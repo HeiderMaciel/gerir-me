@@ -7,41 +7,73 @@
   var customers = [];
   $(function(){
     $("#send_message").notificationField(true);
+    var hasUnitModule = $('.has-unit-module').length > 0;
     var fields = [];
     var total = 0;
     var credit = 0;
     var debit = 0;
-    fields[0] = "int";
-    fields[1] = {
+    var pdid = -1;
+    fields[0] = "date";
+    if (!hasUnitModule) {
+      fields[3] = "none";
+    }
+    fields[4] = { // profissional
       type: "format",
       decode: function(name, row) {
-        return "<a href='/customer/edit?id=" + row[0] + "' target='_customer_maste'>" + name + "</a>";
+        return "<a href='/user/edit?id=" + row[14] + "' target='_user_maste'>" + name + "</a>";
       }
     }
-    fields[4] = {
-      type : "format",
-      decode : function(value){
-        var floatValue = parseFloat(value);
-        if(!isNaN(floatValue)) {
-          if (floatValue > 0) {
-            credit += floatValue;
-          } else {
-            debit -= floatValue;
-          }
-          total += floatValue;
-        }
-        return floatValue.formatMoney();
+    fields[9] = { // usuario
+      type: "format",
+      decode: function(name, row) {
+        return "<a href='/user/edit?id=" + row[15] + "' target='_user_maste'>" + name + "</a>";
       }
-    };
+    }
     fields[6] = {
       type : "format",
-      decode : function(id){
-        customers.push(id);
-        return "<a class='btn' href='/customer/edit?id="+id+"' target='_customer_maste'>Ir</a>"
+      decode : function(value, row){
+/*        if (pdid == row[13]) {
+          return ("")
+        } else {
+          pdid = row[13]
+*/
+          var floatValue = parseFloat(value);
+          if(!isNaN(floatValue)) {
+            if (floatValue > 0) {
+              credit += floatValue;
+            } else {
+              debit -= floatValue;
+            }
+            total += floatValue;
+          }
+          return floatValue.formatMoney();
+//        }
       }
     };
-    $("#unit").unitField(true,false);
-    var url = "/report/customer_account";
+    fields[7] = {
+      type : "format",
+      decode: function(name, row) {
+        return eval (total).formatMoney()
+      }
+    }
+    fields[10] = "dateTime";
+    fields[10] = {
+      type : "format",
+      decode: function(name, row) {
+        var color = "red"
+        if (row[10].substring(0,10) != row[0].substring(0,10)) {
+        return "<p style='color:" + color + "'>" + 
+            dateDecode(row[10]) + " " + 
+            timeDecode(row[10]) + "<p/>"
+        } else {
+          return dateDecode(row[10]) + " " + 
+          timeDecode(row[10]);
+
+        }
+      }
+    }
+
+    var url = "/report/customer_accountdetail";
     var request = function(){
       customers = [];
       total = 0.00;
@@ -79,7 +111,7 @@
       <form id="form_report" class="well form-search" method='get'>
         <h1>
           <span class="lift:CompanySnippet.thumb"> </span>
-          <input class="report_title local_storage" id="title_customer_account_report" name="title_customer_account_report" size="30" type="text" value="Relatório de Clientes - Saldo Credor/Devedor"/>
+          <input class="report_title local_storage" id="title_customer_accountdetail_report" name="title_customer_accountdetail_report" size="30" type="text" value="Relatório de Detalhado de Conta Clientes"/>
         </h1>
         <div class="row">
           <div class="span8">
@@ -97,31 +129,6 @@
                 <span class="help-block">Cliente</span>
                 </div>
               </div>
-            </div>
-            <div class="clearfix">
-              <label for="unit">Unidade </label>
-                <div class="input">
-                  <div class="inline-inputs">
-                    <select id="unit" name="unit"></select>
-                    <span class="help-block">Unidade do cadastro do cliente, mesmo que ele tenha sido atendido em outra unidade
-                    </span>
-                  </div>
-                </div>
-            </div>
-            <div class="clearfix">
-              <label for="start">Valores</label>
-                <div class="input">
-                  <div class="inline-inputs">
-                    <div style="float:left; padding-right:10px" class="input-prepend">
-                      <span class="add-on"><img width="16" src="/images/money.png"></span>
-                      <input type="text" class="input-mini currency" id='start_value' name="start_value" placeholder="Mínimo"/>
-                    </div>
-                    <div style="float:left; padding-right:10px" class="input-prepend">
-                      <span class="add-on"><img width="16" src="/images/money.png"></span>
-                      <input type="text" class="input-mini currency" id='end_value' name="end_value" placeholder="Máximo"/>
-                    </div>
-                  </div>
-                </div>
             </div>
             <div class="clearfix">
               <label for=""></label>
@@ -182,15 +189,22 @@
       <form action="">
     </form>      
   </div>
+  <input type="hidden" class="has-unit-module lift:SecuritySnippet.hasUnitModule" value="1">
   <table id="grid" class="bordered-table zebra-striped">
       <thead>
-        <th>Cod</th>
-        <th>Nome</th>
-        <th>Telefone</th>
-        <th>E-mail</th>
-        <th>Valor Conta</th>
-        <th>Unidade</th>
-        <th>Cadastro</th>
+        <th>Data</th>
+        <th>Comanda</th>
+        <th>Cx</th>
+        <th class="lift:SecuritySnippet.hasUnitModule">
+        Unidade</th>
+        <th>Profissional</th>
+        <th>Prod/Serv</th>
+        <th>Valor</th>
+        <th>Val Ajust</th>
+        <th>F Pagto</th>
+        <th>Usuário</th>
+        <th>Dt Hora</th>
+        <th>Ações</th>
       </thead>
       <tbody>
       </tbody>

@@ -75,6 +75,10 @@ var dateDecode = function (value) {
   return !value || value == "" ? "" : getDateBr(FactoryDate.byTime(value));
 }
 
+var timeDecode = function (value) {
+  return !value ? "" : getHourBr(FactoryDate.byTime(value));
+}
+
 var realDecode = function (value) {
   var ret = (parseFloat(value).formatMoney());
   return ret;
@@ -148,9 +152,6 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
     return ret;
   }
 
-  var timeDecode = function (value) {
-    return !value ? "" : getHourBr(FactoryDate.byTime(value));
-  }
   var booleanDecode = function (value) {
     var _ = function () {
       return value == "true" ? "good.png" : "bad.png"

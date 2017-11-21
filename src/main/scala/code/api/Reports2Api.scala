@@ -785,26 +785,26 @@ println (" vaiiii ============= " + SQL )
 				}			
 
 				val sql = """
-select * from ( 
-select date_part ('day', ba.birthday) as day, ba.birthday, 
-ba.id, ba.name, bc.name,  
-trim (bc.mobile_phone || ' ' || bc.phone || ' ' || bc.email_alternative),
-bc.email, cu.short_name, bi.name, bc.id, bi.id 
-from business_pattern ba 
-left join business_pattern bc on bc.id in (select business_pattern from bprelationship br 
-   where br.company = ba.company and br.status = 1 and relationship = 26 /* dono de */
-   and bp_related = ba.id) and bc.company = ba.company and bc.is_animal = false
-left join business_pattern bi on bi.id = ba.bp_indicatedby
-left join companyunit cu on cu.id = ba.unit
-where ba.company = ? and ba.is_animal = true
-and ba.birthday is not null
-and ba.deathDate is null
-and date_part ('month', ba.birthday) = ?
-%s
-) as data
-where day between ? and ?
-order by 1, 3
-"""
+				select * from ( 
+				select date_part ('day', ba.birthday) as day, ba.birthday, 
+				ba.id, ba.name, bc.name,  
+				trim (bc.mobile_phone || ' ' || bc.phone || ' ' || bc.email_alternative),
+				bc.email, cu.short_name, bi.name, bc.id, bi.id 
+				from business_pattern ba 
+				left join business_pattern bc on bc.id in (select business_pattern from bprelationship br 
+				   where br.company = ba.company and br.status = 1 and relationship = 26 /* dono de */
+				   and bp_related = ba.id) and bc.company = ba.company and bc.is_animal = false
+				left join business_pattern bi on bi.id = ba.bp_indicatedby
+				left join companyunit cu on cu.id = ba.unit
+				where ba.company = ? and ba.is_animal = true
+				and ba.birthday is not null
+				and ba.deathDate is null
+				and date_part ('month', ba.birthday) = ?
+				%s
+				) as data
+				where day between ? and ?
+				order by 1, 3
+				"""
 				toResponse(sql.format(unit),List(AuthUtil.company.id.is, month, start, end))
 			}
 
@@ -831,6 +831,42 @@ order by 1, 3
 				left join companyunit cu on cu.id = bp.unit
 				where valueinaccount <>0 and valueinaccount between ? and ? and bp.company=? %s %s order by valueinaccount """
 				toResponse(SQL.format(customer, unit),List(start_value, end_value, AuthUtil.company.id.is))
+			}
+
+			case "report" :: "customer_accountdetail" :: Nil Post _=> {
+				def customer:Long = S.param("customer") match {
+					case Full(p) if(p != "") => p.toLong
+					case _ => 0
+				}			
+				val SQL = """
+				select tr.dateevent, tr.command, ca.idforcompany, cu.short_name, bp.short_name, pr.name, 
+--				(td.price / pa.value * pd.value),
+				case when pr.productclass = 3 then (td.price / pa.value * pd.value)
+				     when pr.productclass = 2 then (td.price / pa.value * pd.value)
+				     when pr.productclass in (0,1) then (td.price / pa.value * pd.value) * -1
+				end,
+				null,
+				pt.short_name, bu.short_name, pa.createdat, 
+				case when tr.customer <> tr.customerorigin then tr.customerorigin
+				     when tr.customer = tr.customerorigin then null
+				end,
+				pr.productclass, 
+				pd.id, bp.id, bu.id, td.id
+				from treatment tr 
+				inner join treatmentdetail td on td.treatment = tr.id
+				inner join product pr on pr.id = td.product or pr.id = td.activity
+				inner join payment pa on pa.id = tr.payment
+				inner join paymentdetail pd on pd.payment = pa.id
+				inner join paymenttype pt on pt.id = pd.typepayment
+				inner join business_pattern bu on bu.id = pa.createdby
+				inner join cashier ca on ca.id = pa.cashier
+				inner join companyunit cu on cu.id = ca.unit
+				left join business_pattern bp on bp.id = tr.user_c
+				where tr.company = ? and tr.customer = ?
+				and (pr.productclass not in (0,1) or pt.customerregisterdebit = true or customerusecredit = true)
+				order by pa.datepayment, pa.id, pd.id, tr.dateevent, tr.id 
+				"""
+				toResponse(SQL,List(AuthUtil.company.id.is, customer))
 			}
 
 			case "report" :: "budget_plain" :: Nil Post _=> {
