@@ -56,7 +56,6 @@
         return eval (total).formatMoney()
       }
     }
-    fields[10] = "dateTime";
     fields[10] = {
       type : "format",
       decode: function(name, row) {
@@ -72,6 +71,13 @@
         }
       }
     }
+    fields[11] = "intNull";
+
+    fields[12] = "none";
+    fields[13] = "none";
+    fields[14] = "none";
+    fields[15] = "none";
+    fields[16] = "none";
 
     var url = "/report/customer_accountdetail";
     var request = function(){
@@ -200,10 +206,11 @@
         <th>Profissional</th>
         <th>Prod/Serv</th>
         <th>Valor</th>
-        <th>Val Ajust</th>
+        <th>Saldo</th>
         <th>F Pagto</th>
         <th>Usuário</th>
         <th>Dt Hora</th>
+        <th title="Se preenchido indica o id de um cliente que foi unificado com este">Cod Antigo</th>
         <th>Ações</th>
       </thead>
       <tbody>
