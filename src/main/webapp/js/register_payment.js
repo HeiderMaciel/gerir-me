@@ -400,7 +400,7 @@
           }
           if (activity.activityId == prodCustomerCredit) {
             hasCustomerCredit = true;
-            //alert ("tem conta cliente")
+            //alert ("tem crédito cliente")
           }
           total += activity.price * amount;
           lines += "<tr>" + 
@@ -460,13 +460,28 @@
     if (gatDateTreatmentIni() != gatDateTreatmentOr0()) {
       url = "/cash/getTreatment/" + "0" + '/' + $('#customer').val() + '/' +gatDateTreatmentIni() + '/' + gatDateTreatmentOr0();
     } else {
+      // 21/11/2017 - Rigel - tinha feito só qdo informava cliente
+      if (prodCustomerAccount == 0 && prodCustomerCredit == 0) {
+        // chama com customer 0 só para trazer os produtos
+        // credito e conta cliente
+        url = "/cash/getProductPreviousDebts/0"
+        $.get(url, function(t) {
+          eval("var prodObj = " + t);
+          // 13/10/2017 rigel - salva o produto conta cliente
+          prodCustomerAccount = prodObj.id
+          prodCustomerCredit = prodObj.credit
+        }, "text");
+      }  
+
       if ($('#command').val() != "0") {
         if (!$('#customer').val()) {
           $('#customer').val("0")
         }
-        url = "/cash/getTreatment/" + $('#command').val() + '/' + $('#customer').val() + '/' +gatDateTreatmentIni() + '/' + gatDateTreatmentOr0();
+        url = "/cash/getTreatment/" + $('#command').val() + 
+        '/' + $('#customer').val() + '/' +gatDateTreatmentIni() + '/' + gatDateTreatmentOr0();
       } else {
-        url = "/cash/getTreatment/" + $('#command').val() + '/' + $('#customer').val() + '/' +gatDateTreatmentIni() + '/' + gatDateTreatmentOr0();
+        url = "/cash/getTreatment/" + $('#command').val() + 
+        '/' + $('#customer').val() + '/' +gatDateTreatmentIni() + '/' + gatDateTreatmentOr0();
       }        
     }
     $.get(url, function(t) {
@@ -1192,6 +1207,14 @@
     });
     $scope.addPayment = function() {
       paymentType = getPaymentTypeById($('#payment_type').val());
+      if (paymentType.customerRegisterDebit || paymentType.customerUseCredit) {
+        if (hasCustomerCredit || hasCustomerAccount) {
+           alert ("Produtos especiais de conta cliente e/ou crédito cliente,\n" +
+           "não podem ser pagos com formas de pagamento especiais que alteram o saldo do cliente.\n\n" +
+           "Caso necessário ignore estes itens e faça um pagamento separado.")
+           return;
+        }
+      }
       if (paymentType.cheque) {
         chequeInfoObj = {
           agency: $(":input[name=agency]").val(),
