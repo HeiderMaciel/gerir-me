@@ -1,5 +1,5 @@
 /*
- * Applies box-sizing property only on elements that 
+ * Applies box-sizing property only on elements that
  * makes part of sth-select component.
  */
 [class^="sth-select"] {
@@ -25,6 +25,10 @@
   width: 100%;
 }
 .sth-select .sth-select-text {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   width: calc(85%);
 }
 .sth-select .sth-select-arrow {
