@@ -9,21 +9,21 @@ class LiftProject(info: ProjectInfo) extends DefaultWebProject(info) {
   // If you're using JRebel for Lift development, uncomment
   // this line
   // override def scanDirectories = Nil
+  // override val jettyPort = 7171
   override val jettyPort = 7272
-  //override val jettyPort = 7171
 
   //lazy val JavaNet = "Java.net Maven2 Repository" at "http://download.java.net/maven/2/"
-  lazy val simile = "Typesafe" at "http://repo.typesafe.com/typesafe/releases/"
+  //lazy val simile = "Typesafe" at "http://repo.typesafe.com/typesafe/releases/"
   lazy val mvn = "Typesafe" at "http://repo1.maven.org/maven2/"
 
 
   //lazy val Bopeto = "Bopeto" at "http://jrimum.org/maven/content/groups/public/"
-  
+
   lazy val hello = task { log.info("Hello World!"); None }
 
   override def libraryDependencies = Set(
     "org.eclipse.jetty" % "jetty-server" % "7.3.1.v20110307" % "compile->default",
-    "org.eclipse.jetty" % "jetty-servlet" % "7.3.1.v20110307" % "compile->default",    
+    "org.eclipse.jetty" % "jetty-servlet" % "7.3.1.v20110307" % "compile->default",
     "org.quartz-scheduler" % "quartz" % "2.1.5" % "compile",
     "net.liftweb" %% "lift-webkit" % liftVersion.value.toString % "compile",
     "net.liftweb" %% "lift-mapper" % liftVersion.value.toString % "compile",
@@ -43,6 +43,7 @@ class LiftProject(info: ProjectInfo) extends DefaultWebProject(info) {
     "com.github.philcali" %% "scalendar" % "0.1.2",
     "net.sf.ofx4j" % "ofx4j" % "1.3" % "compile",
     "org.scala-lang" % "scala-reflect" % "2.10.0-M4"
+
     //"org.jrimum" % "jrimum-bopepo" % "0.2.3-SNAPSHOT" % "compile",
      //"com.typesafe.akka" %% "akka-actor" % "2.4"
   ) ++ super.libraryDependencies
