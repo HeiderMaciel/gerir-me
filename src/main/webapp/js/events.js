@@ -95,9 +95,30 @@ var updateReportItems = function() {
 				"<span><a class='btn danger' target='_blank' onclick='deleteSection(" + row[10] + ")'>Excluir</a></span>";
 		}
 	}
+  	var group = function(row,value){
+    	return parseFloat(value) + (parseFloat(row[7]));
+  	};
+  	var formater = function(value){
+    	return value.formatMoney();
+  	};        
+	var group_meta_data = {
+		"key":0,
+		"name":0, 
+		"groupFunction" : group,
+        "formater" : formater,
+        "show" : true,
+        "childGroup" : {
+            "key":1, 
+            "name":1, 
+            "groupFunction" : group, 
+            "show" : true,
+            "collapsed" : false,
+            "formater" : formater
+      	}
+    };
 	renderReport("/project/budget/" + gup('id'), fields, {
 		project: gup('id')
-	}, "#table_items");
+	}, "#table_items", false, false, false, false. false, false, group_meta_data);
 };
 
 $(function() {
