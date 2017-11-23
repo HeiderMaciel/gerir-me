@@ -1,4 +1,4 @@
-name := "E-Belle ligth"
+name := "blue-gerir-me"
 
 version := "0.1.22"
 
@@ -27,7 +27,7 @@ libraryDependencies ++= {
   val liftVersion = "2.4"
   Seq(
     "org.eclipse.jetty" % "jetty-webapp" % "7.3.0.v20110203" % "container", // For Jetty 7
-    // "org.eclipse.jetty" % "jetty-servlet" % "7.3.1.v20110307",    
+    // "org.eclipse.jetty" % "jetty-servlet" % "7.3.1.v20110307",
     "javax.servlet" % "servlet-api" % "2.5" % "provided->default",
     "org.quartz-scheduler" % "quartz" % "2.1.5" % "compile",
     "net.liftweb" %% "lift-webkit" % liftVersion % "compile",
