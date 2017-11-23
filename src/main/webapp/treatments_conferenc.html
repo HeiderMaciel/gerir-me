@@ -4,12 +4,21 @@
       </script>
       <script src="/select2/select2_locale_pt-BR.js">
       </script>
+      <script src="/js/reports.js"></script> <!-- por causa de trStatusdecode -->
       <script src="/js/jquery.tablesorter.pager.js">
       </script>
       <div>
+  <h1>
+    <span class="lift:CompanySnippet.thumb"> </span>
+    <input class="report_title local_storage" id="title_treatments_conferenc_report" name="title_treatments_conferenc_report" size="30" type="text" value="Resumo Atendimento Cliente"/>
+  </h1>
+  <a id="hide_arguments" onclick="$('#form_search').toggle();return false;" 
+    href="#" class="btn excel_buttton" 
+    title="Ocultar argumentos">
+    <img style="width: 16px;" src="/images/collapse.png" />
+  </a>  
           <form id="form_search"  method='get'>
               <div class="well">
-                <h1><span class="lift:CompanySnippet.thumb"> </span>Resumo Atendimento Cliente</h1>
                 <div class="row">
                       <div class="span9">
                         <div class="clearfix">

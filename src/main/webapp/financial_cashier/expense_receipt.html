@@ -46,6 +46,8 @@
     fields[idcol] = "none";
     var uphonecol = 28
     fields[uphonecol] = "none";
+    var coobscol = 29
+    fields[coobscol] = "none";
     var url = "/treatments/receipt_customer_unit";
     $("#command").html(gup("command"));
     var date =  gup("date") || getDateBr(new Date());
@@ -93,6 +95,8 @@
         $("#udate").html(udate);
         var uphone = data[0][uphonecol];
         $("#uphone").html(uphone);
+        var coobs = data[0][coobscol];
+        $("#coobs").html(coobs);
         //window.print();
       });
 
@@ -219,8 +223,12 @@
             Local: <span id="ucity"></span> - <span id="ustate"></span><br/><br/>
             Data : <span id="udate"></span><br/><br/>
             <span id="uname"></span> - <span id="udoc"></span>
-            <br>
+            <br/>
+            <br/>
+            <br/>
             </center>
+            <span id="coobs"></span>
+            </div>
           </td>
         </tr>
       </thead>

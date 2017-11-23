@@ -127,7 +127,11 @@ class CompanyUnit
       if(User.count(By(User.unit,this.id)) > 0){
           throw new RuntimeException("Existe profissional para essa unidade! ")
       }
+
+      // deleta o parceiro associado a unidade
+      val ac = this.getPartner
       super.delete_!
+      ac.delete_!
   }
 
   def unitsToShowSql = if (AuthUtil.user.isAdmin) {

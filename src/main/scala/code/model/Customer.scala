@@ -220,6 +220,11 @@ class Customer extends BusinessPattern[Customer]{
 
     def validateDuplicatedBarcode = {
         if (PermissionModule.anvisa_?) {
+            if (this.idForCompany != 0) {
+                if (Customer.count(By(company, AuthUtil.company.id.is), By(idForCompany, this.idForCompany), NotBy(id, this.id)) > 0) {
+                    throw new RuntimeException("Já existe um registro com esse código gerador de prontuário : %s".format(this.idForCompany.is))
+                }  
+            }
             if (this.barcode != "") {
                 if (Customer.count(By(company, AuthUtil.company.id.is), By(barcode, this.barcode), NotBy(id, this.id)) > 0) {
                     throw new RuntimeException("Já existe um registro com esse prontuário : %s".format(this.barcode.is))
@@ -353,7 +358,7 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
             )
         } else {
             findAll(By(Customer.email, email.trim.toLowerCase), 
-            By(Customer.company, company.toLong),
+            By(Customer.company, Company.calPubCompany (company)),
             //By(Customer.password, Project.md5(password))
             BySql[code.model.Customer]("password = ? or password = ?",
                 IHaveValidatedThisSQL("",""), password, pwdMd5)

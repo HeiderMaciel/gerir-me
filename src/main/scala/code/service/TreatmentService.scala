@@ -166,11 +166,17 @@ object  TreatmentService extends net.liftweb.common.Logger {
 */
 
 	def loadTreatmentByCommandOrCustomer(command:String,customer:Long,dateIni:Date,date:Date,unit:Long):List[Treatment] = {
+		val statusSql = if (date != dateIni) {
+			" status not in (5,8,1) "
+		} else {
+			" status not in (5) "
+		}
 		if (command == "0") {
 			// vai pelo customer
 			Treatment.findAllInCompany(By(Treatment.customer,customer),
 			  By(Treatment.unit,unit),
 			  By(Treatment.hasDetail,true),
+			  BySql(statusSql,IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00")),
 			  BySql("dateevent between date(?) and date(?)",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"),dateIni, date),
 			  OrderBy(Treatment.id, Ascending)
 			 )
@@ -180,6 +186,7 @@ object  TreatmentService extends net.liftweb.common.Logger {
 			  By(Treatment.command,command), 
 			  By(Treatment.unit,unit),
 			  By(Treatment.hasDetail,true),
+			  BySql(statusSql,IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00")),
 			  BySql("dateevent between date(?) and date(?)",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"),dateIni, date),
 			  OrderBy(Treatment.id, Ascending)
 			 )
@@ -188,6 +195,7 @@ object  TreatmentService extends net.liftweb.common.Logger {
 			Treatment.findAllInCompany(By(Treatment.command,command),
 			  By(Treatment.unit,unit),
 			  By(Treatment.hasDetail,true),
+			  BySql(statusSql,IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00")),
 			  BySql("dateevent between date(?) and date(?)",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"),dateIni, date),
 			  OrderBy(Treatment.id, Ascending)
 			 )
@@ -211,7 +219,8 @@ object  TreatmentService extends net.liftweb.common.Logger {
 					treatments(0).command.is
 				}else{
 					//if(AuthUtil.company.autoIncrementCommand_?.is){
-					if(AuthUtil.company.commandControl.is == Company.CmdDaily){
+					if(AuthUtil.company.commandControl.is == Company.CmdDaily ||
+						AuthUtil.company.commandControl.is == Company.CmdDailyCompany){
 						Treatment.nextCommandNumber(startDate,AuthUtil.company, AuthUtil.unit).toString
 					}else{
 						// never - user vai por a comanda
@@ -360,24 +369,33 @@ object  TreatmentService extends net.liftweb.common.Logger {
 		TratmentServer ! TreatmentMessage("SaveUpdateTratment",end)		
 	}	
 
-	def addDetailTreatment(id:Long,activityCode:Long, auxiliar:Long, animal:Long, offsale:Long):Box[TreatmentDetail] = {
+	def addDetailTreatment(id:Long,activityCode:Long, auxiliar:Long, animal:Long, tooth: String, offsale:Long):Box[TreatmentDetail] = {
 		val activity = Activity.findByKey(activityCode).get
-		var tempd = addDetailTreatment(id, activity, auxiliar, animal, offsale, true)
+		var tempd = addDetailTreatment(id, activity, auxiliar, animal, tooth, offsale, true)
 		tempd
 	}
-	def addDetailTreatmentWithoutValidate(id:Long,activityCode:Long, auxiliar:Long, animal:Long, offsale:Long):Box[TreatmentDetail] = {
+	def addDetailTreatmentWithoutValidate(id:Long,activityCode:Long, auxiliar:Long, animal:Long, tooth: String, offsale:Long):Box[TreatmentDetail] = {
 		val activity = Activity.findByKey(activityCode).get
-		var tempd = addDetailTreatment(id,activity, auxiliar, animal, offsale, false)
+		var tempd = addDetailTreatment(id,activity, auxiliar, animal, tooth, offsale, false)
 		tempd
 	}	
 
-	def addDetailTreatment(id:Long,activity:Activity, auxiliar:Long, animal:Long, offsale:Long, validate:Boolean =true):Box[TreatmentDetail] = {
+	def addDetailTreatment(id:Long,activity:Activity, auxiliar:Long, animal:Long, tooth: String, offsale:Long, validate:Boolean =true):Box[TreatmentDetail] = {
 		DB.use(DefaultConnectionIdentifier) {
 	 		conn =>
 	 			try{
 					val treatment = Treatment.findByKey(id).get
+					// rigel 10/10/2017 - para alertar e não duplicar
+					// sem querer na agenda
+					if (validate && treatment.details.filter(_.activity == activity).size > 0) {
+						val strAux = Activity.findByKey(activity.id.is).get.name							
+						// nao alterar esta mensagem "Já existe este serviço
+						// sem verificar o trecho no treatmentManger.js
+						// que testa este string para inverte ok e cancelar
+						throw new RuntimeException("Já existe este serviço/procedimento <" + strAux + "> neste agendamento!");
+					}
 					if(treatment.isPaid){
-						throw new RuntimeException("Não é possível adicionar serviço a um atendimento já pago!");
+						throw new RuntimeException("Não é possível adicionar serviço/procedimento a um atendimento já pago!");
 					}
 					var detail = TreatmentDetail.createInCompany
 					detail.treatment(treatment)
@@ -390,6 +408,9 @@ object  TreatmentService extends net.liftweb.common.Logger {
 			        if (AuthUtil.company.appType.isEbellepet) {
 						detail.getTdEpet.animal(animal).save;
 					}
+			        if (AuthUtil.company.appType.isEsmile) {
+						detail.getTdEdoctus.tooth(tooth).save;
+					}
 
 					//treatment.details += detail
 					if (detail.alertObs != "") {
@@ -398,10 +419,11 @@ object  TreatmentService extends net.liftweb.common.Logger {
 						}
 					}
 					treatment.resetEndDate
-					if(validate)
+					if(validate) {
 						treatment.save
-					else 
+					} else {
 						treatment.saveWithoutValidate
+					}
 					updateCalendar("updateDetail", treatment)
 					Full (detail)
 				}catch{
@@ -714,6 +736,7 @@ object  TreatmentService extends net.liftweb.common.Logger {
 													0, 
 													td.auxiliar.is.toInt,
 													td.animal.toInt,
+													td.tooth,
 													td.offsale.is.toInt
 												);
 									}),

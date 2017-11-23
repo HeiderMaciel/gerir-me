@@ -14,12 +14,27 @@ import Helpers._
 import scala.xml.{NodeSeq, Text}
 
 object CompanySnippet{
-	val cmdControl = Seq(
+	def cmdControl = if (PermissionModule.unit_?) {
+		Seq(
+		Company.CmdNever.toString -> "Nunca incrementa, usuário informa" ,
+		Company.CmdDaily.toString -> "Incrementa no dia, no momento do agendamento" ,
+		Company.CmdEver.toString -> "Sempre incrementa, no momento da venda" ,
+		Company.CmdDailyCompany.toString -> "Incrementa no dia, no momento do agendamento, ignora unidade" ,
+		Company.CmdEverCompany.toString -> "Sempre incrementa, no momento da venda, ignora unidade" 
+		)
+	} else {
+		Seq(
 		Company.CmdNever.toString -> "Nunca incrementa, usuário informa" ,
 		Company.CmdDaily.toString -> "Incrementa no dia, no momento do agendamento" ,
 		Company.CmdEver.toString -> "Sempre incrementa, no momento da venda" 
-	)
+		)
+	}
 
+	val cPubControl = Seq(
+		Company.CPubNoone.toString -> "Ninguém" ,
+		Company.CPubCustomer.toString -> "Clientes" ,
+		Company.CPubEveryone.toString -> "Todos"
+	)
 
 	def render(in: NodeSeq):NodeSeq  = {
 		for {
@@ -145,6 +160,8 @@ object CompanySnippet{
 			"name=useTreatmentAsAClass" #> (SHtml.checkbox(ac.useTreatmentAsAClass_?, ac.useTreatmentAsAClass_?(_)))&
 //			"name=autoIncrementCommand" #> (SHtml.checkbox(ac.autoIncrementCommand_?, ac.autoIncrementCommand_?(_)))&
 		    "name=commandControl" #> (SHtml.select(cmdControl,Full(ac.commandControl.is.toString),(v:String) => ac.commandControl(v.toInt)))&
+		    "name=calendarPub" #> (SHtml.select(cPubControl,Full(ac.calendarPub.is.toString),(v:String) => ac.calendarPub(v.toInt)))&
+		    "name=calendarUrl" #> (SHtml.text(ac.calendarUrl.is,ac.calendarUrl(_)))&
 			"name=autoOpenCalendar" #> (SHtml.checkbox(ac.autoOpenCalendar_?, ac.autoOpenCalendar_?(_)))&
 			"name=allowrepeatcommand" #> (SHtml.checkbox(ac.allowRepeatCommand_?, ac.allowRepeatCommand_?(_)))&
 //			"name=notify" #> (SHtml.checkbox(ac.senNotifications_?, ac.senNotifications_?(_)))&

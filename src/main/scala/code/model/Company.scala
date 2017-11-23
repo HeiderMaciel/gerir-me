@@ -453,11 +453,28 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
 
   def productTypes = ProductType.findAllInCompany(OrderBy(ProductType.name, Ascending))
 
-  def bmMonthlyPaymentType = PaymentType.findAllInCompany(By(PaymentType.bpmonthly_?, true))(0)
+  def bmMonthlyPaymentType = {
+    if (PaymentType.count(By(PaymentType.bpmonthly_?, true)) < 1) {
+       throw new RuntimeException("É preciso que haja uma forma de pagamento marcada com comportamento especial de <baixa de sessão de mensalidade>" + "\n\n" +
+        "E ela precisa estar ativa, para que seja gerada a comissão para o profissional");
+    }
+    PaymentType.findAllInCompany(By(PaymentType.bpmonthly_?, true))(0)
+  }  
+  def offSalePaymentType = {
+    if (PaymentType.count(By(PaymentType.offSale_?, true)) < 1) {
+       throw new RuntimeException("É preciso que haja uma forma de pagamento marcada com comportamento especial de <pagamento por convênio>" + "\n\n" +
+        "E ela precisa estar ativa, para que seja gerada a comissão para o profissional");
+    }
+    PaymentType.findAllInCompany(By(PaymentType.offSale_?, true))(0)
+  }
 
-  def offSalePaymentType = PaymentType.findAllInCompany(By(PaymentType.offSale_?, true))(0)
-
-  def packagePaymentType = PaymentType.findAllInCompany(By(PaymentType.deliveryContol_?, true))(0)
+  def packagePaymentType = {
+    if (PaymentType.count(By(PaymentType.deliveryContol_?, true)) < 1) {
+       throw new RuntimeException("É preciso que haja uma forma de pagamento marcada com comportamento especial de <baixa de sessão de pacote>" + "\n\n" +
+        "E ela precisa estar ativa, para que seja gerada a comissão para o profissional");
+    }
+    PaymentType.findAllInCompany(By(PaymentType.deliveryContol_?, true))(0)
+  }
 
   def treatmentsToDay = Treatment.findAll(By(Treatment.company, this.id), By(Treatment.hasDetail, true), BySql("date(start_c) = date(?)", IHaveValidatedThisSQL("start_c", "01-01-2012 00:00:00"), new Date()))
 
@@ -487,6 +504,26 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
   def mainUnit = {
     CompanyUnit.findAll(OrderBy(CompanyUnit.id, Ascending),By(CompanyUnit.company, this), By(CompanyUnit.showInCalendar_?, true))(0)
   }
+
+  def calPubCompany (company:String) = {
+    if (company == "") {
+      1l
+    } else {
+      // testar aqui número e buscar na company pela url
+      if (BusinessRulesUtil.isNumeric(company)) {
+        company.toLong
+      } else {
+        val clist = Company.findAll(
+          By (Company.status, 1),
+          By (Company.calendarUrl,company))   
+        if (clist.length > 0) {
+          clist (0).id.is
+        } else {
+          1l;
+        }
+      }
+    }
+  }
 }
 
 object Company extends Company with LongKeyedMapperPerCompany[Company] with SitebleMapper[Company] {
@@ -507,6 +544,13 @@ object Company extends Company with LongKeyedMapperPerCompany[Company] with Site
   val CmdNever = 0
   val CmdDaily = 1
   val CmdEver = 2;
+  val CmdDailyCompany = 3
+  val CmdEverCompany = 4;
+
+  // public calendar
+  val CPubNoone = 0
+  val CPubCustomer = 1
+  val CPubEveryone = 2;
 
   override def findByKey(id: Long) = {
     val company = super.findByKey(id)

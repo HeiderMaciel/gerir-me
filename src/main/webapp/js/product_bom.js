@@ -21,7 +21,8 @@
 
   ProductBOM.getListFromServer = function() {
     if (gup("id")) {
-      return $.get("/product/" + (gup('id')) + "/product_bom/list", function(results) {
+      return $.get("/product/" + (gup('id')) + "/product_bom/list", 
+        function(results) {
         var obj, ret, _i, _len;
         var product_saleprice = 0.0;
         var item_price = 0.0;
@@ -30,10 +31,45 @@
         ret = "";
         for (_i = 0, _len = results.length; _i < _len; _i++) {
           obj = results[_i];
-          ret += "<tr>\n  <td>" + obj.product_name + "</td>\n  <td>" + obj.qtd + "</td>\n  <td>" + obj.obs + "</td>\n  <td>" + (obj.price.formatMoney()) + "</td>\n  <td><img src=\"/images/" + (obj.parceled ? 'good' : 'bad') + ".png\"/></td>\n  <td>" + obj.orderinreport + "</td>\n  <td><a data-id='" + obj.id + "' class='action_delete'><img src='/images/delete.png'/></a></td>\n</tr>";
+          ret += "<tr>\n  " + 
+          "<td>" + obj.product_name + "</td>" +
+          "<td>" + obj.qtd + "</td>" +
+          "<td>" + obj.obs + "</td>" +
+          "<td>" + (obj.price.formatMoney()) + "</td>" +
+          "<td><img src=\"/images/" + (obj.parceled ? 'good' : 'bad') + ".png\"/></td>" +
+          "<td>" + obj.orderinreport + "</td>" + 
+          "<td><a data-id='" + obj.id + "' class='action_delete'><img src='/images/delete.png'/></a></td>" +
+          "</tr>";
           item_price = (obj.price * obj.qtd)
           product_saleprice += item_price
         }
+
+//        alert ($("#is_bomaux").val())
+//        alert ($("#salePrice").val())
+        var prprice = 0.0;
+        prprice = $("#salePrice").val()
+        if ($("#is_bomaux").val() == "true") {
+          if (product_saleprice == 0.0) {
+            alert ("O produto está marcado como pacote, mas não foi configurado com nenhum item\n\n" +
+              "Insira os itens desejados na aba Configuração de Pacote")
+          }
+          if (prprice != product_saleprice && product_saleprice != 0.0) {
+            if (confirm ("Preço de venda " + prprice + 
+              "\nPreço config pacote " + product_saleprice + "\n\nAtualiza preço de venda?")) {         
+              $("#salePrice").val(product_saleprice).change()
+              $("#pr_salvar").click();
+            }
+          }
+        } else {
+          if (product_saleprice != 0.0) {
+            alert ("O produto tem itens de configuração de pacote e não está marcado como tal\n\n" +
+              "Marque o campo É um pacote? no produto, para que a configuralçao esteja completa")
+            // podia fazer um confirm aqui e chmar uma api para setar o is_bom
+            // true no product, não dá pra fazer como no salprice pq o snippet não
+            // mante o name nem o id do checkbox 
+          }
+        }
+
         $("#grid tbody").html(ret);
         $("#product_salePrice").val((product_saleprice).formatMoney())
         return $(".action_delete").click(function() {

@@ -118,9 +118,9 @@ var CalendarScreen = {
             "keyboard": true,
             "backdrop": true
         });
-        if ((calEvent.command === '' || !calEvent.command) && 
-            global_commandControl == 1 /* daily */) {
-            $.get("/calendar/" + encodeURIComponent(getDateBr(calEvent.start)) + 
+        if ((calEvent.command === '' || !calEvent.command) &&
+            global_commandControl == 1 /* daily */ || global_commandControl == 3 /* dailyCompany */) {
+            $.get("/calendar/" + encodeURIComponent(getDateBr(calEvent.start)) +
                 "/getNextCommandId", function(t) {
 
                 $("#command_treatment", "#treatment_add").val(t);
@@ -146,8 +146,8 @@ var CalendarScreen = {
         } else {
             $("#cutomer_id_treatment").val('');
             setTimeout("$('#cutomer_name_treatment').select2('open');$('.name_customer_search span').html('');", 500)
-        }    
-    
+        }
+
         $("#cutomer_name_treatment").change(function(){
             $("#activitys").next().click();
         });
@@ -211,8 +211,8 @@ var CalendarScreen = {
             window.open("/financial_cashier/register_payment?command=" + $(".command").val() + "&date=" + encodeURIComponent($(".start_treatment").val()), "payment");
             CalendarScreen.closeTreatmentPopUp();
         } else {
-            if (global_commandControl == 2 /* ever */) {
-                $.get("/calendar/" + encodeURIComponent($(".start_treatment").val()) + 
+            if (global_commandControl == 2 /* ever */ || global_commandControl == 4 /* everCompany */) {
+                $.get("/calendar/" + encodeURIComponent($(".start_treatment").val()) +
                     "/getNextCommandId", function(t) {
                     //    $($inputs.get(0)).val(t);
                     $(".command").val(t)

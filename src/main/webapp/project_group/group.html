@@ -1,0 +1,307 @@
+<div id="main" class="lift:surround?with=project;at=content">
+  <script src="/js/angular.js"></script>
+  <script src="/js/angular-resource.min.js"></script>      
+  <script src="/js/angular.date.js"></script>
+  <script src="/js/datetimepicker/jquery.datetimepicker.js"></script>
+  <style>
+    @import url("/js/datetimepicker/jquery.datetimepicker.css");
+  </style>
+  <script type="text/javascript" charset="utf-8">
+    setTimeout(function(){
+      if($("#bp_sponsor").val() && $("#bp_sponsor").val() != '0'){
+        $("#bp_sponsor").change();
+      }
+/*
+      setTimeout(function(){
+        if($("#bp_manager").val() && $("#bp_manager").val() != '0'){
+          $("#bp_manager").change();
+        }
+      },500);
+*/
+    }, 500);    
+    $('#stakeholdertype').stakeholderTypeField();
+  </script>
+  <script src="/js/angular.select2.js"></script>
+  <span class='lift:ProjectSnippet.maintain opt=group'>
+    <form  class="lift:form.ajax">
+      <div class="well">
+        <label for="btn"></label>
+        <a class="btn primary" href="/project_group/list_group?opt=group">Lista</a>
+        <input class="btn success lift:SecuritySnippet.isNotAdminRead" type="submit" value="Salvar">
+        <a class="btn primary" href="/project_group/group?opt=group">Inserir novo</a>
+      </div>
+      <div>
+        <span id="project_form">
+          <span class="row">
+            <span class="span18">
+              <div class="clearfix">
+                <label for="name">Nome</label>        
+                <div class="input">
+                  <div class='inline-inputs'>
+                    <div class="input-prepend" style='float:left; padding-right:10px'>
+                      <input class="large" id="name" name="name" size="30" type="text"/>
+                    </div>
+                    <div class="input-prepend">
+                      <input class="medium" id="short_name" name="short_name" size="30" type="text"/>
+                      <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/name.html' rel="popover" class="_popover_basic _help">
+                        <img src="/images/info.gif" width="20">
+                      </a>
+                    </div>
+                    <span class="help-block">Nome completo e nome reduzido, este último usado em alguns relatórios</span>
+                  </div>
+                </div>
+              </div>
+            </span>
+            <span class="span7">
+              <div class="clearfix">
+                <label for="startat">Início</label>
+                <div class="input">
+                  <div class='inline-inputs'>
+                    <div class="input-prepend" style='float:left; padding-right:10px'>
+                      <span class="add-on"><img width="16" src='/images/calendar_addon.png'/></span> 
+                      <input class="medium datetime" id="startat" name="startat" size="19" type="text"/>
+                    </div>
+                  </div>
+                </div>
+              </div>                     
+              <div>
+                <label for="schedule">Data / Hora</label>
+                <div class="input">
+                  <textarea class="large" id="schedule" name="schedule" size="30"></textarea>
+                  <span class="help-block">Detalha dia(s) e horário(s) do evento</span>
+                </div>
+              </div>
+              <div class="clearfix">
+                <label for="name">Nro Participantes</label>
+                <div class="input">
+                  <input class="mini" id = "numberofguests" name="numberofguests" size="16" type="text">
+                  <span class="help-block">Número de participantes/convidados</span>
+                </div>
+              </div>        
+              <div class="clearfix lift:SecuritySnippet.isSuperAdmin">
+                <label for="name">projectOpt</label>
+                <div class="input">
+                  <input class="mini" id = "projectOpt" name="projectOpt" size="16" type="text">
+                </div>
+              </div>
+              <div class="clearfix">
+                <label for="projectclass">Classe de Grupo</label>
+                <div class="input">
+                  <select id='projectclass' class="projectclass" name='projectclass'></select>
+                </div>
+              </div>
+              <div class="clearfix lift:SecuritySnippet.hasUnitModule">
+                <label for="unit">Unidade</label>
+                <div class="input">
+                  <div class="input-prepend">
+                    <select class="medium" id="unit" name="unit" >
+                    </select>
+                  </div>
+                  <span class="help-block">Unidade do evento</span>
+                </div>
+              </div>
+            </span>
+            <span class="span7">
+              <div class="clearfix">
+                <label for="startat">Fim</label>
+                <div class="input">
+                  <div class='inline-inputs'>
+                    <div class="input-prepend" style='float:left; padding-right:10px'>
+                      <span class="add-on"><img width="16" src='/images/calendar_addon.png'/></span> 
+                      <input class="medium datetime" id="endat" name="endat" size="19" type="text"/>
+                    </div>
+                  </div>
+                </div>
+              </div>                     
+              <div class="clearfix">
+                <label for="status">Status</label>
+                <div class="input">
+                  <select class="medium" id="status" name="status" >
+                  </select>
+                  <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/status.html' rel="popover" class="_popover_basic _help">
+                    <img src="/images/info.gif" width="20">
+                  </a>
+                </div>
+              </div>
+              <div class="clearfix lift:SecuritySnippet.hasCostcenterModule">
+                <label for="costcenter">Centro de Custo</label>
+                <div class="input">
+                  <select id='costcenter' class="costcenter" name='costcenter'></select>
+                </div>
+              </div>
+            </span>
+            <span class="span12">
+              <div class="clearfix">
+                <label for="bp_sponsor">Patrocinador</label>
+                <div class="input">
+                  <span>
+                    <img class="customer_search_button" width='24' src="/images/search.png"/>
+                    <input data-url-name="bp_sponsor" class='mini id_customer_search url_parameter' id='bp_sponsor' name="bp_sponsor" /> 
+                    <input class="name_customer_search" name="bp_sponsorname" id="bp_sponsorname"  size="30" type="text" placeholder="Nome"/>    
+                  </span>
+                  <span class="help-block">Patrocinador</span>
+                </div>
+              </div>
+              <div class="clearfix">
+                <label for="bp_manager">Responsável</label>
+                <div class="input">
+                  <span>
+                    <img class="customer_search_button" width='24' src="/images/search.png"/>
+                    <input class='mini id_customer_search' id='bp_manager' name="bp_manager" /> 
+                    <input class="name_customer_search" name="manager" id="manager"  size="30" type="text" placeholder="Nome"/>
+                  </span>
+                  <span class="help-block">Responsável</span>
+                </div>
+              </div>
+              <div class="clearfix">
+                <label for="Obs">Obs</label>
+                <div class="input">
+                  <textarea class="large" id="obs" name="obs" size="30"></textarea>
+                  <span class="help-block">Observações</span>
+                </div>
+              </div>
+              <div class="clearfix">
+                <label for="about">Resumo</label>
+                <div class="input">
+                  <textarea class="large" id="about" name="about" size="30"></textarea>
+                  <span class="help-block">Sobre</span>
+                </div>
+              </div>
+              <div class="clearfix lift:SecuritySnippet.hasAuditModule">
+                  <label for="createdAt">Criado/Alterado</label>
+                  <div class="input">
+                    <div class='inline-inputs'>
+                      <div class="input-prepend" style='float:left; padding-right:10px'>
+                        <span class="add-on"><img width="16" src='/images/calendar_addon.png'/></span> 
+                        <input class="input-medium datetime disabled" disabled="true" id="createdAt" name="createdAt" size="19" type="text"/>
+                      </div>
+                      <div class="input-prepend" style='float:left; padding-right:10px'>
+                        <span class="add-on"><img width="16" src='/images/calendar_addon.png'/></span> 
+                        <input class="input-medium datetime disabled" disabled="true" id="updatedAt" name="updatedAt" size="19" type="text"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="input">
+                    <div class='inline-inputs'>
+                      <div class="input-prepend" style='float:left; padding-right:10px'>
+                        <span class="add-on"><img src='/images/sex.png'/></span> 
+                        <input class="input-medium disabled" disabled="true" id="createdby" name="createdby" size="19" type="text"/>
+                      </div>
+                      <div class="input-prepend" style='float:left; padding-right:10px'>
+                        <span class="add-on"><img src='/images/sex.png'/></span> 
+                        <input class="input-medium disabled" disabled="true" id="updatedby" name="updatedby" size="19" type="text"/>
+                      </div>
+                    </div>
+                  </div>                            
+              </div>                     
+            </span>
+          </span>
+        </span>
+      </div>
+      <span>
+        <ul class="tabs">
+          <li class="lift:SecuritySnippet.hasPortalModule active tab"><a href="#site">Portal</a></li>
+          <li class="tab"><a href="#stakeholders">Participantes</a></li>
+        </ul>
+        <div class="pill-content">
+          <div class="lift:SecuritySnippet.hasPortalModule tab_content row" id="site">
+            <div class='span12'>
+              <div class="clearfix">
+                <label for="allowshowonsite">Mostrar no Site</label>
+                <div class="input">
+                  <div class='inline-inputs'>
+                    <div class="input-prepend" style='float:left; padding-right:10px'>
+                      <input type="checkbox" name="allowshowonsite">
+                    </div>
+                    <div class="input-prepend" style='float:left; padding-right:20px'>
+                      <label for="allowshowonsite">Mostrar no Portal</label>
+                    </div>
+                    <div class="input-prepend" style='float:left; padding-right:10px'>
+                      <input type="checkbox" name="allowshowonportal">
+                    </div>
+                  </div>
+                </div>
+              </div>                     
+              <div class="lift:SecuritySnippet.isSuperAdmin clearfix">
+                <label for="moderatedportal">Aprovado Moderador</label>
+                <div class="input">
+                  <input type="checkbox" name="moderatedportal">
+                  <span class="help-block">Se foi aprovado pelo moderador do portal do ebelle</span>
+                </div>
+              </div>                     
+              <div class="clearfix">
+                <label for="sitetitle">Título Público</label>        
+                <div class="input">
+                  <input class="large" id="sitetitle" name="sitetitle" size="30" type="text"/>
+                  <span class="help-block">Título como aparecerá no site/portal</span>
+                </div>
+              </div>
+              <div class="clearfix">
+                <label for="sitedescription">Descrição Pública</label>
+                <div class="input">
+                  <div class="input-prepend">
+                    <textarea class="xlarge" id="sitedescription" name="sitedescription" size="16"></textarea>
+                    <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/portal.html' rel="popover" class="_popover_basic _help">
+                      <img src="/images/info.gif" width="20">
+                    </a>
+                    <span class="help-block">Descrição como aparecerá no site/portal</span>
+                  </div>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="active tab_content row" id="stakeholders">
+            <span class='span12'>
+              <div class="clearfix">
+                <label for="bp_stakeholder">Participante</label>
+                <div class="input">
+                  <span>
+                    <img class="customer_search_button" width='24' src="/images/search.png"/>
+                    <input data-url-name="bp_stakeholder" class='mini id_customer_search url_parameter' id='bp_stakeholder' name="bp_stakeholder" /> 
+                    <input class="name_customer_search" name="bp_stakeholdername" id="bp_stakeholdername"  size="30" type="text" placeholder="Nome"/>    
+                  </span>
+                  <span class="help-block">Participante</span>
+                </div>
+              </div>
+              <div class="clearfix">
+                <label for="stakeholdertype">Tipo Participante</label>
+                <div class="input">
+                  <select id='stakeholdertype' class="stakeholdertype" name='stakeholdertype'></select>
+                  <span class="help-block">Tipo de participante</span>
+                </div>
+              </div>
+              <div class="clearfix">
+                <div class="input">
+                  <input class="btn success" id="add_stakeholder" type="button" value="Adicionar">
+                </div>
+              </div>              
+              <table id="table_stakeholders" class='bordered-table zebra-striped'>
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </span>
+          </div>
+        </div>  
+      </span>      
+    </form>
+    <script type="text/javascript" src="/js/reports.js"></script>
+    <script type="text/javascript" src="/js/events.js"></script>
+    <script>
+      $(function(){
+        $('#essential').jqte();
+        $('#sitedescription').jqte();
+        $('#wish').jqte();
+        $('#benefits').jqte();
+      });
+    </script>
+  </span>
+</div>
+</div>

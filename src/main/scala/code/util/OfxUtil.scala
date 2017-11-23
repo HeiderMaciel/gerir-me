@@ -66,19 +66,19 @@ object OfxUtil {
                 // getPayeeId() PAYEEID
                 // getTransactionType() TRNTYPE
                 //     XFER DEP CASH DEBIT (taxas) OTHER
-               var invoice = "";
-               invoice = transaction.getId();
-               if (invoice != transaction.getCheckNumber()) {
-                invoice = invoice + " * " + transaction.getCheckNumber()
+               var ofxid = "";
+               ofxid = transaction.getId();
+               if (ofxid != transaction.getCheckNumber()) {
+                ofxid = ofxid + " * " + transaction.getCheckNumber()
                }
                //println ("vaiii ================ " + invoice.trim);
                val ctMov = AccountPayable.count (
                 By (AccountPayable.dueDate, transaction.getDatePosted()),
-                By (AccountPayable.invoice, invoice.trim),
+                By (AccountPayable.ofxId, ofxid.trim),
                 By (AccountPayable.account, account));
                if (ctMov <= 0) {
                  val movement = AccountPayable.createInCompany
-                 movement.invoice(invoice.trim)
+                 movement.ofxId(ofxid.trim)
                          .dueDate(transaction.getDatePosted())
                          //.paymentDate(transaction.getDatePosted())
                          .paid_?(false) // nao preenche data e seta false 

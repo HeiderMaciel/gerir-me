@@ -38,7 +38,7 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 		)
 
 	def findForListParams: List[QueryParam[User]] = List(OrderBy(User.search_name, Ascending), Like(User.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"), 
-		//Like(User.mobilePhone,"%"+phone+"%"), 
+		//Like(ac.mobilePhone,"%"+phone+"%"), 
 		BySql ("((phone like '%"+phone+"%') or (mobile_phone like '%"+phone+"%') or (email_alternative like '%"+phone+"%'))",IHaveValidatedThisSQL("","")),
 		BySql (userGroupList,IHaveValidatedThisSQL("","")),
 		StartAt(curPage*itemsPerPage), MaxRows(itemsPerPage), ByList(User.userStatus,statusFilter))
@@ -96,8 +96,8 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 			var id:String = ""
 		 	def delete(): Unit ={
 			  		try{
-		  				val user = User.findByKey(id.toLong).get	
-		  				user.delete_!
+		  				val ac = User.findByKey(id.toLong).get	
+		  				ac.delete_!
 		  				S.notice("Profissional excluído com sucesso!")
 		  			}catch{
 		  				case e: NoSuchElementException => S.error("Profissional não existe!")
@@ -106,24 +106,24 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 			
 			}
 
-			page.flatMap(user => 
-			bind("f", xhtml,"name" -> Text(user.name.is),
-							"short_name" -> Text(user.short_name.is),
-							"password" -> Text(user.password.is),
-							"email" -> Text(user.email.is),
-							"phone" -> Text(user.mobilePhone.is + " " + user.phone.is + " " + user.email_alternative.is),
-							"usergroup" -> Text(user.userGroupName),
-							"unit" -> Text(user.unitName),
-//							"username" -> Text(user.userName.is),
-						    //"name=userName" #> (SHtml.text(user.userName.is, user.userName(_))) &
-							//"groupPermission" -> SHtml.text(user.groupPermission, (a:String) => {}),
-							"gp" -> Text(user.groupPermission.is),
-							"actions" -> <a class="btn btn-default" href={"/user/edit?id="+user.id.is}>Editar</a>,
+			page.flatMap(ac => 
+			bind("f", xhtml,"name" -> Text(ac.name.is),
+							"short_name" -> Text(ac.short_name.is),
+							"password" -> Text(ac.password.is),
+							"email" -> Text(ac.email.is),
+							"phone" -> Text(ac.mobilePhone.is + " " + ac.phone.is + " " + ac.email_alternative.is),
+							"usergroup" -> Text(ac.userGroupName),
+							"unit" -> Text(ac.unitName),
+//							"username" -> Text(ac.userName.is),
+						    //"name=userName" #> (SHtml.text(ac.userName.is, ac.userName(_))) &
+							//"groupPermission" -> SHtml.text(ac.groupPermission, (a:String) => {}),
+							"gp" -> Text(ac.groupPermission.is),
+							"actions" -> <a class="btn btn-default" href={"/user/edit?id="+ac.id.is}>Editar</a>,
 //							"actions" -> <a class="btn" href={"/user/edit_new?id="+user.id.is}>Editar</a>,
-							"thumb" -> user.thumb ("36"),
-							"delete" -> SHtml.submit("Excluir",delete,"class" -> "btn danger btn-danger","data-confirm-message" -> {" excluir o profissional "+user.name.is}),
-							"_id" -> SHtml.text(user.id.is.toString, id = _),
-							"id" ->Text(user.id.is.toString)
+							"thumb" -> ac.thumb ("36"),
+							"delete" -> SHtml.submit("Excluir",delete,"class" -> "btn danger btn-danger","data-confirm-message" -> {" excluir o profissional "+ac.name.is}),
+							"_id" -> SHtml.text(ac.id.is.toString, id = _),
+							"id" ->Text(ac.id.is.toString)
 				)
 			)
 	}
@@ -155,14 +155,14 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 
 	def maintain() = {
 		try{
-			var user:User = getUser
+			var ac:User = getUser
 			def process(): JsCmd= {
 				try{
-					user.company(AuthUtil.company)
-					user.groupPermission(S.params("groupPermission").foldLeft("")(_+","+_))
-				   	user.save
+					ac.company(AuthUtil.company)
+					ac.groupPermission(S.params("groupPermission").foldLeft("")(_+","+_))
+				   	ac.save
 				   	S.notice("Profissional salvo com sucesso!")
-				   	S.redirectTo("/user/edit?id="+user.id.is)
+				   	S.redirectTo("/user/edit?id="+ac.id.is)
 				}catch{
 					case (e:net.liftweb.http.ResponseShortcutException) =>{
 						throw e
@@ -172,79 +172,78 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 					}
 				}
 			}
-			"name=allowshowonsite" #> (SHtml.checkbox(user.allowShowOnSite_?, user.allowShowOnSite_?(_)))&
-			"name=allowshowonportal" #> (SHtml.checkbox(user.allowShowOnPortal_?, user.allowShowOnPortal_?(_)))&
-			"name=moderatedportal" #> (SHtml.checkbox(user.moderatedPortal_?, user.moderatedPortal_?(_)))&
-		    "name=sitetitle" #> (SHtml.text(user.siteTitle.is, user.siteTitle(_)))&
-		    "name=sitedescription" #> (SHtml.textarea(user.siteDescription.is, user.siteDescription(_)))&
-		    "name=external_id" #> (SHtml.text(user.external_id.is, user.external_id(_)))&
-			"#img_user" #> user.thumb("192")&
-//		    "name=name" #> (SHtml.text(user.name.is, user.name(_)))&
-		    "name=short_name" #> (SHtml.text(user.short_name.is, user.short_name(_)))&
-		    "name=obs" #> (SHtml.textarea(user.obs.is, user.obs(_)))&
-//		    "name=userName" #> (SHtml.text(user.userName.is, user.userName(_))) &
-		    "name=password" #> (SHtml.password(user.password.is, user.password(_))) &
-		    "name=phone" #> (SHtml.text(user.phone.is, user.phone(_)))&
-			"name=mobilePhone" #> (SHtml.text(user.mobilePhone.is, user.mobilePhone(_)))&
-			"name=email_alternative" #> (SHtml.text(user.email_alternative.is, user.email_alternative(_)))&
-			"name=birthday" #> (SHtml.text(getDateAsString(user.birthday),
+			"name=allowshowonsite" #> (SHtml.checkbox(ac.allowShowOnSite_?, ac.allowShowOnSite_?(_)))&
+			"name=allowshowonportal" #> (SHtml.checkbox(ac.allowShowOnPortal_?, ac.allowShowOnPortal_?(_)))&
+			"name=moderatedportal" #> (SHtml.checkbox(ac.moderatedPortal_?, ac.moderatedPortal_?(_)))&
+		    "name=sitetitle" #> (SHtml.text(ac.siteTitle.is, ac.siteTitle(_)))&
+		    "name=sitedescription" #> (SHtml.textarea(ac.siteDescription.is, ac.siteDescription(_)))&
+		    "name=external_id" #> (SHtml.text(ac.external_id.is, ac.external_id(_)))&
+			"#img_user" #> ac.thumb("192")&
+//		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
+		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
+		    "name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&
+//		    "name=userName" #> (SHtml.text(ac.userName.is, ac.userName(_))) &
+		    "name=password" #> (SHtml.password(ac.password.is, ac.password(_))) &
+		    "name=phone" #> (SHtml.text(ac.phone.is, ac.phone(_)))&
+			"name=mobilePhone" #> (SHtml.text(ac.mobilePhone.is, ac.mobilePhone(_)))&
+			"name=email_alternative" #> (SHtml.text(ac.email_alternative.is, ac.email_alternative(_)))&
+			"name=birthday" #> (SHtml.text(getDateAsString(ac.birthday),
 						(date:String) => {
-							user.birthday(Project.strOnlyDateToDate(date))
+							ac.birthday(Project.strOnlyDateToDate(date))
 						}))&			
-			"name=hireDate" #> (SHtml.text(getDateAsString(user.hireDate),
+			"name=hireDate" #> (SHtml.text(getDateAsString(ac.hireDate),
 						(date:String) => {
-							user.hireDate(Project.strOnlyDateToDate(date))
+							ac.hireDate(Project.strOnlyDateToDate(date))
 						}))&			
-			"name=resignationDate" #> (SHtml.text(getDateAsString(user.resignationDate),
+			"name=resignationDate" #> (SHtml.text(getDateAsString(ac.resignationDate),
 						(date:String) => {
-							user.resignationDate(Project.strOnlyDateToDate(date))
+							ac.resignationDate(Project.strOnlyDateToDate(date))
 						}))&			
-		    "name=sex" #> (SHtml.select(sexs,Full(user.sex.is),user.sex(_)))&					    
-		    "name=civilstatus" #> (SHtml.select(civilstatuses,Full(user.civilstatus.is.toString),(v:String) => user.civilstatus(v.toInt)))&
-		    "name=unit" #> (SHtml.select(units,Full(user.unit.is.toString),(v:String) => user.unit(v.toLong)))&
-			"name=document" #> (SHtml.text(user.document.is, user.document(_)))&
-			"name=document_identity" #> (SHtml.text(user.document_identity.is, user.document_identity(_)))&
-			"name=document_company" #> (SHtml.text(user.document_company.is, user.document_company(_)))&
-			"name=document_council" #> (SHtml.text(user.document_council.is, user.document_council(_)))&
-		    "name=council" #> (SHtml.select(councils,Full(user.council.is.toString),(s:String) => user.council( s.toLong)))&
-		    "name=instructiondegree" #> (SHtml.select(degrees,Full(user.instructiondegree.is.toString),(s:String) => user.instructiondegree( s.toLong)))&
-		    "name=state_ref" #> (SHtml.text(user.stateRef.is.toString, (s:String) => user.stateRef(s.toLong)))&
-			"name=city_ref" #> (SHtml.text(user.cityRef.is.toString, (s:String) => user.cityRef(s.toLong)))&
-			"name=city" #> (SHtml.text(user.city.is, user.city(_)))&
-			"name=state" #> (SHtml.text(user.state.is, user.state(_)))&
-			"name=street" #> (SHtml.text(user.street.is, user.street(_))) &
-			"name=district" #> (SHtml.text(user.district.is, user.district(_)))&
-			"name=postal_code" #> (SHtml.text(user.postal_code.is, user.postal_code(_)))&		    
-		    "name=pointofreference" #> (SHtml.textarea(user.pointofreference.is, user.pointofreference(_))) &
-			"name=lng" #> (SHtml.text(user.lng.is, user.lng(_)))&
-			"name=lat" #> (SHtml.text(user.lat.is, user.lat(_)))&
-		    "name=group" #> (SHtml.select(groups,Full(user.group.is.toString),(v:String) => user.group(v.toLong)))&
-		    "name=status" #> (SHtml.select(status,Full(user.userStatus.is.toString),(v:String) => user.userStatus(v.toInt)))&
-			"name=number" #> (SHtml.text(user.number.is, user.number(_)))&		    
-			"name=complement" #> (SHtml.text(user.complement.is, user.complement(_)))&
-			"name=showInCalendar" #> (SHtml.checkbox(user.showInCalendar_?, user.showInCalendar_?(_)))&
-			"name=calendarFixed" #> (SHtml.checkbox(user.calendarFixed_?, user.calendarFixed_?(_)))&
-			"name=showInCalendarPub" #> (SHtml.checkbox(user.showInCalendarPub_?, user.showInCalendarPub_?(_)))&
-			"name=showInCommand" #> (SHtml.checkbox(user.showInCommand_?, user.showInCommand_?(_)))&
-			"name=showInCashier" #> (SHtml.checkbox(user.showInCashier_?, user.showInCashier_?(_)))&
-			"name=is_auxiliar" #> (SHtml.checkbox(user.is_auxiliar_?, user.is_auxiliar_?(_)))&
-			"name=groupPermission_text" #> (SHtml.text(user.groupPermission, (a:String) => {}))&
-			"#img_thumb" #> user.thumb&
-			"name=orderInCalendar" #> (SHtml.text(user.orderInCalendar.is.toString, (s:String) => user.orderInCalendar(s.toInt))) &
-			"name=parent" #> (SHtml.text(user.parent.is.toString, (p:String) => { 
-					if(p != "")
-						user.parent(p.toLong)
-					else
-						user.parent(0)
-
-			}))&
-			"name=parent_percent" #> (SHtml.text(user.parent_percent.is.toString, (v:String) =>{ if(v !=""){user.parent_percent(v.toDouble)};}))&
-			"name=cancreatecalendarevents" #> (SHtml.checkbox(user.canCreateCalendarEvents_?, user.canCreateCalendarEvents_?(_)))&
-			"name=candeletecalendarevents" #> (SHtml.checkbox(user.canDeleteCalendarEvents_?, user.canDeleteCalendarEvents_?(_)))&
-			"name=canmovecalendarevents" #> (SHtml.checkbox(user.canMoveCalendarEvents_?, user.canMoveCalendarEvents_?(_)))&
-			"name=caneditcalendarevents" #> (SHtml.checkbox(user.canEditCalendarEvents_?, user.canEditCalendarEvents_?(_)))&
-		    "name=email" #> (SHtml.text(user.email.is, user.email(_)))&
-			"name=name" #> (SHtml.text(user.name.is, user.name(_)))&
+		    "name=sex" #> (SHtml.select(sexs,Full(ac.sex.is),ac.sex(_)))&					    
+		    "name=civilstatus" #> (SHtml.select(civilstatuses,Full(ac.civilstatus.is.toString),(v:String) => ac.civilstatus(v.toInt)))&
+		    "name=unit" #> (SHtml.select(units,Full(ac.unit.is.toString),(v:String) => ac.unit(v.toLong)))&
+			"name=document" #> (SHtml.text(ac.document.is, ac.document(_)))&
+			"name=document_identity" #> (SHtml.text(ac.document_identity.is, ac.document_identity(_)))&
+			"name=document_company" #> (SHtml.text(ac.document_company.is, ac.document_company(_)))&
+			"name=document_council" #> (SHtml.text(ac.document_council.is, ac.document_council(_)))&
+		    "name=council" #> (SHtml.select(councils,Full(ac.council.is.toString),(s:String) => ac.council( s.toLong)))&
+		    "name=instructiondegree" #> (SHtml.select(degrees,Full(ac.instructiondegree.is.toString),(s:String) => ac.instructiondegree( s.toLong)))&
+		    "name=state_ref" #> (SHtml.text(ac.stateRef.is.toString, (s:String) => ac.stateRef(s.toLong)))&
+			"name=city_ref" #> (SHtml.text(ac.cityRef.is.toString, (s:String) => ac.cityRef(s.toLong)))&
+			"name=city" #> (SHtml.text(ac.city.is, ac.city(_)))&
+			"name=state" #> (SHtml.text(ac.state.is, ac.state(_)))&
+			"name=street" #> (SHtml.text(ac.street.is, ac.street(_))) &
+			"name=district" #> (SHtml.text(ac.district.is, ac.district(_)))&
+			"name=postal_code" #> (SHtml.text(ac.postal_code.is, ac.postal_code(_)))&		    
+		    "name=pointofreference" #> (SHtml.textarea(ac.pointofreference.is, ac.pointofreference(_))) &
+			"name=lng" #> (SHtml.text(ac.lng.is, ac.lng(_)))&
+			"name=lat" #> (SHtml.text(ac.lat.is, ac.lat(_)))&
+		    "name=group" #> (SHtml.select(groups,Full(ac.group.is.toString),(v:String) => ac.group(v.toLong)))&
+		    "name=status" #> (SHtml.select(status,Full(ac.userStatus.is.toString),(v:String) => ac.userStatus(v.toInt)))&
+			"name=number" #> (SHtml.text(ac.number.is, ac.number(_)))&		    
+			"name=complement" #> (SHtml.text(ac.complement.is, ac.complement(_)))&
+			"name=showInCalendar" #> (SHtml.checkbox(ac.showInCalendar_?, ac.showInCalendar_?(_)))&
+			"name=calendarFixed" #> (SHtml.checkbox(ac.calendarFixed_?, ac.calendarFixed_?(_)))&
+			"name=showInCalendarPub" #> (SHtml.checkbox(ac.showInCalendarPub_?, ac.showInCalendarPub_?(_)))&
+			"name=showInCommand" #> (SHtml.checkbox(ac.showInCommand_?, ac.showInCommand_?(_)))&
+			"name=showInCashier" #> (SHtml.checkbox(ac.showInCashier_?, ac.showInCashier_?(_)))&
+			"name=discountToCommission" #> (SHtml.checkbox(ac.discountToCommission_?, ac.discountToCommission_?(_)))&
+			"name=deletePayment" #> (SHtml.checkbox(ac.deletePayment_?, ac.deletePayment_?(_)))&
+			"name=is_auxiliar" #> (SHtml.checkbox(ac.is_auxiliar_?, ac.is_auxiliar_?(_)))&
+			"name=groupPermission_text" #> (SHtml.text(ac.groupPermission, (a:String) => {}))&
+			"#img_thumb" #> ac.thumb&
+			"name=orderInCalendar" #> (SHtml.text(ac.orderInCalendar.is.toString, (s:String) => ac.orderInCalendar(s.toInt)))&
+			"name=parent" #> (SHtml.text(ac.parent.is.toString, 
+				(f:String) => ac.parent(BusinessRulesUtil.snippetToLong(f))))&
+//			"name=parent_percent" #> (SHtml.text(ac.parent_percent.is.toString, (v:String) =>{ if(v !=""){user.parent_percent(BusinessRulesUtil.snippetToDouble(v))};}))&
+			"name=parent_percent" #> (SHtml.text(ac.parent_percent.is.toString, 
+				(f:String) => ac.parent_percent(BusinessRulesUtil.snippetToDouble(f))))&
+			"name=cancreatecalendarevents" #> (SHtml.checkbox(ac.canCreateCalendarEvents_?, ac.canCreateCalendarEvents_?(_)))&
+			"name=candeletecalendarevents" #> (SHtml.checkbox(ac.canDeleteCalendarEvents_?, ac.canDeleteCalendarEvents_?(_)))&
+			"name=canmovecalendarevents" #> (SHtml.checkbox(ac.canMoveCalendarEvents_?, ac.canMoveCalendarEvents_?(_)))&
+			"name=caneditcalendarevents" #> (SHtml.checkbox(ac.canEditCalendarEvents_?, ac.canEditCalendarEvents_?(_)))&
+		    "name=email" #> (SHtml.text(ac.email.is, ac.email(_)))&
+			"name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 			"name=process" #> (SHtml.hidden(process))
 		}catch {
 		    case e: NoSuchElementException => S.error("Profissional não existe!")

@@ -86,5 +86,38 @@ object NotificationApi extends RestHelper with ReportRest {
         }
       }
     }
+    case "notification" :: "messagesendcontacts" :: contacts_str :: message :: Nil JsonGet _ => {
+      try{
+          val contacts: List[Contact] = if (contacts_str == "all") {
+            Contact.findAllInCompany
+          } else if (contacts_str == "company") {
+            // findAll sem company mesmo pra nós da vilarika podermos testar 
+            // pra nós mesmos emails de clientes de outras empresas
+            Contact.findAll(By (Contact.id, AuthUtil.user.id.is))
+            //List(Contact.createInCompany.email(AuthUtil.user.email.is).name(AuthUtil.user.name.is))
+          } else {
+            contacts_str.split(",").map((id) => {
+              Contact.findByKey(id.toLong).get
+            }).toList
+          }
+          var i = 0
+          val message_obj = NotificationMessage.findByKey(message.toLong).get
+          contacts.foreach((ac) => {
+            if (ac.email.is != "" && i < 3) {
+              // descomentar para enviar só 3 emails
+              //i += 1;
+              var message_aux = Contact.replaceMessage (ac, message_obj.message.is)
+              val final_message = <span>{ Unparsed(message_aux) }</span>
+              var subject_aux = Contact.replaceMessage (ac, message_obj.subject.is)
+              EmailUtil.sendMailTo(ac.email.is, final_message,subject_aux, AuthUtil.company)
+            }
+          })
+          JInt(1)        
+      }catch{
+        case e:Exception =>{
+          JString(e.getMessage)
+        }
+      }
+    }
   }
 }

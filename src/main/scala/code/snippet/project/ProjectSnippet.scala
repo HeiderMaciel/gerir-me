@@ -39,6 +39,10 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
 
 
 	def list(xhtml: NodeSeq): NodeSeq = {
+			def opt : String = S.param ("opt") match {
+					case Full(p) => p
+					case _ => ""
+				}			
 			var id:String = ""
 		 	def delete(): Unit ={
 			  		try{
@@ -47,6 +51,7 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
 		  				S.notice("Projeto excluído com sucesso!")
 		  			}catch{
 		  				case e: NoSuchElementException => S.error("Projeto não existe!")
+		  				case e:Exception => S.error(e.getMessage)
 		  				case _ => S.error("Projeto não pode ser excluído!")
 		  			}
 			
@@ -56,7 +61,17 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"class" -> Text(ac.projectClassName),
 							"startat" -> Text(Project.dateToStrOrEmpty(ac.startAt.is)),
-							"actions" -> <a class="btn" href={"/project/event?id="+ac.id.is}>Editar</a>,
+							"actions" -> <a class="btn" href={
+								if (opt == "budget") {
+								  "/budget/budget?id="+ac.id.is+"&opt=budget"
+								  } else if (opt == "event") {
+								  "/project/event?id="+ac.id.is+"&opt=event"
+								  } else if (opt == "group") {
+								  "/project_group/group?id="+ac.id.is+"&opt=group"
+								  } else {
+								  "/project/event?id="+ac.id.is+"&opt=project"
+								  }
+								}>Editar</a>,
 							"delete" -> SHtml.submit("Excluir",delete,"class" -> "btn danger","data-confirm-message" -> {" excluir o projeto "+ac.name}),
 							"_id" -> SHtml.text(ac.id.is.toString, id = _),
 							"id" ->Text(ac.id.is.toString)
@@ -228,14 +243,37 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
   		}
   	}
 
-	def maintain = {
+	def maintain () = {
+println ("vaiiiiiii ================ attr " + S.attr("projectOpt"));
+		def opt : String = S.param ("projectOpt") match {
+				case Full(p) => p
+				case _ => ""
+			}			
+
 		try{
 			var ac:Project1 = getProject
-			def process(): JsCmd= {
+			def process(): JsCmd = {
 				try {
+println ("vaiiiii =============== tipo user " + S.params ("projectOpt"))
 					ac.company(AuthUtil.company)
+					ac.projectOpt (ac.prjOpt (opt))
 					ac.save
-				   	S.notice("Projeto/evento salvo com sucesso!")
+println ("vaiiiiii ========= opt " + opt )
+
+// rigel 02/11/2017 - retirar o apptype qdo o parm funcionar
+				   	if (opt == "budget" || AuthUtil.company.appType.isEsmile) {
+					   	S.notice("Orçamento salvo com sucesso!")
+				   		S.redirectTo("/budget/budget?id="+ac.id.is+"&opt=budget")
+				   	} else if (opt == "event") {
+					   	S.notice("Evento salvo com sucesso!")
+			   			S.redirectTo("/project/event?id="+ac.id.is+"&opt=event")
+				   	} else if (opt == "group" || AuthUtil.company.appType.isEgrex) {
+					   	S.notice("Grupo salvo com sucesso!")
+			   			S.redirectTo("/project_group/group?id="+ac.id.is+"&opt=group")
+			   		} else {
+					   	S.notice("Projeto salvo com sucesso!")
+			   			S.redirectTo("/project/event?id="+ac.id.is+"&opt=project")
+			   		}
 		   		}catch{
 					case (e:net.liftweb.http.ResponseShortcutException) =>{
 						throw e
@@ -269,13 +307,15 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
 		    "name=projectclass" #> (SHtml.select(classes,Full(ac.projectClass.is.toString),(s:String) => ac.projectClass( s.toLong)))&
 		    "name=projectstage" #> (SHtml.select(stages,Full(ac.projectStage.is.toString),(s:String) => ac.projectStage( s.toLong)))&
 		    "name=numberofguests" #> (SHtml.text(ac.numberofguests.is.toString, (s:String) => ac.numberofguests(s.toInt))) &
+			"name=projectOpt" #> (SHtml.text(ac.projectOpt.is.toString, (s:String) => {}))&
 			"name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&
 			"name=about" #> (SHtml.textarea(ac.about.is, ac.about(_)))&
 			"name=schedule" #> (SHtml.textarea(ac.schedule.is, ac.schedule(_)))&
 		    "name=unit" #> (SHtml.select(units,Full(ac.unit.is.toString),(v:String) => ac.unit(v.toLong)))&
 		    "name=costcenter" #> (SHtml.select(costcenters,Full(ac.costCenter.is.toString),(s:String) => ac.costCenter( s.toLong)))&
-			"name=bp_sponsor" #> (SHtml.text(ac.bp_sponsor.is.toString, (p:String) => ac.bp_sponsor(p.toLong)))&
-			"name=bp_manager" #> (SHtml.text(ac.bp_manager.is.toString, (p:String) => ac.bp_manager(p.toLong)))&
+			"name=bp_sponsor" #> (SHtml.text(ac.bp_sponsor.is.toString, (p:String) => ac.bp_sponsor(BusinessRulesUtil.snippetToLong(p))))&
+			"name=bp_manager" #> (SHtml.text(ac.bp_manager.is.toString, (p:String) => ac.bp_manager(BusinessRulesUtil.snippetToLong(p))))&
+			"name=manager" #> (SHtml.text(ac.bp_managerName, (a:String) => {}))&
 			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt))++SHtml.hidden(process))			
 		}catch {
 		    case e: NoSuchElementException => S.error("Projeto não existe!")

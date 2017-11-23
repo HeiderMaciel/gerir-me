@@ -33,11 +33,24 @@ $(function() {
       startDate: $("#history_startDate").val(),
       endDate: $("#history_endDate").val()
     };
+    var hasUnitModule = $('.has-unit-module').length > 0;
     var fields = [];
     //fields[0] = "date";
     fields[0] = "time";
     fields[1] = "none";
     fields[2] = "none";
+    if (!hasUnitModule) {
+      fields[5] = "none";
+    }
+    fields [6] = {
+      type : "format",
+      decode: function(name, row) {
+        trStatus = 6;
+        trStatus2 = 15; // nao tem
+        return trStatusdecode (name,row)
+      }
+    };
+/*
     fields[6] = {
       type: "format",
       decode: function(status, row) {
@@ -89,6 +102,7 @@ $(function() {
         return "<img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+"1.png' width='24'/>";
       }
     };
+*/
     fields[7] = "real";
     fields[12] = "none";
     fields[14] = "none";

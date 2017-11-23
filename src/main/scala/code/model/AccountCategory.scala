@@ -35,6 +35,41 @@ class AccountCategory extends Audited[AccountCategory] with PerCompany with IdPK
   object managerLevel extends MappedInt(this) {
     override def defaultValue = 0;
   }
+  object treeLevel extends MappedInt(this) with LifecycleCallbacks {
+      override def defaultValue = 0;
+      override def beforeSave() {
+          super.beforeSave;
+          this.set(_treeLevel)
+      }
+  }
+
+  object treeLevelstr extends MappedPoliteString(this,255) with LifecycleCallbacks {
+      override def defaultValue = "";
+      override def beforeSave() {
+          super.beforeSave;
+          this.set(_treeLevelstr)
+      }
+  }
+
+  object fullName extends MappedPoliteString(this,255) with LifecycleCallbacks {
+      override def beforeSave() {
+          super.beforeSave;
+          this.set(BusinessRulesUtil.toCamelCase(_fullName))
+      }
+  }
+  object parentAccount extends MappedLongForeignKey(this, AccountCategory) {
+    override def dbIndexed_? = true
+  }
+  object minTreeNode extends MappedLong(this) {
+    override def defaultValue = 1
+  }
+  object maxTreeNode extends MappedLong(this) {
+    override def defaultValue = 2
+  }
+  object balanceControl_? extends MappedBoolean(this) {
+    override def defaultValue = false
+    override def dbColumnName = "balanceControl"
+  }
 
   private def _treeLevel : Int = {
       var level = 0
@@ -64,22 +99,6 @@ class AccountCategory extends Audited[AccountCategory] with PerCompany with IdPK
       level
  }
 
-  object treeLevel extends MappedInt(this) with LifecycleCallbacks {
-      override def defaultValue = 0;
-      override def beforeSave() {
-          super.beforeSave;
-          this.set(_treeLevel)
-      }
-  }
-
-  object treeLevelstr extends MappedPoliteString(this,255) with LifecycleCallbacks {
-      override def defaultValue = "";
-      override def beforeSave() {
-          super.beforeSave;
-          this.set(_treeLevelstr)
-      }
-  }
-
   def nameStatus =  {
       if (this.isInactive) {
         // se inativo é pra deixar o nome mesmo
@@ -95,31 +114,22 @@ class AccountCategory extends Audited[AccountCategory] with PerCompany with IdPK
       }
       parrentNames+name.is
   }
-  
-  object fullName extends MappedPoliteString(this,255) with LifecycleCallbacks {
-      override def beforeSave() {
-          super.beforeSave;
-          this.set(BusinessRulesUtil.toCamelCase(_fullName))
-      }
-  }
-  object parentAccount extends MappedLongForeignKey(this, AccountCategory) {
-    override def dbIndexed_? = true
-  }
-  object minTreeNode extends MappedLong(this) {
-    override def defaultValue = 1
-  }
-  object maxTreeNode extends MappedLong(this) {
-    override def defaultValue = 2
-  }
-  object balanceControl_? extends MappedBoolean(this) {
-    override def defaultValue = false
-    override def dbColumnName = "balanceControl"
-  }
 
+  def hasParent = {
+    // diferente dos outros para pegar campos "cheios" 
+    // cuja referencia foi deletada
+      if (AccountCategory.count (
+        By (AccountCategory.id, this.parentAccount)) < 1) {
+        false
+      } else {
+        true
+      }        
+  }
+  
   def hasChilds = directyChilds.size > 0
 
   private def saveWithoutUpdateTree = {
-    if (this.testIfDuplicatedName (this.id, this.name)) {
+    if (this.testIfDuplicatedName (this.company, this.id, this.name)) {
       this.name.set (this.name + "  1")
     }
     super.save
@@ -159,9 +169,14 @@ class AccountCategory extends Audited[AccountCategory] with PerCompany with IdPK
     var i = 1;
     category.foreach((c)=>{
       println ("vaiii ================ category full name === " + c.fullName)
-      if (c.testIfDuplicatedName (c.id, c.name)) {
+      if (c.testIfDuplicatedName (c.company, c.id, c.name)) {
         c.name (c.name + " " + i.toString)
         i = i + 1;
+      }
+      if (!c.hasParent) {
+          // garante que nao tem pai para o caso de exclusao nas 
+          // migrações
+          c.parentAccount (0l)
       }
       c.obs (c.obs+" ")
       c.save        

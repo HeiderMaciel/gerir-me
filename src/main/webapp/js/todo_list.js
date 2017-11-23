@@ -1,6 +1,8 @@
 $(function() {
     $("#new_todo").click(function() {
       var agora = getHourBr(FactoryDate.byTime(Date.toDay().getTime()));
+      $("#cutomer_id_treatment").val("")
+      $("#cutomer_id_treatment").change();
       if (!$("#hour_start").val()) {
          $("#hour_start").val(agora);
       } else {

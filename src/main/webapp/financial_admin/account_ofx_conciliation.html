@@ -35,13 +35,24 @@
       }
     };
     fields[6] = "realNull";
-    //fields[7] = "intNull";
-    fields[7] = "date";
+    fields[7] = {
+      type : "format",
+      decode: function(name, row) {
+        var color = "red"
+        if (row[7] != row[0]) {
+        return "<p style='color:" + color + "'>" + 
+            dateDecode(row[7]) + "<p/>"
+        } else {
+          return dateDecode(row[7])
+        }
+      }
+    }
     fields[8] = {
       type : "format",
       decode: function(name, row) {
         var ret = "";
-        if (row[8] != "0") { // api.id
+        if ((row[8] != "0") /*api.id*/ &&  
+          (row[10] == "0") /*ap1.agregateid*/) { 
           if (row[11] != "0") { // ap1.conciliate
             ret = ""
           } else {
@@ -238,6 +249,7 @@
 
     var consolidateOne = function(id, idofx, aggreg) {
       var msg = "";
+      alert (aggreg)
       if (aggreg) {
         msg = "Tem certeza que deseja consolidar os lançamentos agregados?"
       } else {
@@ -327,6 +339,17 @@
                   <div class="input-prepend" style="float:left; padding-right:10px">
                     <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
                     <input type="text" class="input-small date to_day" id='end' name="end" placeholder="Fim"/>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="clearfix">
+            <label for="days">Dias</label>
+              <div class="input">
+                <div class="inline-inputs">
+                  <div style="float:left; padding-right:10px" class="input-prepend">
+                    <input type="text" class="input-mini local_storage" id='days' name="days" placeholder="dias" value="2"/>
+                    <span class="help-block">Intervalo de dias para verificar lançamentos</span>
                   </div>
                 </div>
               </div>

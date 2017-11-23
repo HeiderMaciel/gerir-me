@@ -263,6 +263,7 @@ class  ProductSnippet  extends BootstrapPaginatorSnippet[Product] with SnippetUp
 			"name=commission" #> (SHtml.text(ac.commission.is.toString, (v:String) => ac.commission(BigDecimal(v))))&
 			"name=currentStock" #> (<span>{ac.currentStock.toString}</span>)&
 			"name=is_bom" #> (SHtml.checkbox(ac.is_bom_?, ac.is_bom_?(_)))&
+			"name=is_bomaux" #> (SHtml.text(ac.is_bom_?.toString, (a:String) => {}))&
 			"name=allowSaleByUser" #> (SHtml.checkbox(ac.allowSaleByUser_?, ac.allowSaleByUser_?(_)))&
 			"name=is_discount" #> (SHtml.checkbox(ac.is_discount_?, ac.is_discount_?(_)))&
 			"name=is_for_sale" #> (SHtml.checkbox(ac.is_for_sale_?, ac.is_for_sale_?(_)))&

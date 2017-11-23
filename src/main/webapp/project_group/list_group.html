@@ -1,0 +1,79 @@
+<div id="main" class="lift:surround?with=event;at=content">
+	<div class="well">
+        <label for="btn"></label>
+		<a class="btn primary" href="/project_group/group?opt=group">Inserir novo</a>
+	</div>
+	<div class='filter block-message success"'>
+		<img style='float:left' src="/images/filter.png"/>
+		<span class="filter_form">
+		<script type="text/javascript">
+			$(function(){
+				$(".name_event").val(gup("name"));
+				$("#projectStage").projectStageField(true);
+				if(gup("all")){
+					$("#all").attr("checked", "checked");
+				}				
+			});
+		</script>			
+			<form action=''>
+				<input class="local_storage xlarge name_event" id="name_event" name="name" size="30" type="text" placeholder="Nome"/>
+			    <span class='label-inline'>
+			    	Tipo
+			    </span>
+			    <span class='select-inline'>
+			      <select size="30" id="projectStage" class='local_storage' name="projectStage">
+			      </select>					       						    
+			    </span>
+				<input class="all" id="all" name="all" type="checkbox"/> Mostrar todos?
+				<input class="btn success" type="submit" value="Buscar">
+			</form>
+		</span>		
+	</div>	
+<table class="bordered-table zebra-striped">
+		<thead>
+			<th>Id</th>
+			<th>Nome</th>
+			<th>Classe</th>
+			<th>Data Início</th>
+			<th>Ações</th>
+		</thead>
+		<tbody>
+			<tr class="lift:ProjectSnippet:list">
+				<td>
+					<f:id></f:id>
+				</td>
+				<td>
+					<f:name></f:name>
+				</td>
+				<td>
+					<f:class></f:class>
+				</td>
+				<td>
+					<f:startat></f:startat>
+				</td>
+				<td>
+					<form method="post">
+						<span>
+							<f:actions></f:actions>
+						</span>
+						<span>
+							<f:delete></f:delete>
+						</span>
+						<span style="display:none">
+							<f:_id></f:_id>
+						</span>
+					</form>
+				</td>				
+			</span>
+		</tbody>
+</table>
+<span class='lift:ProjectSnippet.paginate'>
+		<ul class='pagination'>
+			<li class="fisrt"><nav:first/></li>
+			<li class="prev"><nav:prev/></li>
+			<li class="next"><nav:zoomedpages/></li>
+			<li class="next"><nav:next/></li>
+			<li class="last"><nav:last/></li>
+		</ul>
+</span>
+</div>

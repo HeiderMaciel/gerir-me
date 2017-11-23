@@ -13,6 +13,8 @@ var Languages = {
 		"Comanda" : "Comanda",
 		"Eventos" : "Eventos",
 		"Evento" : "Evento",
+		"Orçamentos" : "Orçamentos",
+		"Orçamento" : "Orçamento",
 		"Classe Evento" : "Classe Evento",
 		"Questionários" : "Questionários",
 		"Questionário" : "Questionário"
@@ -38,6 +40,8 @@ var Languages = {
 		"Grupos" : "Especialidades",
 		"Serviços" : "Procedimentos",
 		"Serviço" : "Procedimento",
+		"Orçamentos" : "Planejamentos",
+		"Orçamento" : "Planejamento",
 		"Questionários" : "Prontuários",
 		"Questionário" : "Prontuário"
 	},

@@ -5,7 +5,7 @@ import net.liftweb._
 import mapper._
 import http._
 import actor._
-import model.{Company, CompanyUnit, Customer, ProductType, Account, User, Product, Activity, PermissionModule}
+import model.{Company, CompanyUnit, Customer, ProductType, Account, User, Product, Activity, PermissionModule, PaymentType}
 import code.util._
 import java.util.Random
 import java.util.Date
@@ -39,11 +39,13 @@ object UserCreateActors extends LiftActor {
       //"ebelle"
     } else if (company.appType == Company.SYSTEM_GERIRME) {
       PermissionModule.setModule (company, "BUDGET");
+      PermissionModule.setModule (company, "CRM");
       //"gerirme"
     } else if (company.appType == Company.SYSTEM_ESMILE) {
       PermissionModule.setModule (company, "QUIZ");
       PermissionModule.setModule (company, "BUDGET");
       PermissionModule.setModule (company, "ANVISA");
+      PermissionModule.setModule (company, "CRM");
 
       PermissionModule.resetModule (company, "FIDELITY");
       //"esmile"
@@ -51,6 +53,7 @@ object UserCreateActors extends LiftActor {
       PermissionModule.setModule (company, "QUIZ");
       PermissionModule.setModule (company, "OFFSALE");
       PermissionModule.setModule (company, "ANVISA");
+      PermissionModule.setModule (company, "BMINDEX");
 
       PermissionModule.resetModule (company, "FIDELITY");
       //"edoctus"
@@ -64,6 +67,7 @@ object UserCreateActors extends LiftActor {
     } else if (company.appType == Company.SYSTEM_EPHYSIO) {
       PermissionModule.setModule (company, "BPMONTHLY");
       PermissionModule.setModule (company, "QUIZ");
+      PermissionModule.setModule (company, "BMINDEX");
       //"ephysio"
     } else if (company.appType == Company.SYSTEM_EBELLEPET) {
       PermissionModule.setModule (company, "RELATION");
@@ -90,11 +94,11 @@ object UserCreateActors extends LiftActor {
 
   def _createCustomer(company:Company) = {
     var name = "";
-    if (Customer.testIfDuplicatedName (-1, 
+    if (Customer.testIfDuplicatedName (1, -1, 
       BusinessRulesUtil.clearString(company.name))) {
-      name = BusinessRulesUtil.clearString(company.name)
-    } else {
       name = BusinessRulesUtil.clearString(company.name) + " " + new Date()
+    } else {
+      name = BusinessRulesUtil.clearString(company.name)
     }
     Customer.create.name(name).phone(company.phone).email(company.email).is_person_?(false)
   }  
@@ -289,6 +293,12 @@ object FinancialSqlMigrate{
     val id = company.id.is
     DB.runUpdate(CREATE_PAYMENT_TYPES,id::Nil)
     DB.runUpdate(UPDATE_FACT_INFORMATIONS,id::id::id::id::Nil)
+    if (company.appType == Company.SYSTEM_EBELLE) {
+      //"ebelle"
+      PaymentType.resetPt (company, "%mensalidade%");
+    } else if (company.appType == Company.SYSTEM_GERIRME) {
+      //
+    } 
   }  
   
   val CLEAR_ACCOUNTS = "delete from accountcategory where company =?";
@@ -316,7 +326,8 @@ object FinancialSqlMigrate{
                                 percentdiscounttocommision, sumtoconference, customerusecredit,
                                 search_name, short_name, adduseraccounttodiscount, status,
                                 showasfinoptions, bpmonthly, offsale, individualReceive, creditcard,
-                                cheque, fidelity, allowcustomeraddusertodiscount
+                                cheque, fidelity, allowcustomeraddusertodiscount, autochangetopaid,
+                                usernotification
                                 FROM paymenttype where paymenttype.company=26;"""
 
   val UPDATE_FACT_INFORMATIONS = """update paymenttype 

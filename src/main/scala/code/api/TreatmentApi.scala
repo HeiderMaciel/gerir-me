@@ -162,7 +162,8 @@ object TreatmentApi extends RestHelper with net.liftweb.common.Logger {
 				JsArray(a.map((t)=>{
 					try{
 						val tempt = TreatmentService.factoryTreatment("", t.customer, t.user,t.start.split(" ")(0), t.start.split(" ")(1), t.start.split(" ")(1),"0")
-						var tempd = TreatmentService.addDetailTreatmentWithoutValidate(tempt.get.id, t.service.toLong, 0l, 0l, 0l)
+						var tempd = TreatmentService.addDetailTreatmentWithoutValidate(tempt.get.id, t.service.toLong, 0l /* auxiliar */,
+						0l /* animal */, "" /* tooth */, 0l /*offsale*/)
 						tempt.get.end(Project.strToDate(t.end)).obs(t.obs).insecureSave
 						if (t.amount != "" && t.amount != "1") {
 							tempd.get.amount(t.amount.toDouble).price(tempd.get.price*t.amount.toDouble).save
@@ -203,15 +204,17 @@ object TreatmentDetailsApi extends RestHelper {
 				val activityCode = S.param("activity") openOr "0"
 				val auxiliar = S.param("auxiliar") openOr "0"
 				val animal = S.param("animal") openOr "0"
+				val tooth = S.param("tooth") openOr ""
 				val offsale = S.param("offsale") openOr "0"
 				val id = S.param("id") openOr "0"
 				val validate = S.param("validate") openOr "false"
-				if(validate.toBoolean)
+				if(validate.toBoolean) {
 					TreatmentService.addDetailTreatment(id.toLong,activityCode.toLong, 
-						auxiliar.toLong, animal.toLong, offsale.toLong)
-				else
+						auxiliar.toLong, animal.toLong, tooth, offsale.toLong)
+				} else {
 					TreatmentService.addDetailTreatmentWithoutValidate(id.toLong,
-						activityCode.toLong, auxiliar.toLong, animal.toLong, offsale.toLong)
+						activityCode.toLong, auxiliar.toLong, animal.toLong, tooth, offsale.toLong)
+				}
 				JInt(1)
 			}catch{
 				case e:Exception => {
@@ -244,6 +247,7 @@ object TreatmentDetailsApi extends RestHelper {
 						("auxiliarId",td.auxiliar.is),
 						("animal",td.animalShortName),
 						("animalId",td.animal),
+						("tooth",td.tooth),
 						("offsale",td.offsaleShortName),
 						("unit",td.unitShortName),
 						("activity",td.nameActivity),
@@ -251,7 +255,8 @@ object TreatmentDetailsApi extends RestHelper {
 						("start",Project.dateToStrJs(treatment.start.is)),
 						("end",Project.dateToStrJs(treatment.end.is)),
 						("status",treatment.status.is.toString),
-						("id",td.id.is)
+						("id",td.id.is),
+						("auditstr",td.auditStr)
 					)
 	}	
 }

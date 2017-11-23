@@ -87,21 +87,52 @@ object AccountApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					(/*By(AccountCategory.parent_?,false),*/
 						OrderBy(AccountCategory.maxTreeNode, Descending),
 						OrderBy(AccountCategory.orderInReport, Ascending))
-					.map((c) => JsObj(
-															("name",c._treeLevelstr + c.name.is),
-															("obs",c.obs.is),
-															("color",c.color.is),
-															("id",c.id.is),
-															("isparent",c.parent_?.is),
-															("typeMovement",c.typeMovement.is),
-															("userAssociated", c.userAssociated.is)
-														)
-							)
+						.map((c) => {
+							var tpm = if (c.typeMovement.is == 0) {
+								" +"
+							} else if (c.typeMovement.is == 1) {
+								" -"
+							} else {
+								" t"
+							}
+							if (c.parent_?) {
+								tpm = tpm + " (t)"
+							}
+							JsObj(
+							("name",c._treeLevelstr + c.name.is + tpm),
+							("obs",c.obs.is),
+							("color",c.color.is),
+							("id",c.id.is),
+							("isparent",c.parent_?.is),
+							("typeMovement",c.typeMovement.is),
+							("userAssociated", c.userAssociated.is))
+						}
+					)
 				)
 			}
 
 			case "account" :: "category" :: "list" :: "all" :: Nil JsonGet _ => {
-				JsArray(AccountCategory.findAllInCompany(OrderBy(AccountCategory.name, Ascending)).map((c) => JsObj(("name",c.name.is),("obs",c.obs.is), ("color",c.color.is),("id",c.id.is), ("typeMovement",c.typeMovement.is), ("userAssociated", c.userAssociated.is))))
+				JsArray(AccountCategory.findAllInCompany(OrderBy(AccountCategory.name, Ascending)).map((c) => {
+							var tpm = if (c.typeMovement.is == 0) {
+								" +"
+							} else if (c.typeMovement.is == 1) {
+								" -"
+							} else {
+								" t"
+							}
+							if (c.parent_?) {
+								tpm = tpm + " (t)"
+							}
+						JsObj(
+							("name",c.name.is + tpm),
+							("obs",c.obs.is), 
+							("color",c.color.is),
+							("id",c.id.is), 
+							("typeMovement",c.typeMovement.is), 
+							("userAssociated", c.userAssociated.is)
+						)
+					}
+					))
 			}
 
 			case "account"  :: "list" :: Nil JsonGet _ => {

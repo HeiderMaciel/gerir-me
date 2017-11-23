@@ -172,8 +172,15 @@ object Reports3 extends RestHelper with ReportRest with net.liftweb.common.Logge
 
 		serve {
 			case "report" :: "customer_list" :: Nil Post _=> {
+				val strAux = if (PermissionModule.anvisa_?) {
+						" bp.barcode  || ' ' || "
+					} else {
+						""
+					}
+
 				// MOSTRA OS RELACIONAMENTOS SÓ PARA EGREX
-				val SQL = """select bp.id, bp.name, trim (mobile_phone || ' ' || phone || ' ' || email_alternative), email, 
+				val SQL = """select bp.id, """ + 
+				strAux + """ bp.name, trim (mobile_phone || ' ' || phone || ' ' || email_alternative), email, 
 				cs.name,
 				trunc ((((DATE_PART('year', now()) - DATE_PART('year', birthday)) * 12) 
 					+ (DATE_PART('month', date (now())) - DATE_PART('month', birthday)))/12) as anos,

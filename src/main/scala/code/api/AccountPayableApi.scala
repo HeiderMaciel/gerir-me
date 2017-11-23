@@ -142,57 +142,6 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 			case "accountpayable" :: "conciliateofx" :: id :: idofx :: aggreg :: Nil JsonGet _ => {
 				try{
 					AccountPayable.conCilSol (id,idofx,(aggreg == "true"), 1)
-/*					val apofx = AccountPayable.findByKey(idofx.toLong).get
-					var aplist = if (aggreg == "false") {
-						AccountPayable.findAllInCompany(
-							By(AccountPayable.id, id.toLong))
-					} else {
-						AccountPayable.findAllInCompany(
-							By(AccountPayable.aggregateId, id.toLong))
-					}
-					aplist.map((ap) => {
-						if (!ap.paid_?) {
-							ap.paid_? (true);
-						}
-						// no ofx duedate sempre = data pagamento
-						// o arq é importado sem pagto para não alterar saldo 
-						// por isso usa duedate
-						ap.paymentDate (apofx.dueDate)
-						ap.account (apofx.account)
-						var compl = ap.complement
-						ap.complement (compl + " " + apofx.obs)
-						ap.makeAsConciliated
-					});
-					val ap = AccountPayable.findByKey(id.toLong).get
-					var dif = apofx.value - ap.aggregateValue
-					val auxTm = if (apofx.value > ap.aggregateValue) {
-							apofx.typeMovement
-						} else if (apofx.typeMovement == AccountPayable.IN) {
-							AccountPayable.OUT
-						} else {
-							AccountPayable.IN
-						}
-
-					if (dif != 0.0) {
-						println ("vaiii ============= complementando agregado " + dif)
-						if (dif < 0.0) {
-							dif = dif * -1
-						}
-						val ap1 = AccountPayable.createInCompany
-						.account (apofx.account) // ofx mesmo
-						.paymentDate (apofx.dueDate)
-						.typeMovement(apofx.typeMovement) // ofx mesmo
-						.category (ap.category)
-						.dueDate (ap.dueDate)
-						.value (dif)
-						.paid_? (true)
-						.complement ((ap.complement + " " + apofx.obs).trim)
-						.obs ("====complemento agregado " + ap.obs)
-						ap1.save
-						ap1.makeAsConciliated
-					}
-					apofx.delete_!
-*/
 					JInt(1)
 				} catch {
 					case e:Exception => JString(e.getMessage)
@@ -214,31 +163,6 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 			case "accountpayable" :: "consolidateofx" :: id :: idofx :: aggreg :: Nil JsonGet _ => {
 				try{
 					AccountPayable.conCilSol (id,idofx,(aggreg == "true"), 2);
-/*
-					val apofx = AccountPayable.findByKey(idofx.toLong).get
-					var aplist = if (aggreg == "false") {
-						AccountPayable.findAllInCompany(
-							By(AccountPayable.id, id.toLong))
-					} else {
-						AccountPayable.findAllInCompany(
-							By(AccountPayable.aggregateId, id.toLong))
-					}
-					aplist.map((ap) => {
-						if (!ap.paid_?) {
-							ap.paid_? (true);
-						}
-						// no ofx duedate sempre = data pagamento
-						// o arq é importado sem pagto para não alterar saldo 
-						// por isso usa duedate
-						ap.paymentDate (apofx.dueDate)
-						ap.account (apofx.account)
-						var compl = ap.complement
-						ap.complement (compl + " " + apofx.obs)
-						ap.makeAsConsolidated
-					})
-
-					apofx.delete_!
-*/
 					JInt(1)
 				} catch {
 					case e:Exception => JString(e.getMessage)
@@ -656,6 +580,8 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 											("value",c.value.is.toFloat),
 											("aggregateValue",c.aggregateValue.is.toFloat),
 											("aggregateId",c.aggregateId.is),
+											("aggregateLabel",c.aggregateLabel.is),
+											("conciliate",c.conciliate.is),
 											("unitvalue",c.unitvalue.is.toFloat),
 											("amount",c.amount.is.toFloat),
 											("parcelnum",c.parcelNum.is.toInt),

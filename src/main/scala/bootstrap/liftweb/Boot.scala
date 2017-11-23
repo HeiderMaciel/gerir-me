@@ -68,7 +68,8 @@ class Boot {
     Schemifier.schemify(true, Schemifier.infoF _, JobRequisition, Quiz, QuizSection, QuizQuestion, QuizDomain, QuizDomainItem,
       QuizApplying, QuizAnswer, UserCompanyUnit, AccountCompanyUnit, Breed, Species)
 
-    Schemifier.schemify(true, Schemifier.infoF _, ProjectStage, ProjectType, ProjectClass, Project1, StakeHolderType, StakeHolder, Contact)
+    Schemifier.schemify(true, Schemifier.infoF _, ProjectStage, ProjectType, ProjectClass, Project1, StakeHolderType, StakeHolder, 
+      ProjectTreatment, ProjectSection, Contact)
   
     Schemifier.schemify(true, Schemifier.infoF _, RelationshipType, Relationship, BpRelationship, InstructionDegree, Occupation,
       Invoice, InvoiceTreatment)
@@ -369,6 +370,14 @@ class Boot {
             }
         }
     }
+    def budgetMenuLabel = {
+      if(AuthUtil.? && (AuthUtil.company.appType.isEsmile||AuthUtil.company.appType.isEdoctus||
+          AuthUtil.company.appType.isEphysio)){
+          "Planejamentos"
+        }else{
+          "Orçamentos"
+        }
+    }
     // Build SiteMap
     def sitemap = SiteMap(
         //Menu.i("Home") / "index",
@@ -420,7 +429,11 @@ class Boot {
         Menu(Loc("Faixa Etária", Link(List("agerange"), true, "/agerange/list_agerange"),"Faixa Etária",customerAccess,Hidden)),
         Menu(Loc("Ícone", Link(List("mapicon"), true, "/mapicon/list_mapicon"),"Ícone",customerAccess,Hidden)),
 
+        Menu(Loc("Orçamentos", Link(List("budget"), true, "/budget/list_budget"),budgetMenuLabel,financialAccess,Hidden)),
+        // peopleManagerAccess - lider na cczs
         Menu(Loc("Projetos", Link(List("project"), true, "/project/list_event"),projectMenuLabel,peopleManagerAccess,Hidden)),
+
+        Menu(Loc("Grupos", Link(List("project_group"), true, "/project_group/list_group"),projectMenuLabel,peopleManagerAccess,Hidden)),
 
         Menu(Loc("Relacionamentos", Link(List("bprelationship"), true, "/bprelationship/list_bprelationship"),"Relacionamentos",customerAccess,Hidden)),
         Menu(Loc("Questionários", Link(List("quiz"), true, "/quiz/list"),quizMenuLabel,customerAccess,Hidden)),
@@ -456,7 +469,7 @@ class Boot {
 //        Menu(Loc("/command/user_command", Link(List("command"), true, "/command/user_command"),"Comanda",simpleUserCommand)),
 //        Menu(Loc("/command_full/user_command_full", Link(List("command_full"), true, "/command_full/user_command_full"),"Co1",commandAccess,Hidden)),
         Menu(Loc("Mapa", Link(List("map"), true, "/map"),"Mapa",mapAccess, Hidden)),
-        Menu(Loc("Formas de Pagamento", Link(List("company"), true, "/company/payment_forms"),"",financialAccess,Hidden)),
+        Menu(Loc("Formas de Pagamento", Link(List("company"), true, "/financial_admin/payment_forms"),"",financialManagerAccess,Hidden)),
         Menu(Loc("busy_manager", Link(List("busy_manager"), true, "/activity/busy_manager"),"busy_manager",crudeAccess,Hidden)),
         // antes T estava loggedin - os prof acessavam
         Menu(Loc("treatments_conferenc", Link(List("treatments_conferenc"), true, "/treatments_conferenc"),"treatments_conferenc",customerAccess,Hidden)),

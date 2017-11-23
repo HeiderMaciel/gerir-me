@@ -16,12 +16,15 @@ object Project{
 
 
 
+  val date_format_year = new java.text.SimpleDateFormat ("yyyy")
 	val date_format_hour = new java.text.SimpleDateFormat ("HH:mm")
 	val date_format_hourss = new java.text.SimpleDateFormat ("HH:mm:ss")
 	var date_format = new java.text.SimpleDateFormat ("dd/MM/yyyy")
+  var dateTime_format = new java.text.SimpleDateFormat ("dd/MM/yyyy HH:mm:ss")
 	var date_format_js = new java.text.SimpleDateFormat ("yyyy-MM-dd HH:mm:ss")
 	var date_format_db = new java.text.SimpleDateFormat ("yyyy-MM-dd")
 	val date_format_day_and_month = new java.text.SimpleDateFormat ("dd/MM")
+  val date_format_month_and_year = new java.text.SimpleDateFormat ("MM/YYYY")
 	lazy val isLinuxServer = sys.props("os.name") == "Linux"
 
   lazy val isLocalHost = if (S.hostName.contains ("localhost") || 
@@ -288,6 +291,18 @@ object Project{
 	def dateToDb(date:Date) = {
 		date_format_db.format(date)
 	}
+
+  def dateTimeToStr(date:Date) = {
+    if(date != null)
+      dateTime_format.format(date)
+    else
+      ""
+  }
+
+  def dateToYear(date:Date) = {
+    date_format_year.format(date)
+  }
+
 	def dateToStr(date:Date) = {
 		if(date != null)
 			date_format.format(date)
@@ -307,6 +322,10 @@ object Project{
 	def dateToMonthAndDay(date:Date) = {
 		date_format_day_and_month.format(date)
 	}
+
+  def dateToMonthAndYear(date:Date) = {
+    date_format_month_and_year.format(date)
+  }
 
 	def strToDateOrToday(date:String) = date match {
 				case (s:String) if(s != "") => Project.strOnlyDateToDate(s)
@@ -386,6 +405,22 @@ object BusinessRulesUtil{
       0
     }
   }
+  
+  def snippetToLong (value:String) : Long = {
+    if(value.trim != "") {
+      var aux = "";
+      aux = value.trim
+      aux = aux.replaceAll(" ", "");
+      aux = aux.replaceAll(",", "");
+      // nao sei pq isso nao funciona
+      // testar println antes e depois
+      //aux = aux.replaceAll(".", "");
+      aux.toLong
+    } else {
+      0
+    }
+  }
+
 	def toCamelCase(value:String):String = {
 		if (value != null && value.trim() != EMPTY){
 			val val_camel = value split(" ") filter( _!="" ) map(_.toLowerCase) map( (current:String) => {  if( !notCamelize.contains(current)) { current.capitalize }else{ current } } ) reduceLeft(_+" "+_)

@@ -5,12 +5,17 @@
   <script src="/js/default/date.js"></script>
   <script src="/js/jquery.tablesorter.pager.js"></script>
   <script type="text/javascript">
+  var customers = [];
   $(function(){
+    $("#send_message").notificationField(true);
     var count = 0;
     var fields = [];
     fields[0] = {
       type : "format",
       decode: function(name, row) {
+        // para envio de email deve aparecer em um decode
+        // tem exemplos de receber um id como parm ai usa push(id) como no birhtdays
+        customers.push(row[0]); 
         return "<input type='checkbox' class='contact' value='" + 
             row[0] + "'/>"
       }
@@ -136,6 +141,51 @@
         return $('.contact').removeAttr("checked");
       }
     });
+    $("#send_notifications").click(function(){
+      var message = $("#send_message").val();
+      if (!message) {
+        alert ("É preciso selecionar uma mensagem")
+        return
+      }
+      if(confirm("Deseja enviar esta mensagem aos contatos?")){
+        //alert (customers.join(","))
+        var c1 = (customers.length / 100)
+        //alert (customers.length + "  " +c1)
+        for (i = 0; i < c1; i++) {
+          //alert ("vaiii  i " + i)
+          var cust = [];
+          for (y = 0; y < 100; y++) {
+            //alert ("vaiii  y " + y)
+            if ((i*100)+y < customers.length) {
+              cust.push (customers[(i*100)+y])
+            }
+          }
+          //alert (cust.join(","))
+          $.get("/notification/messagesendcontacts/"+cust.join(",")+"/"+message,function(r){
+            if(r === '1'){
+              //alert("Enviado com sucesso!");
+            }else {
+              alert(r);
+            }
+          }).error(function(){
+            alert("Erro ao enviar!")
+          }); 
+        }
+
+/*
+          $.get("/notification/messagesendcontacts/"+customers.join(",")+"/"+message,function(r){
+            if(r === '1'){
+              alert("Enviado com sucesso!");
+            }else {
+              alert(r);
+            }
+          }).error(function(){
+            alert("Erro ao enviar!")
+          }); 
+*/
+        
+      }
+    });
     $("#send").click(request);
     //request();
   });  
@@ -175,7 +225,26 @@
           </div>
         </div>
         <div class="span8">
+          <fieldset>
+          <legend>Envio de E-mail</legend>
           <div class="clearfix">
+            <label for="">Notificação</label>
+             <div class="input">
+                <select name="send_message" id="send_message"></select>
+                <span class="help-block">Selecione uma mensagem para enviar aos <span data-i18n='Clientes'></span></span>
+             </div>
+          </div>
+          <div class="clearfix">
+            <label for=""></label>
+             <div class="input">
+                <a type="button" id="send_notifications" class="btn primary">
+                  <img width="16px" src="/images/mail.png"/>
+                  Enviar
+                </a>
+             </div>
+          </div>
+        </fieldset>
+        <div class="clearfix">
             <label for="conciliated">Conciliado / Diferença</label>
             <div class="input">
               <div class="inline-inputs">
@@ -219,13 +288,13 @@
   <table id="grid" class="bordered-table zebra-striped">
       <thead>
         <th><input type="checkbox" id='check_all'/></th>
-        <th>Vencimento</th>
-        <th>Pagamento</th>
-        <th>Categoria</th>
-        <th>Parceiro</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Fone</th>
+        <th>Nascimento</th>
+        <th>Data1</th>
         <th>Obs</th>
-        <th>Tipo</th>
-        <th>Entrada</th>
+        <th>Parceiro</th>
       </thead>
       <tbody>
       </tbody>

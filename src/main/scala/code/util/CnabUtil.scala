@@ -64,7 +64,7 @@ object CnabUtil extends net.liftweb.common.Logger {
           str1 = "Boleto " + d.monthlyId + " pagamento confirmado " + co.name + " " + d.paidValue;
           LogObj.wLogObj(AuthUtil.company.id, str1, "importação Cnab 240")
         } else {
-          str1 = "Boleto " + d.monthlyId + " " + co.name + " JÁ ESTAVA MARACDO como pago " + d.paidValue;
+          str1 = "Boleto " + d.monthlyId + " " + co.name + " JÁ ESTAVA MARCADO como pago " + d.paidValue;
           println ("vaii =========== boleto " + str1)
           LogObj.wLogObj(AuthUtil.company.id, str1, "importação Cnab 240")
         }

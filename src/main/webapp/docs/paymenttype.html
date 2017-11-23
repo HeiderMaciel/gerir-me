@@ -7,6 +7,16 @@
         <font face="verdana,geneva">Comissão</font>
     </h1>
     <h1>
+        <font face="verdana,geneva">Nro de Dias para o Pagamento da Comissão</font>
+    </h1>
+    <p>
+      Este campo só tem efeito se a opção paga comissão a vista estiver desmarcada, e esta quantidade de dias é a partir da data projetada para o pagamento. Assim se este campo for preenchido com 30 e o Número de dias para faturamento na aba de <b>Faturamento</b>, também for preenchido com 30, a comissão será disponibilizada para o profissional com 60 dias.
+    </p>
+    <p>
+      Manter este campo com valor 0 (zero) é a mesma coisa que marcar a opção paga comissão a vista.
+
+      Manter este campo com valor 1 (um) e desmarcar a opção paga comissão a vista, faz com que a data de disponibilização da comissão seja a data de vencimento do pagamento, exemplo da data do cheque ou data de vencimento do cartão.
+    <h1>
         <font face="verdana,geneva">Percentual de Desconto</font>
     </h1>
     <p>
@@ -27,7 +37,13 @@
         <font face="verdana,geneva">Vale profissional</font>
     </h1>
     <p>
-      Este comportamento especial faz com que o <span class='system-name'></span> verifique se o cliente selecionado na venda é um profissional da casa. Na aba de faturamento a categoria padrão de faturamento deve ser uma categoria usada como vale para profissionais, para que ela seja gerada no financeiro no fechamento do caixa
+      Este comportamento especial faz com que o <span class='system-name'></span> permita que o "pagamento" seja cobrado posteriormente do profissional. Se o parâmetro <u>Permite cliente</u> estiver marcado, um cliente comum pode ser agendado e o vale será gerado para o profissional executor, caso o parâmetro esteja desmarcado o <span class='system-name'></span> exige que o cliente seja um profissional e o vale será gerado não para o executor, mas para o "profissional cliente". 
+    </p>
+    <p>
+      Na aba de faturamento a <u>Categoria padrão de faturamento</u> deve ser uma categoria usada como vale para profissionais, para que ela seja gerada no financeiro <b>no fechamento do caixa</b>.
+    </p>
+    <p>
+      Normalmente esta forma de pagamento não é faturada a vista, e é marcada como <u>Aceita parcelamento</u>, para que o desconto do profissional possa ser projetado para uma data específica e/ou parcelado.
     </p>
   </section>
   <section id="invoicing">

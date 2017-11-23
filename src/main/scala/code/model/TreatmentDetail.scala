@@ -66,6 +66,7 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
             case Full(t)  if(t.isPaid)=> { throw new RuntimeException(" Não é permitido excluir atendimento pago!") }
             case _ => 
         } 
+        // deletar TdEpet tdEdoctus
         super.delete_!
     }
 
@@ -140,6 +141,14 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
             }
         } else { 
             0
+        }
+    }
+
+    def tooth:String = {
+        if (AuthUtil.company.appType.isEsmile) {
+            getTdEdoctus.tooth
+        } else { 
+            ""
         }
     }
 

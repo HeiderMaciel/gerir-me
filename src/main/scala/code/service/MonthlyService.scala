@@ -18,6 +18,7 @@ object MonthlyService {
 	val MONTHLY_ACTIVITY_TYPE = 983
 	private def findMonthlyNotPaid(customer:Customer, company:Company, date:Date) = {
 		Treatment.findAll(
+			By(Treatment.company, 1),
 			By(Treatment.customer, customer),
 			NotBy(Treatment.status, Treatment.Paid),
 			NotBy(Treatment.status, Treatment.Deleted),
@@ -86,7 +87,8 @@ object MonthlyService {
 	}
 
 	def generateMonthlyAllCompanies(date:Date = new Date()) = {
-		Company.findAll.map((company:Company)=>{
+		Company.findAll(By (Company.status, 1),
+			OrderBy (Company.id, Ascending)).map((company:Company)=>{
 			company.partner.obj match {
 				case Full(customer)=>{
 					generateMonthly(customer, company, date)

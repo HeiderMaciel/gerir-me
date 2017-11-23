@@ -1,4 +1,55 @@
 // rigel
+
+var trStatus = 0;
+var trStatus2 = 0;
+var trStatusdecode = function(name, row, showhint){
+// duplicado do treatments_conference.js
+  var status = row[trStatus]
+  var statstr = '' 
+  var title = ''
+  if (status == '0') {
+    statstr = 'open'
+    title ='agendado'
+  } else if (status == '1') {
+    statstr = 'missed'
+    title ='faltou'
+  } else if (status == '2') {
+    statstr = 'Arrived'
+    title ='chegou'
+  } else if (status == '3') {
+    statstr = 'Ready'
+    title ='atendido'
+  } else if (status == '4') {
+    if (row[trStatus2] == '3') {
+      statstr = 'ready_paid'
+      title ='atendido / pago'
+    } else {
+      statstr = 'paid'
+      title ='pago'
+    }
+  } else if (status == '5') {
+    statstr = 'Deleted'
+    title ='excluído'
+  } else if (status == '6') {
+    statstr = 'Confirmed'
+    title ='confirmado1'
+  } else if (status == '7') {
+    statstr = 'PreOpen'
+    title ='pré agendado'
+  } else if (status == '8') {
+    statstr = 'ReSchedule'
+    title ='desmarcou'
+  } else if (status == '9') {
+    statstr = 'Budget'
+    title ='orçamento'
+  }
+  if (showhint) {
+    return "<p>" + title + "</p><img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+"1.png' width='24'/>"
+  } else {
+    return "<img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+"1.png' width='24'/>"
+  }
+}
+
 var ageDecode = function (value) {
   var res = value;
   if (res.indexOf("0 years") == 0) {
@@ -22,6 +73,15 @@ var ageDecode = function (value) {
 
 var dateDecode = function (value) {
   return !value || value == "" ? "" : getDateBr(FactoryDate.byTime(value));
+}
+
+var timeDecode = function (value) {
+  return !value ? "" : getHourBr(FactoryDate.byTime(value));
+}
+
+var realDecode = function (value) {
+  var ret = (parseFloat(value).formatMoney());
+  return ret;
 }
 
 /**
@@ -53,6 +113,16 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
   if (!grid_selector) {
     grid_selector = "#grid";
   }
+
+  var textNullDecode = function (value) {
+    if (!value || value == 'null') {
+      ret = ""
+    } else {
+      ret = value || "";
+    } 
+    return ret;
+  };
+
   var textDecode = function (value) {
 
     return value || "";
@@ -60,10 +130,6 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
   var integerDecode = function (value) {
     return window.parseInt(value);
   };
-  var realDecode = function (value) {
-    var ret = (parseFloat(value).formatMoney());
-    return ret;
-  }
 
   var integerNullDecode = function (value) {
     var ret = "";
@@ -86,9 +152,6 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
     return ret;
   }
 
-  var timeDecode = function (value) {
-    return !value ? "" : getHourBr(FactoryDate.byTime(value));
-  }
   var booleanDecode = function (value) {
     var _ = function () {
       return value == "true" ? "good.png" : "bad.png"
@@ -136,6 +199,8 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
       return realDecode(value);
     case "realNull":
       return realNullDecode(value);
+    case "textNull":
+      return textNullDecode(value);
     case "approved":
       return approvedDecode(value);
     default:

@@ -27,7 +27,9 @@ with CreatedUpdatedBy with NameSearchble[PaymentType] with ActiveInactivable[Pay
     override def dbColumnName = "sumtoconference"
     override def defaultValue = false
   }  
-  object numDays extends MappedInt(this) // for commission
+  object numDays extends MappedInt(this) { // for commission
+    override def defaultValue = 1;
+  }  
 
   object order extends MappedInt(this){
     override def defaultValue = 1000
@@ -170,6 +172,7 @@ with CreatedUpdatedBy with NameSearchble[PaymentType] with ActiveInactivable[Pay
   override def save() = {
     if ((addUserAccountToDiscount_?) && (receiveAtSight_?)) {
       // println ("************************* Comportamento especial <vale profissional> não pode ser faturado a vista")
+      // para permitir parcelamento e alteracao da data de desconto
       throw new RuntimeException("Comportamento especial <vale profissional> não pode ser faturado a vista")
     }
     super.save
@@ -193,4 +196,11 @@ object PaymentType extends PaymentType with LongKeyedMapperPerCompany[PaymentTyp
            case a:Any => a.toString.toDouble
            case _ => 0.toDouble
     }
+ 
+    def resetPt (company:Company, nameLike:String) = {
+      val pm = PaymentType.findAll (By(PaymentType.company, company),
+        BySql(" lower (name) like ? ",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"),nameLike))
+      pm(0).status (0).save
+    }
+
  }

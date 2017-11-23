@@ -95,7 +95,10 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
     // Calcula-se o número de dias corridos entre a 
     // data base (“Fixada” em 07/10/1997) e a do vencimento desejado
     val   firstdate  = new DateTime("1997-10-07").toDateMidnight()
-    val   seconddate = new DateTime(Project.dtformat(dateExpiration,"yyyy-MM-dd")).toDateMidnight() 
+    // rigel 11/10/2017 - concatenei o  + "T03:00:00" após o dtformat
+    // pq estava dando este erro na semana que atecedeu p horário de verão
+    // Cannot parse "2017-10-15": Illegal instant due to time zone offset transition (America/Sao_Paulo)
+    val   seconddate = new DateTime(Project.dtformat(dateExpiration,"yyyy-MM-dd") + "T03:00:00").toDateMidnight() 
     val   factor = Days.daysBetween(firstdate, seconddate).getDays();
     val   valor = BusinessRulesUtil.clearString (("%.2f".format (value.toFloat)))  
     

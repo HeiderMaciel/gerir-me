@@ -1,0 +1,173 @@
+<div id="main" class="lift:surround?with=calendar;at=content">
+  <link rel="stylesheet" type="text/css" href="/select2/select2.css" />
+  <script src="/select2/select2.js"></script><script src="/mselect2/select2_locale_pt-BR.js"></script>
+  <script src="/js/reports.js"></script>
+  <script src="/js/jquery.tablesorter.pager.js"></script>
+  <script type="text/javascript">
+    var customers = [];
+    $(function(){
+      $("#send_message").notificationField(true);
+      $("#month").monthField(false,true);
+      $("#start").val("1");
+      $("#end").val(new Date().getDate());    
+      var hasUnitModule = $('.has-unit-module').length > 0;
+      var total = 0;
+      var fields = [];
+      fields[0] = "int";
+      fields[1] = "date";
+      fields[2] = "int";
+      fields[3] = {
+        type: "format",
+        decode: function(name, row) {
+          return "<a href='/animal/edit_animal?id=" + row[2] + "' target='_animal_maste'>" + name + "</a>";
+        }
+      }
+      fields[4] = {
+        type: "format",
+        decode: function(name, row) {
+          return "<a href='/customer/edit?id=" + row[9] + "' target='_customer_maste'>" + name + "</a>";
+        }
+      }
+      if (!hasUnitModule) {
+        fields[7] = "none";
+      }
+      fields[8] = {
+        type: "format",
+        decode: function(name, row) {
+          return "<a href='/customer/edit?id=" + row[10] + "' target='_customer_maste'>" + name + "</a>";
+        }
+      }
+      fields[9] = {
+        type : "format",
+        decode : function(id){
+          customers.push(id);
+          total += 1;
+          return "<a class='btn' href='/customer/edit?id="+id+"' target='_customer_maste'>Ir</a>"
+        }
+      };
+      $("#unit").unitField(true,false);
+      var url = "/report/animalbirthdays";
+      var request = function(){
+        total = 0;
+        customers=[];
+        renderReport(url,fields,$("#form_report").serializeObject(), "#grid", function(){
+          $('#total').val(total);
+        });
+      }
+      $("#send").click(request);
+       $("#send_notifications").click(function(){
+          var message = $("#send_message").val();
+          if (!message) {
+            alert ("É preciso selecionar uma mensagem")
+            return
+          }
+          if(confirm("Deseja enviar esta mensagem aos clientes?")){
+            $.get("/notification/messagesend/"+customers.join(",")+"/"+message,function(r){
+              if(r === '1'){
+                alert("Enviado com sucesso!");
+              }else {
+                alert(r);
+              }
+            }).error(function(){
+              alert("Erro ao enviar!")
+            }); 
+          }
+        });    
+    });  
+  </script>
+  <div class="">
+    <form id="form_report" class="well form-search" method='get'>
+      <h1>
+        <span class="lift:CompanySnippet.thumb"> </span>
+        <input class="report_title local_storage" id="title_animalbirthdays" name="title_animalbirthdays" size="30" type="text" value="Relatório de Animais Aniversariantes"/>
+      </h1>
+      <div class="row">
+        <div class="span9">
+          <div class="clearfix">
+            <label for=""> Mês </label>
+            <div class="input">
+                <select id='month' name="month">
+                </select>      
+            </div>
+          </div>
+          <div class="clearfix">
+            <label for=""> Dias </label>
+            <div class="input">
+              <input type="text" class="mini" id='start' name="start" placeholder="Início">
+              <input type="text" class="mini" id='end' name="end" placeholder="Fim">  
+            </div>
+          </div>
+          <input type="hidden" class="has-unit-module lift:SecuritySnippet.hasUnitModule" value="1">
+          <div class="clearfix lift:SecuritySnippet.hasUnitModule">
+            <label for="unit">Unidade </label>
+            <div class="input">
+              <div class="inline-inputs">
+                <select id="unit" name="unit"></select>
+                <span class="help-block">Unidade do cadastro do cliente, mesmo que ele tenha sido atendido em outra unidade</span>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix">
+            <label for=""></label>
+            <div class="input">
+              <button type="button" id="send" class="btn success">Buscar</button>
+            </div>
+          </div>
+          <div class="span18">
+            <div class="clearfix">
+              <label for="start_date">Total </label>
+              <div class="input">
+                <div class="inline-inputs">
+                  <div class="input-prepend" style="float:left; padding-right:10px">
+                    <div style="float:left; padding-right:10px" class="input-prepend">
+                      <span class="add-on"><img src="/images/money.png" width="16"></span>
+                      <input class="small" id="total" name="total" size="19" placeholder="0" type="text">
+                      <span class="help-block">Total</span>
+                    </div>
+                  </div>
+                </div>
+              </div>                      
+            </div>
+          </div>
+        </div>
+        <div class="span7">
+          <fieldset>
+            <legend>Envio de E-mail</legend>
+            <div class="clearfix">
+              <label for="">Notificação</label>
+              <div class="input">
+                <select name="send_message" id="send_message"></select>
+                <span class="help-block">Selecione uma mensagem para enviar aos clientes</span>
+              </div>
+            </div>
+            <div class="clearfix">
+              <label for=""></label>
+              <div class="input">
+                <a type="button" id="send_notifications" class="btn primary">
+                  <img width="16px" src="/images/mail.png"/>
+                  Enviar
+                </a>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </form>
+  </div>
+  <table id="grid" class="bordered-table zebra-striped">
+    <thead>
+      <th>Dia</th>
+      <th>Aniversário</th>
+      <th>Cod</th>
+      <th>Nome</th>
+      <th>Responsável</th>
+      <th>Telefone</th>
+      <th>E-mail</th>
+      <th class="lift:SecuritySnippet.hasUnitModule">Unidade</th>
+      <th>Indicado Por</th>
+      <th>Id</th>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</div>

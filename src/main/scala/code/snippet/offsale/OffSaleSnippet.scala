@@ -41,6 +41,7 @@ class  OffSaleSnippet extends BootstrapPaginatorSnippet[OffSale] with SnippetUpl
 		  				S.notice("Convênio excluído com sucesso!")
 		  			}catch{
 		  				case e: NoSuchElementException => S.error("Convênio não existe!")
+		  				case e:Exception => S.error(e.getMessage)
 		  				case _ => S.error("Convênio não pode ser excluído!")
 		  			}
 			

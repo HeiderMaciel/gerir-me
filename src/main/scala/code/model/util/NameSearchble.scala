@@ -35,6 +35,9 @@ trait NameSearchble [self <: net.liftweb.mapper.Mapper[self]]{
   protected class MySearch(obj: self) extends MappedPoliteString(obj,255) with LifecycleCallbacks {
     override def beforeSave() {
       super.beforeSave;
+      if (fieldOwner.asInstanceOf[NameSearchble[self]].name.is.trim() == "") {
+        throw new RuntimeException("Nome não pode ser vazio!")
+      }
       this.set(BusinessRulesUtil.clearString(fieldOwner.asInstanceOf[NameSearchble[self]].name.is.trim()))
       if(this.is == BusinessRulesUtil.EMPTY){
         throw new RuntimeException("Nome não pode conter apenas caracteres especiais!")
@@ -82,9 +85,9 @@ trait NameSearchble [self <: net.liftweb.mapper.Mapper[self]]{
       this.set(BusinessRulesUtil.toCamelCase(this.is.trim()));
     }
   }
-      def testIfDuplicatedName ( id1: Long, name1 : String) = {
+      def testIfDuplicatedName ( company : Long, id1: Long, name1 : String) = {
         if(!allowDuplicated_? && self.getSingleton.count(
-          By(self.company, self.company.is), 
+          By(self.company, company), 
           Like(self.name, BusinessRulesUtil.toCamelCase(name1)), //self.name.is.trim)), 
           NotBy(self.id, id1) //self.id.is)
           ) > 0){
@@ -95,7 +98,7 @@ trait NameSearchble [self <: net.liftweb.mapper.Mapper[self]]{
       }
 
       def validateDuplicatedName = {
-        if (testIfDuplicatedName (self.id.is, self.name.is.trim)) {
+        if (testIfDuplicatedName (self.company.is, self.id.is, self.name.is.trim)) {
           throw new RuntimeException("Já existe um registro com esse nome : %s".format(self.name.is))
         }
 /*

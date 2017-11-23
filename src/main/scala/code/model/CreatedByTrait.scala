@@ -31,8 +31,12 @@ trait CreatedByTrait {
   }
 
   lazy val createdByName = createdBy.obj match {
-        case Full(t:User) => t.name.is
+        case Full(t:User) => t.short_name.is
         case _ => ""
+  }
+  lazy val createdById = createdBy.obj match {
+        case Full(t:User) => t.id.is
+        case _ => -1
   }
 }
 
@@ -57,11 +61,60 @@ trait UpdatedByTrait {
   }
 
   lazy val updatedByName = updatedBy.obj match {
-        case Full(t:User) => t.name.is
+        case Full(t:User) => t.short_name.is
         case _ => ""
+  }
+  lazy val updatedById = updatedBy.obj match {
+        case Full(t:User) => t.id.is
+        case _ => -1
+  }
+
+}
+
+trait CreatedUpdatedBy extends CreatedByTrait with UpdatedByTrait 
+  with CreatedUpdated {
+  self: BaseMapper =>
+
+  protected def createdAtStr = 
+    if (Project.dateToYear(createdAt) != Project.dateToYear(Project.today)) {
+      Project.dateToStr (createdAt)
+    } else {
+      Project.dateToMonthAndDay(createdAt)
+    }
+
+  protected def updatedAtStr = 
+    if (Project.dateToYear(updatedAt) != Project.dateToYear(Project.today)) {
+      Project.dateToStr (updatedAt)
+    } else {
+      Project.dateToMonthAndDay(updatedAt)
+    }
+
+  lazy val auditStr:String = if (createdById != updatedById) {
+    "Criado por " + createdByName + " " + 
+      createdAtStr + " " +
+      Project.dateToHours(createdAt) + "\n" +
+    "Alterado por " + updatedByName + " " + 
+      updatedAtStr + " " +
+      Project.dateToHours(updatedAt)
+  } else if (Project.dateToStr(createdAt) !=
+    Project.dateToStr(updatedAt)) {
+    "Criado por " + createdByName + " " + 
+      createdAtStr + " " +
+      Project.dateToHours(createdAt) + "\n" +
+    "Alterado em " + 
+      updatedAtStr + " " +
+      Project.dateToHours(updatedAt)
+  } else if (Project.dateToHours(createdAt) !=
+    Project.dateToHours(updatedAt)) {
+    "Criado por " + createdByName + " " + 
+      createdAtStr + " " +
+      Project.dateToHours(createdAt) + "\n" +
+    "Alterado em " + 
+      Project.dateToHours(updatedAt)
+  } else {
+    "Criado por " + createdByName + " " + 
+      createdAtStr + " " +
+      Project.dateToHours(createdAt)
   }
 }
 
-trait CreatedUpdatedBy extends CreatedByTrait with UpdatedByTrait {
-  self: BaseMapper =>
-}

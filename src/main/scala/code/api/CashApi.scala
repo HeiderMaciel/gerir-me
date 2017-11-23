@@ -33,12 +33,20 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 			lazy val product:ProductPreviousDebts = ProductPreviousDebts.productPreviousDebts
 			lazy val productCredit:ProductPreviousDebts = ProductPreviousDebts.productCredits
 			
-			val customer = Customer.findByKey(customerId.toLong).get
-			JsObj(("name",product.name.is), 
-				  ("id",product.id.is), 
-				  ("price",customer.totalDebit.toDouble),
-				  ("credit", productCredit.id.is)
-				)
+			if (customerId != "0") {
+				val customer = Customer.findByKey(customerId.toLong).get
+				JsObj(("name",product.name.is), 
+					  ("id",product.id.is), 
+					  ("price",customer.totalDebit.toDouble),
+					  ("credit", productCredit.id.is)
+					)
+			} else {
+				JsObj(("name",product.name.is), 
+					  ("id",product.id.is), 
+					  ("price", 0.0),
+					  ("credit", productCredit.id.is)
+					)
+			}
 		}
 		case "cash" :: "getPaymentTypes" :: Nil JsonGet _ => {
 			JsArray(
@@ -50,6 +58,8 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 							  ("needChequeInfo",pt.needChequeInfo_?.is),
 							  ("creditCard",pt.creditCard_?.is),
 							  ("needCardInfo",pt.needCardInfo_?.is),
+							  ("customerRegisterDebit",pt.customerRegisterDebit_?.is), // 21/11/2017 rigel
+							  ("customerUseCredit",pt.customerUseCredit_?.is), // 21/11/2017 rigel
 							  ("numDaysForReceive",pt.numDaysForReceive.is),
 							  ("accept_installment",pt.acceptInstallment_?.is)
 							 )
@@ -498,6 +508,7 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 											("auxiliar", d.auxiliar.is),
 											("offsale", d.offsale.is), 
 											("offsaleShortName", d.offsaleShortName), 
+											("tooth", d.tooth), // .is
 											("animalShortName", d.animalShortName), 
 											("animal", d.animal), // .is
 											("parentBom", d.parentBom.is),

@@ -21,7 +21,7 @@ var TreatmentManger = {
             }, function(t) {
                 eval("t=" + t);
                 if (t != 1) {
-                    if (confirm(t + "\n Deseja salvar assim mesmo?")) {
+                    if (confirm(t + "\n\n Deseja salvar assim mesmo?")) {
                         TreatmentManger.updateTreatmentData(id, user, startDate, endDate, status, false);
                     } else {
                         refreshCalendarByAjax();
@@ -71,7 +71,7 @@ var TreatmentManger = {
                         global_calEvent = eventData;
                         TreatmentManger.creatTreatmentDetail(eventData);
                     } else {
-                        if (confirm(eventData.message + " Deseja agendar assim mesmo?")) {
+                        if (confirm(eventData.message + "\n\n Deseja agendar assim mesmo?")) {
                             TreatmentManger.saveTreatment(true);
                         }
                     }
@@ -94,7 +94,7 @@ var TreatmentManger = {
             });
         }
     },
-    addDetail: function(treatmentId, activityId, auxiliar, animal, offsale, valida) {
+    addDetail: function(treatmentId, activityId, auxiliar, animal, tooth, offsale, valida) {
         if (!valida) {
             valida = "true";
         }
@@ -102,6 +102,7 @@ var TreatmentManger = {
             "activity": activityId,
             "auxiliar": auxiliar,
             "animal": animal,
+            "tooth": tooth,
             "offsale": offsale,
             "id": treatmentId,
             "validate": valida
@@ -110,9 +111,15 @@ var TreatmentManger = {
             if (t == 1) {
                 TreatmentManger.creatTreatmentDetail(global_calEvent);
             } else {
-                if (confirm(t + "\n" + " Deseja agendar assim mesmo?")) {
-                    TreatmentManger.addDetail(treatmentId, activityId, auxiliar, animal, offsale, "false");
-                }
+                if (t.indexOf ("Já existe este serviço") != -1) {
+					if (!confirm(t + "\n\n" + "Clique em **<cancelar>** para agendar assim mesmo")) {
+						TreatmentManger.addDetail(treatmentId, activityId, auxiliar, animal, tooth, offsale, "false");
+					}
+				} else {
+					if (confirm(t + "\n\n" + "Deseja agendar assim mesmo?")) {
+						TreatmentManger.addDetail(treatmentId, activityId, auxiliar, animal, tooth, offsale, "false");
+					}
+				}
             }
         });
     },
@@ -139,7 +146,7 @@ var TreatmentManger = {
             var userId = $("#auxiliar").val();
             var msgAux = "";
             if (!userId) {
-                userId = "0";  
+                userId = "0";
                 msgAux = "\nComo o campo está vazio, um possível assistente no atendimento será excluído!"
             } else {
                 msgAux = "";
@@ -175,7 +182,7 @@ var TreatmentManger = {
             var petId = $("#animal").val();
             var msgAux = "";
             if (!petId) {
-                petId = "0";  
+                petId = "0";
                 msgAux = "\nComo o campo está vazio, um possível pet no atendimento será excluído!"
             } else {
                 msgAux = "";
@@ -206,92 +213,92 @@ var TreatmentManger = {
             alert ("Suas permissões não permitem editar agendamento");
         }
     },
+    setToothDetail: function(detailId) {
+		if (CalendarManager.calendarPermitions.editEvent) {
+			var tooth = $("#tooth").val();
+			var msgAux = "";
+			if (!tooth) {
+				tooth = "";
+				msgAux = "\nComo o campo está vazio, um possível dente no atendimento será excluído!"
+			} else {
+				msgAux = "";
+			}
+			if (confirm("Tem certeza que deseja atribuir este dente a este serviço?" + msgAux)) {
+				//
+				// usado tambem na comanda e na agenda e no caixa
+				// duplicado no register_payment.js
+				//
+		        return $.post("/command/settooth", {
+		          "tooth": tooth,
+		          "tdid": detailId,
+		          "command": "0" // agenda 1 seria commanda
+		        }, function(results) {
+		          if(results === 1 || results == "1"){
+		          	if (tooth == "") {
+			            alert("Dente excluído com sucesso");
+		          	} else {
+			            alert("Dente cadastrado com sucesso");
+		          	}
+					TreatmentManger.creatTreatmentDetail(global_calEvent);
+		          }else{
+		            alert(eval(results));
+		          }
+		        });
+			}
+		} else {
+			alert ("Suas permissões não permitem editar agendamento");
+		}
+	},
     creatTreatmentDetail: function(calEvent) {
         var decodeStatus = function(status){
-            // duplicado do treatments_conference.js
-          var status2 = ''; // na verdade este método nao recebe status 2    
-          var statstr = '' 
-          var title = ''
-          if (status == 'Open' || status == '0') {
-            statstr = 'open'
-            title ='agendado'
-          } else if (status == 'Missed' || status == '1') {
-            statstr = 'Missed'
-            title ='faltou'
-          } else if (status == 'Arrived' || status == '2') {
-            statstr = 'Arrived'
-            title ='chegou'
-          } else if (status == 'Ready' || status == '3') {
-            statstr = 'Ready'
-            title ='atendido'
-          } else if (status == 'Paid' || status == '4') {
-            if (status2 == 'Ready' || status2 == '3') {
-              statstr = 'ready_paid'
-              title ='atendido / pago'
-            } else if (status2 == 'Missed' || status2 == '1') {
-              statstr = 'missed_paid'
-              title ='faltou / pago'
-            } else {
-              statstr = 'paid'
-              title ='pago'
-            }
-          } else if (status == 'Deleted' || status == '5') {
-            statstr = 'Deleted'
-            title ='excluído'
-          } else if (status == 'Confirmed' || status == '6') {
-            statstr = 'Confirmed'
-            title ='confirmado'
-          } else if (status == 'PreOpen' || status == '7') {
-            statstr = 'PreOpen'
-            title ='pré agendado'
-          } else if (status == 'ReSchedule' || status == '8') {
-            statstr = 'ReSchedule'
-            title ='desmarcou'
-          } else if (status == 'Budget' || status == '9') {
-            statstr = 'Budget'
-            title ='orçamento'
-          }
-          // rigel alterado agora que status deixou de ser "string" e passou a ser int
-          // 31/05/2017 
-          return "<img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+"1.png' width='24'/>"
+            trStatus = 0;
+            trStatus2 = 1; // nao tem
+            var row = [];
+            row.push (status, '')
+            return trStatusdecode ('',row)
         };
         var url = "/treatment/by_customer/" + calEvent.customerId + "/" + encodeURIComponent(getDateBr(calEvent.start)) + "/details";
         $.get(url, function(ret) {
             var details = [];
             eval("details=" + ret);
             var table = "";
+            var hasAuditModule = $('.has-audit-module').length > 0;
             var hasAuxiliarModule = $('.has-auxiliar-module').length > 0;
             var hasUnitModule = $('.has-unit-module').length > 0;
             var hasPetSystem = $('.has-pet-system').length > 0;
+            var hasEsmileSystem = $('.has-esmile-system').length > 0;
             for (var i = details.length - 1; i >= 0; i--) {
                 detail = details[i];
                 var auxAux = "<a href='/customer/edit?id=" + detail.auxiliarId + "' target='_customer_maste'>" + detail.auxiliar + "</a>"
                 var auxPet = "<a href='/animal/edit_animal?id=" + detail.animalId + "' target='_animal_maste'>" + detail.animal + "</a>"
-                table += 
+                table +=
                 "<tr>" +
-                "<td>" + detail.user + 
-                (hasUnitModule ? "</td><td>" + detail.unit : "") + 
-                (hasAuxiliarModule ? "</td><td>" + auxAux : "") + 
-                (hasPetSystem ? "</td><td>" + auxPet : "") + 
-                "</td><td>" + detail.activity + 
-                "</td><td>" + getHourBr(FactoryDate.byTime(detail.start)) + 
-                "</td><td>" + getHourBr(FactoryDate.byTime(detail.end)) +     
-                //"</td><td class='treatment-status'>" + detail.status + 
+                "<td>" + detail.user +
+                (hasUnitModule ? "</td><td>" + detail.unit : "") +
+                (hasAuxiliarModule ? "</td><td>" + auxAux : "") +
+                (hasPetSystem ? "</td><td>" + auxPet : "") +
+                "</td><td>" + detail.activity +
+                (hasEsmileSystem ? "</td><td>" + detail.tooth : "") +
+                "</td><td>" + getHourBr(FactoryDate.byTime(detail.start)) +
+                "</td><td>" + getHourBr(FactoryDate.byTime(detail.end)) +
+                //"</td><td class='treatment-status'>" + detail.status +
                 "</td><td>" + decodeStatus(detail.status) +
                 "</td><td><a title='Excluir item' href='#' onclick='TreatmentManger.removeDetail(" + detail.id + ")'><img src='/images/delete.png'/></a></td>" +
                 (hasPetSystem ? "</td><td><a title='Atribuir pet' href='#' onclick='TreatmentManger.setAnimalDetail(" + detail.id + ")'><img width='24px' src='/images/addpet.png'/></a></td>" : "") +
+                (hasEsmileSystem ? "</td><td><a title='Atribuir dente' href='#' onclick='TreatmentManger.setToothDetail(" + detail.id + ")'><img width='24px' src='/images/addtooth.png'/></a></td>" : "") +
                 (hasAuxiliarModule ? "</td><td><a title='Atribuir assistente' href='#' onclick='TreatmentManger.setAuxiliarDetail(" + detail.id + ")'><img width='24px' src='/images/user.png'/></a></td>" : "") +
+                (hasAuditModule ? "</td><td><a title='" + detail.auditstr + "' href='#' ><img width='24px' src='/images/audit.png'/></a></td>" : "") +
                 "</tr>";
                 if (detail.treatment == calEvent.id) {
                     $("#hour_treatment_end").val(getHourBr(FactoryDate.byTime(detail.end)));
                     // rigel 09/08/2017 se trocasse status ou mesmo clicasse no
-                    // status agendado antes de fechar o agendamento setava o 
-                    // default da divisão de agenda, mesmo o serviço tendo 
+                    // status agendado antes de fechar o agendamento setava o
+                    // default da divisão de agenda, mesmo o serviço tendo
                     // duração maior
                     calEvent.end = FactoryDate.byTime(detail.end);
                 }
             }
-            // rigel 09/08/2017 
+            // rigel 09/08/2017
             global_calEvent = calEvent;
             $("#table_detail_table tbody").html(table);
             translateStatus();

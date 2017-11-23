@@ -27,44 +27,24 @@
       decode: function(name, row){
         var today = new Date();
         var line = new Date (row[1])
-        if (line.getDateBr() == today.getDateBr()) {
-          return "<img src='/images/account_customer.png' width='16'/>"
-        } else if (line > today) {
-          return "<img src='/images/good.png' width='16'/>"
+        if (line.getDateBr() == today.getDateBr() &&
+          row[4] != '3' /* atendido */) {
+          return "<img src='/images/account_customer.png' width='22'/>"
+        } else if (line > today || 
+          row[4] == '3' /* atendido */) {
+          return "<img src='/images/good.png' width='22'/>"
         } else {
-          return "<img src='/images/bad.png' width='16'/>"
+          return "<img src='/images/bad.png' width='22'/>"
         }
       }
     };
-    fields[4] = {
+
+    fields [4] = {
       type : "format",
-      decode: function(name, row){
-      // duplicado do treatments_conference.js
-      // e do user_command
-        var status = row[4];
-        var statstr = '' 
-        var title = ''
-        if (status == '0') {
-          statstr = 'open'
-          title ='agendado'
-        } else if (status == '1') {
-          statstr = 'missed'
-          title ='faltou'
-        } else if (status == '3') {
-          statstr = 'Ready'
-          title ='atendido'
-        } else if (status == '6') {
-          statstr = 'Confirmed'
-          title ='confirmado'
-        } else if (status == '7') {
-          statstr = 'PreOpen'
-          title ='pré agendado'
-        } else if (status == '8') {
-          statstr = 'ReSchedule'
-          title ='desmarcou'
-        }
-        // //"<img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+".png' width='24'/>"
-        return "<img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+"1.png' width='24'/>"
+      decode: function(name, row) {
+        trStatus = 4;
+        trStatus2 = 0; // nao tem
+        return trStatusdecode (name,row)
       }
     };
     fields[6] = {

@@ -165,6 +165,12 @@ with CanCloneThis[AccountPayable] {
   object aggregateId extends MappedLong(this)
   object aggregateValue extends MappedCurrency(this.asInstanceOf[MapperType])
 
+  // rigel 27/10/2017
+  object aggregateLabel extends MappedPoliteString(this, 255)
+  object ofxId extends MappedPoliteString(this, 255) {
+    override def dbIndexed_? = true
+  } 
+
   def aggregate (aggregId : Long)= {
     if (this.aggregateId != 0 && this.aggregateId != aggregId) {
       throw new RuntimeException("Um lançamento não pode fazer parte de duas agregações!")
@@ -172,6 +178,7 @@ with CanCloneThis[AccountPayable] {
     this.aggregateId(aggregId)
     if (this.id == aggregId) {
         this.aggregateValue (this.aggregateValue.is + this.value.is)
+        this.aggregateLabel ((bpShortName + " " + categoryShortName + "=== Agregado  ").trim)
     } else {
        var vaux = AccountPayable.findByKey(aggregId).get.aggregateValue.is
        AccountPayable.findByKey(aggregId).get.
@@ -197,7 +204,6 @@ with CanCloneThis[AccountPayable] {
   def makeAsConsolidated = this.conciliate(2).partialySecureSave
 
   lazy val accountBox = this.account.obj
-
   lazy val accountShortName:String = {
       accountBox match {
           case Full(c)=> c.short_name.is
@@ -215,9 +221,16 @@ with CanCloneThis[AccountPayable] {
   }
 
   lazy val categoryBox = this.category.obj
-
   lazy val categoryShortName:String = {
       categoryBox match {
+          case Full(c)=> c.short_name.is
+          case _ => ""
+      }
+  }
+
+  lazy val bpBox = this.user.obj
+  lazy val bpShortName:String = {
+      bpBox match {
           case Full(c)=> c.short_name.is
           case _ => ""
       }
@@ -451,7 +464,7 @@ with CanCloneThis[AccountPayable] {
   def conCilSol (id : String, idofx : String, 
     aggreg : Boolean, conciliation : Int) = {
     val apofx = AccountPayable.findByKey(idofx.toLong).get
-    var aplist = if (aggreg) {
+    var aplist = if (!aggreg) {
       AccountPayable.findAllInCompany(
         By(AccountPayable.id, id.toLong))
     } else {
@@ -467,6 +480,7 @@ with CanCloneThis[AccountPayable] {
       // por isso usa duedate
       ap.paymentDate (apofx.dueDate)
       ap.account (apofx.account)
+      ap.ofxId (apofx.ofxId)
       var compl = ap.complement
       ap.complement (compl + " " + apofx.obs)
       if (conciliate == 1) {
@@ -486,7 +500,6 @@ with CanCloneThis[AccountPayable] {
       }
 
     if (aggreg && dif != 0.0) {
-      println ("vaiii ============= complementando agregado " + dif)
       if (dif < 0.0) {
         dif = dif * -1
       }

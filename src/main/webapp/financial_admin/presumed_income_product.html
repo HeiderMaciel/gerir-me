@@ -27,24 +27,27 @@
                           "show" : true,
                           "formater" : formater,
                           "childGroup" : {
-                            "key":3, "name":3, 
-                            "groupFunction" : group,
-                            "formater" : formater                         
+                            "key":3, "name":3, "groupFunction" : group,
+                            "formater" : formater,
+                            "childGroup" : {
+                              "key":4, "name":4, "groupFunction" : group,
+                              "formater" : formater,
+                            }                            
                           }
                         }
                       }
       });
     }
     $("#b_value").click(function(){
-      request(4);
+      request(6);
     });
     $("#b_coust").click(function(){
-      request(5);
+      request(7);
     });
     $("#b_income").click(function(){
-      request(6);
+      request(8);
     });    
-    request(6);
+    request(8);
   });  
   </script>
 <div class="page-header">
@@ -53,6 +56,17 @@
           </h1>
         </div>  
   <div class="row">
+    <a id="hide_arguments" onclick="$('#form_report1').toggle();return false;" 
+      href="#" class="btn excel_buttton" 
+      title="Ocultar argumentos">
+      <img style="width: 16px;" src="/images/collapse.png" />
+    </a>  
+    <form id="form_report1" class="well form-search" method='get'>
+    <h2>
+          Este relatório será descontinuado em breve.<br/>
+          Utilize o relatório do ícone "Lucro", imediatamente superior a este que agora permite a seleção entre produtos/servicos ou ambos<br/><br/>
+      </h2>
+     </form>
       <form id="form_report" class="well form-search" method='get'>
           <div class="clearfix">
             <label for="start">Intervalo</label>

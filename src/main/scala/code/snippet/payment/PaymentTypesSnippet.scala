@@ -87,7 +87,7 @@ class PaymentTypesSnippet extends BootstrapPaginatorSnippet[PaymentType]{
 														}
 														
 												),
-							"actions" -> <a class="btn" href={"/company/payment_forms?id="+ac.id.is}>Editar</a>,
+							"actions" -> <a class="btn" href={"/financial_admin/payment_forms?id="+ac.id.is}>Editar</a>,
 							"delete" -> SHtml.submit("Excluir",delete,"class" -> "btn danger","data-confirm-message" -> {" Excluir a forma "+ac.name.is}),
 							"_id" -> SHtml.text(ac.id.is.toString, id = _),
 							"id" ->Text(ac.id.is.toString)
@@ -108,7 +108,7 @@ class PaymentTypesSnippet extends BootstrapPaginatorSnippet[PaymentType]{
 					ac.company(AuthUtil.company)
 				   	ac.save
 				   	S.notice("Forma de pagamento salva com sucesso!")
-				   	S.redirectTo("/company/payment_forms?id="+ac.id.is)
+				   	S.redirectTo("/financial_admin/payment_forms?id="+ac.id.is)
 	   			}catch{
 					case (e:net.liftweb.http.ResponseShortcutException) =>{
 						throw e

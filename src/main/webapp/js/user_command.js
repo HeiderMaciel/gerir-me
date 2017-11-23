@@ -112,6 +112,7 @@
       var hasAuxiliarModule = $('.has-auxiliar-module').length > 0;
       var hasNotMedical = $('.has-not-medical').length > 0;
       var hasPetSystem = $('.has-pet-system').length > 0;
+      var hasEsmileSystem = $('.has-esmile-system').length > 0;
 
       var fields = [];
       //fields[5] = "dateTime"; a data já tá formatada hh24:mi no sql
@@ -121,7 +122,7 @@
       fields[2] = {
         type: "format",
         decode: function(name, row) {
-          return "<a href='/customer/edit?id=" + row[11] + "' target='_customer_maste'>" + name + "</a>";
+          return "<a href='/customer/edit?id=" + row[12] + "' target='_customer_maste'>" + name + "</a>";
         }
       }
       if (!hasAuxiliarModule) {
@@ -130,7 +131,7 @@
         fields[3] = {
           type: "format",
           decode: function(name, row) {
-            return "<a href='/user/edit?id=" + row[14] + "' target='_user_maste'>" + name + "</a>";
+            return "<a href='/user/edit?id=" + row[15] + "' target='_user_maste'>" + name + "</a>";
           }
         }
       }
@@ -140,67 +141,32 @@
         fields[4] = {
           type: "format",
           decode: function(name, row) {
-            return "<a href='/animal/edit_animal?id=" + row[15] + "' target='_animal_maste'>" + name + "</a>";
+            return "<a href='/animal/edit_animal?id=" + row[16] + "' target='_animal_maste'>" + name + "</a>";
           }
         }
       }
-      if (!hasNotMedical) { // qtde
+      if (!hasEsmileSystem) { // tooth
         fields[6] = "none";
-      }
-      if (!hasNotMedical) { // valor
+      } 
+      if (!hasNotMedical) { // qtde
         fields[7] = "none";
       }
-      fields[8] = {
+      if (!hasNotMedical) { // valor
+        fields[8] = "none";
+      }
+      fields [9] = {
         type : "format",
-        decode: function(name, row){
-        // duplicado do treatments_conference.js
-          var status = row[8];
-          var statstr = '' 
-          var title = ''
-          if (status == '0') {
-            statstr = 'open'
-            title ='agendado'
-          } else if (status == '1') {
-            statstr = 'missed'
-            title ='faltou'
-          } else if (status == '2') {
-            statstr = 'Arrived'
-            title ='chegou'
-          } else if (status == '3') {
-            statstr = 'Ready'
-            title ='atendido'
-          } else if (status == '4') {
-            if (row[16] == '3') {
-              statstr = 'ready_paid'
-              title ='atendido / pago'
-            } else {
-              statstr = 'paid'
-              title ='pago'
-            }
-          } else if (status == '5') {
-            statstr = 'Deleted'
-            title ='excluído'
-          } else if (status == '6') {
-            statstr = 'Confirmed'
-            title ='confirmado'
-          } else if (status == '7') {
-            statstr = 'PreOpen'
-            title ='pré agendado'
-          } else if (status == '8') {
-            statstr = 'ReSchedule'
-            title ='desmarcou'
-          } else if (status == '9') {
-            statstr = 'Budget'
-            title ='orçamento'
-          }
-          // //"<img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+".png' width='24'/>"
-          return "<img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+"1.png' width='24'/>"
+        decode: function(name, row) {
+          trStatus = 9;
+          trStatus2 = 17;
+          return trStatusdecode (name,row, true)
         }
       };
+
       if (hasNotMedical) { // espera
-        fields[10] = "none";
+        fields[11] = "none";
       }
-      fields[11] = {
+      fields[12] = {
         type : "format",
         decode: function(name, row) {
           var strAux = "";
@@ -209,26 +175,32 @@
           if (hasEdoctusSystem || hasEphysioSystem) {
 //          if ((document.location.href.indexOf("edoctus") != -1) ||
 //          (document.location.href.indexOf("ephysio") != -1)) {
-            strAux = '<a title="Novo prontuário" href="/quiz/quizapply?business_pattern=' + row[11] + '&quiz=' + row[13] + '"> <img width="24" src="/images/add.png"/></a>' +
-                '<a title="Prontuário" href="/records/edit_patient?id=' + row[11] + '"> <img width="24" src="/images/records.png"/></a>'
+            strAux = '<a title="Novo prontuário" href="/quiz/quizapply?business_pattern=' + 
+            row[12] + '&quiz=' + row[14] + 
+            '"> <img width="24" src="/images/add.png"/></a>' +
+                '<a title="Prontuário" href="/records/edit_patient?id=' + 
+                row[12] + '"> <img width="24" src="/images/records.png"/></a>'
           }
           return strAux 
            // agora ir para cadastro é link no nome
            //+ <a title="Cadastro" href="/customer/edit?id=' + row[11] + '"> <img width="24" src="/images/customers.png"/></a>'
         }
       };
-      fields[12] = {
+      fields[13] = {
         type : "format",
         decode: function(name, row) {
-          return "<a class='btn primary' onclick='Manager.new_detail(" + row[11] +',"' +row[0]+ '"' + ")'" + " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir novo</a> " +
-                "<a class='btn danger' onclick='Manager.del_detail(" + row[12] +")'  target=''>Excluir</a>"
+          return "<a class='btn primary' onclick='Manager.new_detail(" + 
+          row[12] +',"' +row[0]+ '"' + ")'" + 
+          " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir novo</a> " +
+                "<a class='btn danger' onclick='Manager.del_detail(" + 
+                row[13] +")'  target=''>Excluir</a>"
           //      "<a class='btn primary' onclick='Manager.new_fit(" +row[0].replace (':','.') +")' title='Inserir novo serviço neste mesmo horário' target=''>Encaixar</a> " +
         }
       };
-      fields[13] = "none" // questionario/prontuário default
-      fields[14] = "none" // id assistente
-      fields[15] = "none" // id animal
-      fields[16] = "none" // tr.status2
+      fields[14] = "none" // questionario/prontuário default
+      fields[15] = "none" // id assistente
+      fields[16] = "none" // id animal
+      fields[17] = "none" // tr.status2
       dataaux = $("#day").val();
       renderReport("/command/usersales" + 
         "?user=" + (Manager.user())+
@@ -242,19 +214,22 @@
       fields1[1] = {
         type: "format",
         decode: function(name, row) {
-          return "<a href='/customer/edit?id=" + row[7] + "' target='_customer_maste'>" + name + "</a>";
+          return "<a href='/customer/edit?id=" + row[8] + 
+          "' target='_customer_maste'>" + name + "</a>";
         }
       }
       fields1[2] = {
         type: "format",
         decode: function(name, row) {
-          return "<a href='/user/edit?id=" + row[8] + "' target='_user_maste'>" + name + "</a>";
+          return "<a href='/user/edit?id=" + row[9] + 
+          "' target='_user_maste'>" + name + "</a>";
         }
       }
       fields1[3] = {
         type: "format",
         decode: function(name, row) {
-          return "<a href='/user/edit?id=" + row[9] + "' target='_user_maste'>" + name + "</a>";
+          return "<a href='/user/edit?id=" + row[10] + 
+          "' target='_user_maste'>" + name + "</a>";
         }
       }
       if (!hasPetSystem) {
@@ -263,28 +238,34 @@
         fields1[4] = {
           type: "format",
           decode: function(name, row) {
-            return "<a href='/animal/edit_animal?id=" + row[10] + "' target='_animal_maste'>" + name + "</a>";
+            return "<a href='/animal/edit_animal?id=" + row[11] + 
+            "' target='_animal_maste'>" + name + "</a>";
           }
         }
       }
+      if (!hasEsmileSystem) {
+        fields1[6] = "none";
+      } 
 
 
-      fields1[6] = {
+      fields1[7] = {
         type : "format",
         decode: function(name, row) {
           // porque a 1a opção nao funciona
           // por que a função no Manager não funciona
 //          return "<a class='btn success' href='/command/setaux?user=" + (Manager.user())+ "&tdid="+row[5]+"'>XML</a>"
 //          return "<a class='btn success' onclick='Manager.set_auxiliar(" + (Manager.user()) + "," +row[5]+")'  target='_tissxml_maste'>XML1</a>"
-          return "<a class='btn primary' onclick='Manager.new_detail("+row[7]+ ',"' +row[0]+ '"' + ")'" + " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir novo</a> " +
-          "<a class='btn success' onclick='set_auxiliar(" + (Manager.user()) + "," +row[6]+")'  target=''>Gravar assistente</a> " +
-          "<a class='btn danger' onclick='del_auxiliar(" + (Manager.user()) + "," +row[6]+")'  target=''>Excluir assistente</a>"
+          return "<a class='btn primary' onclick='Manager.new_detail("+
+          row[8]+ ',"' +row[0]+ '"' + ")'" + 
+          " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir novo</a> " +
+          "<a class='btn success' onclick='Manager.set_auxiliar(" + (Manager.user()) + "," +row[7]+")'  target=''>Gravar assistente</a> " +
+          "<a class='btn danger' onclick='Manager.del_auxiliar(" + (Manager.user()) + "," +row[7]+")'  target=''>Excluir assistente</a>"
         }
       };
-      fields1[7] = "none"
       fields1[8] = "none"
       fields1[9] = "none"
       fields1[10] = "none"
+      fields1[11] = "none"
 
       dataaux = $("#day").val();
       renderReport("/command/treataux" + 
@@ -340,10 +321,25 @@
         });
     };
   
+    Manager.del_auxiliar = function (userId, tdId) {
+      return $.post("/command/delaux", {
+        "user": userId,
+        "tdid": tdId
+      }, function(results) {
+        if(results === 1 || results == "1"){
+          alert("Assistente excluído com sucesso");
+        }else{
+          alert(eval(results));
+        }
+        return Manager.getListFromServer();
+      });
+    };
+
     var callApiLock = false;
 
     Manager.save = function() {
-      var end, obs, start, user, password, auxiliar, animal, offsale;
+      var end, obs, start, user, password, auxiliar, 
+      animal, tooth, price, amount, offsale;
       start = $("#start").val() + " " + $("#hour_start").val();
       // aqui é start mesmo pq dt fim não é informada
       end = $("#start").val() + " " + $("#hour_end").val();
@@ -358,6 +354,7 @@
       obs = $("#obs").val();
       activity = $("#activity").val();
       product = $("#product").val();
+      tooth = $("#tooth").val();
       var valid = false;
       if ((!$("#customer").val()) || (parseFloat($("#customer").val()) == 0)) {
         return alert('Um cliente precisa ser selecionado');
@@ -399,6 +396,7 @@
             "user": user,
             "auxiliar": auxiliar,
             "animal": animal,
+            "tooth": tooth,
             "offsale": offsale,
             "password": password,
             "customer": customer,
@@ -451,6 +449,7 @@
   })();
 
   $(function() {
+    $('#tooth').toothField(false);
     $("#forget").click(function() {
       $("#password").val("1234").change(); 
       $("#user").val("0");
@@ -536,7 +535,7 @@
     var hasEdoctusSystem = $('.has-edoctus-system').length > 0;
     if (hasEdoctusSystem) {
 //    if (document.location.href.indexOf("edoctus") != -1) {
-      var min = 5 // minutos para rfresh
+      var min = 5 // minutos para refresh
       setTimeout(function(){    
         window.location.reload();
       },1000*60*min);

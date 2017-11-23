@@ -171,10 +171,10 @@ object EmailUtil {
             "VilarikA Soluções OnLine"
           }
         try {
-      println ("vaii =================== try no email util GENERICO")
+  //    println ("vaii =================== try no email util GENERICO")
 
-        Thread.sleep (300);
-        Mailer.sendMail(
+        Thread.sleep (500);
+        Mailer.blockingSendMail(
            Mailer.From(from, Full("Notificações " + product2 + " " + local1)),
            Mailer.Subject(title),
            Mailer.To(prefix + email),
@@ -186,7 +186,16 @@ object EmailUtil {
           case e:Exception => {
             //e.printStackTrace
             println ("vaiiii ========================= Erro ao enviar email GENERICO - "+e.getMessage)
+            log.subject(title + " ERRO ======= ").save
 //            LogActor ! "Erro ao enviar email - "+e.getMessage
+            Thread.sleep (60000);
+            Mailer.blockingSendMail(
+               Mailer.From(from, Full("Notificações " + product2 + " " + local1)),
+               Mailer.Subject(title),
+               Mailer.To(prefix + email),
+               Mailer.ReplyTo(prefix + companyEmail1, Full(companyName)),
+               toSend
+               )
           }
           case _ =>
         }
@@ -223,9 +232,9 @@ object EmailUtil {
         }
 */
         try{
-          Thread.sleep (300);
-      println ("vaii =================== try no email util")
-          companyUnit.mailer.sendMail(
+          Thread.sleep (500);
+//      println ("vaii =================== try no email util")
+          companyUnit.mailer.blockingSendMail(
              companyUnit.mailer.From(company.email.is.split(",|;")(0), Full(company.name.is)),
              companyUnit.mailer.Subject(title),
              companyUnit.mailer.To(prefix + email),
@@ -238,7 +247,17 @@ object EmailUtil {
           case e:Exception => {
             //e.printStackTrace
             println ("vaiiii ========================= Erro ao enviar email - "+e.getMessage)
+            log.subject(title + " ERRO ======= ").save
 //            LogActor ! "Erro ao enviar email - "+e.getMessage
+            Thread.sleep (60000);
+            companyUnit.mailer.blockingSendMail(
+               companyUnit.mailer.From(company.email.is.split(",|;")(0), Full(company.name.is)),
+               companyUnit.mailer.Subject(title),
+               companyUnit.mailer.To(prefix + email),
+               companyUnit.mailer.ReplyTo(company.email.is.split(",|;")(0), Full(company.name.is)),
+  //             companyUnit.mailer.XHTMLMailBodyType(toSend)
+               toSend
+               )        
           }
           case _ =>
         }
@@ -367,12 +386,22 @@ object EmailUtil {
             <br/>
             <br/>
             <a href={"http://" + appName + ".vilarika.com.br/"}><img src={"http://" + appName + ".vilarika.com.br/images/logo_fbr_name_"+ appName+".png"} style="width: 50px;"/></a>
-            <img src={"http://" + appName + ".vilarika.com.br/system/makeMailAsRead/"+id.toString} style="width: 0px;"/>
+            <img src={if (Project.isLocalHost) {
+              "localhost:7171/system/makeMailAsRead/"+id.toString
+              } else {
+              "http://" + appName + ".vilarika.com.br/system/makeMailAsRead/"+id.toString
+              }
+              } style="width: 0px;"/>
           </div>
   
   def simpleFooterHtml(id:Long, appName:String) = <div>
             <a href={"http://"+appName+".vilarika.com.br/"}> Enviado via <img src={"http://"+appName+".vilarika.com.br/images/logo_fbr_name_"+appName+".png"} style="width: 50px;"/></a>
-            <img src={"http://" + appName + ".vilarika.com.br/system/makeMailAsRead/"+id.toString} style="width: 0px;"/>
+            <img src={if (Project.isLocalHost) {
+              "localhost:7171/system/makeMailAsRead/"+id.toString
+              } else {
+              "http://" + appName + ".vilarika.com.br/system/makeMailAsRead/"+id.toString
+              }
+              } style="width: 0px;"/>
           </div>
   def simpleFooterHtmlEgrex(id:Long, company:Company) = <div>
             <br/>

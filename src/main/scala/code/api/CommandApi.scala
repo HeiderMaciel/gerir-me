@@ -86,7 +86,7 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					to_char (tr.start_c, 'hh24:mi'),
 					to_char (ted.arrivedat, 'hh24:mi'),
 					bc.name, ba.short_name, ban.short_name as pet, 
-					pr.name, td.amount, td.price, 
+					pr.name, tdd.tooth, td.amount, td.price, 
 					tr.status, 
 					trim (COALESCE (ted.obsLate, '') || ' ' || tr.obs || ' ' || td.obs), 
 					'Aguardando a ' || to_char (now() - ted.arrivedat,'hh24:mi'),
@@ -101,6 +101,7 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					inner join product pr on pr.id = td.activity or pr.id = td.product
 					left join treatedoctus ted on ted.treatment = tr.id
 					left join tdepet tdp on tdp.treatmentDetail = td.id
+					left join tdedoctus tdd on tdd.treatmentDetail = td.id
 					left join business_pattern ban on ban.id = tdp.animal
 					where tr.company = ? 
 					and (tr.user_c = ? or td.auxiliar = ?)  
@@ -140,7 +141,7 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					select to_char (tr.start_c,'hh24:mi') , bc.name as cliente, bp.short_name as profissional, 
 					ba.short_name as assistente, 
 					ban.short_name as pet, 
-					pr.short_name as prodserv, td.id, bc.id, bp.id, 
+					pr.short_name as prodserv, tooth, td.id, bc.id, bp.id, 
 					ba.id, -- assitente
 					ban.id -- animal
 					from treatment tr
@@ -150,6 +151,7 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					inner join product pr on pr.id = td.activity or pr.id = td.product and pr.productclass in (0,1)
 					left join business_pattern ba on ba.id = td.auxiliar
 					left join tdepet tdp on tdp.treatmentDetail = td.id
+					left join tdedoctus tdd on tdd.treatmentDetail = td.id
 					left join business_pattern ban on ban.id = tdp.animal
 					where tr.company = ? 
 					and tr.dateevent = ?
@@ -185,12 +187,16 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				def price = S.param("price") openOr ""
 				def amount = S.param("amount") openOr ""
 				def animal = S.param("animal") openOr ""
+				def tooth = S.param("tooth") openOr ""
 				def offsale = S.param("offsale") openOr ""
+				def status = S.param("status") openOr ""
+				def project = S.param("project") openOr "" // normaly budget
+				def projectSection = S.param("projectSection") openOr "" // normaly budget section
 
 				def userId:String = S.param("user") openOr "0"
 				def customerId:String = S.param("customer") openOr "0"
 				def auxiliarId:String = S.param("auxiliar") openOr "0"
-
+println ("vaiiii ====================== " + status)				
 				if (AuthUtil.user.isCommandPwd) {
 					if (!User.loginCommand(userId.toLong, password)) {
 						throw  new Exception("Senha inválida!");
@@ -198,9 +204,22 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				}
 
 				var tempt = TreatmentService.factoryTreatment("", customerId, userId, start, start, end,"0")
+				if (status == "9") { // budget
+					if (!tempt.get.hasDetail) {
+						println ("vaiii ====== criou agora ")
+						tempt.get.showInCalendar(false)
+						tempt.get.markAsBudget
+						tempt.get.save
+					} else {
+						println ("vaiiiii ===== ja tava criado nao altera o status")
+					}
+				} else {
+					println ("vaiiiii ===== NAO é ORCAMENTO")
+				}
 				if (activity.isEmpty || activity == "") {
 					var prod = Product.findByKey(product.toLong).get
-					var tempd1 = TreatmentService.addDetailTreatment(tempt.get.id, prod, animal.toLong, offsale.toLong)
+					var tempd1 = TreatmentService.addDetailTreatment(tempt.get.id, 
+						prod, animal.toLong, offsale.toLong)
 					if (amount != "" && amount != "1") {
 						//println ("vai amount ========= " + amount );
 						tempd1.get.amount(amount.toDouble).price(tempd1.get.price*amount.toDouble).save
@@ -211,9 +230,13 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					if (obs != "") {
 						tempd1.get.obs(obs).save
 					}
+					if (status == "9" && project != "") { // budget
+						ProjectTreatment.createProjectTreatment(project.toLong, 
+							projectSection.toLong, tempt.get.id, tempd1.get.id)
+					}
 				} else {
 					var tempd = TreatmentService.addDetailTreatmentWithoutValidate(tempt.get.id, activity.toLong, 
-						auxiliarId.toLong, animal.toLong, offsale.toLong)
+						auxiliarId.toLong, animal.toLong, tooth, offsale.toLong)
 					if (amount != "" && amount != "1") {
 						tempd.get.amount(amount.toDouble).price(tempd.get.price*amount.toDouble).save
 					}
@@ -222,6 +245,10 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					}
 					if (obs != "") {
 						tempd.get.obs(obs).save
+					}
+					if (status == "9" && project != "") { // budget
+						ProjectTreatment.createProjectTreatment(project.toLong, 
+							projectSection.toLong, tempt.get.id, tempd.get.id)
 					}
 				}
 				if (end != "" && end.length > 11) {
@@ -303,7 +330,7 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 		}
 		case "command" :: "setpet" :: Nil Post _ => {
 			//
-	        // usado tambem na Agenda além de aqui na comnda e no caixa
+	        // usado tambem na Agenda além de aqui na comanda e no caixa
 	        //
 			try { 
 				def petId:String = S.param("animal") openOr "0"
@@ -322,6 +349,30 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				} else {
 					// agenda deixa excluir e alterar pet setado
 					td.getTdEpet.animal(petId.toLong).save;
+				}
+				JInt(1)
+			} catch {
+			  case e: Exception => JString(e.getMessage)
+			}			
+		}
+		case "command" :: "settooth" :: Nil Post _ => {
+			//
+	        // usado tambem na Agenda além de aqui na comanda e no caixa
+	        //
+			try { 
+				def tooth:String = S.param("tooth") openOr ""
+				def tdId:String = S.param("tdid") openOr "0"
+				def command:Boolean = S.param("command") == "1"
+				val td = TreatmentDetail.findByKey (tdId.toLong).get
+				val tdtooth = td.getTdEdoctus.tooth;
+				if (tdtooth == tooth && tooth != "") {
+					// agenda
+					throw new RuntimeException (tooth + " já é o dente neste serviço!")
+				} else if (tdtooth == "" || tdtooth == null) {
+					td.getTdEdoctus.tooth(tooth).save;
+				} else {
+					// agenda deixa excluir e alterar pet setado
+					td.getTdEdoctus.tooth(tooth).save;
 				}
 				JInt(1)
 			} catch {

@@ -1,3 +1,7 @@
+select id, name as nome, commission as comissao, saleprice as preco, duration as duracao, obs from product where company = 387 and productclass = 0
+order by name
+
+
 rever o IP no 
 boot.scala
 no toolbar.html
@@ -6,6 +10,24 @@ no securityapi
 
 http://convertico.com/ favicon
 
+https://github.com/clovisdasilvaneto/speechRecognition/blob/master/meu_artigo.html
+
+https://github.com/lift/framework/blob/5033c8798d4444f81996199c10ea330770e47fbc/core/util/src/main/scala/net/liftweb/util/Mailer.scala
+
+/**
+   * Synchronously send an email.
+   */
+  def blockingSendMail(from: From, subject: Subject, rest: MailTypes*) {
+    msgSendImpl(from, subject, rest.toList)
+  }
+
+graph chart
+console.log(data.map(function(a){
+	return {
+		0: a[0],
+		1: a[1]
+	}
+}));
 
 -- Function: sys_eval999(text)
 

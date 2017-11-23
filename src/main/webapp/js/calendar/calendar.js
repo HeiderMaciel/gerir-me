@@ -1,5 +1,5 @@
-var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar,endCalendar, 
-	    commandControl, autoOpenCalendar, permissions, 
+var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar,endCalendar,
+	    commandControl, autoOpenCalendar, permissions,
 	    features, unit, calendarShowLight,
 	    calendarShowInterval, ignoreParameter){
 			if(!ignoreParameter){
@@ -31,14 +31,14 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 					// });
 				}else{
 					$("#show_conflits").hide();
-					
+
 					var toggle = true;
 
 					$('#toggle_interval').click(function() {
-						if (toggle) {				
+						if (toggle) {
 							$('#calendar').weekCalendar('option', 'timeslotsPerHour', 60/intervalAlt);
-							global_interval = intervalAlt; //15;	
-						} else {					
+							global_interval = intervalAlt; //15;
+						} else {
 							$('#calendar').weekCalendar('option', 'timeslotsPerHour', 60/interval);
 							global_interval = interval;
 						}
@@ -114,7 +114,7 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 								}
 								if(confirm(message)){
 									TreatmentManger.removeTreatmentById(calEvent.id,calendar,calEvent);
-								}								
+								}
 							} else {
 								alert ("Suas permissões não permitem excluir agendamento");
 							}
@@ -137,7 +137,7 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 								if (!calendarShowLight) {
 									$event.find(".wc-time").css({backgroundColor: color.headColor, color:color.text, border:"1px solid " + color.headColor});
 								} else {
-									// usa cores claras o que antes era header vira só a borda e usa a cor 
+									// usa cores claras o que antes era header vira só a borda e usa a cor
 									// do complemento no header
 									$event.find(".wc-time").css({backgroundColor: color.color, color:color.text, border:"1px solid " + color.headColor});
 								}
@@ -153,7 +153,7 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 							if(calEvent.status == 'not_work'){
 								$event.css("backgroundColor", "#9C9C9C");
 								$event.find(".wc-time").css({backgroundColor: " #9C9C9C ", border:"1px solid #000000"});
-							}							
+							}
 */
 						},
 						timeSeparator : ' Ate ',
@@ -211,14 +211,14 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 									}else{
 										// se nao tem cliente é bloqueio de profissional
 										if (calEvent.title == "") {
-											obs = "Bloqueio sem descrição"	
+											obs = "Bloqueio sem descrição"
 										} else {
 											obs = calEvent.title
 										}
 										alert(calEvent.userName + " - " + obs);
 									}
 								}
-								click1 = Date.toDay();								
+								click1 = Date.toDay();
 							}
 						},
 						draggable : function(){
@@ -269,7 +269,7 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 				}else{
 					$("#calendar").html(
 						'<form class="vr-form">' +
-						'	<input size="19" name="data_calendar_end" id="data_calendar_end" class="date">' + 
+						'	<input size="19" name="data_calendar_end" id="data_calendar_end" class="date">' +
 						'</form>'
 					);
 
@@ -277,7 +277,7 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 						beforeShow: function() {
 							setTimeout(function(){
 								$('#ui-datepicker-div').css('z-index',10000);
-								
+
 							}, 0);
 						}
 					}).val(Date.toDay().getDateBr());
@@ -286,7 +286,7 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 						beforeShow: function() {
 							setTimeout(function(){
 								$('#ui-datepicker-div').css('z-index',10000);
-								
+
 							}, 0);
 						}
 					}).val(Date.toDay().getDateBr());
@@ -311,8 +311,8 @@ $(function(){
 	});
 	$("#customer_arrived").click(TreatmentStatusManager.markAsArrived);
 	$("#customer_confirmed").click(TreatmentStatusManager.markAsConfirmed);
-	$("#customer_open").click(TreatmentStatusManager.markAsOpen);	
-	$("#customer_preopen").click(TreatmentStatusManager.markAsPreOpen);	
+	$("#customer_open").click(TreatmentStatusManager.markAsOpen);
+	$("#customer_preopen").click(TreatmentStatusManager.markAsPreOpen);
 	$("#customer_missed").click(TreatmentStatusManager.markAsMissed);
 	$("#customer_reschedule").click(TreatmentStatusManager.markAsReSchedule);
 	$("#customer_ready").click(TreatmentStatusManager.markAsReady);
@@ -328,12 +328,12 @@ $(function(){
 	});
 
 	/*
-	$("#activitys").select2({ 
+	$("#activitys").select2({
 		formatResult : Customer.hasEspecialFormat,
 		formatSelection: Customer.hasEspecialFormat
 	});
 	*/
-	
+
 	$("#treatment_fit_show").click(function(){
 		var treatment = global_treatments.filter(function(a){ return a.id==global_calEvent.id })[0];
 		$("#treatment_add").modal('hide');
@@ -345,6 +345,7 @@ $(function(){
 
 		$("#cutomer_id_treatment").val("");
 		$("#command_treatment").val("");
+		$("#obs_treatment").val(""); // rigel 23/10/2017
 		$("#imgthumb_customer").attr("src", "");
 		//$("#treatment_parent_id").val($("#treatment_id").val());
 		$("#treatment_id").val("")
@@ -356,23 +357,36 @@ $(function(){
 		TreatmentManger.saveTreatment();
 	});
 
-	$("#add_detail_button").click(function(){
-		var aux = $("#auxiliar").val() 	|| 0;
-		var ani = $("#animal").val() 	|| 0;
-		var off = $("#offsale").val() 	|| 0;
 
-		var treatmentId = $("#treatment_id").val();
-		var activities = $("#activitys").val();
-		
-		TreatmentManger.addDetail(treatmentId, activities, aux, ani, off);
-		
-		$("#auxiliar").val("").change();
+	var callApiLock = false;
+	$("#add_detail_button").click(function(){
+		if (!callApiLock) {
+			callApiLock = true
+			var aux = $("#auxiliar").val() || 0;
+			var ani = $("#animal").val()   || 0;
+			var tooth = $("#tooth").val()  || 0;
+			var off = $("#offsale").val()  || 0;
+
+			var treatmentId = $("#treatment_id").val();
+			var activities = $("#activitys").val();
+
+			TreatmentManger.addDetail(treatmentId, activities, aux, ani, tooth, off);
+
+			$("#auxiliar").val("").change();
+
+			setTimeout(function(){
+				callApiLock = false;
+			}, 200);
+
+		} else {
+			alert("Já existe um processo em andamento. Aguarde o fim do processamento para clicar novamente!");
+		}
 	});
 
 	$(".send_email_customer").click(function(){
 		sendEmailCustomer({id:$("#treatment_id").val()});
 	});
-	
+
 	$(".send_email_user").click(function(){
 		sendEmailUser({id:$("#treatment_id").val()});
 	});
@@ -407,7 +421,7 @@ $(function(){
 			$("#animal").val("").change();
 			$("#offsale").val("").change();
 	});
-	$('#tooth').toothField(false);
+	$('#tooth').toothField(true);
 	$('#auxiliar').auxiliarField(false);
     $("#offsale").offSaleField(true);
     Customer.addonsListeners.push(processOffSale);
@@ -454,7 +468,7 @@ $(function(){
 	});
 	$('#treatment_add').on('hidden', function () {
  		global_calEvent = undefined;
- 	});	
+ 	});
 
 	$("#units").change(function(){
 		var unit = $("#units").val();
@@ -478,7 +492,7 @@ $(function(){
 		}
 	});
 	//setTimeout("createHours()",100);
-	
+
 	$("#keep_with_customer").click(function(){
 		if(Customer.current){
 			setTimeout('$("#cutomer_id_treatment").val('+Customer.current.id+').focus().change();', 500);
@@ -496,6 +510,10 @@ $(function(){
 			EventBusyController.save(new EventBussy(start, end, user, obs), function(sucess, error){
 				if(sucess){
 					alert("Bloqueio salvo com sucesso!");
+					// 09/10/2017 - rigel para mostrar bloqueio
+					// fora do dia corrente
+					// antes tinha que dar setinha pra frente e voltar
+					$('#calendar').weekCalendar("refresh");
 				}else{
 					alert(eval(error));
 					CalendarManager.closeTreatmentPopUp();

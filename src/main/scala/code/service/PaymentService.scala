@@ -32,7 +32,11 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 		val validTreatments = treatRemovedTreatments(treatments)
 		validTreatments.map((t:TreatmentDTO) => {
 			val treatment:Treatment = factoryTreatment(t,command,dateTreatment)
-			saveTreatment(treatment, validate)
+			if (treatment.hasDetail || status != 4) {
+				// rigel 08/11/2017
+				// fiz o if pq antes setava paid em treatment vazio
+				saveTreatment(treatment, validate)
+			}
 			
 			val validActivities = treatRemovedActivity(t.activitys)
 			validActivities foreach((a:ActivityDTO) => {
@@ -51,12 +55,19 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 		        if (AuthUtil.company.appType.isEbellepet) {
 					detail.getTdEpet.animal(a.animal).save;
 				}
+		        if (AuthUtil.company.appType.isEsmile) {
+					detail.getTdEdoctus.tooth(a.tooth).save;
+				}
 			})
-			treatment.status(status)
-			if (status2 =="4") {
-				treatment.status2(status)
+			if (treatment.hasDetail || status != 4) {
+				// rigel 08/11/2017
+				// fiz o if pq antes setava paid em treatment vazio
+				treatment.status(status)
+				if (status2 =="4") {
+					treatment.status2(status)
+				}
+				saveTreatment(treatment, validate)
 			}
-			saveTreatment(treatment, validate)
 			treatment
 		})
 	}
@@ -432,7 +443,7 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 }
 case class ActivityDTO(activityId:Int, activityType:String, id:Int, price:Double, 
 	removed:Boolean, amount:Float, for_delivery:Boolean, parentBom:Int, 
-	auxiliar:Int=0, animal:Int=0, offsale:Int=0);
+	auxiliar:Int=0, animal:Int=0, tooth:String="", offsale:Int=0);
 
 case class PaymentDTO(typePayment:Int,value:Double,removed:Boolean,chequeInfo:ChequeRequest, dateDetailStr:String){
 	def this(typePayment:Int,value:Double,removed:Boolean, dateDetailStr:String) = this( typePayment, value, removed, null, dateDetailStr);

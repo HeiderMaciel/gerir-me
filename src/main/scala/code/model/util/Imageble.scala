@@ -24,7 +24,7 @@ trait Imageble{
   def logo_web = Props.get("photo.urlbase").get+imagePath+"/"+image.is
   //def logo_web = Props.get("photo.urlbase").get+image.is
   def image_web = Props.get("photo.urlbase").get+image.is
-  def imagePath:String
+  def imagePath:String // diretorio definido em cada model
 
   def thumb = imagethumb.is match {
     case img:String if(img!="") => <img style="width:24px" src={thumbPath}/>

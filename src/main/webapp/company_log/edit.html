@@ -4,7 +4,7 @@
 			<div class="well">
 				<label for="btn"></label>
                 <input class="btn success lift:SecuritySnippet.isNotAdminRead" type="submit" value="Salvar">
-				<a class="btn primary" href="/company/payment_forms_list">
+				<a class="btn primary" href="/financial/payment_forms_list">
 					<img src="/images/money.png" width="16">
 					Formas de Pagamento
 				</a>
@@ -92,13 +92,13 @@
                   <span class="help-block">Política de cancelamento enviada na notificação do cliente</span>
                </div>
             </div>          
-			<div class="clearfix">
+			<!--div class="clearfix">
 	            <label for="autoIncrementCommand">Incrementar automaticamente comandas</label>
 	            <div class="input">
 	              <input id="autoIncrementCommand" name='autoIncrementCommand'>
 	              <span class="help-block">Não utiliza comanda numerada</span>
 	            </div>
-          	</div>
+          	</div-->
 			<div class="clearfix">
 				<label for="commandControl">Controle de Comandas</label>
 				<div class="input">
@@ -271,6 +271,22 @@
 				              <span class="help-block">Mostra agendamentos de unidades diferentes da corrente?</span>
 				            </div>
 			          	</div> 
+						<div class="clearfix">
+							<label for="calendarPub">Agenda Pública</label>
+							<div class="input">
+							  <select class="xlarge" id="calendarPub" name="calendarPub" >
+							  </select>
+							</div>
+						</div>
+			            <div class="clearfix">
+			                <label for="calendarUrl">Compl url agenda</label>
+			                <div class="input">
+			                    <div class="input-prepend">
+			                        <input class="xlarge" id="calendarUrl" name="calendarUrl" size="16" type="text">
+			                    </div>
+				              <span class="help-block">Para acessar a agenda ebelle.com.br/agenda.html/complemento</span>
+			                </div>
+			            </div>
 				    </div>
 				  </div>
 				</div>

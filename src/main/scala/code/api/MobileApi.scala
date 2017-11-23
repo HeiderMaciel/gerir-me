@@ -107,7 +107,8 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
         AuthUtil << userObj.unit.obj.get
 
         var treatment = TreatmentService.factoryTreatment("", customer.id.is.toString, user, date, hour_start, hour_start, "", "Agendamento Online","", true).get
-        TreatmentService.addDetailTreatmentWithoutValidate(treatment.id.is, activity.toLong, 0l, 0l, 0l)
+        TreatmentService.addDetailTreatmentWithoutValidate(treatment.id.is, 
+          activity.toLong, 0l /* auxiliar */ , 0l /* animal */, "" /* tooth*/, 0l /* offsale */)
         treatment.markAsPreOpen
         treatment.save
         JInt(1)
@@ -159,12 +160,7 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
       for {
         company <- S.param("id") ?~ "id parameter missing" ~> 400
       } yield {
-        val companyLong = if (company == "") {
-          1l
-        } else {
-          // testar aqui número e buscar na company pela url
-          company.toLong
-        }
+        val companyLong = Company.calPubCompany (company)
         val ac = Company.findByKey(companyLong).get
         asJson (ac)
       }
@@ -179,12 +175,7 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
         email <- S.param("email") ?~ "email parameter missing" ~> 400
         password <- S.param("password") ?~ "password parameter missing" ~> 400
       } yield {
-        val companyLong = if (company == "") {
-          1l
-        } else {
-          // testar aqui número e buscar na company pela url
-          company.toLong
-        }
+        val companyLong = Company.calPubCompany (company)
         var ac = Customer.findAll (By(Customer.company, companyLong),
           Like (Customer.email, "%"+email+"%"));
         if (ac.length > 0) {

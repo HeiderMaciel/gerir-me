@@ -62,6 +62,12 @@
     }
   };
   var decodeStatus = function(status, status2){
+          trStatus = 0;
+          trStatus2 = 1; // nao tem
+          var row = [];
+          row.push (status, status2)
+          return trStatusdecode ('',row)
+/*
     // duplicado no treatmentManger.js
           var statstr = '' 
           var title = ''
@@ -106,6 +112,7 @@
           }
           //"<img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+".png' width='24'/>" +
     return "<img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+"1.png' width='24'/>"
+*/
   };
   var executa_rel = function(){
         $.post("/treatments/getTreatmentsByFilter",$("#form_search").serialize(),function(t){

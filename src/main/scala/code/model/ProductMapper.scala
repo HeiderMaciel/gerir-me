@@ -130,7 +130,7 @@ trait ProductMapper[OwnerType <: ProductMapper[OwnerType]] extends Audited[Owner
             //val n1 = this.name.is
             c.name.set (BusinessRulesUtil.convertChars(c.name));
             println ("vaiii ================ product name === " + c.name)
-            if (c.testIfDuplicatedName (c.id, c.name)) {
+            if (c.testIfDuplicatedName (c.company, c.id, c.name)) {
                 c.name (c.name + " " + i.toString)
                 i = i + 1;
             }
@@ -142,7 +142,7 @@ trait ProductMapper[OwnerType <: ProductMapper[OwnerType]] extends Audited[Owner
         activity.foreach((c)=>{
             c.name.set (BusinessRulesUtil.convertChars(c.name));
             println ("vaiii ================ activity name === " + c.name)
-            if (c.testIfDuplicatedName (c.id, c.name)) {
+            if (c.testIfDuplicatedName (c.company, c.id, c.name)) {
                 c.name (c.name + " " + i.toString)
                 i = i + 1;
             }

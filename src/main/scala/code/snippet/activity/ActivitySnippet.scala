@@ -79,6 +79,7 @@ class  ActivitySnippet extends BootstrapPaginatorSnippet[Activity] with SnippetU
 
 			page.flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
+							"shortname" -> Text(ac.short_name.is),
 							"duration" -> Text(ac.duration.is),
 							"obs" -> Text(ac.obs.is),
 							"type" -> Text(ac.typeActivityName),

@@ -82,6 +82,13 @@ object SecuritySnippet {
         NodeSeq.Empty
       }
 
+      def isPeopleManager(in:NodeSeq):NodeSeq ={
+        if (AuthUtil.user.isPeopleManager)
+        in
+        else
+        NodeSeq.Empty
+      }
+
       def isInventoryManager(in:NodeSeq):NodeSeq ={
         if (AuthUtil.user.isInventoryManager)
         in
@@ -382,6 +389,25 @@ object SecuritySnippet {
         else
           NodeSeq.Empty
       }      
+      def hasBMIndexModule(in:NodeSeq):NodeSeq ={
+        if (PermissionModule.bmindex_?)
+          in
+        else
+          NodeSeq.Empty
+      }      
+      def hasContactModule(in:NodeSeq):NodeSeq ={
+        if (PermissionModule.contact_?)
+          in
+        else
+          NodeSeq.Empty
+      }      
+      def hasCostcenterModule(in:NodeSeq):NodeSeq ={
+        if (PermissionModule.costcenter_?)
+          in
+        else
+          NodeSeq.Empty
+      }      
+
 //
       def calendarFixed (in:NodeSeq):NodeSeq ={
         if (AuthUtil.user.calendarFixed_?)

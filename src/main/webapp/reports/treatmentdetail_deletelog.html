@@ -8,6 +8,14 @@
   $(function(){
     var fields = [];
     fields[0] = "int";
+    fields [3] = {
+      type : "format",
+      decode: function(name, row) {
+        trStatus = 3;
+        trStatus2 = 3;
+        return trStatusdecode (name,row)
+      }
+    };
     fields[4] = "dateTime";
     fields[5] = "dateTime";
     fields[11] = "dateTime";

@@ -108,6 +108,28 @@ class OffSale extends Audited[OffSale] with KeyedMapper[Long, OffSale]
         offsale(this.id).is_unit_?(false).is_member_?(false).save
         super.save()
     }
+      override def delete_! = {
+          if(Customer.count(By(Customer.offsale,this.id)) > 0){
+              throw new RuntimeException("Existe cliente para esse convênio! ")
+          }
+
+          if(TreatmentDetail.count(By(TreatmentDetail.offsale, this.id)) > 0){
+            throw new RuntimeException("Existe atendimento com este convênio!")
+          }
+
+          if(TreatEdoctus.count(By(TreatEdoctus.offsale, this.id)) > 0){
+            throw new RuntimeException("Existe atendimento(edoctus) com este convênio!")
+          }
+
+          if(OffSaleProduct.count(By(OffSaleProduct.offsale, this.id)) > 0){
+            throw new RuntimeException("Existe relacionamento com produto/serviço para este convênio!")
+          }
+
+          // deleta o parceiro associado ao convênio
+          val ac = this.getPartner
+          super.delete_!
+          ac.delete_!
+      }
 }
 
 object OffSale extends OffSale with LongKeyedMapperPerCompany[OffSale] with OnlyActive[OffSale]{

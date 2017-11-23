@@ -23,30 +23,61 @@
           }
         }
         fields[4] = "real";
-        fields[5] = "real";
+        //fields[5] = "real";
+        fields[5] = {
+          type : "format",
+          decode: function(name, row) {
+            var color = "red"
+            if (row[5] != row[4]) {
+            return "<p style='color:" + color + "'>" + 
+                realDecode(row[5]) + "<p/>"
+            } else {
+              return realDecode(row[5])
+            }
+          }
+        }
         fields[7] = "date";
         fields[8] = "date";
+        fields[8] = {
+          type : "format",
+          decode: function(name, row) {
+            var color = "red"
+            if (row[8] != row[7]) {
+            return "<p style='color:" + color + "'>" + 
+                dateDecode(row[8]) + "<p/>"
+            } else {
+              return dateDecode(row[8])
+            }
+          }
+        }
         if (!hasUnitModule) {
           fields[9] = "none";
         }
-        var url = "/report/paymenttype_details";
+        var url = "/report/paymenttype_details/false";
         var total_to_pay = 0.00;
         var request = function(){
           var total = 0.00;
-          var total_sale = 0.00;
+          //var total_sale = 0.00;
           var total_paid = 0.00;
-          var count = 0.0;
+          var countpt = 0.0;
           var params = $("#form_report").serializeObject();
           renderReport(url,fields,Cachier.prepareCashierParams(params),"#grid", function(data){
             data.forEach(function(row){
-              total_sale += parseFloat(row[4]);
+              //total_sale += parseFloat(row[4]);
               total_paid += parseFloat(row[5]);
-              count += 1;
+              countpt += 1;
             });
-            $("#total_sale").val(total_sale.formatMoney());
+            //$("#total_sale").val(total_sale.formatMoney());
             $("#total_paid").val(total_paid.formatMoney());
+            $("#countpt").val(countpt);
+          });
+          $.post("/report/paymenttype_details/true", $("#form_report").serializeObject(), function(r){
+            var total = parseFloat(eval(r)[0][0]);
+            $("#total_sale").val((total).formatMoney());
+            var count = parseFloat(eval(r)[0][1]);
             $("#count").val(count);
           });
+
         }
         $("#send").click(request);
         if (gup("cashier") != "") {
@@ -140,6 +171,11 @@
                     <span class="help-block">Total de Venda</span>
                   </div>
                   <div class="input-prepend" style="float:left; padding-right:10px">
+                    <span class="add-on"><img src="/images/count.png" width="16"></span>
+                    <input class="small" id="countpt" name="countpt" size="19" placeholder="0.00" type="text">
+                    <span class="help-block">Nro de Pagtos</span>
+                  </div>
+                  <div class="input-prepend" style="float:left; padding-right:10px">
                     <span class="add-on"><img src="/images/remove.png" width="16"></span>
                     <input class="small" id="total_paid" name="total_paid" size="19" placeholder="0.00" type="text">
                     <span class="help-block">Total de Pagto</span>
@@ -164,6 +200,7 @@
         <th>Data</th>
         <th>Vencimento</th>
         <th class="clearfix lift:SecuritySnippet.hasUnitModule">Unidade</th>
+        <th>Usuário</th>
         </tr>
       </thead>
       <tbody>

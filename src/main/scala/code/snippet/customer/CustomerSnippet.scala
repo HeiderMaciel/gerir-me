@@ -318,15 +318,8 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 			"#img_thumb" #> ac.thumb&
 			"name=manager" #> (SHtml.text(ac.bp_managerName, (a:String) => {}))&
 			"name=indicatedby" #> (SHtml.text(ac.bp_indicatedbyName, (a:String) => {}))&
-			"name=bp_indicatedby" #> (SHtml.text(ac.bp_indicatedby.is.toString, (p:String) => ac.bp_indicatedby(p.toLong)))&
-			"name=bp_manager" #> (SHtml.text(ac.bp_manager.is.toString, (p:String) => { 
-					if(p != "")
-						ac.bp_manager(p.toLong)
-					else
-						ac.bp_manager(0)
-
-			}))&
-			//ac.bp_manager(p.toLong)))&
+			"name=bp_indicatedby" #> (SHtml.text(ac.bp_indicatedby.is.toString, (p:String) => ac.bp_indicatedby(BusinessRulesUtil.snippetToLong(p))))&
+			"name=bp_manager" #> (SHtml.text(ac.bp_manager.is.toString, (p:String) => ac.bp_manager(BusinessRulesUtil.snippetToLong(p))))&
 			"name=name" #> (SHtml.text(ac.name.is, ac.name(_))++SHtml.hidden(process))
 
 		}catch {

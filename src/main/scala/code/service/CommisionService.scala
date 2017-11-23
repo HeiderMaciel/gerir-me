@@ -173,13 +173,26 @@ trait CommissionCalculator {
   protected def comissionProcessedProcess(pd:PaymentDetail){
     pd.commisionNotProcessed(0).save
   }
-  protected def buildCommission(company: Long, payment: Payment, finalValue: BigDecimal, due_date: Date, payment_date: Date, payment_detail: PaymentDetail, treatment_detail: TreatmentDetail, user: User, cheque: Box[Cheque], commision: Box[Commision] = Empty): Commision = {
+  protected def buildCommission(company: Long, payment: Payment, 
+    finalValue: BigDecimal, due_date: Date, 
+    payment_date: Date, payment_detail: PaymentDetail, 
+    treatment_detail: TreatmentDetail, user: User, 
+    cheque: Box[Cheque], 
+    commision: Box[Commision] = Empty): Commision = {
     val commisionObj = commision match {
       case Full(c) => c
       case _ => Commision.create
     }
     comissionProcessedProcess(payment_detail)
-    commisionObj.company(company).payment(payment).value(finalValue.toDouble).due_date(due_date).payment_date(payment_date).payment_detail(payment_detail).treatment_detail(treatment_detail).check(cheque).user(user).product(treatment_detail.activity_id)
+    commisionObj.company(company).payment(payment)
+    .value(finalValue.toDouble)
+    .due_date(due_date)
+    .payment_date(payment_date)
+    .payment_detail(payment_detail)
+    .treatment_detail(treatment_detail)
+    .check(cheque)
+    .user(user)
+    .product(treatment_detail.activity_id)
 /*    primeira tentativa de gerar a comissão do supeior - 
       tb funcionaria, mas a oura solução ficou melhor - rigel - 02/2017
       faltava ainda aceertar o valor
@@ -196,8 +209,13 @@ trait CommissionCalculator {
 
   def canBeBuyingBpMonthly = true;
 
-  def dicountPerPaymentType(value: Double, payment_detail: PaymentDetail): Double = {
-    value * (payment_detail.typePaymentObj.get.percentDiscountToCommision.is / 100).toDouble
+  def discountPerPaymentType(value: Double, payment_detail: PaymentDetail, user:User): Double = {
+    // rigel 18/10/2017
+    if (user.discountToCommission_?) {
+      value * (payment_detail.typePaymentObj.get.percentDiscountToCommision.is / 100).toDouble
+    } else {
+      0.0;
+    }
   }
   def paymentDate(payment_detail: PaymentDetail): Date = payment_detail.payment.obj.get.datePayment.is
   def cheque(payment_detail: PaymentDetail): Box[Cheque] = Empty
@@ -259,15 +277,15 @@ trait CommissionCalculator {
 
           val finalValueWithoudDicount = (valueToUser * percent_in_total).toDouble //dicountPerPaymentType(,payment_detail)
 
-          val dicountPerPaymentTypeValue = dicountPerPaymentType(finalValueWithoudDicount, payment_detail)
+          val discountPerPaymentTypeValue = discountPerPaymentType(finalValueWithoudDicount, payment_detail, user)
 
-          if (dicountPerPaymentTypeValue > 0.0) {
+          if (discountPerPaymentTypeValue > 0.0) {
             commision.addDetail("Val prof antes desc fpagto " + finalValueWithoudDicount, finalValueWithoudDicount.toDouble)
           }
 
           //commision.addDetail("Valor dos descontos por forma de pagamento", dicountPerPaymentTypeValue.toDouble * (-1))
 
-          val finalValue = finalValueWithoudDicount - dicountPerPaymentTypeValue
+          val finalValue = finalValueWithoudDicount - discountPerPaymentTypeValue
 
           //commision.addDetail("Valor final para o profissional 1: " + finalValue)
 
@@ -342,7 +360,7 @@ object CommissionGenerationStrategy {
             commision.addDetail("Valor para o profissional : " + valueToUser)
             val finalValueWithoudDicount = (valueToUser * percent_in_total).toDouble //dicountPerPaymentType(,payment_detail)
             commision.addDetail("Valor final antes dos descontos : " + finalValueWithoudDicount)
-            val finalValue = finalValueWithoudDicount - dicountPerPaymentType(finalValueWithoudDicount, payment_detail)
+            val finalValue = finalValueWithoudDicount - discountPerPaymentType(finalValueWithoudDicount, payment_detail, user)
             commision.addDetail("Valor depois dos descontos 2: " + finalValue)
             val dueDate = payment.datePayment
             val payment_date = dataToPayment
@@ -386,7 +404,7 @@ object CommissionGenerationStrategy {
     override def paymentDate(payment_detail: PaymentDetail) = {
       val c = Calendar.getInstance
       c.setTime(payment_detail.dueDate.is)
-      c.add(Calendar.DATE, payment_detail.typePaymentObj.get.numDays.is)
+      c.add(Calendar.DATE, (payment_detail.typePaymentObj.get.numDays.is-1))
       c.getTime
     }
   }

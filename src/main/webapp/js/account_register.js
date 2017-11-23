@@ -241,7 +241,8 @@
         $("#paymenttype_select").val(obj.paymenttype_id).change();
         $("#cheque_select").val(obj.cheque_id).change();
         $("#unitvalue").val(obj.unitvalue);
-        $("#recurrence_id").val(obj.recurrence_id);
+        $("#unitvalue").val(obj.unitvalue);
+        $("#conciliate").val(obj.conciliate);
         $("#createdAt").val(obj.createdAt).datetimeDecode();
         $("#updatedAt").val(obj.updatedAt).datetimeDecode();
         $("#createdby").val(obj.createdBy);
@@ -454,6 +455,8 @@
       return $.post("/accountpayable/list", request, function(results) {
         var credit, debit, obj, ret, total, _i, _len;
         var hasUnitModule = $('.has-unit-module').length > 0;
+        var hasCostcenterModule = $('.has-costcenter-module').length > 0;
+        var hasFinancialadModule = $('.has-financialad-module').length > 0;
         eval("results = " + results);
         Account.list = results;
         Account.ids = Account.list.map(function(item) {
@@ -475,10 +478,12 @@
           ret += "<tr>" + 
             "<td><input type='checkbox' class='account_payable' value='" + 
             obj.id + "'/></td>" +
+            (obj.color == "" || obj.color == "#FFFFFF" ? "<td>" + obj.id + "</td>" : 
             "<td style='background-color:" + obj.color + "'>" + 
-            obj.id + "</td>" + 
+            obj.id + "</td>" ) + 
             "<td>" + (getDateBr(new Date(obj.dueDate))) + "</td>" +
-            "<td>" + obj.category + "</td>" +
+//            "<td>" + obj.category + "</td>" +
+            "<td>"+"<a href='/financial_admin/account_category?id="+obj.category_id+"' target='_customer_maste'>"+obj.category+"</a>"+"</td>" +
             "<td>" + obj.obs_trunc + "</td>" +
             "<td>" + 
             (obj.value.formatMoney()) + "</td>" + 
@@ -492,8 +497,13 @@
             (hasUnitModule ? "<td>" + obj.unit_name + "</td>" : "") + 
             "<td>" + obj.cashier + "</td>" +
             "<td>" + obj.account_name + "</td>" +
-            "<td>" + obj.costcenter_name + "</td>" + 
+            (hasCostcenterModule ? "<td>" + obj.costcenter_name + "</td>" : "") + 
             "<td>" + obj.paymenttype_name + "</td>" + 
+            (hasFinancialadModule ? "<td>" + 
+              "<img width='16px' src=\"/images/" + 
+              (obj.conciliate == "0" ? 'audit'     : (obj.conciliate == "1" ? 'tick'       : 'consolidate')) + ".png\" title=\"" + 
+              (obj.conciliate == "0" ? 'em aberto' : (obj.conciliate == "1" ? 'conciliado' : 'consolidado')) + "\"/>" +
+            "</a>" + "</td>" : "") + 
             "<td><a href='#' data-id='" + 
             obj.id + "' class='action_edit'><img src='/images/edit.png' /></a></td>" +
             "<td><a href='#' data-id='" + obj.id + "' data-recid='" + 
@@ -712,48 +722,63 @@
       return Account.getListFromServer();
     });
 
-    $(".b_add_account").click($.throttle(1000, function() {
+    var callApiLock = false;
+    $(".b_add_account").click(function() {
       var e;
-      try {
-        if (Account.actualId) {
-          //alert ("vaiii ==== " + $("#recurrence_id").val())
-          if ($("#recurrence_all").is(":checked")) {
-             if (confirm("Tem certeza que deseja atualizar este lançamentos e inclusive os futuros?")) {
-             } else {
-              return
-             } 
+      if (!callApiLock) {
+        callApiLock = true;
+        try {
+          if (Account.actualId) {
+            //alert ("vaiii ==== " + $("#recurrence_id").val())
+            if ($("#recurrence_all").is(":checked")) {
+               if (confirm("Tem certeza que deseja atualizar este lançamentos e inclusive os futuros?")) {
+               } else {
+                callApiLock = false
+                return
+               } 
+            }
+            return $.post("/accountpayable/edit/" + Account.actualId, new Account(), function(t) {
+              if (t == 'true') {
+                alert("Lançamento alterado com sucesso!");
+                Account.getListFromServer();
+                Account.actualId = false;
+                $("#account_modal").modal({
+                  "hide": true
+                });
+                callApiLock = false;
+                return;
+              } else {
+                callApiLock = false;
+                return alert("Erro ao alterar lançamento! \n\n" + eval (t));
+              }
+            });
+          } else {
+            return $.post("/accountpayable/add", new Account(), function(t) {
+              if (t == 'true') {
+                alert("Lançamento cadastrado com sucesso!");
+                Account.getListFromServer();
+                Account.actualId = false;
+                $("#account_modal").modal({
+                  "hide": true
+                });
+                callApiLock = false;
+                return;
+              } else {
+                callApiLock = false;
+                return alert("Erro ao cadastrar lançamento! \n\n" + eval (t));
+              }
+            });
           }
-          return $.post("/accountpayable/edit/" + Account.actualId, new Account(), function(t) {
-            if (t == 'true') {
-              alert("Lançamento alterado com sucesso!");
-              Account.getListFromServer();
-              Account.actualId = false;
-              return $("#account_modal").modal({
-                "hide": true
-              });
-            } else {
-              return alert("Erro ao alterar lançamento! \n\n" + eval (t));
-            }
-          });
-        } else {
-          return $.post("/accountpayable/add", new Account(), function(t) {
-            if (t == 'true') {
-              alert("Lançamento cadastrado com sucesso!");
-              Account.getListFromServer();
-              Account.actualId = false;
-              return $("#account_modal").modal({
-                "hide": true
-              });
-            } else {
-              return alert("Erro ao cadastrar lançamento! \n\n" + eval (t));
-            }
-          });
+        } catch (_error) {
+          e = _error;
+          callApiLock = false;
+          return alert(e);
         }
-      } catch (_error) {
-        e = _error;
-        return alert(e);
+      } else {
+        alert("Já existe um processo em andamento. Aguarde o fim do processamento para clicar novamente!");
+        return;
       }
-    }));
+    });
     $("#cashier").cashierField(false, "all");
     $('.currency').calculator({
       showOn: 'button'

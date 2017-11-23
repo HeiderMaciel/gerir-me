@@ -118,7 +118,7 @@ class  StakeHolderSnippet extends BootstrapPaginatorSnippet[StakeHolder] {
 			}
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
-			"name=orderinreport" #> (SHtml.text(ac.orderInreport.is.toString, (v:String) => ac.orderInreport(v.toInt)))&
+			"name=orderinreport" #> (SHtml.text(ac.orderInReport.is.toString, (v:String) => ac.orderInReport(v.toLong)))&
 			"name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_))++SHtml.hidden(process))
 
 		}catch {

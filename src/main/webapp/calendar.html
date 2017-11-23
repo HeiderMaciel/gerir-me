@@ -9,7 +9,8 @@
     <script type="text/javascript" src="/js/calendar/TreatmentStatusManager.js?_v25042015_"></script>
     <script type="text/javascript" src="/js/calendar/TreatmentManger.js?_v25042015_"></script>
     <script type="text/javascript" src="/js/calendar/CalendarScreen.js?_v25042015_"></script>
-    <script type="text/javascript" src="/js/calendar/calendarUtil.js?_v25042015_"></script>
+	<script type="text/javascript" src="/js/calendar/calendarUtil.js?_v25042015_"></script>
+	<script src="/js/reports.js"></script> <!-- por causa de trStatusdecode -->
     <script type="text/javascript" src='/js/default/animal.js'></script>
     <script type="text/javascript" src="/js/calendar/calendar.js?_v10052017_"></script>
 
@@ -79,7 +80,7 @@
                         <tbody>
                         </tbody>
                     </table>
-                </span>    
+                </span>
             </div>
         </div>
     </div>
@@ -124,13 +125,13 @@
                                     <a id="customer_open" type="button" >
                                         <img src="/images/treatment_open1.png" style="width: 16px;">
                                         Agendado
-                                    </a>    
+                                    </a>
                                 </li>
 
                                 <li class="hide_on_paid">
                                     <a class="" id="customer_confirmed" type="button">
                                         <img src="/images/treatment_confirmed1.png" style="width: 16px;">
-                                        Confirmado    
+                                        Confirmado
                                     </a>
                                 </li>
 
@@ -147,18 +148,18 @@
                                     <a class="" id="customer_ready" type="button">
                                         <img src="/images/treatment_ready1.png" style="width: 16px;">
                                         Atendido
-                                    </a>                            
+                                    </a>
                                 </li>
 
                                 <li class='hide_on_paid'>
                                     <a class="" id="customer_missed" href="#" type="button">
                                         <img src="/images/treatment_missed1.png" style="width: 16px;">
                                         Faltou
-                                    </a>                            
+                                    </a>
                                     <a class="" id="customer_reschedule" href="#" type="button">
                                         <img src="/images/treatment_reschedule1.png" style="width: 16px;">
                                         Desmarcou
-                                    </a>                            
+                                    </a>
                                 </li>
                             </ul>
                         </li>
@@ -176,13 +177,13 @@
 
                         <li>
                             <a class="btn btn-danger" id="start_block" href="#">
-                                Bloqueio                        
+                                Bloqueio
                             </a>
                         </li>
                     </ul>
 
                     <div class="vr-tab-content">
-                        
+
                         <!-- Add treatment form -->
                         <form id="treatment_div_span" class="vr-form">
                             <div class="row">
@@ -260,7 +261,7 @@
                                 </div>
                             </div>
 
-                            
+
 
                             <div class="row">
                                 <div class="col-xs-12">
@@ -272,7 +273,7 @@
 
                     </div>
 
-                    
+
 
                     <!-- Treatment detail form -->
                     <div id="treatment_detail_div">
@@ -324,8 +325,11 @@
                                             sth-select-title="Selecione um serviço"
                                             sth-select-placeholder="Selecione um serviço"
                                             sth-select-filter="true"
-                                            sth-select-filter-placeholder="Pesquisar"></select>
-                                        <!-- antigo select2 select style="width: 100%" class="notselect2"  name="activitys" id="activitys"></select-->
+											sth-select-filter-placeholder="Pesquisar"></select>
+
+											<span class="lift:SecuritySnippet.isEsmileSystem">
+												<select class="notselect21"  name="tooth" id="tooth"></select>
+											</span>
                                     </div>
                                     <div class="col-xs-12 col-md-5">
                                         <label>&nbsp; <!-- Empty space due Bootstrap bug --></label>
@@ -349,7 +353,8 @@
                                     <th class="lift:SecuritySnippet.hasUnitModule">Unidade</th>
                                     <th class="lift:SecuritySnippet.hasAuxiliarModule"><span data-i18n='Assistente'></span></th>
                                     <th class="lift:SecuritySnippet.isEbellepetSystem">Pet</th>
-                                    <th><span data-i18n='Serviço'></span></th>
+									<th><span data-i18n='Serviço'></span></th>
+									<th class="lift:SecuritySnippet.isEsmileSystem">Dente</th>
                                     <th>Início</th>
                                     <th>Fim</th>
                                     <th>Status</th>
@@ -391,5 +396,5 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 </div>

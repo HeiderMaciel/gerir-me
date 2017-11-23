@@ -44,7 +44,7 @@ with PerCity{
     object email extends MappedPoliteString(this,150) with LifecycleCallbacks {
       override def beforeSave() {
           super.beforeSave;
-          if(this.get != ""){
+          if(this.get.trim != ""){
             this.get.toLowerCase.trim.split(",|;").foreach((email1) => {
               if (!emailPattern.matcher(email1).matches /*&& !isNew*/) {
                 throw new RuntimeException("E-mail inválido! " + email1)

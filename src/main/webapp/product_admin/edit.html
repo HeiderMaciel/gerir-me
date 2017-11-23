@@ -9,7 +9,7 @@
       <div class="well">
         <label for="btn"></label>
         <a class="btn primary" href="/product/list">Lista</a>
-        <input class="btn success" type="submit" value="Salvar">
+        <input class="btn success" type="submit" value="Salvar" id="pr_salvar" name="pr_salvar">
         <a class="btn primary" href="/product_admin/edit">Inserir novo</a>
       </div>
       <div class="lift:ProductSnippet.maintain">
@@ -154,7 +154,7 @@
                 <span class="help-block">Categoria de desconto para faturamento, depende de parâmetro na configuração da empresa</span>
               </div>
             </div>
-            <div class="clearfix">
+            <div class="clearfix lift:SecuritySnippet.hasCostcenterModule">
               <label for="costcenter">Centro de Custo</label>
               <div class="input">
                 <select id='costcenter' class="costcenter" name='costcenter'></select>
@@ -237,6 +237,7 @@
                     <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/product_bom.html' rel="popover" class="_popover_basic _help">
                       <img src="/images/info.gif" width="20">
                     </a>
+                    <input type="hidden" class="mini" id="is_bomaux"  name="is_bomaux" style = "width: 0px; height: 0px"/>
                   </div>
                 </div>
             </div>

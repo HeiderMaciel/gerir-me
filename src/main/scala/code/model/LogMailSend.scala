@@ -32,6 +32,7 @@ object LogMailSend extends LogMailSend with LongKeyedMapperPerCompany[LogMailSen
         left join business_pattern bp on bp.id = business_pattern
         where lm.company = ? and date (lm.createdat) between ? and ? 
         and lower (subject) like '%s' and %s
+        and %s
         order by lm.updatedat desc, bp.name
         """
 }

@@ -11,11 +11,13 @@
       if($("#bp_sponsor").val() && $("#bp_sponsor").val() != '0'){
         $("#bp_sponsor").change();
       }
+/*
       setTimeout(function(){
         if($("#bp_manager").val() && $("#bp_manager").val() != '0'){
           $("#bp_manager").change();
         }
       },500);
+*/
     }, 500);    
     $('#stakeholdertype').stakeholderTypeField();
   </script>
@@ -24,9 +26,9 @@
     <form  class="lift:form.ajax">
       <div class="well">
         <label for="btn"></label>
-        <a class="btn primary" href="/project/list_event">Lista</a>
+        <a class="btn primary" href="/project/list_event?opt=event">Lista</a>
         <input class="btn success lift:SecuritySnippet.isNotAdminRead" type="submit" value="Salvar">
-        <a class="btn primary" href="/project/event">Inserir novo</a>
+        <a class="btn primary" href="/project/event?opt=event">Inserir novo</a>
       </div>
       <div>
         <span id="project_form">
@@ -76,14 +78,19 @@
                   <span class="help-block">Número de participantes/convidados</span>
                 </div>
               </div>        
+              <div class="clearfix lift:SecuritySnippet.isSuperAdmin">
+                <label for="name">projectOpt</label>
+                <div class="input">
+                  <input class="mini" id = "projectOpt" name="projectOpt" size="16" type="text">
+                </div>
+              </div>
               <div class="clearfix">
                 <label for="projectclass">Classe de Evento</label>
                 <div class="input">
                   <select id='projectclass' class="projectclass" name='projectclass'></select>
-                  <span class="help-block">Classe de evento</span>
                 </div>
               </div>
-              <div class="clearfix">
+              <div class="clearfix lift:SecuritySnippet.hasUnitModule">
                 <label for="unit">Unidade</label>
                 <div class="input">
                   <div class="input-prepend">
@@ -122,7 +129,7 @@
                   <select id='projectstage' class="projectstage" name='projectstage'></select>
                 </div>
               </div>
-              <div class="clearfix">
+              <div class="clearfix lift:SecuritySnippet.hasCostcenterModule">
                 <label for="costcenter">Centro de Custo</label>
                 <div class="input">
                   <select id='costcenter' class="costcenter" name='costcenter'></select>
@@ -147,7 +154,7 @@
                   <span>
                     <img class="customer_search_button" width='24' src="/images/search.png"/>
                     <input class='mini id_customer_search' id='bp_manager' name="bp_manager" /> 
-                    <input class="name_customer_search" name="bp_managername" id="bp_managername"  size="30" type="text" placeholder="Nome"/>
+                    <input class="name_customer_search" name="manager" id="manager"  size="30" type="text" placeholder="Nome"/>
                   </span>
                   <span class="help-block">Responsável</span>
                 </div>

@@ -4,9 +4,9 @@
       <div class="well">
         <h1><span class="lift:CompanySnippet.thumb"> </span>Formas de Pagamento</h1>
         <label for="btn"></label>
-        <a class="btn primary" href="/company/payment_forms_list">Lista</a>
+        <a class="btn primary" href="/financial/payment_forms_list">Lista</a>
         <input class="btn success" type="submit" value="Salvar">
-        <a class="btn primary" href="/company/payment_forms">Inserir novo</a>
+        <a class="btn primary" href="/financial_admin/payment_forms">Inserir novo</a>
       </div>      
       <span>
         <div class="clearfix">
@@ -66,7 +66,10 @@
               <label for="numDays">Número de Dias para o Pagamento</label>        
               <div class="input">
                 <div class='inline-inputs'>
-                  <input name='numDays' class= "mini"/>
+                  <input name='numDays' id='numDays' class= "mini"/>
+                  <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/paymenttype.html#commission' rel="popover" class="_popover_basic _help">
+                  <img src="/images/info.gif" width="20">
+                  </a>
                 </div>
               </div>
             </div>
@@ -200,7 +203,7 @@
                 <legend>Comportamentos Especiais</legend>
                 </fieldset>
                 <div class="clearfix">
-                  <label for="deliveryContol">Pagamento de Pacote?</label>        
+                  <label for="deliveryContol">Baixa de sessão de Pacote?</label>        
                   <div class="input">
                     <div class='inline-inputs'>
                       <input name='deliveryContol'/>
@@ -240,7 +243,7 @@
                   </div>
                 </div>            
                 <div class="clearfix">
-                  <label for="bpmonthly">Pagamento de Mensalidade?</label>
+                  <label for="bpmonthly">Baixa de sessão de Mensalidade?</label>
                   <div class="input">
                     <div class='inline-inputs'>
                       <input name='bpmonthly'/>
@@ -377,9 +380,9 @@
         </div>          
         <div class="well">
           <label for="btn"></label>
-          <a class="btn primary" href="/company/payment_forms_list">Lista</a>
+          <a class="btn primary" href="/financial/payment_forms_list">Lista</a>
           <input class="btn success" type="submit" value="Salvar">
-          <a class="btn primary" href="/company/payment_forms">Inserir novo</a>
+          <a class="btn primary" href="/financial_admin/payment_forms">Inserir novo</a>
         </div>      
       </form>
     </div>

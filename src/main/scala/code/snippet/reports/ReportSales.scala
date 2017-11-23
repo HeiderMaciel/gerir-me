@@ -150,7 +150,8 @@ object  ReportSales extends net.liftweb.common.Logger{
 							"link" -> <a href={"/financial/commission_report_filter?payment="+p.id.is.toString+""}><img alt="Ver comissões deste atendimento" src="/images/commision_payment.png" width="24"/></a>,
 							"commandprint" -> <a target="_command_maste" href={"/financial_cashier/print_command?command="+p.command.is.toString+ "&unit="+p.unitId.toString+"&date="+Project.dateToStr(p.datePayment.is)+""}><img alt="Imprimir comanda" src="/images/print.png" width="24"/></a>,
 							"ticket" -> <a target="_command_maste" href={"/financial_cashier/expense_ticket?command="+p.command.is.toString+"&date="+Project.dateToStr(p.datePayment.is)+""}><img alt="Imprimir ticket" src="/images/print.png" width="24"/></a>,
-							"receipt" -> <a target="_command_maste" href={"/financial_cashier/expense_receipt?command="+p.command.is.toString+"&date="+Project.dateToStr(p.datePayment.is)+""}><img alt="Imprimir recibo" src="/images/print.png" width="24"/></a>
+							"receipt" -> <a target="_command_maste" href={"/financial_cashier/expense_receipt?command="+p.command.is.toString+"&date="+Project.dateToStr(p.datePayment.is)+""}><img alt="Imprimir recibo" src="/images/print.png" width="24"/></a>,
+							"audit" -> <a href= '#' title={p.auditStr}><img src="/images/audit.png" width="24"/></a>
 				)
 			)
 	}

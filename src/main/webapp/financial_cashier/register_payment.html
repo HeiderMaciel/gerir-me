@@ -45,6 +45,7 @@
           </div>                  
           <input type="hidden" class="has-edoctus-system lift:SecuritySnippet.isEdoctusSystem" value="1">
           <input type="hidden" class="has-ephysio-system lift:SecuritySnippet.isEphysioSystem" value="1">
+          <input type="hidden" class="has-esmile-system lift:SecuritySnippet.isEsmileSystem" value="1">
           <input type="hidden" class="has-pet-system lift:SecuritySnippet.isEbellepetSystem" value="1">
           <div class="clearfix lift:SecuritySnippet.isEbellepetSystem">
             <label for="animal">Pet</label>
@@ -132,6 +133,14 @@
                   </div>
                 </div>
             </div>
+            <div class="clearfix lift:SecuritySnippet.isEsmileSystem">
+              <label for="tooth">Dente</label>
+                <div class="input">
+                  <div class="inline-inputs">
+                    <select id='tooth' name='tooth'></select>
+                  </div>
+                </div>
+            </div>
           </div>
           <div class="span8">
             <div class="clearfix">
@@ -198,7 +207,9 @@
             </div>
           </div>                                                 
         </div>
-        <center>          
+        <div class="clearfix">
+          <label for="treatments_details"></label>
+        <!--center pq o template de financeiro cresceu !-->
           <table id='treatments_details' class="bordered-table zebra-striped span16">
             <thead>
               <tr>
@@ -208,6 +219,7 @@
                 <th class="lift:SecuritySnippet.hasAuxiliarModule"><span data-i18n='Assistente'></span></th>
                 <th class="lift:SecuritySnippet.isEbellepetSystem">Pet</th>
                 <th><span data-i18n='Serviço'></span>/Produto</th>
+                <th class="lift:SecuritySnippet.isEsmileSystem">Dente</th>
                 <th>Preço</th>
                 <th alt='Quantidade'>Qtde</th>
                 <th class="lift:SecuritySnippet.hasOffSaleModule">Convênio</th>
@@ -217,7 +229,8 @@
             <tbody>
             </tbody>
           </table>
-        </center>                                
+        <!--/center!-->
+        </div>
         <div class="clearfix">
           <label for="name">Total</label>
           <div class="input">

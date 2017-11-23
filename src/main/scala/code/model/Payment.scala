@@ -22,6 +22,32 @@ class Payment extends LongKeyedMapper[Payment] with PerCompany with IdPK with Cr
     object cashier extends MappedLongForeignKey(this,Cashier)
     object command extends MappedPoliteString(this,50)    
     object datePayment extends EbMappedDate(this)
+    object detailPaymentAsText extends MappedPoliteString(this,400) with LifecycleCallbacks {
+            override def beforeSave() {
+                if (createdBy != 1) {
+                  // se foi migrado user = 1 - mantem o detailastext original
+                  super.beforeSave;
+                  this.set(fieldOwner.asInstanceOf[Payment].descritionByDetails)
+                }
+            }         
+        override def  defaultValue = descritionByDetails
+    }
+
+    def descritionDetails = {
+        descritionByDetails
+    }
+
+    def descritionByDetails = {
+        details match { 
+                case (dl) if(dl.size >0 ) => { 
+                  (details map(_.typePaymentName) reduceLeft(_+", "+_))
+                }
+                case _ => {
+                    ""
+                }
+            }
+    }    
+
     def commissions = Commision.findAll(By(Commision.payment,this))
     def deliveries = DeliveryControl.findAll(By(DeliveryControl.payment,this))
     def treatmentDetailsAsText = {

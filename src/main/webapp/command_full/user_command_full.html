@@ -4,36 +4,6 @@
   </script>
   <script type="text/javascript" src="/js/user_command.js"></script>
   <script type="text/javascript">
-    var set_auxiliar = function (userId, tdId) {
-        //
-        // usado também na agenda
-        //
-        return $.post("/command/setaux", {
-          "user": userId,
-          "tdid": tdId,
-          "command": "1"
-        }, function(results) {
-          if(results === 1 || results == "1"){
-            alert("Assistente cadastrado com sucesso");
-          }else{
-            alert(eval(results));
-          }
-          return Manager.getListFromServer();
-        });
-    };
-    var del_auxiliar = function (userId, tdId) {
-        return $.post("/command/delaux", {
-          "user": userId,
-          "tdid": tdId
-        }, function(results) {
-          if(results === 1 || results == "1"){
-            alert("Assistente excluído com sucesso");
-          }else{
-            alert(eval(results));
-          }
-          return Manager.getListFromServer();
-        });
-    };
   </script>
   <div class="well">
     <div class='filter block-message success"'>
@@ -90,6 +60,7 @@
 
   <input type="hidden" class="has-edoctus-system lift:SecuritySnippet.isEdoctusSystem" value="1">
   <input type="hidden" class="has-ephysio-system lift:SecuritySnippet.isEphysioSystem" value="1">
+  <input type="hidden" class="has-esmile-system lift:SecuritySnippet.isEsmileSystem" value="1">
   <input type="hidden" class="has-auxiliar-module lift:SecuritySnippet.hasAuxiliarModule" value="1">
   <input type="hidden" class="has-not-medical lift:SecuritySnippet.isNotMedicalSystem" value="1">
 
@@ -101,12 +72,13 @@
       <th class="lift:SecuritySnippet.hasAuxiliarModule"><span data-i18n='Assistente'></span></th>
       <th class="lift:SecuritySnippet.isEbellepetSystem">Pet</th>
       <th>Produto/<span data-i18n='Serviço'></span></th>
+      <th class="clearfix lift:SecuritySnippet.isEsmileSystem">Dente</th>
       <th class="clearfix lift:SecuritySnippet.isNotMedicalSystem">Qtde</th>
       <th class="clearfix lift:SecuritySnippet.isNotMedicalSystem">Valor</th>
       <th>Status</th>
       <th>Obs</th>
       <th class="clearfix lift:SecuritySnippet.isMedicalSystem">Espera</th>
-      <th>Ações</th>
+      <th class="hide_on_print">Ações</th>
     </thead>
     <tbody>
     </tbody>
@@ -122,7 +94,8 @@
       <th><span data-i18n='Assistente'></span></th>
       <th class="lift:SecuritySnippet.isEbellepetSystem">Pet</th>
       <th>Produto/<span data-i18n='Serviço'></span></th>
-      <th>Ações</th>
+      <th class="clearfix lift:SecuritySnippet.isEsmileSystem">Dente</th>
+      <th class="hide_on_print">Ações</th>
     </thead>
     <tbody>
     </tbody>
@@ -176,6 +149,12 @@
                         <select id='auxiliar' name='auxiliar'></select>
                       </div>
                     </div>
+                </div>
+                <div class="lift:SecuritySnippet.IsEsmileSystem clearfix">
+                  <label for="tooth">Dente</label>
+                  <div class="input">
+                    <select class="xlarge" id="tooth" name="tooth" size="30"></select>
+                  </div>
                 </div>
               </div>
               <div class="span8">

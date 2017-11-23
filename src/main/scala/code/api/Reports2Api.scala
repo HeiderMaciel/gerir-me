@@ -260,7 +260,12 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 
 				}
 
-				toResponse(LogMailSend.SQL_TO_REPORT.format(subFilter.toLowerCase, qtd_query),List(AuthUtil.company.id.is,start,end))
+			    val compl = if (AuthUtil.user.isSuperAdmin) {
+		            " 1 = 1 "
+		        } else {
+		            " subject not like '%ERRO%' "
+		        }
+				toResponse(LogMailSend.SQL_TO_REPORT.format(subFilter.toLowerCase, qtd_query, compl),List(AuthUtil.company.id.is,start,end))
 			}
 
 			case "report" :: "animal_report" :: Nil Post _ => {
@@ -325,6 +330,9 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					and %s
 					order by co.name
 				"""
+
+//					and co.email in (select to_c from logmailsend lm where lm.company = co.company and subject like 'Dia da Noiva Fidelis Studio ERRO ======= ' and lm.id > 340884)
+
 				toResponse(SQL_REPORT.format(unit),List(AuthUtil.company.id.is, origin))
 			}
 
@@ -568,10 +576,16 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case _ => " and 1 = 1 "
 				}
 
+				val strAux = if (PermissionModule.anvisa_?) {
+						" bc.barcode  || ' ' || "
+					} else {
+						""
+					}
 				val SQL = """
 					select bc.id, tr.dateevent, 
 					fu_dt_humanize (tr.dateevent),
-					to_char (tr.start_c, 'hh24:mi'), tr.status, pr.name, bc.name as cliente, 
+					to_char (tr.start_c, 'hh24:mi'), tr.status, pr.name, trim (""" +
+					strAux + """ bc.name) as cliente, 
 					(select case 
 					  when tr1.status = 1 then 'faltou' 
 					  when tr1.status = 8 then 'desmarcou' 
@@ -612,6 +626,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					/* project class */
 					order by tr.dateevent desc, bp.name asc
 				"""
+println (" vaiiii ============= " + SQL ) 
 				toResponse(SQL.format(customer, status, unit, offsale, user, prod),
 					List(AuthUtil.company.id.is, start, end))
 			}
@@ -748,6 +763,51 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					"""
 				toResponse(sql.format(unit, user),List(AuthUtil.company.id.is,month, start, end))
 			}
+
+			case "report" :: "animalbirthdays" :: Nil Post _ => {
+				def start:Int = S.param("start") match {
+					case Full(p) => p.toInt
+					case _ => 1 
+				}
+				def end:Int = S.param("end") match {
+					case Full(p) => p.toInt
+					case _ => 31
+				}
+
+				def month:Int = S.param("month") match {
+					case Full(p) => p.toInt+1
+					case _ => Calendar.getInstance().get(Calendar.MONTH)+1
+				}
+
+				def unit:String = S.param("unit") match {
+					case Full(p) if(p != "") => " and ba.unit =%S".format(p) 
+					case _ => ""
+				}			
+
+				val sql = """
+				select * from ( 
+				select date_part ('day', ba.birthday) as day, ba.birthday, 
+				ba.id, ba.name, bc.name,  
+				trim (bc.mobile_phone || ' ' || bc.phone || ' ' || bc.email_alternative),
+				bc.email, cu.short_name, bi.name, bc.id, bi.id 
+				from business_pattern ba 
+				left join business_pattern bc on bc.id in (select business_pattern from bprelationship br 
+				   where br.company = ba.company and br.status = 1 and relationship = 26 /* dono de */
+				   and bp_related = ba.id) and bc.company = ba.company and bc.is_animal = false
+				left join business_pattern bi on bi.id = ba.bp_indicatedby
+				left join companyunit cu on cu.id = ba.unit
+				where ba.company = ? and ba.is_animal = true
+				and ba.birthday is not null
+				and ba.deathDate is null
+				and date_part ('month', ba.birthday) = ?
+				%s
+				) as data
+				where day between ? and ?
+				order by 1, 3
+				"""
+				toResponse(sql.format(unit),List(AuthUtil.company.id.is, month, start, end))
+			}
+
 			case "report" :: "customer_account" :: Nil Post _=> {
 				def customer:String = S.param("customer") match {
 					case Full(p) if(p != "") => " and bp.id =%S".format(p) 
@@ -771,6 +831,42 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 				left join companyunit cu on cu.id = bp.unit
 				where valueinaccount <>0 and valueinaccount between ? and ? and bp.company=? %s %s order by valueinaccount """
 				toResponse(SQL.format(customer, unit),List(start_value, end_value, AuthUtil.company.id.is))
+			}
+
+			case "report" :: "customer_accountdetail" :: Nil Post _=> {
+				def customer:Long = S.param("customer") match {
+					case Full(p) if(p != "") => p.toLong
+					case _ => 0
+				}			
+				val SQL = """
+				select tr.dateevent, tr.command, ca.idforcompany, cu.short_name, bp.short_name, pr.name, 
+--				(td.price / pa.value * pd.value),
+				case when pr.productclass = 3 then (td.price / pa.value * pd.value)
+				     when pr.productclass = 2 then (td.price / pa.value * pd.value)
+				     when pr.productclass in (0,1) then (td.price / pa.value * pd.value) * -1
+				end,
+				null,
+				pt.short_name, bu.short_name, pa.createdat, 
+				case when tr.customer <> tr.customerorigin then tr.customerorigin
+				     when tr.customer = tr.customerorigin then null
+				end,
+				pr.productclass, 
+				pd.id, bp.id, bu.id, td.id
+				from treatment tr 
+				inner join treatmentdetail td on td.treatment = tr.id
+				inner join product pr on pr.id = td.product or pr.id = td.activity
+				inner join payment pa on pa.id = tr.payment
+				inner join paymentdetail pd on pd.payment = pa.id
+				inner join paymenttype pt on pt.id = pd.typepayment
+				inner join business_pattern bu on bu.id = pa.createdby
+				inner join cashier ca on ca.id = pa.cashier
+				inner join companyunit cu on cu.id = ca.unit
+				left join business_pattern bp on bp.id = tr.user_c
+				where tr.company = ? and tr.customer = ?
+				and (pr.productclass not in (0,1) or pt.customerregisterdebit = true or customerusecredit = true)
+				order by pa.datepayment, pa.id, pd.id, tr.dateevent, tr.id 
+				"""
+				toResponse(SQL,List(AuthUtil.company.id.is, customer))
 			}
 
 			case "report" :: "budget_plain" :: Nil Post _=> {
@@ -1192,6 +1288,22 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 
 				toResponse(SQL,List(AuthUtil.company.id.is, project)) //, start, end))
 			}
+
+			case "report" :: "section_by_project" :: Nil Post _ =>{
+				def project = S.param("project") match {
+					case Full(p) => p.toLong
+					case _ => 0l
+				}
+				val SQL = """
+					select orderinreport, title, obs, id from projectsection 
+					where 
+					company = ? and project = ? and status = 1
+					order by orderinreport, title
+	        	"""
+
+				toResponse(SQL,List(AuthUtil.company.id.is, project)) //, start, end))
+			}
+
 
 			case "report" :: "td_activities" :: Nil Post _ =>{
 				def treatment = S.param("treatment") match {
@@ -1860,11 +1972,16 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case Full(p) if(p != "") => p.toDouble
 					case _ => 0;
 				}
+				def days:Int = S.param("days") match {
+					case Full(p) if(p != "") => p.toInt
+					case _ => 0;
+				}
 
 				lazy val SQL_REPORT = """
 					select ap.duedate, ap.obs, ap.typemovement, 
 					ap.value, ap.id, 
-					ap1.obs, ap1.value, ap1.duedate, 
+					trim (coalesce(ap1.aggregateLabel,'') || ' ' || ap1.obs), 
+					ap1.value, ap1.duedate, 
 					ap1.id,
 					ap1.aggregatevalue, ap1.aggregateid,
 					ap1.conciliate,
@@ -1874,7 +1991,8 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					  ((ap1.paymentdate = ap.paymentdate or ap1.duedate = ap.paymentdate 
 					  or ap1.paymentdate = ap.duedate or ap1.duedate = ap.duedate) 
 					  and (ap1.value = ap.value or (ap1.aggregatevalue > (ap.value * ((100-?)/100)) and ap1.aggregatevalue < (ap.value * ((100+?)/100))))
-					  or (ap1.duedate between date(?) and date (?) and
+					  or (ap1.duedate between date(ap.duedate-?) and date (ap.duedate+?) and
+					  --or (ap1.duedate between date(?) and date (?) and
 					     (ap1.value = ap.value or (ap1.aggregatevalue > (ap.value * ((100-?)/100)) and ap1.aggregatevalue < (ap.value * ((100+?)/100))))))
 					  and ap1.toconciliation = false and ap.company = ap1.company
 					  and ap1.typemovement = ap.typemovement
@@ -1888,7 +2006,8 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					ap.duedate, ap.id, (ap1.value = ap.value)
 					"""
 				toResponse(SQL_REPORT.format(account_fin, show_conciliated, account_ofx),
-					List(margin, margin, start, end, margin, margin, AuthUtil.company.id.is, start, end))
+					List(margin, margin, days, days,
+						margin, margin, AuthUtil.company.id.is, start, end))
 			}
 			case "report" :: "offsaleproduct_cost" :: Nil Post _ =>{
 				val offsales_param_name = S.param("offsales[]") match {

@@ -12,6 +12,11 @@
 
   var paymentOfAccount = false;
 
+  var prodCustomerAccount = 0;
+  var hasCustomerAccount = false;
+  var prodCustomerCredit = 0;
+  var hasCustomerCredit = false;
+
   mousePrepare = function() {
     Mousetrap.init();
     Mousetrap.bind('!', function() {
@@ -124,6 +129,10 @@
   var global_activityIndex = 0;
   var editPrice = function(treatmentIndex, activityIndex, element) {
     var value = $(element).val();
+    // rigel 13/10/2017 evitar NaN qdo limpa o valor
+    if (value == "NaN" || value == "") {
+      value = "0";
+    }
     value = value.replace(',', '.');
     global_treatmentIndex = treatmentIndex;
     global_activityIndex = activityIndex;
@@ -256,6 +265,41 @@
       });
     }
   };
+  var setToothActivity = function(treatmentIndex, activityIndex) {
+    var customerId = treatments[treatmentIndex].customerId;
+    var detailId = treatments[treatmentIndex].activitys[activityIndex].id
+    var tooth = $("#tooth").val();
+    var msgAux = "";
+    if (!tooth) {
+      tooth = "";  
+      msgAux = "\nComo o campo está vazio, um possível dente no atendimento será excluído!"
+    } else {
+      msgAux = "";
+    }
+    if (confirm("Tem certeza que deseja atribuir este dente a este serviço?" + msgAux)) {
+      //
+      // usado tambem na comanda e na agenda e no caixa
+      // duplicado identico ao treatmentManger
+      //
+      return $.post("/command/settooth", {
+        "tooth": tooth,
+        "tdid": detailId,
+        "command": "0" // agenda 1 seria commanda
+      }, function(results) {
+        if(results === 1 || results == "1"){
+          if (tooth == "") {
+            alert("Dente excluído com sucesso");
+          } else {
+            alert("Dente cadastrado com sucesso");
+          }
+          getTreatmentbyCommand(false, customerId);
+        }else{
+          alert(eval(results));
+        }
+      });
+    }
+  };
+
   var removeTreatments = function() {
       for (var i = treatments.length - 1; i >= 0; i--) {
         var treatment = treatments[i];
@@ -307,6 +351,8 @@
         alert("Atendimento já foi pago!");
       }
     }
+    hasCustomerAccount = false;
+    hasCustomerCredit = false;
     for (var i = treatments.length - 1; i >= 0; i--) {
       treatment = treatments[i];
       if (treatment.ignored) {
@@ -345,7 +391,17 @@
           var hasAuxiliarModule = $('.has-auxiliar-module').length > 0;
           var hasOffSaleModule = $('.has-offsale-module').length > 0;
           var hasPetSystem = $('.has-pet-system').length > 0;
+          var hasEsmileSystem = $('.has-esmile-system').length > 0;
           var amount = activity.amount = activity.amount || 1;
+
+          if (activity.activityId == prodCustomerAccount) {
+            hasCustomerAccount = true;
+            //alert ("tem conta cliente")
+          }
+          if (activity.activityId == prodCustomerCredit) {
+            hasCustomerCredit = true;
+            //alert ("tem crédito cliente")
+          }
           total += activity.price * amount;
           lines += "<tr>" + 
           "<td>" + getActivityIcon(activity) + "</td>" +
@@ -354,6 +410,7 @@
             (hasAuxiliarModule ? "<td>" + activity.auxiliarShortName + "</td>" : "" ) +
             (hasPetSystem ? "<td>" + activity.animalShortName + "</td>" : "" ) +
             "<td>" + activity.activity + "</td>" +
+            (hasEsmileSystem ? "<td>" + activity.tooth + "</td>" : "" ) +
             "<td>" + getChagePrice(activity) + "</td>" +
             "<td><input type='number' step='1' min='0' class='mini' onchange='editQtd(" + i + "," + j + ",this)' value='" + amount + "'/></td>" +
             (hasOffSaleModule ? "<td>" + activity.offsaleShortName + "</td>" : "" ) +
@@ -361,6 +418,7 @@
             "<a title='Ignorar este item neste pagamento' href='#' onclick=\"if(confirm('Tem certeza que deseja ignorar o atendimento!')){ignoreTreatment(" + i + "," + j + "); return false;}else{return false};\"><img width='16px' src='../images/cancel.png'/></a>   " + 
             (hasPetSystem ? "<a title='Atribuir pet' href='#' onclick=setPetActivity(" + i + "," + j + ")><img width='16px' src='/images/addpet.png'/></a>" : "") +
             (hasAuxiliarModule ? "<a title='Atribuir assistente' href='#' onclick=setAuxiliarActivity(" + i + "," + j + ")><img width='16px' src='/images/user.png'/></a>" : "") +
+            (hasEsmileSystem ? "<a title='Atribuir dente' href='#' onclick=setToothActivity(" + i + "," + j + ")><img width='16px' src='/images/addtooth.png'/></a>" : "") +
             "</td>" +
             "</tr>";
         }
@@ -402,13 +460,28 @@
     if (gatDateTreatmentIni() != gatDateTreatmentOr0()) {
       url = "/cash/getTreatment/" + "0" + '/' + $('#customer').val() + '/' +gatDateTreatmentIni() + '/' + gatDateTreatmentOr0();
     } else {
+      // 21/11/2017 - Rigel - tinha feito só qdo informava cliente
+      if (prodCustomerAccount == 0 && prodCustomerCredit == 0) {
+        // chama com customer 0 só para trazer os produtos
+        // credito e conta cliente
+        url = "/cash/getProductPreviousDebts/0"
+        $.get(url, function(t) {
+          eval("var prodObj = " + t);
+          // 13/10/2017 rigel - salva o produto conta cliente
+          prodCustomerAccount = prodObj.id
+          prodCustomerCredit = prodObj.credit
+        }, "text");
+      }  
+
       if ($('#command').val() != "0") {
         if (!$('#customer').val()) {
           $('#customer').val("0")
         }
-        url = "/cash/getTreatment/" + $('#command').val() + '/' + $('#customer').val() + '/' +gatDateTreatmentIni() + '/' + gatDateTreatmentOr0();
+        url = "/cash/getTreatment/" + $('#command').val() + 
+        '/' + $('#customer').val() + '/' +gatDateTreatmentIni() + '/' + gatDateTreatmentOr0();
       } else {
-        url = "/cash/getTreatment/" + $('#command').val() + '/' + $('#customer').val() + '/' +gatDateTreatmentIni() + '/' + gatDateTreatmentOr0();
+        url = "/cash/getTreatment/" + $('#command').val() + 
+        '/' + $('#customer').val() + '/' +gatDateTreatmentIni() + '/' + gatDateTreatmentOr0();
       }        
     }
     $.get(url, function(t) {
@@ -581,6 +654,10 @@
       objAcitivity.offsale = parseInt($("#offsale").val()) || 0;
     }
 
+    if (!objAcitivity.tooth) {
+      objAcitivity.tooth = $("#tooth").val() || "";
+    }
+
     if (!objAcitivity.animal) {
       objAcitivity.animal = parseInt($("#animal").val()) || 0;
     }
@@ -681,6 +758,7 @@
       userFieldSelector: '#user'
     });
     $('#auxiliar').auxiliarField(false);
+    $("#tooth").toothField(true);
     $("#offsale").offSaleField(true);
     $("#offsale").change(function() {
       OffSaleCurrent.getProcuts($(this).val());
@@ -816,6 +894,9 @@
         eval("var prodObj = " + t);
         if (prodObj.price < 0) {
           paymentOfAccount = true;
+          // 13/10/2017 rigel - salva o produto conta cliente
+          prodCustomerAccount = prodObj.id
+          prodCustomerCredit = prodObj.credit
           addActivityToAtualTreatment({
             activity: prodObj.name,
             activityId: prodObj.id,
@@ -855,6 +936,12 @@
       if (treatments.length === 0) {
         messages.push("Não existem itens a serem pagos!");
       }
+
+      if (hasCustomerAccount && hasCustomerCredit) {
+        messages.push("Pagamento de Conta cliente e compra de Crédito cliente, devem ser efetuadas em transações separadas!" +
+          "\n\n" + "Você pode ignorar um dos itens fazer o pagamento e depois acessar o cliente/comanda para fazer um segundo pagamento"); 
+      }
+
       if (messages.length !== 0) {
         alert(messages.join("\n"));
         return false;
@@ -1120,6 +1207,14 @@
     });
     $scope.addPayment = function() {
       paymentType = getPaymentTypeById($('#payment_type').val());
+      if (paymentType.customerRegisterDebit || paymentType.customerUseCredit) {
+        if (hasCustomerCredit || hasCustomerAccount) {
+           alert ("Produtos especiais de conta cliente e/ou crédito cliente,\n" +
+           "não podem ser pagos com formas de pagamento especiais que alteram o saldo do cliente.\n\n" +
+           "Caso necessário ignore estes itens e faça um pagamento separado.")
+           return;
+        }
+      }
       if (paymentType.cheque) {
         chequeInfoObj = {
           agency: $(":input[name=agency]").val(),
@@ -1223,6 +1318,17 @@
     prepareTreatmentsInUi();
   }
   var getCommandByServer = function(customerId) {
+    // 13/10/2017 - rigel para nao deixar pagar conta cliente e credito cliente na mesma transação
+    if (prodCustomerAccount == 0 && prodCustomerCredit == 0) {
+      var url = "/cash/getProductPreviousDebts/" + customerId;
+      $.get(url, function(t) {
+        eval("var prodObj = " + t);
+        // 13/10/2017 rigel - salva o produto conta cliente
+        prodCustomerAccount = prodObj.id
+        prodCustomerCredit = prodObj.credit
+      }, "text");
+    }  
+
     $.get("/cash/getCommand/" + customerId + "/" + gatDateTreatmentOr0(), function(t) {
       var commandData = {};
       eval("commandData=" + t);

@@ -120,6 +120,44 @@ class Contact extends LongKeyedMapper[Contact]
     }
     this.delete_!
   }
+
+  lazy val firstName:String = {
+    if (name.is.indexOf(" ") > 0) {
+      name.is.substring (0,name.is.indexOf(" "))
+    } else {
+      name.is
+    }
+  }
+  
+  def replaceMessage (ac:Contact, message:String) = {
+      var message_aux = message;
+      //val extenso = WrittenForm (123.999.467.89)
+      //println ("vaiiii ===================== " + extenso.humanize());
+      //println ("vai =================== fora ")
+      if (ac.name.is != "") {
+          //println ("vai =================== dentro ")
+
+          message_aux = message_aux.replaceAll("##hoje##", Project.dateToExt(new Date()));
+          message_aux = message_aux.replaceAll("##mescorrente##", Project.monthToExt(new Date()));
+          message_aux = message_aux.replaceAll("##messeguinte##", Project.monthToExt(Project.nextMonth (new Date())));
+          message_aux = message_aux.replaceAll("##mesanterior##", Project.monthToExt(Project.prevMonth (new Date())));
+
+          message_aux = message_aux.replaceAll("##logo##", "<img width='100px' src='" + AuthUtil.company.thumb_web + "'/>");
+
+          message_aux = message_aux.replaceAll("##nome##", ac.name.is)
+          message_aux = message_aux.replaceAll ("##prinome##", ac.firstName)
+          message_aux = message_aux.replaceAll ("##telefone##", ac.phone)
+          message_aux = message_aux.replaceAll ("##celular##", ac.mobilePhone)
+          message_aux = message_aux.replaceAll ("##email##", ac.email)
+          message_aux = message_aux.replaceAll ("##nasc_data##", Project.dateToStr(ac.birthday))
+          message_aux = message_aux.replaceAll ("##nasc_idade##", Project.dateToAge(ac.birthday))
+          message_aux = message_aux.replaceAll ("##nasc_anos##", Project.dateToYears(ac.birthday))
+          message_aux = message_aux.replaceAll ("##nasc_ext##", Project.dateToExt(ac.birthday))
+
+      }
+      message_aux
+  }
+
 }
 
 object Contact extends Contact with LongKeyedMapperPerCompany[Contact]
