@@ -26,8 +26,13 @@ var deleteSection = function(id) {
 		$.post("/project/remove_projectsection/" + id, {
 				id: id
 			})
-			.success(function() {
+			.success(function(t) {
+	          if (t=="1" || t==1) {
 				updateReportSection();
+			  } else {
+	            eval("var obj = " + t)
+	            return alert("Erro ao excluir seção!\n\n"+obj);
+			  } 
 			});
 	}
 };
@@ -83,6 +88,13 @@ var updateReportItems = function() {
     fields[6] = "real";
     fields[7] = "real";
     fields[8] = "real";
+    fields[10] = {
+		type: "format",
+		decode: function(id, row) {
+			return "<span style='margin-right:4px'><a class='btn' href='/project/edit_project_section?id=" + row[3] + "' target='_blank'>Ir</a></span>" +
+				"<span><a class='btn danger' target='_blank' onclick='deleteSection(" + row[10] + ")'>Excluir</a></span>";
+		}
+	}
 	renderReport("/project/budget/" + gup('id'), fields, {
 		project: gup('id')
 	}, "#table_items");

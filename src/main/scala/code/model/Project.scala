@@ -161,13 +161,13 @@ println ("vaiiiii ======================= no project opt " + opt)
     }
 
     override def delete_! = {
-    if(ProjectTreatment.count(By(ProjectTreatment.project,this.id)) > 0){
-        throw new RuntimeException("Existe item ligado a este " + this.prjOptDesc)
-    }
-    if(ProjectSection.count(By(ProjectSection.project,this.id)) > 0){
-        throw new RuntimeException("Existe Seção ligada a este " + this.prjOptDesc)
-    }
-    super.delete_!;
+        if(ProjectTreatment.count(By(ProjectTreatment.project,this.id)) > 0){
+            throw new RuntimeException("Existe item ligado a este " + this.prjOptDesc)
+        }
+        if(ProjectSection.count(By(ProjectSection.project,this.id)) > 0){
+            throw new RuntimeException("Existe Seção ligada a este " + this.prjOptDesc)
+        }
+        super.delete_!;
     }
 
 }
@@ -359,6 +359,12 @@ class ProjectSection extends Audited[ProjectSection] with KeyedMapper[Long, Proj
                 .save
 
     }    
+    override def delete_! = {
+        if(ProjectTreatment.count(By(ProjectTreatment.projectSection,this.id)) > 0){
+            throw new RuntimeException("Existe item ligado a esta seção " + this.title)
+        }
+        super.delete_!;
+    }
 }
 
 object ProjectSection extends ProjectSection 

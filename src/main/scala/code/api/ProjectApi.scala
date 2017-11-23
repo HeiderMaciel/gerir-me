@@ -71,9 +71,13 @@ object ProjectApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				JInt(1)
 			}
 			case "project" :: "remove_projectsection" :: id :: Nil Post _ =>{
-				val projectObj = ProjectSection.findByKey(id.toLong).get
-				projectObj.delete_!
-				JInt(1)
+				try{
+					val projectObj = ProjectSection.findByKey(id.toLong).get
+					projectObj.delete_!
+					JInt(1)
+				} catch {
+					case e:Exception => JString(e.getMessage)
+				}
 			}			
 
 			case "project" :: "getProjectSections" :: projectId :: Nil JsonGet _ =>{
