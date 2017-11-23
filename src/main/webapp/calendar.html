@@ -316,7 +316,7 @@
 
                             <div class="row lift:SecuritySnippet.hasNotAuxiliarModule">
                                 <div class="col-xs-12">
-                                    <div class="col-xs-12 col-md-7">
+                                    <div class="col-xs-12 col-md-5">
                                         <label for="activitys"><span data-i18n="Serviço"></span>:</label>
                                         <select
                                             name="activitys"
@@ -326,12 +326,19 @@
                                             sth-select-placeholder="Selecione um serviço"
                                             sth-select-filter="true"
 											sth-select-filter-placeholder="Pesquisar"></select>
-
-											<span class="lift:SecuritySnippet.isEsmileSystem">
-												<select class="notselect21"  name="tooth" id="tooth"></select>
-											</span>
                                     </div>
-                                    <div class="col-xs-12 col-md-5">
+                                    <div class="col-xs-12 col-md-5 lift:SecuritySnippet.isEsmileSystem">
+                                        <label for="tooth">Dente:</label>
+                                        <select
+                                            name="tooth"
+                                            id="tooth"
+                                            sth-select
+                                            sth-select-title="Selecione um dente"
+                                            sth-select-placeholder="Selecione um dente"
+                                            sth-select-filter="true"
+											sth-select-filter-placeholder="Pesquisar"></select>
+                                    </div>
+                                    <div class="col-xs-12 col-md-2">
                                         <label>&nbsp; <!-- Empty space due Bootstrap bug --></label>
                                         <button type="button" id="add_detail_button" class="btn btn-primary">
                                             Adicionar
