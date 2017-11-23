@@ -197,6 +197,8 @@ var saveBudget = function() {
           $("#budget_modal").modal({
             "hide": true
           });
+          // tá lá no events.js
+          updateReportItems();
         }else{
           alert(eval(results));
         }

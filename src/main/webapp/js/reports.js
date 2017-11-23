@@ -264,6 +264,7 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
         var groupFunction = groupConfig.groupFunction;
         var cssClass = groupConfig.show ? "" : "hide";
         var formater = groupConfig.formater;
+        var collapsed = groupConfig.collapsed;
         var getGroup = function (key, current) {
           if (!groups[current[key]]) {
             groups[current[key]] = {
@@ -296,10 +297,15 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
           };
           table += "<td colspan='" + group.data[0].length + "'><a>" + group.name + "( " + formater(group.value) + " )</a></td>"
           table += "</tr>";
-          if (groupConfig.childGroup)
+          if (groupConfig.childGroup) {
             table += groupDataset(groupConfig.childGroup, group.data, n + 1, hashKey);
-          else
-            table += getTrs(group.data, hashKey, "hide");
+          } else {
+            if (collapsed) { 
+              table += getTrs(group.data, hashKey, "hide");
+            } else { // rigel 23/11/2017 - trazer expandido
+              table += getTrs(group.data, hashKey);
+            }
+          }
         };
         return table;
       }

@@ -26,8 +26,13 @@ var deleteSection = function(id) {
 		$.post("/project/remove_projectsection/" + id, {
 				id: id
 			})
-			.success(function() {
+			.success(function(t) {
+	          if (t=="1" || t==1) {
 				updateReportSection();
+			  } else {
+	            eval("var obj = " + t)
+	            return alert("Erro ao excluir seção!\n\n"+obj);
+			  } 
 			});
 	}
 };
@@ -83,9 +88,37 @@ var updateReportItems = function() {
     fields[6] = "real";
     fields[7] = "real";
     fields[8] = "real";
+    fields[10] = {
+		type: "format",
+		decode: function(id, row) {
+			return "<span style='margin-right:4px'><a class='btn' href='/project/edit_project_section?id=" + row[3] + "' target='_blank'>Ir</a></span>" +
+				"<span><a class='btn danger' target='_blank' onclick='deleteSection(" + row[10] + ")'>Excluir</a></span>";
+		}
+	}
+  	var group = function(row,value){
+    	return parseFloat(value) + (parseFloat(row[7]));
+  	};
+  	var formater = function(value){
+    	return value.formatMoney();
+  	};        
+	var group_meta_data = {
+		"key":0,
+		"name":0, 
+		"groupFunction" : group,
+        "formater" : formater,
+        "show" : true,
+        "childGroup" : {
+            "key":1, 
+            "name":1, 
+            "groupFunction" : group, 
+            "show" : true,
+            "collapsed" : false,
+            "formater" : formater
+      	}
+    };
 	renderReport("/project/budget/" + gup('id'), fields, {
 		project: gup('id')
-	}, "#table_items");
+	}, "#table_items", false, false, false, false. false, false, group_meta_data);
 };
 
 $(function() {
