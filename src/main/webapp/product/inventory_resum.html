@@ -26,19 +26,28 @@
         renderReport(url,fields,$("#form_report").serializeObject(),"#grid", false, false, false, false. false, false,{"key":0, "name":0, "groupFunction" : group,
         "formater" : formater,
         "show" : true,
-        "childGroup" : {"key":1, "name":1, "groupFunction" : group,
-                        "show" : true,
-                        "formater" : formater,
-                        "childGroup" : {
-                          "key":2, "name":2, "groupFunction" : group,
-                          "show" : true,
-                          "formater" : formater,
-                          "childGroup" : {
-                            "key":3, "name":3, "groupFunction" : group,
-                            "formater" : formater                            
-                          }
-                        }
-                      }
+        "childGroup" : {
+          "key":1, 
+          "name":1, 
+          "groupFunction" : group,
+          "show" : true,
+          "formater" : formater,
+          "childGroup" : {
+            "key":2, 
+            "name":2, 
+            "groupFunction" : group,
+            "show" : true,
+            "formater" : formater,
+            "childGroup" : {
+              "key":3, 
+              "name":3, 
+              "groupFunction" : group,
+              "formater" : formater,        
+              "show" : true,
+              "collapsed" : false
+            }
+          }
+        }
       });
     }
     $("#b_qtd").click(function(){

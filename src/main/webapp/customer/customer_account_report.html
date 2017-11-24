@@ -8,6 +8,7 @@
   $(function(){
     $("#send_message").notificationField(true);
     var fields = [];
+    var totalc = 0;
     var total = 0;
     var credit = 0;
     var debit = 0;
@@ -29,6 +30,7 @@
             debit -= floatValue;
           }
           total += floatValue;
+          totalc += 1;
         }
         return floatValue.formatMoney();
       }
@@ -44,10 +46,12 @@
     var url = "/report/customer_account";
     var request = function(){
       customers = [];
+      totalc = 0.00;
       total = 0.00;
       credit = 0.00;
       debit = 0.00;
       renderReport(url,fields,$("#form_report").serializeObject(), "#grid", function(){
+        $('#totalc').val(totalc);
         $('#total').val(total.formatMoney());
         $('#credit').val(credit.formatMoney());
         $('#debit').val(debit.formatMoney());
@@ -157,6 +161,13 @@
               <div class="input">
                 <div class="inline-inputs">
                   <div class="input-prepend" style="float:left; padding-right:10px">
+                    <div class="input-prepend" style="float:left; padding-right:10px">
+                      <div style="float:left; padding-right:10px" class="input-prepend">
+                        <span class="add-on"><img src="/images/count.png" width="16"></span>
+                        <input class="small" id="totalc" name="totalc" size="19" placeholder="0" type="text">
+                        <span class="help-block">Total</span>
+                      </div>
+                    </div>
                     <div class="input-prepend" style="float:left; padding-right:10px">
                       <span class="add-on"><img src="/images/add.png" width="16"></span>
                       <input class="small" id="credit" name="credit" size="19" placeholder="0.00" type="text">

@@ -15,17 +15,19 @@
         var urlWithouUnit = "/report/inventory_control_no_unit";
         var request = function(){
           var action = $("#unit").val() !="" ? url : urlWithouUnit;
-          var group_meta_data =  $("#unit").val() =="" ?  {"key":2, "name":2, "groupFunction" : group,
-                    "formater" : formater,
-                    "show" : true,
-                    "childGroup" : {
-                        "key":4, 
-                        "name":4, 
-                        "groupFunction" : group, 
-                        "show" : true,
-                        "collapsed" : true,
-                        "formater" : formater
-                  }
+          var group_meta_data =  $("#unit").val() =="" ?  { "key":2, 
+                "name":2, 
+                "groupFunction" : group,
+                "formater" : formater,
+                "show" : true,
+                "childGroup" : {
+                  "key":4, 
+                  "name":4, 
+                  "groupFunction" : group, 
+                  "show" : true,
+                  "collapsed" : false,
+                  "formater" : formater
+                }
           } : false;
           renderReport(action,[],$("#form_report").serializeObject(),"#grid", false, false, false, false. false, false, group_meta_data);
         }
