@@ -80,6 +80,20 @@ object ProjectApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				}
 			}			
 
+			case "project" :: "remove_projectitem" :: id :: Nil Post _ =>{
+				try{
+					val projectObj = ProjectTreatment.findByKey(id.toLong).get
+					var td = TreatmentDetail.findByKey(projectObj.treatmentDetail).get
+					td.delete_!
+					var tr = Treatment.findByKey(projectObj.treatment).get
+					tr.delete_!
+					projectObj.delete_!
+					JInt(1)
+				} catch {
+					case e:Exception => JString(e.getMessage)
+				}
+			}			
+
 			case "project" :: "getProjectSections" :: projectId :: Nil JsonGet _ =>{
 				JsArray(ProjectSection.findAllInCompany(
 					By(ProjectSection.project, projectId.toLong),
@@ -94,8 +108,10 @@ object ProjectApi extends RestHelper with ReportRest with net.liftweb.common.Log
 
 			case "project" :: budget :: projectId :: Nil Post _ =>{
 				val SQL = """
-					select pj.name, ps.title, pr.name, tdd.tooth, pr.saleprice, pr.saleprice * td.amount, 
-					td.amount, td.price/td.amount, td.price, td1.price, td.id
+					select pj.name, ps.title, pr.name, tdd.tooth, 
+					pr.saleprice, pr.saleprice * td.amount, 
+					td.amount, td.price/td.amount, td.price, td1.price, 
+					td.id, pt.id
 					from project pj
 					inner join projectsection ps on ps.project = pj.id
 					inner join projecttreatment pt on pt.project = pj.id and pt.projectsection = ps.id

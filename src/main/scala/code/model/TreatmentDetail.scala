@@ -67,6 +67,14 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
             case _ => 
         } 
         // deletar TdEpet tdEdoctus
+        if (AuthUtil.company.appType.isEbellepet) {
+            var tdepet = getTdEpet
+            tdepet.delete_!
+        }
+        if (AuthUtil.company.appType.isEsmile || AuthUtil.company.appType.isEdoctus) {
+            var tdEdoctus = getTdEdoctus
+            tdEdoctus.delete_!
+        }
         super.delete_!
     }
 

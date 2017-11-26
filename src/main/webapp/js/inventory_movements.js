@@ -41,8 +41,7 @@
                  ret += "<tr>" +
                   (!purchaseOrder ? "<td>"+obj.unit+"</td>" : "" ) +
                   "<td>"+obj.product_id+"</td>" +
-                  "<td>"+obj.product_name+"</td>" +
-                  //"<td>"+obj.bp_name+"</td>" +
+                  "<td>"+"<a href='/product_admin/edit?id=" + obj.product_id + "' target='_product_maste'>" + obj.product_name + "</a>"+"</td>" +
                   "<td>"+"<a href='/customer/edit?id=" + obj.bp_id + "' target='_customer_maste'>" + obj.bp_name + "</a>"+"</td>" +
                   "<td>"+obj.invoice+"</td>" +
                   "<td>"+obj.amount+"</td>" + 
@@ -53,6 +52,7 @@
                   (!purchaseOrder ? "<td>"+obj.cause+"</td>" : "" ) + 
                   "<td>"+new Date(obj.efetive_date).getDateBr()+"</td>" +
                   (purchaseOrder ? "<td>"+"<a class='btn danger' onclick='del_detail(" + obj.im_id +")'  target=''>Excluir</a>"+"</td>" : "" ) + 
+                  "<td>" + "<a href= '#' title='" + obj.auditStr + "'><img src='/images/audit.png' width='24'/></a>" + "</td>" +
                   "</tr>"
             };
             $("#grid tbody").html(ret);

@@ -497,9 +497,15 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case _ => " and 1 = 1 "
 				}
 
+				val strAux = if (PermissionModule.anvisa_?) {
+						" bc.barcode  || ' ' || "
+					} else {
+						""
+					}
 				val SQL = """
 					select cu.short_name, bp.name as profissional, tr.dateevent as data, 
-					pr.name as servico, td.amount, td.price, bc.name as cliente, bc.email,
+					pr.name as servico, td.amount, td.price, trim (""" + 
+					strAux + """ bc.name) as cliente, bc.email,
 					trim (bc.mobile_phone || ' ' || bc.phone || ' ' || bc.email_alternative) as telefone,
 					bc.id, bp.id from treatment tr 
 					inner join business_pattern bc on bc.id = tr.customer

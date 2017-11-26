@@ -37,6 +37,22 @@ var deleteSection = function(id) {
 	}
 };
 
+var deleteItems = function(id) {
+	if (confirm("Deseja excluir o item?")) {
+		$.post("/project/remove_projectitem/" + id, {
+				id: id
+			})
+			.success(function(t) {
+	          if (t=="1" || t==1) {
+				updateReportItems();
+			  } else {
+	            eval("var obj = " + t)
+	            return alert("Erro ao excluir item!\n\n"+obj);
+			  } 
+			});
+	}
+};
+
 var updateReportStake = function() {
 	var fields = ['text', {
 		type: "format",
@@ -92,9 +108,11 @@ var updateReportItems = function() {
 		type: "format",
 		decode: function(id, row) {
 			return "<span style='margin-right:4px'><a class='btn' href='/project/edit_project_section?id=" + row[3] + "' target='_blank'>Ir</a></span>" +
-				"<span><a class='btn danger' target='_blank' onclick='deleteSection(" + row[10] + ")'>Excluir</a></span>";
+				"<span><a class='btn danger' target='_blank' onclick='deleteItems(" + row[11] + ")'>Excluir</a></span>";
 		}
 	}
+    fields[11] = "none";
+    
   	var group = function(row,value){
     	return parseFloat(value) + (parseFloat(row[7]));
   	};
