@@ -618,7 +618,7 @@
       return $("#user_select").html(ret);
     });
     $("#costcenter_select_filter, #costcenter_select").costcenterField(true);
-    $("#paymenttype_select_filter, #paymenttype_select").paymentTypeField(true);
+    $("#paymenttype_select_filter, #paymenttype_select").paymentTypeField(true, true);
     $("#cheque_select").chequeField(true);
 
     $("#category_select").change(function() {

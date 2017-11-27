@@ -106,7 +106,7 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					where tr.company = ? 
 					and (tr.user_c = ? or td.auxiliar = ?)  
 					and tr.dateevent = ?
-					and tr.hasdetail = true and tr.status <> 5
+					and tr.hasdetail = true and tr.status not in (5,9)
 					%s
 					order by start_c, bc.name, pr.name
 				"""
@@ -155,7 +155,7 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					left join business_pattern ban on ban.id = tdp.animal
 					where tr.company = ? 
 					and tr.dateevent = ?
-					and tr.status not in (5,4,8,1) -- pago deletado desmarcou faltou
+					and tr.status not in (5,4,8,1,9) -- pago deletado desmarcou faltou orçamento
 					order by tr.start_c				"""
 				toResponse(SQL,List(AuthUtil.company.id.is, day)) 
 			} catch {
