@@ -590,7 +590,9 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 				val SQL = """
 					select bc.id, tr.dateevent, 
 					fu_dt_humanize (tr.dateevent),
-					to_char (tr.start_c, 'hh24:mi'), tr.status, pr.name, trim (""" +
+					to_char (tr.start_c, 'hh24:mi'), 
+					tr.status, 
+					pr.name, trim (""" +
 					strAux + """ bc.name) as cliente, 
 					(select case 
 					  when tr1.status = 1 then 'faltou' 
@@ -611,7 +613,8 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					/* action edita obs */
 					/* action desmarca e cria outro */
 					bp.id,
-					td.id
+					td.id,
+					pr.id
 					from treatment tr 
 					inner join business_pattern bc on bc.id = tr.customer
 					inner join business_pattern bp on bp.id = tr.user_c
@@ -632,7 +635,6 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					/* project class */
 					order by tr.dateevent desc, bp.name asc
 				"""
-println (" vaiiii ============= " + SQL ) 
 				toResponse(SQL.format(customer, status, unit, offsale, user, prod),
 					List(AuthUtil.company.id.is, start, end))
 			}

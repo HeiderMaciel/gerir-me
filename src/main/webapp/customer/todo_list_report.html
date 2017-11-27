@@ -65,7 +65,7 @@
     fields[12] = {
       type : "format",
       decode: function(name, row) {
-        return "<a class='btn' href='/treatment/treatment?id="+row[12]+"' title='Editar a atividade' target='_treatment_maste'>Editar</a>" + "<a class='btn primary' onclick='new_detail(" + row[0] +',"' +row[3]+ '"' + ")'" + " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir_novo</a> " 
+        return "<a class='btn' href='/treatment/treatment?id="+row[12]+"' title='Editar a atividade' target='_treatment_maste'>Editar</a>" + "<a class='btn primary' onclick='new_detail(" + row[0] +',"' +row[3]+ '"' + ", " + row[13] + "," + row[15] + ")'" + " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir_novo</a> " 
       }
     };
     fields[13] = {
@@ -75,6 +75,7 @@
       }
     };
     fields[14] = "none"; // id treatmentdetail
+    fields[15] = "none"; // id product
 
     $("#unit").unitField(true,false);
     DataManager.getActivities(function(userObj){
@@ -319,7 +320,7 @@
                 </div>
               </div>                  
               <div class="clearfix">
-                <label for="name"><span data-i18n='Profissionais'></label>
+                <label for="name"><span data-i18n='Profissional'></label>
                   <div class="input">
                       <select class='local_storage' id='user_todo' name='user_todo'></select>
                   </div>

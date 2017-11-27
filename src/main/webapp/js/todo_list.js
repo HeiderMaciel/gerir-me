@@ -175,10 +175,12 @@ var saveTodo = function() {
   }
 };
 
-var new_detail = function (customerId, start_hour) {
+var new_detail = function (customerId, start_hour, user, activity) {
     $("#cutomer_id_treatment").val(customerId)
     $("#cutomer_id_treatment").change();
     $("#hour_start").val(start_hour);
+    $("#user_todo").val(user).change();
+    $("#activity").val(activity).change();
     $("#new_todo").click();
 };
 

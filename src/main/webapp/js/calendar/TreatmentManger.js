@@ -256,54 +256,6 @@ var TreatmentManger = {
           var row = [];
           row.push (status, '')
         	return trStatusdecode ('',row)
-	/* DELETAR
-	    	// duplicado do treatments_conference.js
-	      var status2 = ''; // na verdade este método nao recebe status 2	
-          var statstr = '' 
-          var title = ''
-          if (status == 'Open' || status == '0') {
-            statstr = 'open'
-            title ='agendado1'
-          } else if (status == 'Missed' || status == '1') {
-            statstr = 'Missed'
-            title ='faltou'
-          } else if (status == 'Arrived' || status == '2') {
-            statstr = 'Arrived'
-            title ='chegou'
-          } else if (status == 'Ready' || status == '3') {
-            statstr = 'Ready'
-            title ='atendido'
-          } else if (status == 'Paid' || status == '4') {
-            if (status2 == 'Ready' || status2 == '3') {
-              statstr = 'ready_paid'
-              title ='atendido / pago'
-            } else if (status2 == 'Missed' || status2 == '1') {
-              statstr = 'missed_paid'
-              title ='faltou / pago'
-            } else {
-              statstr = 'paid'
-              title ='pago'
-            }
-          } else if (status == 'Deleted' || status == '5') {
-            statstr = 'Deleted'
-            title ='excluído'
-          } else if (status == 'Confirmed' || status == '6') {
-            statstr = 'Confirmed'
-            title ='confirmado'
-          } else if (status == 'PreOpen' || status == '7') {
-            statstr = 'PreOpen'
-            title ='pré agendado'
-          } else if (status == 'ReSchedule' || status == '8') {
-            statstr = 'ReSchedule'
-            title ='desmarcou'
-          } else if (status == 'Budget' || status == '9') {
-            statstr = 'Budget'
-            title ='orçamento'
-          }
-          // rigel alterado agora que status deixou de ser "string" e passou a ser int
-          // 31/05/2017 
-	      return "<img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+"1.png' width='24'/>"
-*/
 	    };
 
 		var url = "/treatment/by_customer/" + calEvent.customerId + "/" + encodeURIComponent(getDateBr(calEvent.start)) + "/details";
