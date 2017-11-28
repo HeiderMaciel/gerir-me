@@ -86,18 +86,20 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					to_char (tr.start_c, 'hh24:mi'),
 					to_char (ted.arrivedat, 'hh24:mi'),
 					bc.name, ba.short_name, ban.short_name as pet, 
-					pr.name, tdd.tooth, td.amount, td.price, 
+					pr.name, tdd.tooth, os.short_name, td.amount, td.price, 
 					tr.status, 
 					trim (COALESCE (ted.obsLate, '') || ' ' || tr.obs || ' ' || td.obs), 
 					'Aguardando a ' || to_char (now() - ted.arrivedat,'hh24:mi'),
 					bc.id, td.id,
 					(select defaultquiz from usergroup where id = bp.group_c),
-					ba.id, ban.id, tr.status2
+					ba.id, ban.id, tr.status2,
+					os.id
 					from treatment tr 
 					inner join business_pattern bc on bc.id = tr.customer
 					inner join business_pattern bp on bp.id = tr.user_c
 					inner join treatmentdetail td on td.treatment = tr.id
 					left  join business_pattern ba on ba.id = td.auxiliar
+					left  join offsale os on os.id = td.offsale
 					inner join product pr on pr.id = td.activity or pr.id = td.product
 					left join treatedoctus ted on ted.treatment = tr.id
 					left join tdepet tdp on tdp.treatmentDetail = td.id
@@ -322,6 +324,38 @@ println ("vaiiii ====================== " + status)
 					val bp = User.findByKey (tdaux)
 					val bpname = bp.get.short_name;
 					throw new RuntimeException (bpname + " é assistente neste serviço!")
+				}
+				JInt(1)
+			} catch {
+			  case e: Exception => JString(e.getMessage)
+			}			
+		}
+		case "command" :: "setoff" :: Nil Post _ => {
+			//
+	        // usado tambem na Agenda além de aqui na comnda e no caixa
+	        //
+			try { 
+				def offsaleId:String = S.param("offsale") openOr "0"
+				def tdId:String = S.param("tdid") openOr "0"
+				def command:Boolean = S.param("command") == "1"
+				val td = TreatmentDetail.findByKey (tdId.toLong)
+				val tdoff = td.get.offsale;
+				if (tdoff == offsaleId.toLong && offsaleId.toLong != 0) {
+					if (command) {
+						throw new RuntimeException (td.get.offsaleShortName + " já é o convênio neste serviço!")
+					} else {
+						// agenda
+						throw new RuntimeException (td.get.offsaleShortName + " já é o convênio neste serviço!")
+					}
+				} else if (tdoff == 0 || tdoff == null) {
+					td.get.offsale(offsaleId.toLong).save
+				} else {
+					if (command) {
+						throw new RuntimeException (td.get.offsaleShortName + " já é o convênio neste serviço!")
+					} else {
+						// agenda deixa excluir e alterar convênio setado
+						td.get.offsale(offsaleId.toLong).save
+					}
 				}
 				JInt(1)
 			} catch {

@@ -110,6 +110,7 @@
         }
       }
       var hasAuxiliarModule = $('.has-auxiliar-module').length > 0;
+      var hasOffSaleModule = $('.has-offsale-module').length > 0;
       var hasNotMedical = $('.has-not-medical').length > 0;
       var hasPetSystem = $('.has-pet-system').length > 0;
       var hasEsmileSystem = $('.has-esmile-system').length > 0;
@@ -122,7 +123,8 @@
       fields[2] = {
         type: "format",
         decode: function(name, row) {
-          return "<a href='/customer/edit?id=" + row[12] + "' target='_customer_maste'>" + name + "</a>";
+          return "<a href='/customer/edit?id=" + row[13] + 
+          "' target='_customer_maste'>" + name + "</a>";
         }
       }
       if (!hasAuxiliarModule) {
@@ -131,7 +133,8 @@
         fields[3] = {
           type: "format",
           decode: function(name, row) {
-            return "<a href='/user/edit?id=" + row[15] + "' target='_user_maste'>" + name + "</a>";
+            return "<a href='/user/edit?id=" + row[16] + 
+            "' target='_user_maste'>" + name + "</a>";
           }
         }
       }
@@ -141,32 +144,36 @@
         fields[4] = {
           type: "format",
           decode: function(name, row) {
-            return "<a href='/animal/edit_animal?id=" + row[16] + "' target='_animal_maste'>" + name + "</a>";
+            return "<a href='/animal/edit_animal?id=" + row[17] + 
+            "' target='_animal_maste'>" + name + "</a>";
           }
         }
       }
       if (!hasEsmileSystem) { // tooth
         fields[6] = "none";
       } 
-      if (!hasNotMedical) { // qtde
+      if (!hasOffSaleModule) { // tooth
         fields[7] = "none";
-      }
-      if (!hasNotMedical) { // valor
+      } 
+      if (!hasNotMedical) { // qtde
         fields[8] = "none";
       }
-      fields [9] = {
+      if (!hasNotMedical) { // valor
+        fields[9] = "none";
+      }
+      fields [10] = {
         type : "format",
         decode: function(name, row) {
-          trStatus = 9;
-          trStatus2 = 17;
+          trStatus = 10;
+          trStatus2 = 18;
           return trStatusdecode (name,row, true)
         }
       };
 
       if (hasNotMedical) { // espera
-        fields[11] = "none";
+        fields[12] = "none";
       }
-      fields[12] = {
+      fields[13] = {
         type : "format",
         decode: function(name, row) {
           var strAux = "";
@@ -176,31 +183,32 @@
 //          if ((document.location.href.indexOf("edoctus") != -1) ||
 //          (document.location.href.indexOf("ephysio") != -1)) {
             strAux = '<a title="Novo prontuário" href="/quiz/quizapply?business_pattern=' + 
-            row[12] + '&quiz=' + row[14] + 
+            row[13] + '&quiz=' + row[15] + 
             '"> <img width="24" src="/images/add.png"/></a>' +
                 '<a title="Prontuário" href="/records/edit_patient?id=' + 
-                row[12] + '"> <img width="24" src="/images/records.png"/></a>'
+                row[13] + '"> <img width="24" src="/images/records.png"/></a>'
           }
           return strAux 
            // agora ir para cadastro é link no nome
            //+ <a title="Cadastro" href="/customer/edit?id=' + row[11] + '"> <img width="24" src="/images/customers.png"/></a>'
         }
       };
-      fields[13] = {
+      fields[14] = {
         type : "format",
         decode: function(name, row) {
           return "<a class='btn primary' onclick='Manager.new_detail(" + 
-          row[12] +',"' +row[0]+ '"' + ")'" + 
+          row[13] +',"' +row[0]+ '"' + ")'" + 
           " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir novo</a> " +
                 "<a class='btn danger' onclick='Manager.del_detail(" + 
-                row[13] +")'  target=''>Excluir</a>"
+                row[14] +")'  target=''>Excluir</a>"
           //      "<a class='btn primary' onclick='Manager.new_fit(" +row[0].replace (':','.') +")' title='Inserir novo serviço neste mesmo horário' target=''>Encaixar</a> " +
         }
       };
-      fields[14] = "none" // questionario/prontuário default
-      fields[15] = "none" // id assistente
-      fields[16] = "none" // id animal
-      fields[17] = "none" // tr.status2
+      fields[15] = "none" // questionario/prontuário default
+      fields[16] = "none" // id assistente
+      fields[17] = "none" // id animal
+      fields[18] = "none" // tr.status2
+      fields[19] = "none" // tr.status2
       dataaux = $("#day").val();
       renderReport("/command/usersales" + 
         "?user=" + (Manager.user())+
@@ -449,7 +457,8 @@
   })();
 
   $(function() {
-    $('#tooth').toothField(false);
+    $('#tooth').toothField(true);
+    $("#offsale").offSaleField(true);
     $("#forget").click(function() {
       $("#password").val("1234").change(); 
       $("#user").val("0");

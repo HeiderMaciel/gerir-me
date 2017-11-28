@@ -177,6 +177,42 @@ var TreatmentManger = {
 			alert ("Suas permissões não permitem editar agendamento");
 		}
 	},
+	setOffSaleDetail: function(detailId) {
+		if (CalendarManager.calendarPermitions.editEvent) {
+			var offsaleId = $("#offsale").val();
+			var msgAux = "";
+			if (!offsaleId) {
+				offsaleId = "0";  
+				msgAux = "\nComo o campo está vazio, um possível convênio no atendimento será excluído!"
+			} else {
+				msgAux = "";
+			}
+			if (confirm("Tem certeza que deseja atribuir este convênio a este serviço?" + msgAux)) {
+				//
+				// usado tambem na comanda e na agenda e no caixa
+				// duplicado no register_payment.js
+				//
+		        return $.post("/command/setoff", {
+		          "offsale": offsaleId,
+		          "tdid": detailId,
+		          "command": "0" // agenda 1 seria commanda
+		        }, function(results) {
+		          if(results === 1 || results == "1"){
+		          	if (offsaleId == "0") {
+			            alert("Convênio excluído com sucesso");
+		          	} else {
+			            alert("Convênio cadastrado com sucesso");
+		          	}
+					TreatmentManger.creatTreatmentDetail(global_calEvent);
+		          }else{
+		            alert(eval(results));
+		          }
+		        });
+			}
+		} else {
+			alert ("Suas permissões não permitem editar agendamento");
+		}
+	},
 	setAnimalDetail: function(detailId) {
 		if (CalendarManager.calendarPermitions.editEvent) {
 			var petId = $("#animal").val();
@@ -265,6 +301,7 @@ var TreatmentManger = {
 			var table = "";
 	        var hasAuditModule = $('.has-audit-module').length > 0;
 	        var hasAuxiliarModule = $('.has-auxiliar-module').length > 0;
+	        var hasOffSaleModule = $('.has-offsale-module').length > 0;
 	        var hasUnitModule = $('.has-unit-module').length > 0;
 	        var hasPetSystem = $('.has-pet-system').length > 0;
 	        var hasEsmileSystem = $('.has-esmile-system').length > 0;
@@ -272,6 +309,7 @@ var TreatmentManger = {
 				detail = details[i];
 				var auxAux = "<a href='/customer/edit?id=" + detail.auxiliarId + "' target='_customer_maste'>" + detail.auxiliar + "</a>"
 				var auxPet = "<a href='/animal/edit_animal?id=" + detail.animalId + "' target='_animal_maste'>" + detail.animal + "</a>"
+				var auxOff = "<a href='/offsale/edit?id=" + detail.offsaleId + "' target='_offsale_maste'>" + detail.offsale + "</a>"
 				table += 
 				"<tr>" +
 				"<td>" + detail.user + 
@@ -280,6 +318,7 @@ var TreatmentManger = {
 				(hasPetSystem ? "</td><td>" + auxPet : "") + 
 				"</td><td>" + detail.activity + 
 				(hasEsmileSystem ? "</td><td>" + detail.tooth : "") + 
+				(hasOffSaleModule ? "</td><td>" + auxOff : "") + 
 				"</td><td>" + getHourBr(FactoryDate.byTime(detail.start)) + 
 				"</td><td>" + getHourBr(FactoryDate.byTime(detail.end)) + 	
 				//"</td><td class='treatment-status'>" + detail.status + 
@@ -288,6 +327,7 @@ var TreatmentManger = {
 				(hasPetSystem ? "</td><td><a title='Atribuir pet' href='#' onclick='TreatmentManger.setAnimalDetail(" + detail.id + ")'><img width='24px' src='/images/addpet.png'/></a></td>" : "") +
 				(hasEsmileSystem ? "</td><td><a title='Atribuir dente' href='#' onclick='TreatmentManger.setToothDetail(" + detail.id + ")'><img width='24px' src='/images/addtooth.png'/></a></td>" : "") +
 				(hasAuxiliarModule ? "</td><td><a title='Atribuir assistente' href='#' onclick='TreatmentManger.setAuxiliarDetail(" + detail.id + ")'><img width='24px' src='/images/user.png'/></a></td>" : "") +
+				(hasOffSaleModule ? "</td><td><a title='Atribuir convênio' href='#' onclick='TreatmentManger.setOffSaleDetail(" + detail.id + ")'><img width='24px' src='/images/agreement.png'/></a></td>" : "") +
 				(hasAuditModule ? "</td><td><a title='" + detail.auditstr + "' href='#' ><img width='24px' src='/images/audit.png'/></a></td>" : "") +
 				"</tr>";
 				if (detail.treatment == calEvent.id) {

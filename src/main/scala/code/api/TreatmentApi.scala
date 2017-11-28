@@ -249,6 +249,7 @@ object TreatmentDetailsApi extends RestHelper {
 						("animalId",td.animal),
 						("tooth",td.tooth),
 						("offsale",td.offsaleShortName),
+						("offsaleId",td.offsale.is),
 						("unit",td.unitShortName),
 						("activity",td.nameActivity),
 						("treatment",td.treatment.is),

@@ -231,6 +231,40 @@
       });
     }
   };
+  var setOffSaleActivity = function(treatmentIndex, activityIndex) {
+    var customerId = treatments[treatmentIndex].customerId;
+    var detailId = treatments[treatmentIndex].activitys[activityIndex].id
+    var offsaleId = $("#offsale").val();
+    var msgAux = "";
+    if (!offsaleId) {
+      offsaleId = "0";  
+      msgAux = "\nComo o campo está vazio, um possível convênio no atendimento será excluído!"
+    } else {
+      msgAux = "";
+    }
+    if (confirm("Tem certeza que deseja atribuir este convênio a este serviço?" + msgAux)) {
+      //
+      // usado tambem na comanda e na agenda e no caixa
+      // duplicado identico ao treatmentManger
+      //
+      return $.post("/command/setoff", {
+        "offsale": offsaleId,
+        "tdid": detailId,
+        "command": "0" // agenda 1 seria commanda
+      }, function(results) {
+        if(results === 1 || results == "1"){
+          if (offsaleId == "0") {
+            alert("Convênio excluído com sucesso");
+          } else {
+            alert("Convênio cadastrado com sucesso");
+          }
+          getTreatmentbyCommand(false, customerId);
+        }else{
+          alert(eval(results));
+        }
+      });
+    }
+  };
   var setPetActivity = function(treatmentIndex, activityIndex) {
     var customerId = treatments[treatmentIndex].customerId;
     var detailId = treatments[treatmentIndex].activitys[activityIndex].id
@@ -419,6 +453,7 @@
             (hasPetSystem ? "<a title='Atribuir pet' href='#' onclick=setPetActivity(" + i + "," + j + ")><img width='16px' src='/images/addpet.png'/></a>" : "") +
             (hasAuxiliarModule ? "<a title='Atribuir assistente' href='#' onclick=setAuxiliarActivity(" + i + "," + j + ")><img width='16px' src='/images/user.png'/></a>" : "") +
             (hasEsmileSystem ? "<a title='Atribuir dente' href='#' onclick=setToothActivity(" + i + "," + j + ")><img width='16px' src='/images/addtooth.png'/></a>" : "") +
+            (hasOffSaleModule ? "<a title='Atribuir convênio' href='#' onclick=setOffSaleActivity(" + i + "," + j + ")><img width='16px' src='/images/agreement.png'/></a>" : "") +
             "</td>" +
             "</tr>";
         }

@@ -62,22 +62,24 @@
   <input type="hidden" class="has-ephysio-system lift:SecuritySnippet.isEphysioSystem" value="1">
   <input type="hidden" class="has-esmile-system lift:SecuritySnippet.isEsmileSystem" value="1">
   <input type="hidden" class="has-auxiliar-module lift:SecuritySnippet.hasAuxiliarModule" value="1">
+  <input type="hidden" class="has-offsale-module lift:SecuritySnippet.hasOffSaleModule" value="1">
   <input type="hidden" class="has-not-medical lift:SecuritySnippet.isNotMedicalSystem" value="1">
 
   <table id="grid" class="bordered-table zebra-striped">
     <thead>
       <th>Início</th>
-      <th class="clearfix lift:SecuritySnippet.isMedicalSystem">Chegou</th>
+      <th class="lift:SecuritySnippet.isMedicalSystem">Chegou</th>
       <th><span data-i18n='Cliente'></span></th>
       <th class="lift:SecuritySnippet.hasAuxiliarModule"><span data-i18n='Assistente'></span></th>
       <th class="lift:SecuritySnippet.isEbellepetSystem">Pet</th>
       <th>Produto/<span data-i18n='Serviço'></span></th>
-      <th class="clearfix lift:SecuritySnippet.isEsmileSystem">Dente</th>
-      <th class="clearfix lift:SecuritySnippet.isNotMedicalSystem">Qtde</th>
-      <th class="clearfix lift:SecuritySnippet.isNotMedicalSystem">Valor</th>
+      <th class="lift:SecuritySnippet.isEsmileSystem">Dente</th>
+      <th class="lift:SecuritySnippet.hasOffSaleModule">Convênio</th>
+      <th class="lift:SecuritySnippet.isNotMedicalSystem">Qtde</th>
+      <th class="lift:SecuritySnippet.isNotMedicalSystem">Valor</th>
       <th>Status</th>
       <th>Obs</th>
-      <th class="clearfix lift:SecuritySnippet.isMedicalSystem">Espera</th>
+      <th class="lift:SecuritySnippet.isMedicalSystem">Espera</th>
       <th class="hide_on_print">Ações</th>
     </thead>
     <tbody>
@@ -149,6 +151,17 @@
                         <select id='auxiliar' name='auxiliar'></select>
                       </div>
                     </div>
+                </div>
+                <div class="clearfix lift:SecuritySnippet.hasOffSaleModule">
+                  <label for="offsale">Convênio</label>
+                  <div class="input">
+                    <div class="inline-inputs">
+                      <div style="float:left; padding-right:10px" class="input-prepend">
+                        <span class="add-on"><img width="16" src="/images/agreement.png"></span> 
+                        <select class= 'xlarge' id='offsale'  name="offsale"></select>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="lift:SecuritySnippet.IsEsmileSystem clearfix">
                   <label for="tooth">Dente</label>
