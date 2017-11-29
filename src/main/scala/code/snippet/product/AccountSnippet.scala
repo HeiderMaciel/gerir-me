@@ -55,7 +55,7 @@ class  AccountSnippet  extends BootstrapPaginatorSnippet[Account] {
 			Account.findAllInCompany.flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"allowcashierout" -> Text(if(ac.allowCashierOut_?.is){ "Sim" }else{ "Não" }),
-							"value" -> Text(ac.value.is.toString),
+							// "value" -> Text(ac.value.is.toString),
 							"balanceunits" -> <table>{ac.balanceUnits.filter((au) => { units.size ==0 || units.contains(au.unit.is) }).map((au) => <tr><td>{au.unit.obj.get.short_name} </td> <td>{au.value.is.toString}</td></tr>)}</table>,
 							"actions" -> <a class="btn" href={"/financial_admin/account?id="+ac.id.is}>Editar</a>,
 							"delete" -> SHtml.submit("Excluir",delete,"class" -> "btn danger","data-confirm-message"->{" excluir a conta "+ac.name.is}),
@@ -87,7 +87,7 @@ class  AccountSnippet  extends BootstrapPaginatorSnippet[Account] {
 		    "name=bank" #> (SHtml.select(banksSelect,Full(ac.bank.is.toString),(s:String) => ac.bank(s.toLong)))&
 		    "name=allowCashierOut" #> (SHtml.checkbox(ac.allowCashierOut_?.is,ac.allowCashierOut_?(_)))&
 		    "name=balanceControl" #> (SHtml.checkbox(ac.balanceControl_?.is,ac.balanceControl_?(_)))&
-			"name=value" #> (SHtml.text(ac.value.is.toString, (v:String) => { if(v !="")ac.value(v.toDouble)} ))&
+//			"name=value" #> (SHtml.text(ac.value.is.toString, (v:String) => { if(v !="")ac.value(v.toDouble)} ))&
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_))++SHtml.hidden(process))
 		}catch {
 		    case e: NoSuchElementException => S.error("Conta não existe!")

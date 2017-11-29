@@ -241,7 +241,7 @@
         $("#paymenttype_select").val(obj.paymenttype_id).change();
         $("#cheque_select").val(obj.cheque_id).change();
         $("#unitvalue").val(obj.unitvalue);
-        $("#unitvalue").val(obj.unitvalue);
+//        $("#unitvalue").val(obj.unitvalue);
         $("#conciliate").val(obj.conciliate);
         $("#createdAt").val(obj.createdAt).datetimeDecode();
         $("#updatedAt").val(obj.updatedAt).datetimeDecode();

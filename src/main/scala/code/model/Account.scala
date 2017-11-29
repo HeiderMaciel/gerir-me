@@ -27,6 +27,7 @@ class Account extends Audited[Account]
 
   def getSingleton = Account
   override def updateShortName = false
+/*
   object value extends MappedCurrency(this) with LifecycleCallbacks {
     override def defaultValue = 0.0;
     override def beforeSave() {
@@ -44,6 +45,7 @@ class Account extends Audited[Account]
       this.set(this.defaultValue);
     }
   }
+*/
 
   object bank extends MappedLong(this)
 
@@ -83,8 +85,8 @@ class Account extends Audited[Account]
         // 01/08/2017
         val aau = AccountCompanyUnit.createInCompany.
         unit (unit).
-        value (this.value).
-        lastValue (this.lastValue).
+//        value (this.value).
+//        lastValue (this.lastValue).
         bank (this.bank).
         account (this).obs ("criado auto")
         aau

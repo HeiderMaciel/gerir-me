@@ -136,7 +136,12 @@ object AccountApi extends RestHelper with ReportRest with net.liftweb.common.Log
 			}
 
 			case "account"  :: "list" :: Nil JsonGet _ => {
-				JsArray(Account.findAllInCompany(OrderBy(Account.name, Ascending)).map((c) => JsObj(("id",c.id.is),("name",c.name.is),("value",c.value.is),("allowCashierOut",c.allowCashierOut_?.is))))
+				JsArray(Account.findAllInCompany(
+					OrderBy(Account.name, Ascending)).map((c) => JsObj(
+						("id",c.id.is),
+						("name",c.name.is),
+						//("value",c.value.is),
+						("allowCashierOut",c.allowCashierOut_?.is))))
 			}
 
 		}
