@@ -62,6 +62,23 @@ object InventoryApi extends RestHelper {
 					}		
 				}
 
+				def movements = S.param("movements") match {
+					case Full(p) => { 
+						if (p == "1") {
+							BySql[code.model.InventoryMovement](
+							"treatment_detail is not null ",IHaveValidatedThisSQL("",""));
+  						} else if (p == "0") {
+							BySql[code.model.InventoryMovement](
+								"treatment_detail is null ",IHaveValidatedThisSQL("",""));
+						} else {
+							BySql[code.model.InventoryMovement](
+								"1 =1",IHaveValidatedThisSQL("",""))				
+						}
+					}	
+					case _ => 
+						BySql[code.model.InventoryMovement](
+							"1 =1",IHaveValidatedThisSQL("",""))				}
+
 				def types = S.param("types") match {
 					case  Full(a) if(a != "") => {
 						val s = S.params("types").reduceLeft(_+_)
@@ -144,8 +161,11 @@ object InventoryApi extends RestHelper {
 					}
 
 				}				
-				date_query :: qtd_query :: id :: customer :: line :: category :: name :: causes :: unit :: types ::
-				OrderBy(InventoryMovement.efetiveDate, Ascending) :: OrderBy(InventoryMovement.id, Ascending) :: Nil
+				date_query :: qtd_query :: id :: customer :: 
+				line :: category :: name :: causes :: unit :: 
+				types :: movements :: 
+				OrderBy(InventoryMovement.efetiveDate, Ascending) :: 
+				OrderBy(InventoryMovement.id, Ascending) :: Nil
 			}			
 			JsArray(
 					InventoryMovement.findAllInCompany(filters :_*).map( (im)=> {

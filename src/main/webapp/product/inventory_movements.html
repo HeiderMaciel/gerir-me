@@ -61,6 +61,19 @@
             </div>
             <div class="span8">
               <div class="clearfix">
+                <label for="movements">Movimentações</label>
+                  <div class="input">
+                    <div class="inline-inputs">
+                        <select class="local_storage xlarge" name="movements" id="movements">
+                            <option value='3'>Todas movimentações</option>
+                            <option value='1'>Movimentações Vendas</option>
+                            <option value='0'>Movimentações avulsas</option>
+                         </select>
+                         <span class="help-block"></span>
+                    </div>
+                  </div>
+              </div>
+              <div class="clearfix">
                   <label for="line_select">Quantidade</label>
                   <div class="input">
                     De <input class="mini qtd url_parameter" name="qtd_start" size="30" type="text" placeholder="Mínimo"/> até <input class="mini qtd url_parameter" name="qtd_end" size="30" type="text" placeholder="Máximo"/>
