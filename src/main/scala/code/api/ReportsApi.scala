@@ -268,6 +268,11 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					case _ => " and " + Treatment.unitsToShowSql
 				}			
 
+				def offsale:String = S.param("offsale") match {
+					case Full(p) if(p != "") => " and td.offsale =%S".format(p) 
+					case _ => " and 1 = 1 " 
+				}			
+
 				val sql = """select * from (select pr.name produto, sum (td.amount) quantidade, sum (td.price) valor_total
 							from treatment tr
 							inner join treatmentdetail td on (td.treatment = tr.id and td.company = tr.company)
@@ -276,12 +281,14 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 							where 
 							tr.company = ? and
 							td.treatment = tr.id and pr.id = td.product and 
-					        p.datepayment between ? and ? %s
+					        p.datepayment between ? and ? 
+					        %s 
+					        %s
 						    and td.price <> 0
 							group by pr.name
 							order by pr.name) as data1 order by valor_total desc
 							""";
-				toResponse(sql.format(unit),List(AuthUtil.company.id.is,start,end))
+				toResponse(sql.format(unit, offsale),List(AuthUtil.company.id.is,start,end))
 			}
 			case "report" :: "geral" :: Nil Post _ => {
 				toResponse(Company.SQL_REPORT_DATA,List(AuthUtil.company.id.is))
