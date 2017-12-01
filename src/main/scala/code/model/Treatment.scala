@@ -64,7 +64,10 @@ with WithCustomer with net.liftweb.common.Logger{
 
 //    object status extends MappedEnum(this,Treatment.TreatmentStatus) with LifecycleCallbacks {
     object status extends MappedInt(this) with LifecycleCallbacks {
-        override def defaultValue = Treatment.Budget;
+        // em 06/2017 inserir defualt Budget - rigel
+        // em 12/2017 troquei para Open - algumas inserções fora da agenda, 
+        // principalmente no caixa estavamficando com 9 budget
+        override def defaultValue = Treatment.Open;
         override def afterSave() {
             super.afterSave;
             // criar parm na empresa para tirar o false
