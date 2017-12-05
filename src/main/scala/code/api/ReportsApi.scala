@@ -509,6 +509,8 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
                           where co.company = ? and co.user_c in (%s) and date(co.payment_date) between date(?) and date(?) 
                           and p.productclass in(%s) %s
                           order by datepayment desc, pa.command, customer.short_name, p.short_name;"""
+                          //fiz um sum no td.price pro caso de 2 vezes o mesmo prod ou serv na comanda
+                          // rigel 04/12/2017
 					lazy val SQL_REPORT_MINI = """
 					        select
 					        ca.idforcompany as cashier, 
@@ -519,7 +521,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					        cu.short_name,
 					        customer.short_name as customer,
 					        p.short_name product,
-					        td.price,
+					        sum (td.price),
 					        sum(co.value),
 							ba.short_name,
 					        pa.detailPaymentAsText as paymenttype,
@@ -614,7 +616,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					cu.short_name as unidade, td.price as preco, 
 					(select sum (co.value) from commision co where co.company = tr.company 
 						and co.treatment_detail = td.id
-						and co.due_date between date(?) and date(?)
+						and date(co.payment_date) between date(?) and date(?)
 						and (co.user_c = bp.id)
 					) as comissao 
 					from treatment tr
