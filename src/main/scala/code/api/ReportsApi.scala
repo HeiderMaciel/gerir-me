@@ -604,38 +604,45 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 		          }
 
 				val SQL = """
-					select id, prof, telefone, email, unidade, sum (preco), sum (comissao), 
+					select cod, prof, telefone, email, unidade, tpreco, tcomissao, vales, tcomissao + coalesce(vales,0),
+					cod1 from (
+					select id as cod, prof, telefone, email, unidade, sum (preco) as tpreco, sum (comissao) as tcomissao, 
 					(select sum (case when typemovement = 1 then value * -1 when typemovement = 0 then value end)
 					from accountpayable where paid = true """ + sqldt + """
 					and toconciliation = false
 					and company = ?
 					and user_c = data1.id
 					) as vales,
-					id from (
+					id as cod1 from (
 					select bp.id as id, bp.name as prof, trim (mobile_phone || ' ' || phone || ' ' || email_alternative) as telefone, bp.email as email,
-					cu.short_name as unidade, td.price as preco, 
-					(select sum (co.value) from commision co where co.company = tr.company 
-						and co.treatment_detail = td.id
+					cu.short_name as unidade, 
+					(select sum (td.price) from treatment tr 
+					 inner join treatmentdetail td on td.treatment = tr.id
+					 inner join product pr on ((td.activity = pr.id or td.product = pr.id)
+					 and pr.productclass in (%s)
+					 )
+					 where tr.dateevent between date(?) and date(?) and tr.status = 4
+					 and tr.user_c = bp.id) as preco, 
+					(select sum (co.value) from commision co 
+					 inner join treatmentdetail td on td.id = co.treatment_detail
+					 inner join product pr on ((td.activity = pr.id or td.product = pr.id)
+					 and pr.productclass in (%s))					        
+					where co.company = bp.company 
 						and date(co.payment_date) between date(?) and date(?)
 						and (co.user_c = bp.id)
 					) as comissao 
-					from treatment tr
-					inner join treatmentdetail td on td.treatment = tr.id
-					left join business_pattern bp on (bp.id = tr.user_c or bp.id = td.auxiliar)
-					inner join product pr on td.activity = pr.id or td.product = pr.id
+					from business_pattern bp
 					left join companyunit cu on cu.id = bp.unit
-					where tr.dateevent between date(?) and date(?)
-					and tr.status = 4
-					and tr.company = ?
-					and pr.productclass in (%s)
+					where 
+					bp.company = ? and bp.is_employee = true
 					%s
 					%s
 					order by bp.name, cu.name) as data1
 					group by prof, id, telefone, email, unidade
-					order by prof, id, telefone, email, unidade
+					order by prof, id, telefone, email, unidade) as data2 where tpreco <> 0 or tcomissao <> 0
 					"""
 					//LogActor ! SQL
-				toResponse(SQL.format(productclass,unit,user),List(start, end, AuthUtil.company.id.is, start, end, start, end, AuthUtil.company.id.is))
+				toResponse(SQL.format(productclass,productclass,unit,user),List(start, end, AuthUtil.company.id.is, start, end, start, end, AuthUtil.company.id.is))
 			}
 
 			case "report" :: "sales_purchase_margin" :: Nil Post _=> {
