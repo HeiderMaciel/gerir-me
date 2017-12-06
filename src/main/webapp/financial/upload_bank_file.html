@@ -1,4 +1,9 @@
 <div id="main" class="lift:surround?with=financial;at=content">
+      <link rel="stylesheet" type="text/css" href="/select2/select2.css" />
+      <script src="/select2/select2.js">
+      </script>
+      <script src="/select2/select2_locale_pt-BR.js">
+      </script>
 <script type="text/javascript">
 	$(function(){
       $(".account").accountField();
@@ -6,7 +11,10 @@
 	})
 </script>
 <h3>
-	<center>Conciliação Bancária</center>
+  <div class="clearfix">
+    <label for="name"></label>
+	Importação de arquivo OFX para Conciliação Bancária
+  </div>
 </h3>
 <form class="lift:UploadOfx?form=post;multipart=true">
   <div class="clearfix">

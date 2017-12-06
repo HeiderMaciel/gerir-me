@@ -35,7 +35,11 @@ object OfxUtil {
 
      //objeto contendo informações como instituição financeira, idioma, data da conta.
     val sr = re.getSignonResponse();
-
+     println("Banco: " + sr.getFinancialInstitution().getOrganization());
+     println("Banco: " + sr.getFinancialInstitution().getId());
+     // santander permite ofxid duplicado principalmente no caso 
+     // de credito de operadora de cartão - verificado na getnet 
+     val validate = !(sr.getFinancialInstitution().getId() == "SANTANDER")
      //como não existe esse get "BankStatementResponse bsr = re.getBankStatementResponse();"
      //fiz esse codigo para capturar a lista de transações
      val typeMessage = MessageSetType.banking;
@@ -43,7 +47,12 @@ object OfxUtil {
       if (message != null) {
         val bank = message.asInstanceOf[BankingResponseMessageSet].getStatementResponses().asScala;
         bank.foreach((b) => {
-          val list = b.getMessage().getTransactionList().getTransactions().asScala;
+           println("cc: " + b.getMessage().getAccount().getBankId());
+           println("cc: " + b.getMessage().getAccount().getAccountNumber());
+           println("ag: " + b.getMessage().getAccount().getBranchId());
+           println("balanço final: " + b.getMessage().getLedgerBalance().getAmount());
+           println("dataDoArquivo: " + b.getMessage().getLedgerBalance().getAsOfDate());          
+           val list = b.getMessage().getTransactionList().getTransactions().asScala;
           list.foreach((transaction)=>{
                val amount:Double = if(transaction.getAmount() != null){
                   transaction.getAmount()
@@ -76,7 +85,7 @@ object OfxUtil {
                 By (AccountPayable.dueDate, transaction.getDatePosted()),
                 By (AccountPayable.ofxId, ofxid.trim),
                 By (AccountPayable.account, account));
-               if (ctMov <= 0) {
+               if (ctMov <= 0 || !validate) {
                  val movement = AccountPayable.createInCompany
                  movement.ofxId(ofxid.trim)
                          .dueDate(transaction.getDatePosted())
