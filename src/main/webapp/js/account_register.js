@@ -478,9 +478,13 @@
           ret += "<tr>" + 
             "<td><input type='checkbox' class='account_payable' value='" + 
             obj.id + "'/></td>" +
-            (obj.color == "" || obj.color == "#FFFFFF" ? "<td>" + obj.id + "</td>" : 
+            (obj.color == "" || obj.color == "#FFFFFF" ? "<td>" + 
+            "<a href='#' data-id='" + 
+            obj.id + "' class='action_edit'>" + obj.id + "</a>" + "</td>" : 
             "<td style='background-color:" + obj.color + "'>" + 
-            obj.id + "</td>" ) + 
+            "<a href='#' data-id='" + 
+            obj.id + "' class='action_edit'>" + 
+            obj.id + "</a>" + "</td>" ) + 
             "<td>" + (getDateBr(new Date(obj.dueDate))) + "</td>" +
 //            "<td>" + obj.category + "</td>" +
             "<td>"+"<a href='/financial_admin/account_category?id="+obj.category_id+"' target='_customer_maste'>"+obj.category+"</a>"+"</td>" +
