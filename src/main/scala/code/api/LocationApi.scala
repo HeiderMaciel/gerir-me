@@ -38,8 +38,14 @@ object LocationApi extends RestHelper with net.liftweb.common.Logger {
 		
 		case "location" :: "customerLocation" :: Nil JsonGet _  => {
 			JsArray(Customer.findAllInCompany(NotBy(Customer.lat,""))
-				.map((customer:Customer)=>{JsObj(("id",customer.id.is),("title",customer.name.is),
-				("lat",customer.lat.is),("lng",customer.lng.is),("icon","http://nb.vilarika.com.br/images/mapicon/"+customer.mapIcon.obj.get.imagethumb.is/*iconPath*/))}))
+				.map((customer:Customer)=>{
+					JsObj(("id",customer.id.is),
+					("title",customer.name.is),
+					("lat",customer.lat.is),
+					("lng",customer.lng.is),
+					("icon","http://images.vilarika.com.br/mapicon/"+
+					customer.mapIcon.obj.get.imagethumb.is/*iconPath*/))
+				}))
 			
 		}		
 		case "location" :: "userLocation" :: Nil JsonGet _  => {
