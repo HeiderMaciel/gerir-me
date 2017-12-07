@@ -146,11 +146,13 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
   }
 
   def toRemessa (sequencial:Int) = {
-     val  bank = "001";
+     // val  bank = "001";
      val  valor = BusinessRulesUtil.clearString (("%.2f".format (value.toFloat)));
-     var strXml:String = bank + "0001" + "3" + 
+     var strXml:String = bank + "0001" + // lote
+     "3" + // tipo registro
      BusinessRulesUtil.zerosLimit (sequencial.toString,5) + 
-     "J" + "0" + "00" + bank + "9" + barCodeDv + 
+     "J" + "0" + "00" + 
+     bank + "9" + barCodeDv + 
      BusinessRulesUtil.zerosLimit(valor,14) + barCode3 + 
      BusinessRulesUtil.limitSpaces (AuthUtil.company.search_name.toUpperCase,30) +
      Project.dtformat(dateExpiration, "ddMMyyyy") + 
@@ -165,6 +167,50 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      "09" + "      " + "0000000000" + "\n" // + 
      // _barCode + "\n" + _editableLine + " " + company + "\n" 
       strXml
+  }
+
+  def toRemessaJ52 (sequencial:Int) = {
+     // val  bank = "001";
+     val bc = Customer.findByKey (this.business_pattern.obj.get.id).get
+     val  tpinsc = if (bc.document_company != "") {
+          "2" // cnpj
+      } else {
+          "1" // cpf
+      }
+     val  insc = if (bc.document_company != "") {
+          BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bc.document_company),14); // cnpj 
+      } else if (bc.document != "") {
+          BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bc.document),14); // cpf
+      } else {
+          // cpf rigel 
+          "00055118593620"        
+      }
+     var strXml:String = bank + "0001" + // lote
+     "3" + // tipo registro
+     BusinessRulesUtil.zerosLimit (sequencial.toString,5) + 
+     "J" + " " + "00" + // inclusao
+     "52" +
+     tpinsc + "0" + insc + // cliente
+     BusinessRulesUtil.limitSpaces (bc.search_name.toUpperCase,40) + 
+     cotpinsc + "0" + coinsc + // company
+     BusinessRulesUtil.limitSpaces (AuthUtil.company.search_name.toUpperCase,40) +
+     tpinsc + "0" + insc + // cliente
+     BusinessRulesUtil.limitSpaces (bc.search_name.toUpperCase,40) + 
+     BusinessRulesUtil.limitSpaces ("",53) + "\n" // 
+     strXml
+  }
+
+  def  bu = Customer.findByKey (AuthUtil.unit.partner).get
+  def  bank = "001";
+  def  cotpinsc = if (bu.document_company != "") {
+      "2" // cnpj
+  } else {
+      "1" // cpf
+  }
+  def  coinsc = if (bu.document_company != "") {
+      BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bu.document_company),14); // cnpj 
+  } else {
+      BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bu.document),14); // cpf
   }
 
 }
@@ -210,18 +256,6 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
     def toRemessa240 (start:Date, end:Date) {
         val now  = new Date()
         //val nowTime  = now.getTime()
-       var  bu = Customer.findByKey (AuthUtil.unit.partner).get
-       val  bank = "001";
-       val  tpinsc = if (bu.document_company != "") {
-            "2" // cnpj
-        } else {
-            "1" // cpf
-        }
-       val  insc = if (bu.document_company != "") {
-            BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bu.document_company),14); // cnpj 
-        } else {
-            BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bu.document),14); // cpf
-        }
        val  convenio = ("00" + "2863040" + "0126" + "       ") // novo - 2550720 antigo
        val  agencia = BusinessRulesUtil.zerosLimit ("0591",5);
        val  dvagencia = "6"
@@ -234,7 +268,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
        var strXml =
           // header de arquivo
           """""" + bank + """0000""" + "0" + """         """ + 
-          tpinsc + insc + convenio + agencia + dvagencia + conta + dvconta + "0" +
+          cotpinsc + coinsc + convenio + agencia + dvagencia + conta + dvconta + "0" +
           BusinessRulesUtil.limitSpaces (AuthUtil.company.search_name.toUpperCase,30) + bankname + 
           "          " + "1" +
           Project.dtformat(now, "ddMMyyyy") + 
@@ -244,7 +278,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           // header de lote
           bank + "0001" + "1" + "C" + // minha documentacao estava R o suporte mandou por C para crédito 
           "98" + "30" + "030" + " " + 
-          tpinsc + insc + convenio + agencia + dvagencia + conta + dvconta + "0" +
+          cotpinsc + coinsc + convenio + agencia + dvagencia + conta + dvconta + "0" +
           BusinessRulesUtil.limitSpaces (AuthUtil.company.search_name.toUpperCase,30) + 
           msg + 
           BusinessRulesUtil.limitSpaces(bu.street.toString,30) + 
@@ -266,6 +300,9 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
             sequencial += 1;
             strXml += mo.toRemessa (sequencial);
             somatoria += mo.value
+            sequencial += 1;
+            // identifica o sacado cliente
+            strXml += mo.toRemessaJ52 (sequencial);
            if (mo.barCode == "") {
             mo.barCode.set("*")
             mo.save
