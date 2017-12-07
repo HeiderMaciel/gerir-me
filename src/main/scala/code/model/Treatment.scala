@@ -191,7 +191,11 @@ with WithCustomer with net.liftweb.common.Logger{
                         } else {
                             ""
                         }
-                    petName + (details map(_.nameActivity) reduceLeft(_+", "+_))
+                    if (AuthUtil.company.appType.isEsmile) {
+                        (details map(_.nameActivityTooth) reduceLeft(_+", "+_))
+                    } else {
+                        petName + (details map(_.nameActivity) reduceLeft(_+", "+_))
+                    }                        
                 }
                 case _ => {
                     ""

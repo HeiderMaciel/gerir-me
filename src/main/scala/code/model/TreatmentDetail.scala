@@ -154,7 +154,12 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
 
     def tooth:String = {
         if (AuthUtil.company.appType.isEsmile) {
-            getTdEdoctus.tooth
+            val strAux = getTdEdoctus.tooth;
+            if (strAux == "0") {
+                ""
+            } else {
+                strAux
+            }
         } else { 
             ""
         }
@@ -322,6 +327,16 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
     def nameActivity:String = {
     	 activity.obj match {
             case Full(a) => a.name.is
+            case _ => product.obj match {
+                case Full(p) => p.name.is
+                case _ => ""
+            }  
+        }
+    }
+
+    def nameActivityTooth:String = {
+         activity.obj match {
+            case Full(a) => (a.name.is + " " + tooth).trim
             case _ => product.obj match {
                 case Full(p) => p.name.is
                 case _ => ""

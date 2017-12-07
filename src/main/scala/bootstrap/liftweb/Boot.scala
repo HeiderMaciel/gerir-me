@@ -141,6 +141,11 @@ class Boot {
                             ()=> toAccessDenied
                           )
 
+    val budgetAccess = If(
+                            ()=> (AuthUtil.? && PermissionModule.budget_?),
+                            ()=> toAccessDenied
+                          )
+
     val inventoryAccess = If(
                             ()=> (AuthUtil.? && PermissionModule.inventory_?),
                             ()=> toAccessDenied
@@ -429,7 +434,7 @@ class Boot {
         Menu(Loc("Faixa Etária", Link(List("agerange"), true, "/agerange/list_agerange"),"Faixa Etária",customerAccess,Hidden)),
         Menu(Loc("Ícone", Link(List("mapicon"), true, "/mapicon/list_mapicon"),"Ícone",customerAccess,Hidden)),
 
-        Menu(Loc("Orçamentos", Link(List("budget"), true, "/budget/list_budget"),budgetMenuLabel,financialAccess,Hidden)),
+        Menu(Loc("Orçamentos", Link(List("budget"), true, "/budget/list_budget"),budgetMenuLabel,budgetAccess,Hidden)),
         // peopleManagerAccess - lider na cczs
         Menu(Loc("Projetos", Link(List("project"), true, "/project/list_event"),projectMenuLabel,peopleManagerAccess,Hidden)),
 

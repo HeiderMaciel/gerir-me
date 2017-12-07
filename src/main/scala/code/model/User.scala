@@ -445,6 +445,8 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 
     def isRecords = isAdmin || isAdminRead || groupPermissionList.filter(_==UserGroupPermission.RECORDS).size > 0
 
+    def isBudget = isAdmin || isAdminRead || groupPermissionList.filter(_==UserGroupPermission.BUDGET).size > 0
+
     def isFinancialUser = isAdmin  || isFinancialManager || groupPermissionList.filter(_==UserGroupPermission.FINANCIAL_USER).size > 0
 
     //def isSaleManagerUser = isAdmin || groupPermissionList.filter(_==UserGroupPermission.SALE_MANAGER).size > 0
