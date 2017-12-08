@@ -195,7 +195,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 			val thumb = a(0).results.thumb.url
 			val image = a(0).uploads(0).url
 			val customer = getCustomer
-			ImageCustomer.createInCompany.customer(customer).thumb(thumb).image(image).save
+			ImageCustomer.createInCompany.customer(customer).imagethumb(thumb).image(image).save
 
 		}
 	}
@@ -405,7 +405,8 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 }
 
 
-case class TrasloaditResponse(assembly_id:String,assembly_url:String, uploads:List[Upload],results:Results)
+case class TrasloaditResponse(assembly_id:String,assembly_url:String, 
+		uploads:List[Upload],results:Results)
 
 case class Upload(url:String)
 case class Results(thumb:Thumb)

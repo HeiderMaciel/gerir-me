@@ -17,9 +17,20 @@ import _root_.java.util.Date
 //Class de cliente
 
 //class ImageCustomer extends LongKeyedMapper[ImageCustomer] with IdPK with CreatedUpdated with CreatedUpdatedBy  with PerCompany with WithCustomer {
-class ImageCustomer extends Audited[ImageCustomer] with IdPK with CreatedUpdated with CreatedUpdatedBy  with PerCompany with WithCustomer {
+class ImageCustomer extends Audited[ImageCustomer] 
+with IdPK 
+with CreatedUpdated 
+with CreatedUpdatedBy  
+with PerCompany 
+with Imageble 
+with WithCustomer {
     def getSingleton = ImageCustomer 
-    object image extends MappedPoliteString(this,455)
-    object thumb extends MappedPoliteString(this,455)
+ 
+ //   object image extends MappedPoliteString(this,455)
+ //   object thumb extends MappedPoliteString(this,455)
+
+    def imagePath = "imagecustomer"
+
 }
+
 object ImageCustomer  extends ImageCustomer with LongKeyedMapperPerCompany[ImageCustomer] with OnlyCurrentCompany[ImageCustomer]
