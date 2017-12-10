@@ -37,7 +37,14 @@ trait Imageble{
   }  
   
   def thumbPath = imagethumb.is match {
-    case img:String if(img!="") => Props.get("photo.urlbase").get+imagePath+"/"+img
+    case img:String if(img!="") => 
+      if (!Project.isLocalHost || true) {
+        Props.get("photo.urlbase").get+imagePath+"/"+img
+      } else {
+        "/images/"+imagePath+"/"+img
+      }
     case _ => ""
   }  
 }
+
+
