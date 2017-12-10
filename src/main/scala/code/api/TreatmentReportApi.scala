@@ -202,6 +202,7 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					command  <- S.param("command") ?~ "command parameter missing" ~> 400
 					date_str <- S.param("date") ?~ "date parameter missing" ~> 400
 					unit_str <- S.param("unit") ?~ "unit parameter missing" ~> 400
+					customer  <- S.param("customer") ?~ "customer parameter missing" ~> 400
 			}yield{
 				val unit = unit_str.toLong;
 				val sql = """
@@ -215,6 +216,7 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 								left join business_pattern u on( u.id = t.user_c and u.company = t.company)
 								left join business_pattern c on( c.id = t.customer and c.company = t.company)
 								where t.company =? and command=? and t.dateevent=date(?) and t.unit =? and t.status <> 5
+								and c.id = ?
 							union
 								select null,null,p.name,null as amount, p.saleprice,' ' as status ,orderInCommand, '' as name
 								,orderInCommand as tdid from 
@@ -225,6 +227,7 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 											treatment t
 											inner join business_pattern c on(c.id = t.customer)
 											where t.company =? and command=? and t.dateevent=date(?) and t.unit =? and t.status <> 5
+											and c.id = ?
 											limit 1
 									)
 								)
@@ -241,10 +244,10 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 						) as data order by orderInCommand, tdid asc
 				""";
 				toResponse(sql,scala.List(
-					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str), unit, 
+					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str), unit, customer.toLong, 
 					AuthUtil.company.id.is, 
-					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str), unit, 
-					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str), unit, 
+					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str), unit, customer.toLong, 
+					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str), unit,
 					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str), unit))
 			}	
 		}
@@ -252,6 +255,7 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 			for {
 					command  <- S.param("command") ?~ "command parameter missing" ~> 400
 					date_str <- S.param("date") ?~ "customer parameter missing" ~> 400
+					customer  <- S.param("customer") ?~ "customer parameter missing" ~> 400
 			}yield{
 				val sql = """
 						select user_id, user_name, product,amount, price, name, phone, document, cstreet,
@@ -270,6 +274,7 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 								left join business_pattern u on( u.id = t.user_c and u.company = t.company)
 								left join business_pattern c on( c.id = t.customer and c.company = t.company)
 								where t.company =? and command=? and t.dateevent=date(?) and t.status <> 5
+								and c.id = ?
 							union
 								select null, 'Total' as user_name,'', sum(td.amount),sum (td.price), 
 								'' as name, '' as phone, '' as document, '' as cstreet, 
@@ -277,18 +282,21 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 								'' as cnpj, 
 								99999999 as tdid from   treatment t
 								inner join treatmentdetail td on(td.treatment = t.id and td.company = t.company)
+								left join business_pattern c on( c.id = t.customer and c.company = t.company)
 								where t.company =? and command=? and t.dateevent=date(?) and t.status <> 5
+								and c.id = ?
 						) as data order by tdid asc
 				""";
 				toResponse(sql,scala.List(
-					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str), 
-					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str)))
+					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str), customer.toLong, 
+					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str), customer.toLong))
 			}	
 		}
 		case "treatments"::"receipt_customer_unit" :: Nil Post _ => {
 			for {
 					command  <- S.param("command") ?~ "command parameter missing" ~> 400
 					date_str <- S.param("date") ?~ "customer parameter missing" ~> 400
+					customer  <- S.param("customer") ?~ "customer parameter missing" ~> 400
 			}yield{
 				val sql = """
 					select bc.name, trim (bc.phone || ' ' || bc.mobile_phone), 
@@ -320,15 +328,20 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					left join city cic on cic.id = bc.cityref
 					left join state stc on stc.id = cic.state
 					where pa.company = ? and pa.command = ? and pa.datepayment = ?
+					and bc.id = ?
 				""";
+				println ("vaiii ==================== " + customer.toLong)
 				toResponse(sql,scala.List(
-					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str)))
+					AuthUtil.company.id.is, command, 
+					Project.strOnlyDateToDate(date_str), 
+					customer.toLong))
 			}	
 		}
 		case "treatments"::"receipt_payments" :: Nil Post _ => {
 			for {
 					command  <- S.param("command") ?~ "command parameter missing" ~> 400
 					date_str <- S.param("date") ?~ "customer parameter missing" ~> 400
+					customer  <- S.param("customer") ?~ "customer parameter missing" ~> 400
 			}yield{
 				val sql = """
 					select pt.name || ' ' || coalesce (ba.short_name,'') || ' ' || coalesce (ch.agency,'') 
@@ -336,15 +349,20 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					pd.value, pd.duedate
 					--, pd.* 
 					from payment pa
+					inner join business_pattern bc on bc.id = pa.customer
 					inner join paymentdetail pd on pd.payment = pa.id
 					inner join paymenttype pt on pt.id = pd.typepayment
 					left join cheque ch on ch.paymentdetail = pd.id
 					left join bank ba on ba.id = ch.bank
 					where pa.company = ? and pa.command = ? and pa.datepayment = ?
+					and bc.id = ?
 					order by pd.id
 				""";
+				println ("vaiii ==================== " + customer.toLong)
 				toResponse(sql,scala.List(
-					AuthUtil.company.id.is, command, Project.strOnlyDateToDate(date_str)))
+					AuthUtil.company.id.is, command, 
+					Project.strOnlyDateToDate(date_str), 
+					customer.toLong))
 			}	
 		}
 		case "treatments"::"getTreatmentsByFilter" :: Nil Post _ => {

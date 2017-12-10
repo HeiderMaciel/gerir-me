@@ -20,9 +20,10 @@
     $("#command").html(gup("command"));
     var date =  gup("date") || getDateBr(new Date());
     $("#date").html(date);
+    var idcustomer1 = (gup("customerId"));
     //$("#week_day").html(i18n_days[new Date().getDay()]);
     var request = function(){
-      renderReport(url,fields,{command:gup("command"), date: date },"#grid",function(data){
+      renderReport(url,fields,{command:gup("command"), date: date, customer: idcustomer1 },"#grid",function(data){
         var document_company = data[0][13];
         $("#document_company").html(document_company);
         var customer = data[0][5];

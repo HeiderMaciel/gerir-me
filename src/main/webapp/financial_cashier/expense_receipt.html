@@ -52,12 +52,13 @@
     $("#command").html(gup("command"));
     var date =  gup("date") || getDateBr(new Date());
     $("#date").html(date);
+    idcustomer1 = (gup("customerId"));
     //$("#week_day").html(i18n_days[new Date().getDay()]);
     var request = function(){
-      renderReport(url,fields,{command:gup("command"), date: date },"#grid",function(data){
+      renderReport(url,fields,{command:gup("command"), date: date, customer: idcustomer1 },"#grid",function(data){
         var document_company = data[0][10];
         $("#document_company").html(document_company);
-        // não é exeibido usado para envio de email
+        // não é exibido usado para envio de email
         idcustomer1 = data[0][idcol];
         var customer = data[0][0];
         $("#customer").html(customer);
@@ -105,7 +106,7 @@
     fields_pay[2] = "date";
     var url_pay = "/treatments/receipt_payments";
     var request_pay = function(){
-      renderReport(url_pay,fields_pay,{command:gup("command"), date: date },"#grid_payments",function(data){
+      renderReport(url_pay,fields_pay,{command:gup("command"), date: date, customer: idcustomer1  },"#grid_payments",function(data){
         window.print(); // aqui já acabou
       });
     }

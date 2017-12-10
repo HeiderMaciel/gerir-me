@@ -350,7 +350,11 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					p.name product,
 					td.price,
 					co.value,
-					pt.name as paymenttype
+					pt.name as paymenttype, 
+					customer.id,
+					prof.id,
+					p.productclass,
+					p.id
 					from commision co
 					inner join payment on(payment.id = co.payment)
 					left join cashier on(cashier.id = payment.cashier)
