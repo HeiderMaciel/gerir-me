@@ -19,7 +19,15 @@ import java.util.Date;
 import net.liftweb.common.{Box,Full,Empty}
 
 
-class Cashier extends LongKeyedMapper[Cashier]  with PerCompany with PerUnit with IdPK with CreatedUpdated with CreatedUpdatedBy with CompanyIdable[Cashier] with net.liftweb.common.Logger { 
+class Cashier extends LongKeyedMapper[Cashier]  
+    with PerCompany 
+    with PerUnit 
+    with IdPK 
+    with CreatedUpdated 
+    with Audited[Cashier] 
+    with CreatedUpdatedBy 
+    with CompanyIdable[Cashier] 
+    with net.liftweb.common.Logger { 
     def getSingleton = Cashier
     object openerDate extends EbMappedDateTime(this)
     object firstCloseDate extends EbMappedDateTime(this)
