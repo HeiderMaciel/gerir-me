@@ -137,7 +137,6 @@ object CommissionService extends net.liftweb.common.Logger  {
     import CommissionGenerationStrategy._
     val paymentType = paymentdetail.typePaymentObj.get
     if(paymentType.comissionAtSight_?){
-      println ("vaiiii ===================== BAIXA DE PACOTE")
       DefaultCommissionCalculator
     }else if (!paymentType.generateCommision_?.is) {
       NotCommissionCalculator
