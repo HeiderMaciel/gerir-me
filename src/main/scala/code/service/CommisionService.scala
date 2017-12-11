@@ -137,6 +137,7 @@ object CommissionService extends net.liftweb.common.Logger  {
     import CommissionGenerationStrategy._
     val paymentType = paymentdetail.typePaymentObj.get
     if(paymentType.comissionAtSight_?){
+      println ("vaiiii ===================== BAIXA DE PACOTE")
       DefaultCommissionCalculator
     }else if (!paymentType.generateCommision_?.is) {
       NotCommissionCalculator
@@ -209,10 +210,20 @@ trait CommissionCalculator {
 
   def canBeBuyingBpMonthly = true;
 
-  def discountPerPaymentType(value: Double, payment_detail: PaymentDetail, user:User): Double = {
+  def discountPerPaymentType(value: Double, payment_detail: PaymentDetail, user:User, treatment_detail: TreatmentDetail): Double = {
     // rigel 18/10/2017
     if (user.discountToCommission_?) {
-      value * (payment_detail.typePaymentObj.get.percentDiscountToCommision.is / 100).toDouble
+      val pt = payment_detail.typePaymentObj.get;
+      if (pt.deliveryContol_? && pt.percentDiscountToCommision.is == 0) {
+        // se a forma de pagamento é baixa de pacote e o percent na comissão == 0
+        // verifica qual a forma de pagamento usada na compra do pacote
+        // e se for o caso aplica o percentual de desconto na comissão
+        // encontrado
+        var pt1 = DeliveryControl.paymentType (treatment_detail.customer, treatment_detail.activity_id)
+        value * (pt1.get.percentDiscountToCommision.is / 100).toDouble
+      } else {
+        value * (pt.percentDiscountToCommision.is / 100).toDouble
+      }
     } else {
       0.0;
     }
@@ -277,7 +288,7 @@ trait CommissionCalculator {
 
           val finalValueWithoudDicount = (valueToUser * percent_in_total).toDouble //dicountPerPaymentType(,payment_detail)
 
-          val discountPerPaymentTypeValue = discountPerPaymentType(finalValueWithoudDicount, payment_detail, user)
+          val discountPerPaymentTypeValue = discountPerPaymentType(finalValueWithoudDicount, payment_detail, user, treatment_detail)
 
           if (discountPerPaymentTypeValue > 0.0) {
             commision.addDetail("Val prof antes desc fpagto " + finalValueWithoudDicount, finalValueWithoudDicount.toDouble)
@@ -360,7 +371,8 @@ object CommissionGenerationStrategy {
             commision.addDetail("Valor para o profissional : " + valueToUser)
             val finalValueWithoudDicount = (valueToUser * percent_in_total).toDouble //dicountPerPaymentType(,payment_detail)
             commision.addDetail("Valor final antes dos descontos : " + finalValueWithoudDicount)
-            val finalValue = finalValueWithoudDicount - discountPerPaymentType(finalValueWithoudDicount, payment_detail, user)
+            val finalValue = finalValueWithoudDicount - 
+              discountPerPaymentType(finalValueWithoudDicount, payment_detail, user, treatment_detail)
             commision.addDetail("Valor depois dos descontos 2: " + finalValue)
             val dueDate = payment.datePayment
             val payment_date = dataToPayment

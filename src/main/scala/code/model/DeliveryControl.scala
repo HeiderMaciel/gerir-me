@@ -10,7 +10,12 @@ import _root_.java.math.MathContext;
 import net.liftweb.common.{Box,Full,Empty}
 import code.util._
 
-class DeliveryControl extends LongKeyedMapper[DeliveryControl] with PerCompany with IdPK with CreatedUpdated with CreatedUpdatedBy with WithCustomer{
+class DeliveryControl extends LongKeyedMapper[DeliveryControl] 
+    with PerCompany 
+    with IdPK 
+    with CreatedUpdated 
+    with CreatedUpdatedBy 
+    with WithCustomer{
     def getSingleton = DeliveryControl
     object treatment extends MappedLongForeignKey(this,Treatment)
     object product extends MappedLongForeignKey(this,Product)
@@ -23,6 +28,16 @@ class DeliveryControl extends LongKeyedMapper[DeliveryControl] with PerCompany w
     def usedDetails = DeliveryDetail.findAll(By(DeliveryDetail.delivery,this), By(DeliveryDetail.used_?, true))
     def notDetails = DeliveryDetail.findAll(By(DeliveryDetail.delivery,this), By(DeliveryDetail.used_?, false))
     def details = DeliveryDetail.findAll(By(DeliveryDetail.delivery,this))
+
+    def paymentType (customer:Customer, activity:Long) = {
+        val product = Product.findByKey(activity.toInt).get
+        val dc = DeliveryDetail.findPriceByCustomerProduct(customer,product)(0).delivery;
+        val pa = dc.obj.get.payment
+        val pd = PaymentDetail.findAll (
+            By (PaymentDetail.payment, pa),
+            OrderBy (PaymentDetail.value, Descending))(0)
+        pd.typePaymentObj    
+    }
 }
 
 object DeliveryControl extends DeliveryControl with LongKeyedMapperPerCompany[DeliveryControl]  with  OnlyCurrentCompany[DeliveryControl]{
