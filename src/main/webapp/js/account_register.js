@@ -513,6 +513,50 @@
             "<td><a href='#' data-id='" + obj.id + "' data-recid='" + 
             obj.recurrence_id + "' class='action_delete'><img src='/images/delete.png'/></a></td></tr>";
         }
+
+        $("#print_message").click(function(){
+            var message_print = $('#grid_dre').html();
+            var header = "";
+            if ($('.has-pet-system').length > 0) {
+              header = "ebellepet"
+            } else if ($('.has-edoctus-system').length > 0) {
+              header = "edoctus"
+            } else if ($('.has-ephysio-system').length > 0) {
+              header = "ephysio"
+            } else if ($('.has-gerirme-system').length > 0) {
+              header = "gerirme"
+            } else {
+              header = "ebelle"
+            }
+
+            var logo = "";
+            if ($('.has-pet-system').length > 0) {
+              logo = "ebellepet"
+            } else if ($('.has-edoctus-system').length > 0) {
+              logo = "edoctus"
+            } else if ($('.has-ephysio-system').length > 0) {
+              logo = "ephysio"
+            } else if ($('.has-gerirme-system').length > 0) {
+              logo = "gerirme"
+            } else {
+              logo = "ebelle"
+            }
+
+            // um trailer gerar 
+            //header = '<img width="70px" style="padding-right: 10px" src="/images/logo_'+logo+'.png"/>' + header + " Gestão Integrada <br></p>"
+            header = "<head> " + 
+              " <meta charset='utf-8'> " +
+              " <title>" + header + "</title> " +
+              " </head> " +
+            '<img width="35px" style="padding-right: 10px" src="/images/logo_ftr_'+logo+'.png"/>' + 
+            header + " Gestão Integrada " + 
+            '<img width="70px" style="padding-right: 10px" src="http://nb.vilarika.com.br/images/company/'+AuthUtil.company.image+'"/>' + 
+            " <br></p>"
+            var printWindow = window.open("", "MsgPrintWindow");
+            printWindow.document.write(header + message_print);
+            printWindow.print();
+        });
+
         $("#grid tbody").html(ret);
         $(".action_edit").click(function() {
           return Account.editAccount($(this).attr("data-id"));
