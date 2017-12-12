@@ -22,7 +22,11 @@ alert (" na var function click aqui não chega NUNCA !!!!!! ")
     });
 
     $(".b_add_budget").click(function() {
-      return saveBudget ();
+      return saveBudget (false);
+    });
+
+    $(".b_addnew_budget").click(function() {
+      return saveBudget (true);
     });
 
     $("#cutomer_id_treatment").change(function(){
@@ -127,7 +131,7 @@ var newItem = function() {
 
 var callApiLock = false;
 
-var saveBudget = function() {
+var saveBudget = function(newItem) {
   var end, obs, start, user, password, auxiliar, animal, 
   price, amount, tooth, offsale
   projectSection;
@@ -204,7 +208,10 @@ var saveBudget = function() {
         }
         callApiLock = false
         //return Manager.getListFromServer();
-        $("#send").click();
+        if (newItem) {
+          new_detail ();
+        }
+        //$("#send").click();
       });
     }
   } else {
