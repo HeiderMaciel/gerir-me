@@ -169,6 +169,13 @@
           return trStatusdecode (name,row, true)
         }
       };
+      fields[11] = { // obs
+        type : "format",
+        decode: function(name, row) {
+          return "<p style='line-height: 120%'>" + 
+              row[11] + "<p/>"
+        }
+      }
 
       if (hasNotMedical) { // espera
         fields[12] = "none";

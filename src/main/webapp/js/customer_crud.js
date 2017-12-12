@@ -39,6 +39,13 @@ $(function() {
     fields[0] = "time";
     fields[1] = "none";
     fields[2] = "none";
+    fields[3] = { 
+      type : "format",
+      decode: function(name, row) {
+        return "<p style='line-height: 120%'>" + 
+            row[3] + "<p/>"
+      }
+    }
     if (!hasUnitModule) {
       fields[5] = "none";
     }

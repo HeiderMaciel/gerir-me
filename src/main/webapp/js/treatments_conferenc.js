@@ -86,8 +86,10 @@
             "</td>" + 
             "<td>"+obj.customerid+"</td>" + 
             "<td>"+"<a href='/customer/edit?id="+obj.customerid+"' target='_customer_maste'>"+obj.customername+"</a>"+"</td>" +
-            "<td>"+obj.phone+"</td>" + // tem tb email conctenado
-            "<td>"+obj.obs+"</td>" +
+            "<td>"+"<p style='line-height: 120%'>" + 
+              obj.phone + "<p/>"+"</td>" + // tem tb email conctenado
+            "<td>"+"<p style='line-height: 120%'>" + 
+              obj.obs + "<p/>"+"</td>" +
             "<td>"+obj.username+"</td>"+
             (hasUnitModule ? "<td>"+obj.unitname+"</td>" : '')+ 
             "<td>"+decodeStatus(obj.status, obj.status2)+"</td>" + 
