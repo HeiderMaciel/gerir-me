@@ -1007,9 +1007,16 @@
       saveTreatments(function() {
         var hasAnvisaModule = $('.has-anvisa-module').length > 0;
         if (hasAnvisaModule) {
-          window.open('/financial_cashier/expense_ticket?command=' + $('#command').val() + "&date=" + $('#date_treatment').val(),"_command_maste");
+          window.open('/financial_cashier/expense_ticket?command=' + 
+            $('#command').val() + 
+            "&date=" + $('#date_treatment').val() + 
+            "&customerId=" + $('#customer').val(),"_command_maste");
         } else {
-          window.open('/financial_cashier/print_command?command=' + $('#command').val() + "&unit=" + AuthUtil.unit.id + "&date=" + $('#date_treatment').val(),"_command_maste");
+          window.open('/financial_cashier/print_command?command=' + 
+            $('#command').val() + 
+            "&unit=" + AuthUtil.unit.id + 
+            "&date=" + $('#date_treatment').val() +
+            "&customerId=" + $('#customer').val(),"_command_maste");
         }
       }, true);
     }
