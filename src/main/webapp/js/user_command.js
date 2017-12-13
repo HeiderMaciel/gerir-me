@@ -2,6 +2,7 @@
   var Manager;
 
   Manager = (function() {
+
     function Manager() {}
 
     Manager.remove = function(id) {
@@ -115,9 +116,11 @@
       var hasPetSystem = $('.has-pet-system').length > 0;
       var hasEsmileSystem = $('.has-esmile-system').length > 0;
 
+      var print = $("input[@id=print_command]:checked").length == 1;
+
       var fields = [];
       //fields[5] = "dateTime"; a data já tá formatada hh24:mi no sql
-      if (hasNotMedical) { // chegou
+      if (hasNotMedical || print) { // chegou
         fields[1] = "none";
       }
       fields[2] = {
@@ -152,7 +155,7 @@
       if (!hasEsmileSystem) { // tooth
         fields[6] = "none";
       } 
-      if (!hasOffSaleModule) { // tooth
+      if (!hasOffSaleModule) { // offsale
         fields[7] = "none";
       } 
       if (!hasNotMedical) { // qtde
@@ -166,7 +169,11 @@
         decode: function(name, row) {
           trStatus = 10;
           trStatus2 = 18;
-          return trStatusdecode (name,row, true)
+          if (print) {
+            return trStatusdecode (name,row, true)
+          } else {
+            return trStatusdecode (name,row, false)
+          }
         }
       };
       fields[11] = { // obs
@@ -177,40 +184,55 @@
         }
       }
 
-      if (hasNotMedical) { // espera
+      if (print){
+        $("#tharrived").hide();
+        $("#thwait").hide();
+        $("#thaction").hide();
+      }
+
+      if ((hasNotMedical) || (print)) { // espera
         fields[12] = "none";
       }
-      fields[13] = {
-        type : "format",
-        decode: function(name, row) {
-          var strAux = "";
-          var hasEdoctusSystem = $('.has-edoctus-system').length > 0;
-          var hasEphysioSystem = $('.has-ephysio-system').length > 0;
-          if (hasEdoctusSystem || hasEphysioSystem) {
-//          if ((document.location.href.indexOf("edoctus") != -1) ||
-//          (document.location.href.indexOf("ephysio") != -1)) {
-            strAux = '<a title="Novo prontuário" href="/quiz/quizapply?business_pattern=' + 
-            row[13] + '&quiz=' + row[15] + 
-            '"> <img width="24" src="/images/add.png"/></a>' +
-                '<a title="Prontuário" href="/records/edit_patient?id=' + 
-                row[13] + '"> <img width="24" src="/images/records.png"/></a>'
+
+      if (print) {
+        fields[13] = "none";
+      } else {
+        fields[13] = {
+          type : "format",
+          decode: function(name, row) {
+            var strAux = "";
+            var hasEdoctusSystem = $('.has-edoctus-system').length > 0;
+            var hasEphysioSystem = $('.has-ephysio-system').length > 0;
+            if (hasEdoctusSystem || hasEphysioSystem) {
+  //          if ((document.location.href.indexOf("edoctus") != -1) ||
+  //          (document.location.href.indexOf("ephysio") != -1)) {
+              strAux = '<a title="Novo prontuário" href="/quiz/quizapply?business_pattern=' + 
+              row[13] + '&quiz=' + row[15] + 
+              '"> <img width="24" src="/images/add.png"/></a>' +
+                  '<a title="Prontuário" href="/records/edit_patient?id=' + 
+                  row[13] + '"> <img width="24" src="/images/records.png"/></a>'
+            }
+            return strAux 
+             // agora ir para cadastro é link no nome
+             //+ <a title="Cadastro" href="/customer/edit?id=' + row[11] + '"> <img width="24" src="/images/customers.png"/></a>'
           }
-          return strAux 
-           // agora ir para cadastro é link no nome
-           //+ <a title="Cadastro" href="/customer/edit?id=' + row[11] + '"> <img width="24" src="/images/customers.png"/></a>'
-        }
-      };
-      fields[14] = {
-        type : "format",
-        decode: function(name, row) {
-          return "<a class='btn primary' onclick='Manager.new_detail(" + 
-          row[13] +',"' +row[0]+ '"' + ")'" + 
-          " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir novo</a> " +
-                "<a class='btn danger' onclick='Manager.del_detail(" + 
-                row[14] +")'  target=''>Excluir</a>"
-          //      "<a class='btn primary' onclick='Manager.new_fit(" +row[0].replace (':','.') +")' title='Inserir novo serviço neste mesmo horário' target=''>Encaixar</a> " +
-        }
-      };
+        };
+      }
+      if (print) {
+        fields[14] = "none"
+      } else {
+        fields[14] = {
+          type : "format",
+          decode: function(name, row) {
+            return "<a class='btn primary' onclick='Manager.new_detail(" + 
+            row[13] +',"' +row[0]+ '"' + ")'" + 
+            " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir novo</a> " +
+                  "<a class='btn danger' onclick='Manager.del_detail(" + 
+                  row[14] +")'  target=''>Excluir</a>"
+            //      "<a class='btn primary' onclick='Manager.new_fit(" +row[0].replace (':','.') +")' title='Inserir novo serviço neste mesmo horário' target=''>Encaixar</a> " +
+          }
+        };
+      }
       fields[15] = "none" // questionario/prontuário default
       fields[16] = "none" // id assistente
       fields[17] = "none" // id animal

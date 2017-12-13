@@ -8,9 +8,11 @@
   <div class="well">
     <div class='filter block-message success"'>
       <span class="filter_form">
-          <h1><span class="lift:CompanySnippet.thumb"> </span>Agenda do <span data-i18n='Profissional'></span>
-          </h1>
-          <form action="">
+        <h1><span class="lift:CompanySnippet.thumb"> </span>Agenda do <span data-i18n='Profissional'></span>
+        </h1>
+        <form action="">
+        <div class="row">
+          <div class="span8">
             <div class="clearfix">
               <label for="start">Data</label>
               <div class="input">
@@ -23,7 +25,7 @@
               </div>
             </div>
             <div class="clearfix">
-              <label for="name"><span data-i18n='Profissionais'></label>
+              <label for="name"><span data-i18n='Profissionais'></span></label>
                 <div class="input">
                     <select class='local_storage' id='user' name='user'></select>
                 </div>
@@ -35,6 +37,19 @@
                 <span class="help-block">Senha para acesso</span>
               </div>
             </div>
+          </div>
+          <div class="span8">
+            <div class="clearfix">
+              <label for="quantity">Impressão
+              </label>
+              <div class="input">
+                <div class="inline-inputs">
+                  <input class="local_storage" name="print_command" id='print_command' type='checkbox' />
+                </div> 
+              </div>
+            </div>
+          </div>
+          <div class="span13">
             <div class="clearfix">
               <label for="btn"></label>
               <div class="input">
@@ -50,8 +65,10 @@
                   </div>
                 </div>
               </div>
-            </div>                  
-          </form>
+            </div>    
+          </div>              
+        </div>
+        </form>
       </span>
     </div>
   </div>
@@ -68,7 +85,7 @@
   <table id="grid" class="bordered-table zebra-striped">
     <thead>
       <th>Início</th>
-      <th class="lift:SecuritySnippet.isMedicalSystem">Chegou</th>
+      <th id= 'tharrived' class="lift:SecuritySnippet.isMedicalSystem">Chegou</th>
       <th><span data-i18n='Cliente'></span></th>
       <th class="lift:SecuritySnippet.hasAuxiliarModule"><span data-i18n='Assistente'></span></th>
       <th class="lift:SecuritySnippet.isEbellepetSystem">Pet</th>
@@ -79,8 +96,8 @@
       <th class="lift:SecuritySnippet.isNotMedicalSystem">Valor</th>
       <th>Status</th>
       <th>Obs</th>
-      <th class="lift:SecuritySnippet.isMedicalSystem">Espera</th>
-      <th class="hide_on_print">Ações</th>
+      <th id='thwait' class="lift:SecuritySnippet.isMedicalSystem">Espera</th>
+      <th id='thaction' class="hide_on_print">Ações</th>
     </thead>
     <tbody>
     </tbody>

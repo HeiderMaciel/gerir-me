@@ -198,7 +198,7 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				def userId:String = S.param("user") openOr "0"
 				def customerId:String = S.param("customer") openOr "0"
 				def auxiliarId:String = S.param("auxiliar") openOr "0"
-println ("vaiiii ====================== " + status)				
+
 				if (AuthUtil.user.isCommandPwd) {
 					if (!User.loginCommand(userId.toLong, password)) {
 						throw  new Exception("Senha inválida!");
@@ -208,15 +208,10 @@ println ("vaiiii ====================== " + status)
 				var tempt = TreatmentService.factoryTreatment("", customerId, userId, start, start, end,"0")
 				if (status == "9") { // budget
 					if (!tempt.get.hasDetail) {
-						println ("vaiii ====== criou agora ")
 						tempt.get.showInCalendar(false)
 						tempt.get.markAsBudget
 						tempt.get.save
-					} else {
-						println ("vaiiiii ===== ja tava criado nao altera o status")
 					}
-				} else {
-					println ("vaiiiii ===== NAO é ORCAMENTO")
 				}
 				if (activity.isEmpty || activity == "") {
 					var prod = Product.findByKey(product.toLong).get

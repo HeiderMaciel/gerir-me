@@ -44,7 +44,7 @@ var trStatusdecode = function(name, row, showhint){
     title ='orçamento'
   }
   if (showhint) {
-    return "<p>" + title + "</p><img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+"1.png' width='24'/>"
+    return "<p>" + title + "</p>"
   } else {
     return "<img title='" + title + "' src='/images/treatment_"+statstr.toLowerCase()+"1.png' width='24'/>"
   }
