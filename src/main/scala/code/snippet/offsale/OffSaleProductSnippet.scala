@@ -49,8 +49,11 @@ class  OffSaleProductSnippet extends net.liftweb.common.Logger {
 			}
 		    "name=offsale" #> (SHtml.select(offsales,Full(ac.offsale.is.toString),(s:String) => ac.offsale( s.toLong)))&
 			"name=product" #> (SHtml.text(ac.product.is.toString, (p:String) => ac.product(p.toLong)))&
+			"name=productName" #> (SHtml.text(ac.productName, (a:String) => {}))&
+			"name=productTypeName" #> (SHtml.text(ac.productTypeName, (a:String) => {}))&
 			"name=suggestedprice" #> (SHtml.text(ac.suggestedPrice.is.toString, (v:String) => { if(v !="")ac.suggestedPrice(v.toDouble)} ))&
-			"name=offprice" #> (SHtml.text(ac.offPrice.is.toString, (v:String) => { if(v !="")ac.offPrice(v.toDouble)} ))&
+			"name=offprice" #> (SHtml.text(ac.offPrice.is.toString, (v:String) => { if(v !="")ac.offPrice(BusinessRulesUtil.snippetToDouble(v))} ))&
+			"name=percentoff" #> (SHtml.text(ac.percentOff.is.toString, (v:String) => { if(v !="")ac.percentOff(BusinessRulesUtil.snippetToDouble(v))} ))&
 			"name=indic1" #> (SHtml.text(ac.indic1.is.toString, (v:String) => { if(v !="")ac.indic1(v.toDouble)} ))&
 			"name=indic2" #> (SHtml.text(ac.indic2.is.toString, (v:String) => { if(v !="")ac.indic2(v.toDouble)} ))&
 			"name=indic3" #> (SHtml.text(ac.indic3.is.toString, (v:String) => { if(v !="")ac.indic3(v.toDouble)} ))&

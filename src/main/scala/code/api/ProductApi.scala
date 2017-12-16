@@ -103,7 +103,7 @@ object ProductApi extends RestHelper {
 		}
 		case "product" :: "product_type" :: Nil JsonGet _ =>{
 			JsArray(ProductType.findAllInCompany(OrderBy (ProductType.name, Ascending)).map((pl) =>{
-				JsObj(("name",pl.name.is), ("id", pl.id.is))
+				JsObj(("name",pl.name.is+" - " + pl.typeClass), ("id", pl.id.is))
 			}))
 		}		
 		case "product" :: "product_line" :: Nil Put _ =>{

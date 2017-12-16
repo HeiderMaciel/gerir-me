@@ -49,6 +49,23 @@ class OffSaleProduct extends Audited[OffSaleProduct] with KeyedMapper[Long, OffS
     }	
     object obs extends MappedPoliteString(this,255)
     object external_id extends MappedPoliteString(this,200)
+
+    def productName : String = {
+        if (product != 0) {
+          val ac = Product.findByKey(product).get
+          ac.name;
+        } else {
+          ""
+        }
+    }
+    def productTypeName : String = {
+        if (productType != 0) {
+          val ac = ProductType.findByKey(productType).get
+          ac.name;
+        } else {
+          ""
+        }
+    }
 }
 
 object OffSaleProduct extends OffSaleProduct with LongKeyedMapperPerCompany[OffSaleProduct] with  OnlyCurrentCompany[OffSaleProduct]{

@@ -1,6 +1,15 @@
   Olá ##nome##,<p><br>&nbsp;   </p><p><img src="http://nb.vilarika.com.br/images/home_F644243920084XDXFND.jpg.png" alt=""></p><p></p><p></p>
 
 
+xml
+https://alvinalexander.com/scala/how-to-load-xml-file-in-scala-load-open-read
+
+import scala.xml.XML
+
+val xml = XML.loadFile("/Users/al/Projects/Scala/yahoo-weather.xml")
+
+val temp = (xml \\ "channel" \\ "item" \ "condition" \ "@temp") text
+
 sources_bak
 
 /**

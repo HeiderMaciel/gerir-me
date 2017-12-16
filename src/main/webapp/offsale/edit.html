@@ -102,8 +102,7 @@
           <li class="active tab"><a href="#address">Endereço</a></li>
           <li class="lift:SecuritySnippet.IsGerirmeSystem tab"><a href="#indic">Indicadores</a></li>
           <li class="lift:SecuritySnippet.hasPortalModule tab"><a href="#site">Portal</a></li>
-          <li class="tab"><a href="#osactivity">Serviços</a></li>
-          <li class="tab"><a href="#osproduct">Produtos</a></li>
+          <li class="tab"><a href="#osproduct">Produtos & Serviços</a></li>
           <li class="tab"><a href="#photo">Foto</a></li>
         </ul>
         <div class="pill-content">
@@ -303,65 +302,40 @@
       </div>
     </form>    
   </div>
-  <div id="osactivity" class='tab_content'>
-      <div class='span8'>
-          <div class="clearfix">
-            <label for="product">Serviço</label>
-            <div class="input">
-                <select class="xlarge" id="osactivity_activity" name="osactivity_activity">
-                </select>
-                <span class="help-block">Serviço</span>
-            </div>
-          </div>
-          <div class="clearfix">
-            <label for="osactivity_offprice">Preço Item Convênio</label>
-            <div class="input">
-              <div class="input-prepend">
-                <span class="add-on"><img src="/images/dre.png" width="16"></span>
-                <input class="mini currency" id="osactivity_offprice" name="osactivity_offprice" size="30" type="text"/>
-                <span class="help-block">Valor de venda do item no convênio</span>
-              </div>
-            </div>
-          </div>
-          <div class="clearfix">
-              <label for="text">Obs</label>
-              <div class="input">
-                  <input class="xlarge" id="osactivity_obs" size="30" type="textarea"/>
-              </div>
-          </div>
-          <div class="clearfix">
-              <label for="btn"></label>
-              <input class="btn success" id="osactivity_add" type="button" value="Adicionar">
-          </div>
-      </div>
-      <table id="grid_osactivity" class="bordered-table zebra-striped">
-          <thead>
-              <th>Serviço</th>
-              <th>Preço</th>
-              <th>Obs</th>
-              <th>Código</th>
-              <th></th>
-          </thead>
-          <tbody>
-          </tbody>
-      </table>
-  </div>
   <div id="osproduct" class='tab_content'>
+      <div class="row">
       <div class='span8'>
           <div class="clearfix">
-            <label for="product">Produtos</label>
+            <label for="producttype">Tipo Prod</label>
             <div class="input">
-                <select class="xlarge" id="osproduct_product" name="osproduct_product">
+                <select class="xlarge" id="osproduct_producttype" name="osproduct_producttype">
+                </select>
+            </div>
+          </div>
+          <div class="clearfix">
+            <label for="osproduct_activity"><span data-i18n='Serviço'></span></label>
+            <div class="input">
+                <select class="xlarge" id="osproduct_activity" name="osproduct_activity">
                 </select>
             </div>
           </div>
           <div class="clearfix">
             <label for="osproduct_offprice">Preço Item Convênio</label>
             <div class="input">
-              <div class="input-prepend">
-                <span class="add-on"><img src="/images/dre.png" width="16"></span>
-                <input class="mini currency" id="osproduct_offprice" name="osproduct_offprice" size="30" type="text"/>
-                <span class="help-block">Valor de venda do item no convênio</span>
+              <div class='inline-inputs'>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                  <span class="add-on"><img src="/images/dre.png" width="16"></span>
+                  <input class="mini currency" id="osproduct_offprice" name="osproduct_offprice" size="30" type="text"/>
+                  <span class='label-inline' for='osproduct_percentoff'>Perc desconto</span>
+                </div>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                  <span class="add-on">%</span>
+                  <input class="mini currency" id="osproduct_percentoff" name="osproduct_percentoff" size="30" type="text"/>
+                </div>
+              </div>
+              <div>
+              <br/>
+                  <span class="help-block">Valor de venda do item no convênio ou percentual de desconto em relação ao preço original</span>
               </div>
             </div>
           </div>
@@ -371,14 +345,46 @@
                   <input class="xlarge" id="osproduct_obs" size="30" type="textarea"/>
               </div>
           </div>
+          </div>
+      <div class='span9'>
+                  <div class="clearfix">
+                    <label for="name">Produto</label>
+                    <div class="input">
+                      <div class="inline-inputs">
+                        <div style="float:left; padding-right:10px" class="input-prepend">
+                              <span class="add-on"></span> 
+                              <input class="xlarge process_product_field" name="product" id='product'/>
+                        </div>                                                    
+                      </div>
+                    </div>
+                  </div>
+                  <div class="clearfix">
+                    <label for="current_stock">Estoque Atual</label>
+                    <div class="input">
+                      <div class="inline-inputs">
+                        <div style="float:left; padding-right:10px" class="input-prepend">
+                          <span class="add-on"><img width="16" src="/images/categorie.png"></span> 
+                          <input type="text" size="19" name="current_stock" id="current_stock" disabled='true' class="mini disabled inventory_product_search">
+                           <span class="help-block">Quantidade atual do produto em estoque</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>      
+      </div>          
+      <div class='span13'>
           <div class="clearfix">
               <label for="btn"></label>
+              <div class="input">
               <input class="btn success" id="osproduct_add" type="button" value="Adicionar">
+              </div>
           </div>
+      </div>
       </div>
       <table id="grid_osproduct" class="bordered-table zebra-striped">
           <thead>
+              <th>Tipo Prod</th>
               <th>Produto</th>
+              <th>Percent Desc</th>
               <th>Preço</th>
               <th>Obs</th>
               <th>Pacote</th>
@@ -394,8 +400,9 @@
   <script src="/js/offsale_crud.js?sensor=true"></script>
   <script type="text/javascript">
     $(function () {
-        $("#osactivity_activity").activityField(true);
+        $("#osproduct_activity").activityField(true);
         $("#osproduct_product").productField(true);
+        $("#osproduct_producttype").productTypeField(true);
     });
   </script>
 </div>
