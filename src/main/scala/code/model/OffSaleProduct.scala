@@ -69,16 +69,32 @@ class OffSaleProduct extends Audited[OffSaleProduct] with KeyedMapper[Long, OffS
 }
 
 object OffSaleProduct extends OffSaleProduct with LongKeyedMapperPerCompany[OffSaleProduct] with  OnlyCurrentCompany[OffSaleProduct]{
-    def offSaleProductPrice (offsale : Long, product : Long, price : BigDecimal) : BigDecimal = {
+    def offSaleProductPrice (offsale : Long, 
+        product : Long, price : BigDecimal) : BigDecimal = {
+        // procura o produto no convênio
         val ac = OffSaleProduct.findAllInCompany (
             By (OffSaleProduct.status, 1),
             By (OffSaleProduct.offsale, offsale),
             By (OffSaleProduct.product, product));
         if (ac.length > 0) {
-            ac(0).offPrice.is
+            if ((ac(0).offPrice.is) != 0.0) {
+                ac(0).offPrice.is
+            } else {
+                (price - (ac(0).percentOff.is * price / 100.0))                
+            }
         } else {
-            // retorna o preço do produto que já veio como parm
-            price 
+            //procura o tipo do produto no convênio
+            val p = Product.findByKey (product).get
+            val ac = OffSaleProduct.findAllInCompany (
+                By (OffSaleProduct.status, 1),
+                By (OffSaleProduct.offsale, offsale),
+                By (OffSaleProduct.productType, p.typeProduct));
+            if (ac.length > 0) {
+                (price - (ac(0).percentOff.is * price / 100.0))
+            } else {
+                // retorna o preço do produto que já veio como parm
+                price 
+            }
         }
     }
 }

@@ -271,8 +271,10 @@ println ("vaiiiiii ========= opt " + opt )
 					   	S.notice("Grupo salvo com sucesso!")
 			   			S.redirectTo("/project_group/group?id="+ac.id.is+"&opt=group")
 			   		} else {
-					   	S.notice("Projeto salvo com sucesso!")
-			   			S.redirectTo("/project/event?id="+ac.id.is+"&opt=project")
+					   	S.notice("Orçamento salvo com sucesso!")
+				   		S.redirectTo("/budget/budget?id="+ac.id.is+"&opt=budget")
+//					   	S.notice("Projeto salvo com sucesso!")
+//			   			S.redirectTo("/project/event?id="+ac.id.is+"&opt=project")
 			   		}
 		   		}catch{
 					case (e:net.liftweb.http.ResponseShortcutException) =>{

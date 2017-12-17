@@ -44,7 +44,8 @@ class Project1 extends Audited[Project1] with KeyedMapper[Long, Project1] with B
         } else if (AuthUtil.company.appType.isEgrex) {
             3 // group
         } else {
-            2 // event
+            5 // budget
+            //2 // event
         }
     }
 
