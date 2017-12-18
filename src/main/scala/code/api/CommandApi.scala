@@ -251,10 +251,11 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				if (end != "" && end.length > 11) {
 					tempt.get.end(Project.strToDate(end)).save
 				}
+/* nao duplica mais obs do td no tr
 				if (obs != "") {
 					tempt.get.obs(tempt.get.obs + " - " + obs).save
 				}
-				JInt(1)
+*/				JInt(1)
 			} catch {
 			  case e: Exception => JString(e.getMessage)
 			}			

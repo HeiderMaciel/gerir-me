@@ -12,6 +12,7 @@
     $("#send_message").notificationField(true);
     $("#user").userField();
     $("#offsale").offSaleField(true);
+    $("#offsale_todo").offSaleField(true);
     if (AuthUtil.company.id == 1) {
       $("#start_date").val(getDateBr(new Date(new Date().setDate(1))) );
     } else {
@@ -306,7 +307,7 @@
               <div class="clearfix lift:SecuritySnippet.hasOffSaleModule">
                 <label for="offsale">Convênio</label>
                  <div class="input">
-                    <select name="offsale" id='offsale'></select>
+                    <select name="offsale_todo" id='offsale_todo'></select>
                  </div>
               </div>                  
               <input type="hidden" class="has-pet-system lift:SecuritySnippet.isEbellepetSystem" value="1">
