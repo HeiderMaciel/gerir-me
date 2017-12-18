@@ -162,12 +162,14 @@ var saveBudget = function(newItem) {
     } else {
       valid = true;
     } 
+    if ((!$("#user_budget").val()) || (parseFloat($("#user_budget").val()) == 0)) {
+      return alert('Um profissional precisa ser selecionado!');
+    }
+  } else if (($("#product").val()) && (parseFloat($("#product").val()) != 0)) {
+    // produto nao requer profissional
+    valid = true;
   } else {
-    return alert('Um serviço precisa ser selecionado');
-  }
-
-  if ((!$("#user_budget").val()) || (parseFloat($("#user_budget").val()) == 0)) {
-    return alert('Um profissional precisa ser selecionado!');
+    return alert('Um serviço ou produto precisa ser selecionado');
   }
 
   if ((!$("#projectSection").val()) || (parseFloat($("#projectSection").val()) == 0)) {

@@ -98,6 +98,16 @@ var updateReportSection = function() {
 
 var updateReportItems = function() {
     var fields = [];
+    fields[2] = {
+      type: "format",
+      decode: function(name, row) {
+        if (row[12] != "" && row[12] != "0") {
+          return "<a href='/activity/edit?id=" + row[12] + "' target='_activity_maste'>" + name + "</a>";
+        } else {
+          return "<a href='/product_admin/edit?id=" + row[13] + "' target='_product_maste'>" + name + "</a>";
+        }
+      }
+    }
     fields[3] = "textNull";
     fields[4] = "real";
     fields[5] = "real";
@@ -107,14 +117,16 @@ var updateReportItems = function() {
     fields[10] = {
 		type: "format",
 		decode: function(id, row) {
-			return "<span style='margin-right:4px'><a class='btn' href='/project/edit_project_section?id=" + row[3] + "' target='_blank'>Ir</a></span>" +
+			return "<span style='margin-right:4px'><a class='btn' href='/treatment/treatmentdetail?id=" + row[10] + "' target='_treatdetail_maste'>Editar</a></span>" +
 				"<span><a class='btn danger' target='_blank' onclick='deleteItems(" + row[11] + ")'>Excluir</a></span>";
 		}
 	}
     fields[11] = "none";
+    fields[12] = "none"; // activity
+    fields[13] = "none"; // product
     
   	var group = function(row,value){
-    	return parseFloat(value) + (parseFloat(row[7]));
+    	return parseFloat(value) + (parseFloat(row[8]));
   	};
   	var formater = function(value){
     	return value.formatMoney();
@@ -137,6 +149,17 @@ var updateReportItems = function() {
 	renderReport("/project/budget/" + gup('id'), fields, {
 		project: gup('id')
 	}, "#table_items", false, false, false, false. false, false, group_meta_data);
+
+    $.post("/projectsum/budget/" + gup('id'), 
+    	function(r){
+      var precolista = parseFloat(eval(r)[0][0]);
+      var precototal = parseFloat(eval(r)[0][1]);
+      $("#totallista").val((precolista).formatMoney());
+      $("#totaldesc").val((precolista-precototal).formatMoney());
+      $("#totalperc").val((100-(precototal * 100 / precolista)).formatMoney());
+      $("#totalbudget").val((precototal).formatMoney());
+    });
+
 };
 
 $(function() {
