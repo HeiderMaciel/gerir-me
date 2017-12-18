@@ -292,7 +292,9 @@ object FinancialSqlMigrate{
   def createPaymentType(company:Company) = {
     val id = company.id.is
     DB.runUpdate(CREATE_PAYMENT_TYPES,id::Nil)
-    DB.runUpdate(UPDATE_FACT_INFORMATIONS,id::id::id::id::Nil)
+    DB.runUpdate(UPDATE_FACT_INFORMATIONS,id::id::id::Nil)
+    DB.runUpdate(UPDATE_FACT_INFORMATIONS1,id::id::Nil)
+    DB.runUpdate(UPDATE_FACT_INFORMATIONS2,id::id::Nil)
     if (company.appType == Company.SYSTEM_EBELLE) {
       //"ebelle"
       PaymentType.resetPt (company, "%mensalidade%");
@@ -334,7 +336,23 @@ object FinancialSqlMigrate{
                                     set 
                                     defaltdicountcategory=(select a.id from accountcategory a where a.aux_id=paymenttype.defaltdicountcategory and a.company=?),
                                     defaltcategory=(select a.id from accountcategory a where a.aux_id=paymenttype.defaltcategory and a.company=?),
-                                    defaltaccount=(select account.id from account where account.company=? limit 1),
                                     status = 1  
                                     where paymenttype.company=?;"""
+
+  val UPDATE_FACT_INFORMATIONS1 = """update paymenttype 
+                                    set 
+                                    defaltaccount=(select account.id from account where account.company=? and account.search_name like '%seu banco%')
+                                    where paymenttype.company=? and 
+                                    (paymenttype.search_name like '%credito%' 
+                                    or paymenttype.search_name like '%debito%'
+                                    or paymenttype.search_name like '%cheque%');
+                                    """
+  val UPDATE_FACT_INFORMATIONS2 = """update paymenttype 
+                                    set 
+                                    defaltaccount=(select account.id from account where account.company=? and account.search_name like '%caixa%')
+                                    where paymenttype.company=? and 
+                                    (paymenttype.search_name like '%dinheiro%' 
+                                    or paymenttype.search_name like '%vale prof%');
+                                    """
+
 }
