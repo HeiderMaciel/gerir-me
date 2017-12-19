@@ -114,7 +114,6 @@
 
   ProductBOM.save = function() {
     var pb1 = new ProductBOM()
-alert (pb1.product_bom + " <- bom " + pb1.priceZero + " bool " + pb1.price)
     if (!pb1.product_bom) {
       return alert ("Um serviço precisa ser selecionado")
     }
