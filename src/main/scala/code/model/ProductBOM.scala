@@ -31,13 +31,33 @@ class ProductBOM extends Audited[ProductBOM] with PerCompany with IdPK with Crea
         override def dbColumnName = "discount_of_commision"
     }    
 
+    object priceZero_? extends MappedBoolean(this){
+        override def defaultValue = false
+        override def dbColumnName = "priceZero"
+        // 19/12/2017 - rigel - campo criado para indicar que
+        // o preço é zero mesmo - caso de pacote que ganha um
+        // item - antes mesmo que salvasse com zero o metodo 
+        // price buscava o preço de lista no produto ou serviço
+        // isso  era usado tanto no BOM como desconto para não 
+        // fixar o preço no serviço e poder altera-lo no produto
+        // quanto no pacote com itens zerados ao levar pro caixa 
+        // buscava o preço de lista
+    }    
+
     object orderInReport extends MappedInt(this) {
         override def defaultValue = 1
     }
 
+    def listPrice = {
+        product_bom.obj.get.salePrice.is
+    }
+    
     def price = if(salePrice.is > 0){
         salePrice.is
-    }else{
+    } else if (priceZero_?) {
+        salePrice.is // que neste caso é zero
+    } else {
+        // retorna o preço do produto ou do serviço
         product_bom.obj.get.salePrice.is
     }
 }
@@ -54,3 +74,4 @@ object ProductBOM extends ProductBOM with LongKeyedMapperPerCompany[ProductBOM] 
             .save
     }     
 }
+

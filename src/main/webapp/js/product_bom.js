@@ -9,7 +9,8 @@
       this.obs = $("#obs_bom").val();
       this.qtd = $("#qtd").val();
       this.praceled = $("#praceled").is(':checked');
-      this.price = $("#bom_salePrice").val();
+      this.priceZero = $("#priceZero").is(':checked');
+      this.price = $("#bom_salePrice").val() || "0";
       this.orderinreport = $("#orderinreport").val();
     }
 
@@ -25,6 +26,7 @@
         function(results) {
         var obj, ret, _i, _len;
         var product_saleprice = 0.0;
+        var product_count_pb = 0;
         var item_price = 0.0;
         eval("results = " + results);
         ProductBOM.list = results;
@@ -36,12 +38,15 @@
           "<td>" + obj.qtd + "</td>" +
           "<td>" + obj.obs + "</td>" +
           "<td>" + (obj.price.formatMoney()) + "</td>" +
+          "<td><img src=\"/images/" + (obj.pricezero ? 'good' : 'bad') + ".png\"/></td>" +
+          "<td>" + (obj.listprice.formatMoney()) + "</td>" +
           "<td><img src=\"/images/" + (obj.parceled ? 'good' : 'bad') + ".png\"/></td>" +
           "<td>" + obj.orderinreport + "</td>" + 
           "<td><a data-id='" + obj.id + "' class='action_delete'><img src='/images/delete.png'/></a></td>" +
           "</tr>";
           item_price = (obj.price * obj.qtd)
           product_saleprice += item_price
+          product_count_pb += 1;
         }
 
 //        alert ($("#is_bomaux").val())
@@ -49,7 +54,8 @@
         var prprice = 0.0;
         prprice = $("#salePrice").val()
         if ($("#is_bomaux").val() == "true") {
-          if (product_saleprice == 0.0) {
+          //if (product_saleprice == 0.0) {
+          if (product_count_pb == 0) {
             alert ("O produto está marcado como pacote, mas não foi configurado com nenhum item\n\n" +
               "Insira os itens desejados na aba Configuração de Pacote")
           }
@@ -107,7 +113,15 @@
   };
 
   ProductBOM.save = function() {
-    return $.post("/product/product_bom", new ProductBOM(), function(t) {
+    var pb1 = new ProductBOM()
+alert (pb1.product_bom + " <- bom " + pb1.priceZero + " bool " + pb1.price)
+    if (!pb1.product_bom) {
+      return alert ("Um serviço precisa ser selecionado")
+    }
+    if (pb1.priceZero && pb1.price != "0") {
+      return alert ("Preço diferente de zero e opção de preço zero marcada, verifique")
+    }
+    return $.post("/product/product_bom", pb1, function(t) {
       if (t) {
         alert("Cadastrado com sucesso!");
         return ProductBOM.getListFromServer();

@@ -39,13 +39,15 @@ object ProductBomApi extends RestHelper {
 				 obs <- S.param("obs") ?~ "obs param missing" ~> 400
 				 qtd <- S.param("qtd") ?~ "qtd param missing" ~> 400
 				 praceled <- S.param("praceled") ?~ "qtd param missing" ~> 400
-				 price <- S.param("price") ?~ "qtd param missing" ~> 400
+				 pricezero <- S.param("priceZero") ?~ "priceZero param missing" ~> 400
+				 price <- S.param("price") ?~ "price param missing" ~> 400
 				 orderinreport <- S.param("orderinreport") ?~ "orderinreport param missing" ~> 400
 			} yield {
 				JBool(ProductBOM.createInCompany.product(product.toLong).
 					product_bom(product_bom.toLong).
 					obs(obs).qtd(BigDecimal (qtd)).
 					praceled_?(praceled.toBoolean).
+					priceZero_?(pricezero.toBoolean).
 					salePrice(price.toDouble).
 					orderInReport(orderinreport.toInt).save)
 			}
@@ -57,7 +59,9 @@ object ProductBomApi extends RestHelper {
 						("obs",pb.obs.is), 
 						("qtd",pb.qtd.toDouble), 
 						("price", pb.price.toDouble),
+						("listprice", pb.listPrice.toDouble),
 						("parceled", pb.praceled_?.is), 
+						("pricezero", pb.priceZero_?.is), 
 						("orderinreport",pb.orderInReport.is))
 				})
 			)

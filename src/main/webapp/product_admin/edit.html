@@ -365,7 +365,12 @@
                 <div class="input-prepend">
                   <span class="add-on"><img src="/images/dre.png" width="16"></span>
                   <input class="mini currency" id="bom_salePrice" name="bom_salePrice" size="30" type="text"/>
-                  <span class="help-block">Valor de venda do item no pacote</span>
+                  <span class='label-inline'>
+                    Preço Zero
+                  </span>
+                  <input type="checkbox" id="priceZero"  name="priceZero" />
+
+                  <span class="help-block">Valor unitário do item no pacote / Indica que o preço é zero mesmo e não será usado preço de lista</span>
                 </div>
               </div>
             </div>
@@ -388,13 +393,17 @@
                 <th>Produto</th>
                 <th>Quantidade</th>
                 <th>Obs</th>
-                <th>Preço</th>
+                <th title='Preço unitário do item no pacote'>Preço</th>
+                <th title='Se ok, indica que o preço é zero mesmo, do contrário o preço de lista será usado'>Preço Zero</th>
+                <th title='Preço de lista no cadastro do produto/serviço'>Preço Lista</th>
                 <th>Parcelado</th>
                 <th>Ordem</th>
                 <th>Ações</th>
               </thead>
               <tbody>
                 <tr>
+                  <td></td>
+                  <td></td>
                   <td></td>
                   <td></td>
                   <td></td>
