@@ -412,6 +412,7 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
     def priceActivity:BigDecimal = {
         activity.obj match {
             case Full(t) => {
+                println ("vaiiii ============= activity")
                             if(isAMonthlyService && BpMonthly.countBpMonthlyByProduct(t, customer, start) > 0){
                                 BigDecimal(BpMonthly.monthlyByProduct(t, 
                                     customer, start).valueSession.is)
@@ -426,7 +427,22 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
                 }
             case _ => product.obj match {
                 case Full(p) => {
-                            if(hasOffSale) {
+                            if (p.is_bom_? && 
+                                p.productClass == ProductType.Types.Product) {
+                                // foi necessário testar o productclass pq 
+                                // activity com produtos de desconto são marcadas como pacote
+                                0.0 // 19/12/2017 - rigel - preço de pacote no revert price é zero
+                                // o preço é resultado dos itens configurados
+                            } else if (parentBom > 0) {
+                                val ac = ProductBOM.findAllInCompany (
+                                    By(ProductBOM.product, parentBom),
+                                    By(ProductBOM.product_bom, p))
+                                if (ac.length > 0) {
+                                    ac (0).price
+                                } else {
+                                    0.0
+                                }
+                            } else if(hasOffSale) {
                                 OffSaleProduct.offSaleProductPrice (offsale.obj.get.id, 
                                     product.obj.get.id.is, p.salePrice.is)
                             } else if(hasUser) {
