@@ -130,12 +130,14 @@ object EmailUtil {
         log.save
         val toSend:MailBodyType =  attachment match {
           case a:FullAttachment =>  if (!company.appType.isEgrex) {
-            XHTMLPlusImages(compleMail(mail,teamfooterHtml(log.id.is,company.appShortName)), PlusImageHolder(a.name, a.mimeType, a.bytes))
+            XHTMLPlusImages(compleMail(mail,teamfooterHtml(log.id.is,
+              company.appShortName, company.name)), PlusImageHolder(a.name, a.mimeType, a.bytes))
           } else {
             XHTMLPlusImages(compleMail(mail,simpleFooterHtmlEgrex(log.id.is, company)), PlusImageHolder(a.name, a.mimeType, a.bytes))
           }
           case _ => if (!company.appType.isEgrex) {
-              compleMail(mail,teamfooterHtml(log.id.is, company.appShortName))
+              compleMail(mail,teamfooterHtml(log.id.is, 
+                company.appShortName, company.name))
             } else {
               compleMail(mail,simpleFooterHtmlEgrex(log.id.is, company))
             }
@@ -213,12 +215,14 @@ object EmailUtil {
 
         val toSend:companyUnit.mailer.MailBodyType =  attachment match {
           case a:FullAttachment =>  if (!company.appType.isEgrex) {
-            companyUnit.mailer.XHTMLPlusImages(compleMail(mail,teamfooterHtml(log.id.is,company.appShortName)), companyUnit.mailer.PlusImageHolder(a.name, a.mimeType, a.bytes))
+            companyUnit.mailer.XHTMLPlusImages(compleMail(mail,teamfooterHtml(log.id.is,
+              company.appShortName, company.name)), companyUnit.mailer.PlusImageHolder(a.name, a.mimeType, a.bytes))
           } else {
             companyUnit.mailer.XHTMLPlusImages(compleMail(mail,simpleFooterHtmlEgrex(log.id.is, company)), companyUnit.mailer.PlusImageHolder(a.name, a.mimeType, a.bytes))
           }
           case _ => if (!company.appType.isEgrex) {
-              companyUnit.mailer.XHTMLMailBodyType(compleMail(mail,teamfooterHtml(log.id.is, company.appShortName)))
+              companyUnit.mailer.XHTMLMailBodyType(compleMail(mail,teamfooterHtml(log.id.is, 
+                company.appShortName, company.name)))
             } else {
               companyUnit.mailer.XHTMLMailBodyType(compleMail(mail,simpleFooterHtmlEgrex(log.id.is, company)))
             }
@@ -380,9 +384,9 @@ object EmailUtil {
 //            <a href="http://" + {appName} + ".vilarika.com.br/"><img src="http://" + appName + ".vilarika.com.br/images/logo.png" style="width: 100px;"/></a>
 //             <img src={"http://" + appName + ".vilarika.com.br/system/makeMailAsRead/"+id.toString} style="width: 0px;"/>
 
-  def teamfooterHtml(id:Long, appName:String) = <div>
+  def teamfooterHtml(id:Long, appName:String, companyName:String) = <div>
             Tenha um bom dia!<br/>
-            Atenciosamente equipe {appName}
+            Atenciosamente equipe {companyName}
             <br/>
             <br/>
             <a href={"http://" + appName + ".vilarika.com.br/"}><img src={"http://" + appName + ".vilarika.com.br/images/logo_fbr_name_"+ appName+".png"} style="width: 50px;"/></a>
