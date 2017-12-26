@@ -22,8 +22,8 @@ import java.util.Date
 
 
 object ContactsUtil extends net.liftweb.common.Logger {
-
-  def execute(file:File, origin:String, nameasis: Long){
+  var sqlInsert = "";
+  def execute(file:File, origin:String, nameasis: Long, generatesql: Long){
     val lines = fromFile(file).getLines.toList
     val separator:String = if (lines(1).count(_ == '.') >
       lines(1).count(_ == ';')) {
@@ -34,9 +34,15 @@ object ContactsUtil extends net.liftweb.common.Logger {
       } else {
         ","
       }
+    // o for começa de um para saltar a primeira linha 
+    // cabeçalho das colunas - parametrizar
     val details = for(i <- 1 to (lines.size)-1 ) yield {
       //println ("vaiii ====== " + lines(i) + " === " + i + " serapardor " + separator)
-      factory(i, lines, separator, origin, nameasis)
+      factory(i, lines, separator, origin, nameasis, generatesql)
+    }
+    // gerar arquivo aqui
+    if (generatesql > 0) {
+      println ("vaiiiii ======= " + sqlInsert)
     }
     details.map((d) => {
 /*
@@ -133,14 +139,25 @@ object ContactsUtil extends net.liftweb.common.Logger {
   }
 */
 
-  def factory(i:Int, lines:List[String], separator:String, origin:String, nameasis:Long):DetailContacts ={
+  def factory(i:Int, lines:List[String], separator:String, origin:String, nameasis:Long, generatesql:Long):DetailContacts ={
+    sqlInsert += "\ninsert into diversos." + origin + " values ("
     val listCol = lines(i).split(separator)
-    listCol.foreach((column) => {
-//      println ("vaiii ====== " + column);
-    });
+    var j = 0;
 
-    //println ("vaiii ======== " + listCol(0) + " ----- " +listCol (1));
-    saveContacts (listCol, origin, nameasis);
+    if (generatesql > 0) {
+      listCol.foreach((column) => {
+        sqlInsert += "'" + column + "'";
+        j += 1;
+        if (j < listCol.length) {
+          sqlInsert += ","
+        } else {
+          sqlInsert += ");"
+        }
+  //      println ("vaiii ====== " + column);
+      });
+    } else {
+      saveContacts (listCol, origin, nameasis);
+    }
 
     DetailContacts("","","","")
 /*

@@ -1,0 +1,44 @@
+<div id="main" class="lift:surround?with=dashboard_customer;at=content">
+  <h3>
+  	<center>Importar Planilha Gerar Sql</center>
+  </h3>
+  <form class="lift:UploadContacts?form=post;multipart=true">
+    <div class="clearfix">
+      <label for="file">Arquivo</label>
+      <div class="input">
+        <div class="input-prepend">
+        	<input type="text" name='file' id='file'/>
+        </div>
+      </div>
+    </div> 
+    <div class="clearfix">
+      <label for="origin">Tabela</label>        
+      <div class="input">
+        <div class='inline-inputs'>
+          <div class="input-prepend" style='float:left; padding-right:10px'>
+            <input class="large local_storage" id="origin" name="origin" size="30" type="text"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix">
+      <label for="generatesql">Gera Sql
+      </label>
+      <div class="input">
+        <div class="inline-inputs">
+          <input class="local_storage" name="generatesql" id='generatesql' type='checkbox' checked='true'/>
+        </div> 
+      </div>
+    </div>
+    <div class="clearfix">
+      <label for="name"></label>
+      <div class="input">
+        <div class="input-prepend">
+        	<input class="btn success" type="submit" "Enviar"/>
+          <a class="btn primary" href="/customer/contacts_conciliation" title="Relatório de conciliação de contatos/clientes">Relatório Contatos
+          </a>
+      </div>
+        </div>
+    </div> 
+  </form>
+</div>
