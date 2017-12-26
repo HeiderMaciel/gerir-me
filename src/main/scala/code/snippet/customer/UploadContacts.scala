@@ -26,6 +26,12 @@ class UploadContacts extends Logger {
     case _ => ""
   } 
 
+  def nameasis:Long = S.param("nameasis") match {
+    case Full(p) if(p != "")=> 1
+    case _ => 0
+  }     
+
+
   object imageFile extends RequestVar[Box[FileParamHolder]](Empty)
   object fileName extends RequestVar[Box[String]](Full(Helpers.nextFuncName))
   private def prepareFile(file:File){
@@ -59,7 +65,7 @@ class UploadContacts extends Logger {
         output.close()
         prepareFile(oFile)
         info("File uploaded!")
-        ContactsUtil.execute(oFile, origin);
+        ContactsUtil.execute(oFile, origin, nameasis);
         S.notice("Arquivo importado com sucesso!")
       }
     }

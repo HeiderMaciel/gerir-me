@@ -23,7 +23,7 @@ import java.util.Date
 
 object ContactsUtil extends net.liftweb.common.Logger {
 
-  def execute(file:File, origin:String){
+  def execute(file:File, origin:String, nameasis: Long){
     val lines = fromFile(file).getLines.toList
     val separator:String = if (lines(1).count(_ == '.') >
       lines(1).count(_ == ';')) {
@@ -36,7 +36,7 @@ object ContactsUtil extends net.liftweb.common.Logger {
       }
     val details = for(i <- 1 to (lines.size)-1 ) yield {
       //println ("vaiii ====== " + lines(i) + " === " + i + " serapardor " + separator)
-      factory(i, lines, separator, origin)
+      factory(i, lines, separator, origin, nameasis)
     }
     details.map((d) => {
 /*
@@ -74,7 +74,7 @@ object ContactsUtil extends net.liftweb.common.Logger {
     }
   }
 
-  def saveContacts (listCol:Array[String], origin:String) = {
+  def saveContacts (listCol:Array[String], origin:String, nameasis:Long) = {
     val length = 5
     var temp = Array.ofDim[String](length)
     var maxLen = if (5 < listCol.length) {
@@ -90,8 +90,14 @@ object ContactsUtil extends net.liftweb.common.Logger {
         temp (i) = "";
       }
     }
+    var strAux = if (nameasis > 0) {
+      //mantem o nome original
+      temp(0)
+    } else {
+      BusinessRulesUtil.toCamelCase (BusinessRulesUtil.clearString(temp(0)))
+    }
     val ac = Contact.createInCompany
-    .name (BusinessRulesUtil.toCamelCase (BusinessRulesUtil.clearString(temp(0))))
+    .name (strAux)
     .email ((temp(1)).toLowerCase)
     .phone (temp(2))
     .birthday (BusinessRulesUtil.mgrDate (temp(3)))
@@ -127,14 +133,14 @@ object ContactsUtil extends net.liftweb.common.Logger {
   }
 */
 
-  def factory(i:Int, lines:List[String], separator:String, origin:String):DetailContacts ={
+  def factory(i:Int, lines:List[String], separator:String, origin:String, nameasis:Long):DetailContacts ={
     val listCol = lines(i).split(separator)
     listCol.foreach((column) => {
 //      println ("vaiii ====== " + column);
     });
 
     //println ("vaiii ======== " + listCol(0) + " ----- " +listCol (1));
-    saveContacts (listCol, origin);
+    saveContacts (listCol, origin, nameasis);
 
     DetailContacts("","","","")
 /*
