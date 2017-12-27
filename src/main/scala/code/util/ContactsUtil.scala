@@ -42,7 +42,13 @@ object ContactsUtil extends net.liftweb.common.Logger {
     }
     // gerar arquivo aqui
     if (generatesql > 0) {
-      println ("vaiiiii ======= " + sqlInsert)
+      val filePath = if(Project.isLinuxServer){
+        "/tmp/"
+      }else{
+        "c:\\vilarika\\"
+      }
+     scala.tools.nsc.io.File(filePath + origin + ".sql").writeAll(sqlInsert);
+     //println ("vaiiiii ======= " + sqlInsert)
     }
     details.map((d) => {
 /*
