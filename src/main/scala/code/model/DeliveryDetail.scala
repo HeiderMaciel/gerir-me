@@ -38,9 +38,21 @@ class DeliveryDetail extends LongKeyedMapper[DeliveryDetail] with IdPK with Crea
             By(DeliveryDetail.used_?, false),
             OrderBy(DeliveryDetail.createdAt, Ascending) // pra o antigo vir primeiro
             )
-        dd
+        if (dd.length > 0) {
+           dd
+        } else {
+            // este método é chamado no calulo de comissao
+            // aqui já deu baixa na sessao de pacote que
+            // pode ter sido a ultima - e neste caso nao tem 
+            // mais a serem usadas. mas precisa calcular a comissao
+            val dd1 = DeliveryDetail.findAll(
+                By(DeliveryDetail.customer, customer), 
+                By(DeliveryDetail.product, product), 
+                OrderBy(DeliveryDetail.createdAt, Descending) // pra o mais recente vir primeiro
+                )
+            dd1
+        }
     }
-
 }
 
 object DeliveryDetail extends DeliveryDetail with LongKeyedMapperPerCompany[DeliveryDetail] with  OnlyCurrentCompany[DeliveryDetail]{
