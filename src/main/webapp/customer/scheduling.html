@@ -157,21 +157,27 @@
 			treatments = [];
 			render(treatments);
 		}
+		var callApiLock = false;
 		var process = function(){
+		  if (!callApiLock) {
+		    callApiLock = true
 			if(treatments.length <= 0){
 				alert("Não há o que salvar, os agendamentos devem aparecer na tabela abaixo antes de serem salvos.")
+				callApiLock = false;
 				return;
 			}
 
 			$.post("/treatment/util/scheduling",{data : JSON.stringify(treatments)}, function(r){
 				eval("var dataset ="+r);
 				dataset.filter(function(item){
+					callApiLock = false;
 					return item.valid;
 				}).forEach(function(item){
 					removeTreatment(item.id);
 				});
 
 				var invalids = dataset.filter(function(item){
+					callApiLock = false;
 					return !item.valid;
 				});
 				invalids.forEach(function(item){
@@ -180,12 +186,16 @@
 				});
 				render(treatments);
 				if(invalids.length > 0){
+					callApiLock = false;
 					alert(invalids.length+" atendimento(s) na tabela abaixo encontra(m)-se com problema")
 				}else{
+					callApiLock = false;
 					alert("Agendamento efetuado com sucesso!")
 				}
 			});
-
+		  } else {
+		    alert("Já existe um processo em andamento. Aguarde o fim do processamento para clicar novamente!");
+		  }
 		}
 		var getTreatmentById  = function(id){
 			return treatments.filter(function(t){
