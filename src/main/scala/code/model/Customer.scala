@@ -656,7 +656,14 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
                     "update business_pattern set occupation = (select bps.occupation from business_pattern bps where bps.id = ? ) where id = ? and occupation is null;"::
                     "update business_pattern set civilstatus = (select bps.civilstatus from business_pattern bps where bps.id = ? ) where id = ? and civilstatus is null;"::
                     Nil
-                    customerSource.name (customerSource.name + " deleted").save;
+                    if (customerSource.document != "" &&
+                        customerSource.document == customerDesc.document) {
+                        customerSource.name (customerSource.name + " deleted").
+                        document (customerSource.document + " a").
+                        save;
+                    } else {
+                        customerSource.name (customerSource.name + " deleted").save;
+                    }
                     customerDesc.valueInAccount(customerSource.valueInAccount.is+customerDesc.valueInAccount.is).save
                     sqls.foreach((sql)=>{
                         DB.runUpdate(sql,customerDesc.id.is::customerSource.id.is::Nil)
