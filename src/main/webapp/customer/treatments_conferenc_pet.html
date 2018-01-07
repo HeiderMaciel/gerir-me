@@ -168,7 +168,6 @@
             <label for="send"></label>
             <div class="input">
               <button type="button" id="go" class="btn success">Buscar</button>
-              <button type="button" id="godelete" class="btn danger" title="Exclui os atendimentos/agendamentos coletivamente, é preciso selecionar um cliente e um serviço e <Buscar> antes de excluir">Excluir</button>
             </div>
           </div>
           <input type="hidden" class="has-financial-access lift:SecuritySnippet.isFinancialUser" value="1">
@@ -189,21 +188,6 @@
         </div>
       </form>
       </div>
-      <a onclick="return ExcellentExport.excel(this, 'grid', 'data');"
-        href="#" download="data.xls" class="btn excel_buttton"
-        title="Exportar para excel">
-        <img style="width: 16px;" src="/images/excel.png" />
-      </a>  
-      <a onclick="return ExcellentExport.csv(this, 'grid', ';');"
-        href="#" download="data.csv" class="btn excel_buttton"
-        title="Exportar para csv">
-        <img style="width: 16px;" src="/images/generate.png" />
-      </a>  
-      <a id="hide_grid_payments" onclick="$('#grid').toggle();return false;" 
-        href="#" class="btn excel_buttton" 
-        title="Ocultar tabela">
-        <img style="width: 16px;" src="/images/collapse.png" />
-      </a>  
     <table id="grid" class="bordered-table zebra-striped">
       <thead>
         <th>Comanda</th>
@@ -228,7 +212,6 @@
     <tbody>
     </tbody>
     </table>
-    <script type="text/javascript" src="/js/treatments_conferenc.js">
+    <script type="text/javascript" src="/js/treatments_conferenc_pet.js">
     </script>
  </div>
- 

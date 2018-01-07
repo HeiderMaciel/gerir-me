@@ -69,7 +69,7 @@
           return trStatusdecode ('',row)
   };
   var executa_rel = function(){
-        $.post("/treatments/getTreatmentsByFilter",$("#form_search").serialize(),function(t){
+        $.post("/treatments/getTreatmentsByFilter",$("#form_report").serialize(),function(t){
           var treatments = [];
           var total = 0.0;
           eval("treatments = "+t);
@@ -102,10 +102,10 @@
             "<a href='#' onclick='removeTreatmentById("
               +obj.id+", this)'><img class='hide_on_print' alt='excluir este atendimento'  src='/images/delete.png'></a></td>";
           };
-          $("#table_result tbody").html(ret);
+          $("#grid tbody").html(ret);
           $("#count").val(treatments.length);
           $("#total").val(total.formatMoney());
-          $("#table_result").tablesorter();
+          $("#grid").tablesorter();
         })
   };  
   $(function(){

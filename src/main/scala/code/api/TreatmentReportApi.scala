@@ -21,6 +21,8 @@ import java.text.ParseException
 import java.util._
 
 import net.liftweb.json._
+	
+
 //implicit val formats = DefaultFormats // Brings in default date formats etc.
 
 //Com a lisença poetica do dao
@@ -365,6 +367,87 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					customer.toLong))
 			}	
 		}
+			case "treatments" :: "getTreatmentsByFilterPet" :: Nil Post _ => {
+/*
+				def user = S.param("user") match {
+					case Full(p) => p.toLong
+					case _ => 0l
+				}
+*/				
+// REVER hora vai 145 ora vai ,145 o list de vales e o total faturado tb não funcionam com mais de 1
+				val user_param_name = S.param("user[]") match {
+					case Full(p) => "user[]"
+					case _ => "user"
+				}
+
+				def user = S.param(user_param_name) match {
+					case Full(p) if(p != "")=> "%s".format(p)
+					case _ => S.params(user_param_name) match {
+						case primeiro :: r if(primeiro == "") => {
+							info(r)
+							"%s".format(r.mkString(","))
+						}
+						case primeiro :: resto => primeiro
+						case _ => " 01 " 
+					}
+				}			
+				def units:String = S.param("unit") match {
+					case Full(s) if(s != "") => " and tr.unit = %s".format(s)
+					case _ => " and " + Treatment.unitsToShowSql
+				}
+
+				def productclass:String = S.param("productclass") match {
+					case Full(p) => p
+					case _ => "0,1";
+				}
+				def start:Date = S.param("startDate") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+				def end:Date = S.param("endDate") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+				val rel_mini:Long = S.param("rel_mini") match {
+					case Full(p) if(p != "")=> 1
+					case _ => 0
+				}			
+				lazy val SQL_REPORT = """
+select 
+tr.command,
+tr.dateevent, 
+bc.name as cliente, 
+replace (trim (bc.mobile_phone || ' ' || bc.phone || ' ' || bc.email_alternative || ' ' || bc.email),'  ',' '),
+bp.short_name as profissional, 
+ba.name as pet, 
+bt.name as tutor, 
+replace (trim (bt.mobile_phone || ' ' || bt.phone || ' ' || bt.email_alternative || ' ' || bt.email),'  ',' '),
+bx.name as requisitante, pr.name as prod_serv, tr.status, 
+pa.detailPaymentAsText,
+td.price as valor , ca.idforcompany, 
+cu.name as unidade,
+ba.id, bc.id, bt.id, bx.id, bp.id, pr.id
+from treatment tr 
+inner join business_pattern bc on bc.id = tr.customer
+inner join treatmentdetail td on td.treatment = tr.id
+inner join product pr on pr.id = td.product or  pr.id = td.activity
+left join payment pa on pa.id = tr.payment
+left join cashier ca on ca.id = pa.cashier
+left join tdepet tdp on tdp.treatmentdetail = td.id
+left join business_pattern bp on bp.id = tr.user_c
+left join business_pattern bx on bx.id = td.auxiliar
+left join companyunit cu on cu.id = tr.unit
+left join business_pattern ba on tdp.animal = ba.id
+left join business_pattern bt on bt.id = ba.bp_manager
+where tr.company = ?
+and tr.dateevent between ? and ?
+and tr.status in (4,3,0)
+order by tr.start_c
+"""
+
+				toResponse(SQL_REPORT.format(user, productclass, units),scala.List(AuthUtil.company.id.is, start, end))
+			}
+
 		case "treatments"::"getTreatmentsByFilter" :: Nil Post _ => {
 			lazy val startDate = Project.strToDateOrToday(S.param("startDate") openOr "")
 			lazy val endDate = Project.strToDateOrToday(S.param("endDate") openOr "")
