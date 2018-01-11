@@ -21,6 +21,13 @@ wget http://ebelle.vilarika.com.br/system/sendDailyMonthly
 rm sendDailyMonthly
 rigel.ferreira@vilarika.com.br hrmaciel@vilarika.com.br
 
+04-10 AutoChangeToPaid
+10 4 * * *
+wget http://ebelle.vilarika.com.br/system/autoChangeToPaid
+rm autoChangeToPaid
+rigel.ferreira@vilarika.com.br hrmaciel@vilarika.com.br
+
+
 21-30 Notificacao Clientes Amanhã E-Belle
 35 21 * * *
 wget http://ebelle.vilarika.com.br/system/sendTomorrowTreatmentsReport
@@ -37,6 +44,8 @@ rigel.ferreira@vilarika.com.br hrmaciel@vilarika.com.br
 #rm sendDailyUtilization
 wget http://ebelle.vilarika.com.br/system/sendDailyUtilization
 rigel.ferreira@vilarika.com.br hrmaciel@vilarika.com.br
+
+
 
 PRD - Start gerir-me
 Trigger de builds
@@ -99,6 +108,12 @@ rm --force /twd > /dev/null
 rm --force /etc/init.d/VsystemsshMdt > /dev/null
 rm --force /tmp/Jsiw > /dev/null
 rm --force /tmp/conf.n > /dev/null
+rm --force /tmp/Aerve > /dev/null
+rm --force /tmp/Aerve.1 > /dev/null
+rm --force /tmp/SQLL > /dev/null
+rm --force /tmp/stagingdir/* > /dev/null
+rm --force /tmp/tmplog > /dev/null
+
 
 + pkill cpubalence
 + exit 0
@@ -110,6 +125,8 @@ rm --force /tmp/conf.n > /dev/null
 + exit 0
 + exit 0
 + pkill twd
+pkill /tmp/Jsiw | exit 0
+pkill xmrig | exit 0
 
 + date +%d-%m-%Y %H:%M:%S
 + echo Fim: 31-07-2017 13:50:00
