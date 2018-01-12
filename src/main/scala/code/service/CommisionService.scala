@@ -386,7 +386,8 @@ object CommissionGenerationStrategy {
 
   object ChequeCommissionCalculator extends CommissionCalculator {
     override def cheque(payment_detail: PaymentDetail) = Full(payment_detail.cheque)
-    override def paymentDate(payment_detail: PaymentDetail) = payment_detail.cheque.paymentDate.is
+    // rigel 12/01/2018 override def paymentDate(payment_detail: PaymentDetail) = payment_detail.cheque.paymentDate.is
+    override def paymentDate(payment_detail: PaymentDetail) = payment_detail.cheque.dueDate.is
   }
 
   object MonthlyCommissionCalculator extends CommissionCalculator with net.liftweb.common.Logger  {
