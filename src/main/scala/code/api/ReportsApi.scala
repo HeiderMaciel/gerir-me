@@ -775,6 +775,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				      where acc.company=? and acc.mintreenode between ac.mintreenode and ac.maxtreenode
 				      )
 				      and ap.paid=true and ap.typemovement=0 """ + sqldt + """
+				      and ap.value <> 0
 				      and (%s) and (%s)
 				) 
 				-
@@ -789,6 +790,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				      where acc.company=? and acc.mintreenode between ac.mintreenode and ac.maxtreenode
 				      )
 				      and ap.paid=true and ap.typemovement=1 """ + sqldt + """
+				      and ap.value <> 0
 				      and (%s) and (%s)
 				)
 				)
