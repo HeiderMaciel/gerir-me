@@ -162,3 +162,11 @@ jenkins  25594     1  0 Jul27 ?        00:00:00 /usr/bin/daemon --name=jenkins -
 jenkins  25595 25594 13 Jul27 ?        15:44:14 /usr/bin/java -Xms512m -Xmx1024m -XX:PermSize=512m -XX:MaxPermSize=1024m -jar /usr/share/jenkins/jenkins.war --webroot=/var/cache/jenkins/war --httpPort=8080
 jenkins  28577 25595  2 Jul27 ?        02:30:33 java -Xms512m -Xmx1024m -XX:PermSize=512m -XX:MaxPermSize=1024m -Dsbt.log.noformat=true -jar /var/lib/jenkins/tools/org.jvnet.hudson.plugins.SbtPluginBuilder_SbtInstallation/sbt_lauch/bin/sbt-launch.jar ~;container:start; container:reload /
 jenkins  28633     1  3 Jul20 ?        08:42:51 /tmp/Jsiw
+
+
+
+processo - malicioso jenkins
+/sbin/wipefs
+/usr/share/man/man8/wipefs.8.gz
+/usr/share/bash-completion/completions/wipefs
+/var/lib/jenkins/.wipefs

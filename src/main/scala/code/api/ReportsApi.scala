@@ -354,7 +354,8 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					customer.id,
 					prof.id,
 					p.productclass,
-					p.id
+					p.id,
+					td.id
 					from commision co
 					inner join payment on(payment.id = co.payment)
 					left join cashier on(cashier.id = payment.cashier)
@@ -366,7 +367,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
                     inner join treatment tr on tr.id = td.treatment and tr.user_c = co.user_c
 					inner join product p on(p.id = td.product or p.id = td.activity)
 					where co.company = ? and %s
-					order by datepayment desc;"""  
+					order by datepayment desc, td.id;"""  
 
 					//                          (pd.commisionnotprocessed) as open,
 					//                          COALESCE((select sum(c2.value) from commision c2 where  c2.payment_date > co.payment_date and c2.payment_detail = co.payment_detail ),0.00) as paid,
@@ -525,7 +526,8 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					        cu.short_name,
 					        customer.short_name as customer,
 					        p.short_name product,
-					        sum (td.price),
+					        -- sum (td.price), dobrava pra mais de uma forma de pagto 11/01/2018
+					        td.price,
 					        sum(co.value),
 							ba.short_name,
 					        pa.detailPaymentAsText as paymenttype,

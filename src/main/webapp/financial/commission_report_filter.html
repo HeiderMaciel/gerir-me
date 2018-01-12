@@ -37,15 +37,20 @@
     fields[11] = "none";
     fields[12] = "none";
     fields[13] = "none";
+    fields[14] = "none";
     var url = "/report/commissions_filter";
     var total_to_pay = 0.00;
     var request = function(){
       var total = 0.00;
       var total_commission = 0.00;
+      var tdAnt = -1;
       renderReport(url,fields,{"payment" : gup("payment"), "treatment" : gup('treatment')},"#grid", function(data){
         data.forEach(function(row){
-          total += parseFloat(row[6]);
-          total_commission += parseFloat(row[7]);
+          if (row[14] != tdAnt) {
+            total += parseFloat(row[7]);
+            tdAnt = row[14]; 
+          }
+          total_commission += parseFloat(row[8]);
         });
         $("#total").val(total.formatMoney());
 

@@ -264,6 +264,9 @@ find / -type f -size +1G -exec ls -lh {} \; | awk '{ print $9 ": " $5 }'
 encontra arquivos maiores que 500 Mega 
 find / -type f -size +500M -exec ls -lh {} \; | awk '{ print $9 ": " $5 }'
 
+encontra recurssivo a partir do /
+find / | grep xxxxxx
+
 diretorio de logs do Transito
 /var/lib/jenkins/jobs/TrasitoRun/builds
 
