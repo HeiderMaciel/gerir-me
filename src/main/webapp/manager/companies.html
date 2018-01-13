@@ -23,6 +23,12 @@
         return "<a href='/security/useCompany?id="+row[2]+"'>"+name+"</a>"
       }
     };     
+    fields[5] = {
+      type : "format",
+      decode : function(name, row){
+        return "<a href='/security/useCompany?id="+row[2]+"'>"+name+"</a>"
+      }
+    };     
     var url = "/report/companies";
     var request = function(){
       renderReport(url,fields,$("#form_report").serializeObject(),"#grid",function(data){

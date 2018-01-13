@@ -422,11 +422,13 @@ bp.short_name as profissional,
 ba.name as pet, 
 bt.name as tutor, 
 replace (trim (bt.mobile_phone || ' ' || bt.phone || ' ' || bt.email_alternative || ' ' || bt.email),'  ',' '),
-bx.name as requisitante, pr.name as prod_serv, tr.status, 
+bx.name as requisitante, 
+pr.name as prod_serv, 
+tr.status, 
 pa.detailPaymentAsText,
 td.price as valor , ca.idforcompany, 
 cu.name as unidade,
-ba.id, bc.id, bt.id, bx.id, bp.id, pr.id
+ba.id, bc.id, bt.id, bx.id, bp.id, td.activity, td.product
 from treatment tr 
 inner join business_pattern bc on bc.id = tr.customer
 inner join treatmentdetail td on td.treatment = tr.id
