@@ -368,6 +368,10 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 			}	
 		}
 			case "treatments" :: "getTreatmentsByFilterPet" :: Nil Post _ => {
+				def customer:String = S.param("customer") match {
+					case Full(p) if(p != "") => " and bc.id =%S".format(p) 
+					case _ => ""
+				}			
 /*
 				def user = S.param("user") match {
 					case Full(p) => p.toLong
@@ -375,31 +379,31 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 				}
 */				
 // REVER hora vai 145 ora vai ,145 o list de vales e o total faturado tb não funcionam com mais de 1
-				val user_param_name = S.param("user[]") match {
-					case Full(p) => "user[]"
-					case _ => "user"
-				}
-
-				def user = S.param(user_param_name) match {
-					case Full(p) if(p != "")=> "%s".format(p)
-					case _ => S.params(user_param_name) match {
-						case primeiro :: r if(primeiro == "") => {
-							info(r)
-							"%s".format(r.mkString(","))
-						}
-						case primeiro :: resto => primeiro
-						case _ => " 01 " 
-					}
+				def user:String = S.param("user") match {
+					case Full(p) if(p != "") => " and tr.user_c =%S".format(p) 
+					case _ => ""
 				}			
+
 				def units:String = S.param("unit") match {
 					case Full(s) if(s != "") => " and tr.unit = %s".format(s)
 					case _ => " and " + Treatment.unitsToShowSql
 				}
 
-				def productclass:String = S.param("productclass") match {
-					case Full(p) => p
-					case _ => "0,1";
-				}
+				def activity:String = S.param("activity") match {
+					case Full(p) if(p != "") => " and td.activity =%S".format(p) 
+					case _ => ""
+				}			
+
+				def product:String = S.param("product") match {
+					case Full(p) if(p != "") => " and td.product =%S".format(p) 
+					case _ => ""
+				}			
+
+				def cashier:String = S.param("cashier") match {
+					case Full(p) if(p != "") => " and pa.cashier =%S".format(p) 
+					case _ => ""
+				}			
+
 				def start:Date = S.param("startDate") match {
 					case Full(p) => Project.strToDateOrToday(p)
 					case _ => new Date()
@@ -408,46 +412,85 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					case Full(p) => Project.strToDateOrToday(p)
 					case _ => new Date()
 				}
-				val rel_mini:Long = S.param("rel_mini") match {
-					case Full(p) if(p != "")=> 1
-					case _ => 0
-				}			
-				lazy val SQL_REPORT = """
-select 
-tr.command,
-tr.dateevent, 
-bc.name as cliente, 
-replace (trim (bc.mobile_phone || ' ' || bc.phone || ' ' || bc.email_alternative || ' ' || bc.email),'  ',' '),
-bp.short_name as profissional, 
-ba.name as pet, 
-bt.name as tutor, 
-replace (trim (bt.mobile_phone || ' ' || bt.phone || ' ' || bt.email_alternative || ' ' || bt.email),'  ',' '),
-bx.name as requisitante, 
-pr.name as prod_serv, 
-tr.status, 
-pa.detailPaymentAsText,
-td.price as valor , ca.idforcompany, 
-cu.name as unidade,
-ba.id, bc.id, bt.id, bx.id, bp.id, td.activity, td.product
-from treatment tr 
-inner join business_pattern bc on bc.id = tr.customer
-inner join treatmentdetail td on td.treatment = tr.id
-inner join product pr on pr.id = td.product or  pr.id = td.activity
-left join payment pa on pa.id = tr.payment
-left join cashier ca on ca.id = pa.cashier
-left join tdepet tdp on tdp.treatmentdetail = td.id
-left join business_pattern bp on bp.id = tr.user_c
-left join business_pattern bx on bx.id = td.auxiliar
-left join companyunit cu on cu.id = tr.unit
-left join business_pattern ba on tdp.animal = ba.id
-left join business_pattern bt on bt.id = ba.bp_manager
-where tr.company = ?
-and tr.dateevent between ? and ?
-and tr.status in (4,3,0)
-order by tr.start_c
-"""
 
-				toResponse(SQL_REPORT.format(user, productclass, units),scala.List(AuthUtil.company.id.is, start, end))
+				def paymentTypesWhere = filterSqlIn("payment_type", " pa.id in (select pd.payment from paymentdetail pd where pd.payment = pa.id and pd.typepayment in (%s)) ")
+
+				def status = S.param("status") match {
+					case Full(s) if(s != "All") => {
+						val statusFilter = if(s == "7") {
+							Treatment.PreOpen
+						}else if(s == "0"){
+							Treatment.Open
+						}else if(s == "1"){
+							Treatment.Missed
+						}else if(s == "8"){
+							Treatment.ReSchedule
+						}else if(s == "2"){
+							Treatment.Arrived
+						}else if(s == "3"){
+							Treatment.Ready
+						}else if(s == "4"){
+							Treatment.Paid
+						}else if(s == "5"){
+							Treatment.Deleted
+						}else if(s == "6"){
+							Treatment.Confirmed
+						}else if(s == "9"){
+							Treatment.Budget
+						}else{
+							Treatment.Deleted
+						}
+						"and tr.status = " + statusFilter + " "
+					}
+					case _ => {
+						"and tr.status != 5 "
+					}
+				}
+
+				lazy val SQL_REPORT = """
+				select 
+				tr.command,
+				tr.dateevent, 
+				bc.name as cliente, 
+				replace (trim (bc.mobile_phone || ' ' || bc.phone || ' ' || bc.email_alternative || ' ' || bc.email),'  ',' '),
+				bp.short_name as profissional, 
+				ba.name as pet, 
+				bt.name as tutor, 
+				replace (trim (bt.mobile_phone || ' ' || bt.phone || ' ' || bt.email_alternative || ' ' || bt.email),'  ',' '),
+				bx.name as requisitante, 
+				pr.name as prod_serv, 
+				tr.status, 
+				pa.detailPaymentAsText,
+				td.price as valor , ca.idforcompany, 
+				cu.name as unidade,
+				ba.id, bc.id, bt.id, bx.id, bp.id, td.activity, td.product
+				from treatment tr 
+				inner join business_pattern bc on bc.id = tr.customer
+				inner join treatmentdetail td on td.treatment = tr.id
+				inner join product pr on pr.id = td.product or  pr.id = td.activity
+				left join payment pa on pa.id = tr.payment
+				left join cashier ca on ca.id = pa.cashier
+				left join tdepet tdp on tdp.treatmentdetail = td.id
+				left join business_pattern bp on bp.id = tr.user_c
+				left join business_pattern bx on bx.id = td.auxiliar
+				left join companyunit cu on cu.id = tr.unit
+				left join business_pattern ba on tdp.animal = ba.id
+				left join business_pattern bt on bt.id = ba.bp_manager
+				where tr.company = ?
+				and tr.dateevent between ? and ?
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				and %s
+				%s
+				order by tr.start_c
+				"""
+				toResponse(SQL_REPORT.format(customer, 
+					units, user, cashier,activity, product, paymentTypesWhere, status),
+				    scala.List(AuthUtil.company.id.is, start, end))
 			}
 
 		case "treatments"::"getTreatmentsByFilter" :: Nil Post _ => {

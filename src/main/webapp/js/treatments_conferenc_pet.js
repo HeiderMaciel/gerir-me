@@ -2,19 +2,11 @@
   var hasUnitModule = $('.has-unit-module').length > 0;
   var hasFinancialAccess = $('.has-financial-access').length > 0;
 
-  var decodeStatus = function(status, status2){
-          trStatus = 0;
-          trStatus2 = 1; // nao tem
-          var row = [];
-          row.push (status, status2)
-          return trStatusdecode ('',row)
-  };
   var executa_rel = function(){
     var url = "/treatments/getTreatmentsByFilterPet";
-    var total_to_pay = 0.00;
     var request = function(){
       var total = 0.00;
-      var total_commission = 0.00;
+      var count = 0.00;
       var user = $('#user').val()
       var fields = [];
       fields[1] = "date";
@@ -66,7 +58,11 @@
           return trStatusdecode (name,row)
         }
       };
-      fields[12] = "real";
+      if (!hasFinancialAccess) {
+        fields[12] = "none";
+      } else {
+        fields[12] = "real";
+      }
       fields[13] = "intNull";
       if (!hasUnitModule) {
         fields[14] = "none";
@@ -80,10 +76,11 @@
       fields[21] = "none"; // produto
       renderReport(url,fields,$("#form_report").serializeObject(),"#grid", function(data){
         data.forEach(function(row){
-          total_commission += parseFloat(row[8]);
+          total += parseFloat(row[12]);
+          count += 1;
         });
-        $("#total_commission").val(total_commission.formatMoney());
-        total_to_pay = total_commission;
+        $("#total").val(total.formatMoney());
+        $("#count").val(count);
         var unitparm = $("#unit").val() || '0';
       });
     }
