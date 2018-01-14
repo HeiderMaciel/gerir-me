@@ -6,12 +6,31 @@
   <script type="text/javascript">
   $(function(){
     var fields = [];
+    fields[0] = {
+      type: "format",
+      decode: function(name, row) {
+        if (row[12] == "0") {
+          return "<a href='/activity/edit?id=" + row[11] + "' target='_activity_maste'>" + name + "</a>";
+        } else {
+          return "<a href='/product_admin/edit?id=" + row[11] + "' target='_product_maste'>" + name + "</a>";
+        }
+      }
+    }
     fields[3] = "real";
     fields[4] = "real";
     fields[5] = "real";
     fields[6] = "real";
     fields[7] = "real";
     fields[8] = "real";
+    fields[9] = {
+      type: "format",
+      decode: function(name, row) {
+        return "<a href='/user/edit?id=" + row[10] + "' target='_user_maste'>" + name + "</a>";
+      }
+    }
+    fields[10] = "none";
+    fields[11] = "none";
+    fields[12] = "none";
     var url = "/report/prof_services";
     var request = function(){
       renderReport(url,fields,$("#form_report").serializeObject());
@@ -29,45 +48,82 @@
       for(var i in userObj){
             user_str += "<option value='"+userObj[i].id+"'>"+userObj[i].name+"</option>";
         }
-        $("#product").html(user_str);     
+        $("#activity").html(user_str);     
     });    
+    $("#product").productSearch({
+      createName: false,
+      iconElement: ".add-on",
+      userThuch: true,
+      allUnits: true
+    });
     
   });  
   </script>
   <form id="form_report" class="well form-search" method='get'>
-    <h1><span class="lift:CompanySnippet.thumb"> </span>Relatório Profissionais / Serviços</h1>
-	<div class="span8">
-		<div class="clearfix">
-		    <label for="user">Profissionais</label>
-		    <div class="input">
-				<select multiple="multiple"  id='user' name="user">
-				</select>
-			</div>
-		</div>
-		<div class="clearfix">
-		    <label for="product">Serviços</label>
-		    <div class="input">
-		        <select multiple="multiple"  id='product' name="product">
-		        </select>
-		    </div>
-		</div>
-		<div class="clearfix">
-		    <label for="type_detail">Tipo Detalhe</label>
-		    <div class="input">
-		        <select name="type_detail" id="type_detail">
-		            <option value='1'>Todos</option>
-		            <option value='0'>Exceções</option>
-		        </select>
-			    <span class="help-block">Todos / Execeções (preço, comissão, ou duração diferentes)</span>
-		    </div>
-		</div>
-    <div class="clearfix">
-      <label for=""></label>
-      <div class="input">
-        <input class="btn success" id="send" type="button" value="Buscar">
+    <h1>
+      <span class="lift:CompanySnippet.thumb"> </span>
+      <input class="report_title local_storage" id="title_useractivity_report" name="title_useractivity_report" size="30" type="text" value="Relatório Profissionais / Produtos e Serviços"/>
+    </h1>
+  <div class="row">
+  	<div class="span8">
+  		<div class="clearfix">
+  		    <label for="user">Profissionais</label>
+  		    <div class="input">
+  				<select multiple="multiple"  id='user' name="user">
+  				</select>
+  			</div>
+  		</div>
+  		<div class="clearfix">
+  		    <label for="activity">Serviços</label>
+  		    <div class="input">
+  		        <select multiple="multiple"  id='activity' name="activity">
+  		        </select>
+  		    </div>
+  		</div>
+  		<div class="clearfix">
+  		    <label for="type_detail">Tipo Detalhe</label>
+  		    <div class="input">
+  		        <select name="type_detail" id="type_detail">
+  		            <option value='1'>Todos</option>
+  		            <option value='0'>Exceções</option>
+  		        </select>
+  			    <span class="help-block">Todos / Execeções (preço, comissão, ou duração diferentes)</span>
+  		    </div>
+  		</div>
+      <div class="clearfix">
+        <label for=""></label>
+        <div class="input">
+          <input class="btn success" id="send" type="button" value="Buscar">
+        </div>
+      </div>
+  	</div>
+    <div class="span8">
+      <div class="clearfix">
+        <label for="productclass">Tipo</label>
+          <div class="input">
+            <div class="inline-inputs">
+                <select class="local_storage" name="productclass" id="productclass">
+                    <option value='1,0'>Todos</option>
+                    <option value='1'>Produtos</option>
+                    <option value='0'>Serviços</option>
+                 </select>
+                 <span class="help-block">Tipos de Comissões (ex: Prod / Ser)</span>
+            </div>
+          </div>
+      </div>
+      <div class="clearfix">
+        <label for="name">Produto</label>
+        <div class="input">
+          <div class="inline-inputs">
+            <div style="float:left; padding-right:10px" class="input-prepend">
+                  <span class="add-on"></span> 
+                  <input class="xlarge process_product_field" name="product" id='product'/>
+            </div>                                                    
+          </div>
+        </div>
       </div>
     </div>
-	</div>
+  </div>
   </form>
   <table id="grid" class="bordered-table zebra-striped">
       <thead>

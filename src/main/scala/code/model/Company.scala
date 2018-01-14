@@ -451,7 +451,10 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
 
   def products = Product.findAllInCompany(OrderBy(Product.name, Ascending))
 
-  def productTypes = ProductType.findAllInCompany(OrderBy(ProductType.name, Ascending))
+  // 14/12/2018 - rigel pt agora tem status
+  def productTypes = ProductType.findAllInCompany(
+    By(ProductType.status,ProductType.STATUS_OK),
+    OrderBy(ProductType.name, Ascending))
 
   def bmMonthlyPaymentType = {
     if (PaymentType.count(By(PaymentType.bpmonthly_?, true)) < 1) {

@@ -133,7 +133,17 @@ class  ProductSnippet  extends BootstrapPaginatorSnippet[Product] with SnippetUp
 			
 			}
 
-			ProductType.findAllProduct.flatMap(ac => 
+			def aclist = if (!showAll) {
+				ProductType.findAllInCompany(By(ProductType.typeClass,ProductType.Types.Product),
+					By(ProductType.status,ProductType.STATUS_OK),
+					Like(ProductType.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+					OrderBy(ProductType.name, Ascending))
+			} else {
+				ProductType.findAllInCompany(By(ProductType.typeClass,ProductType.Types.Product),
+					Like(ProductType.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+					OrderBy(ProductType.name, Ascending))
+			}
+			aclist.flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"obs" -> Text(ac.obs.is),
 							"igname" -> Text(ac.invoiceGroupName),
@@ -181,6 +191,7 @@ class  ProductSnippet  extends BootstrapPaginatorSnippet[Product] with SnippetUp
 			}
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
+			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&
 		    "name=invoiceGroup" #> (SHtml.select(igroups,Full(ac.invoiceGroup.is.toString),(s:String) => ac.invoiceGroup( s.toLong)))&
 			"name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_))++SHtml.hidden(process))
 

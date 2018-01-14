@@ -72,5 +72,5 @@ object ProductType extends ProductType with LongKeyedMapperPerCompany[ProductTyp
 
     def createTypeProduct  = create.typeClass(ProductType.Types.Product)
 
-    def findAllProduct = findAllInCompany(By(ProductType.typeClass,ProductType.Types.Product),OrderBy(ProductType.name, Ascending))
+//    def findAllProduct = findAllInCompany(By(ProductType.typeClass,ProductType.Types.Product),OrderBy(ProductType.name, Ascending))
 }

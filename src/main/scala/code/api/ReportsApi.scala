@@ -91,12 +91,24 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 			}
 */
 			case "report" :: "prof_services" :: Nil Post _ => {
-				def prod = 	 S.param("product") match {
+				def activity = 	 S.param("activity") match {
+					case Full(p) if(p != "")=> "pr.id in(%s)".format(p)
+					case _ => S.param("activity[]") match {
+						case Full(p) if(p != "") => "pr.id in(%s)".format(S.params("activity[]").foldLeft("0")(_+","+_))
+						case _ => " 1=1 " 
+					}
+				}
+				def product = 	 S.param("product") match {
 					case Full(p) if(p != "")=> "pr.id in(%s)".format(p)
 					case _ => S.param("product[]") match {
 						case Full(p) if(p != "") => "pr.id in(%s)".format(S.params("product[]").foldLeft("0")(_+","+_))
 						case _ => " 1=1 " 
 					}
+				}
+
+				def productclass:String = S.param("productclass") match {
+					case Full(p) => p
+					case _ => "0,1";
 				}
 				def user = S.param("user") match {
 					case Full(p) if(p != "")=> "bp.id in(%s)".format(p)
@@ -107,16 +119,20 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				}			
 				val sql = """
 						select
-						pr.name , pr.duration, ua.duration, pr.saleprice , ua.price, 
-						pr.commission, ua.commission, pr.commissionAbs, ua.commissionAbs, bp.short_name Profissional
+						pr.name , pr.duration, ua.duration, 
+						pr.saleprice , ua.price, 
+						pr.commission, ua.commission, 
+						pr.commissionAbs, ua.commissionAbs, 
+						bp.short_name Profissional, bp.id, pr.id, pr.productclass
 						from product pr
 						inner join useractivity ua on ua.activity = pr.id
 						inner join business_pattern bp on bp.id = ua.user_c and bp.status = 1
 						left join producttype pt on pt.id = pr.typeproduct
 						where  pr.company = ? and ua.company=pr.company and pr.status = 1 and bp.userStatus = 1 
-						and pr.productclass = 0 and %s and  %s
+						and pr.productclass in (%s) 
+						and %s and %s and %s
 						order by 1,5				
-							""".format(prod,user); //, prod,user);
+							""".format(productclass, product, activity,user); //, prod,user);
 //				info (prod)
 				toResponse(sql,List(AuthUtil.company.id.is)) //, AuthUtil.company.id.is))
 /*						union
