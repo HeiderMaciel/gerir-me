@@ -351,7 +351,9 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 		}
 		
 		case "cash" :: "getActivityTypes" :: Nil JsonGet _ =>{
-			JsArray(ProductType.findAllService.map((a) => {
+			JsArray(ProductType.findAllInCompany(By(ProductType.typeClass,ProductType.Types.Service),
+					By(ProductType.status,ProductType.STATUS_OK),
+					OrderBy(ProductType.name, Ascending)).map((a) => {
 				JsObj(
 						("name",a.name.is),
 						("id",a.id.is)

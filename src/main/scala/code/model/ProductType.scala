@@ -11,7 +11,13 @@ import _root_.java.math.MathContext;
 import net.liftweb.common.{Box,Full}
 
 
-class ProductType extends Audited[ProductType] with PerCompany with IdPK with CreatedUpdated with CreatedUpdatedBy with NameSearchble[ProductType]{ 
+class ProductType extends Audited[ProductType] 
+    with PerCompany 
+    with IdPK 
+    with CreatedUpdated 
+    with CreatedUpdatedBy 
+    with ActiveInactivable[ProductType]
+    with NameSearchble[ProductType]{ 
     def getSingleton = ProductType
     override def updateShortName = false
     object obs extends MappedPoliteString(this,255)
@@ -59,7 +65,7 @@ object ProductType extends ProductType with LongKeyedMapperPerCompany[ProductTyp
 
     } 
 
-    def findAllService = findAllInCompany(By(ProductType.typeClass,ProductType.Types.Service),OrderBy(ProductType.name, Ascending))
+//    def findAllService = findAllInCompany(By(ProductType.typeClass,ProductType.Types.Service),OrderBy(ProductType.name, Ascending))
 //    def findAllProducts = findAllInCompany(By(ProductType.typeClass,ProductType.Types.Product),OrderBy(ProductType.name, Ascending))
 
     def createTypeService  = create.typeClass(ProductType.Types.Service)

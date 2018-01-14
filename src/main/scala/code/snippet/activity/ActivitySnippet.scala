@@ -40,7 +40,9 @@ class  ActivitySnippet extends BootstrapPaginatorSnippet[Activity] with SnippetU
 		BySql (productTypeList,IHaveValidatedThisSQL("","")),
 		OrderBy(Activity.name, Ascending), StartAt(curPage*itemsPerPage), MaxRows(itemsPerPage), ByList(Activity.status,statusFilter))
 	def types_allow_null = ("0" ,"Nenhum") :: types
-	def types = ProductType.findAllService.map(t => (t.id.is.toString,t.name.is))
+	def types = ProductType.findAllInCompany(By(ProductType.typeClass,ProductType.Types.Service),
+					By(ProductType.status,ProductType.STATUS_OK),
+					OrderBy(ProductType.name, Ascending)).map(t => (t.id.is.toString,t.name.is))
 	def igroups = InvoiceGroup.findAllInCompanyOrDefaultCompany(OrderBy(InvoiceGroup.name, Ascending)).map(t => (t.id.is.toString,t.name.is))
 
 	def productType = S.param("productType") match {
@@ -109,7 +111,17 @@ class  ActivitySnippet extends BootstrapPaginatorSnippet[Activity] with SnippetU
 			
 			}
 
-			ProductType.findAllService.flatMap(ac => 
+			def aclist = if (!showAll) {
+				ProductType.findAllInCompany(By(ProductType.typeClass,ProductType.Types.Service),
+					By(ProductType.status,ProductType.STATUS_OK),
+					Like(ProductType.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+					OrderBy(ProductType.name, Ascending))
+			} else {
+				ProductType.findAllInCompany(By(ProductType.typeClass,ProductType.Types.Service),
+					Like(ProductType.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+					OrderBy(ProductType.name, Ascending))
+			}
+			aclist.flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"obs" -> Text(ac.obs.is),
 							"igname" -> Text(ac.invoiceGroupName),
@@ -157,6 +169,8 @@ class  ActivitySnippet extends BootstrapPaginatorSnippet[Activity] with SnippetU
 			}
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
+			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),
+				(v:String) => ac.status(v.toInt)))&
 		    "name=invoiceGroup" #> (SHtml.select(igroups,Full(ac.invoiceGroup.is.toString),(s:String) => ac.invoiceGroup( s.toLong)))&
 		    "name=showObs" #> (SHtml.checkbox(ac.showObs_?.is, ac.showObs_?(_)))&
 			"name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_))++SHtml.hidden(process))
