@@ -35,6 +35,18 @@ object  UnitSnippet extends BootstrapPaginatorSnippet[CompanyUnit] with SnippetU
 	def findForListParams: List[QueryParam[CompanyUnit]] = List(Like(CompanyUnit.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),OrderBy(CompanyUnit.name, Ascending), StartAt(curPage*itemsPerPage), MaxRows(itemsPerPage))
 //	def findForListParams: List[QueryParam[CompanyUnit]] = List(OrderBy(CompanyUnit.name, Ascending), Like(CompanyUnit.name,name+"%"), StartAt(curPage*itemsPerPage), MaxRows(itemsPerPage))
 
+	def apptypes = {
+		Seq(
+      "1" -> "ebelle",
+      "2" -> "gerirme",
+      "3" -> "esmile",
+      "4" -> "edoctus",
+      "5" -> "egrex",
+      "6" -> "ephysio",
+      "7" -> "ebellepet"
+		)
+	}
+
 	def costcenters = ("0" -> "Selecione um Centro de Custo")::CostCenter.findAllInCompany.map(cc => (cc.id.is.toString,cc.name.is))
 
 	def units(xhtml: NodeSeq): NodeSeq = {
@@ -96,6 +108,7 @@ object  UnitSnippet extends BootstrapPaginatorSnippet[CompanyUnit] with SnippetU
 			"name=port" #> (SHtml.text(ac.port.is, ac.port(_)))&
 			"name=showInCalendar" #> (SHtml.checkbox(ac.showInCalendar_?, ac.showInCalendar_?(_)))&
 			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&	
+		    "name=apptypeu" #> (SHtml.select(apptypes,Full(ac.appTypeU.is.toString),(v:String) => ac.appTypeU(v.toInt)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=statusPartner" #> (SHtml.select(status,Full(ac.getPartner.status.is.toString),(v:String) => ac.getPartner.status(v.toInt)))&
 		    "name=document_company" #> (SHtml.text(ac.getPartner.document_company.is, ac.getPartner.document_company(_))) &

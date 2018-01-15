@@ -14,6 +14,18 @@ import Helpers._
 import scala.xml.{NodeSeq, Text}
 
 object CompanySnippet{
+	def apptypes = {
+		Seq(
+      "1" -> "ebelle",
+      "2" -> "gerirme",
+      "3" -> "esmile",
+      "4" -> "edoctus",
+      "5" -> "egrex",
+      "6" -> "ephysio",
+      "7" -> "ebellepet"
+		)
+	}
+
 	def cmdControl = if (PermissionModule.unit_?) {
 		Seq(
 		Company.CmdNever.toString -> "Nunca incrementa, usuário informa" ,
@@ -153,7 +165,8 @@ object CompanySnippet{
 			//
 //		    "name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&
 		    "name=status" #>(SHtml.text(ac.status.is.toString,(s:String) => ac.status(s.toInt)))&
-		    "name=apptype" #>(SHtml.text(ac.appType.is.toString,(s:String) => ac.appType(s.toInt)))&
+//		    "name=apptype" #>(SHtml.text(ac.appType.is.toString,(s:String) => ac.appType(s.toInt)))&
+		    "name=apptype" #> (SHtml.select(apptypes,Full(ac.appType.is.toString),(v:String) => ac.appType(v.toInt)))&
 		    "name=bpIdForCompany" #>(SHtml.text(ac.bpIdForCompany.is.toString,(s:String) => ac.bpIdForCompany(s.toInt)))&
 			"name=userActivityAssociate" #> (SHtml.checkbox(ac.userActivityAssociate_?, ac.userActivityAssociate_?(_)))&
 			"name=showSalesToUser" #> (SHtml.checkbox(ac.showSalesToUser_?, ac.showSalesToUser_?(_)))&

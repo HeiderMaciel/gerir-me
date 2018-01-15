@@ -85,6 +85,26 @@ class CompanyUnit
     override def dbColumnName = "smtp_ssl"
   }
 
+  object appTypeU extends MappedInt(this) {
+      //override def defaultValue = Company.SYSTEM_EBELLE
+      /*
+      1 - ebelle
+      2 - gerirme
+      3 - esmile
+      4 - edoctus
+      5 - egrex
+      6 - ephysio
+      7 - ebellepet
+      */
+     def isEbelleU = appTypeU.is == Company.SYSTEM_EBELLE
+     def isGerirmeU = appTypeU.is == Company.SYSTEM_GERIRME
+     def isEsmileU = appTypeU.is == Company.SYSTEM_ESMILE
+     def isEdoctusU = appTypeU.is == Company.SYSTEM_EDOCTUS
+     def isEgrexU = appTypeU.is == Company.SYSTEM_EGREX
+     def isEphysioU = appTypeU.is == Company.SYSTEM_EPHYSIO
+     def isEbellepetU = appTypeU.is == Company.SYSTEM_EBELLEPET
+  }
+
   override def updateShortName = false
   def getSingleton = CompanyUnit
   def SMTPMap = Map(
@@ -117,6 +137,9 @@ class CompanyUnit
   override def save() = {
     //      getPartner.name(BusinessRulesUtil.clearString(this.name.is)).save
     getPartner.company(this.company).name(this.name + " unit pattern").unit(this.id).save
+    if (appTypeU == Empty) {
+      appTypeU (AuthUtil.company.appType)
+    }
     super.save()
   }
 

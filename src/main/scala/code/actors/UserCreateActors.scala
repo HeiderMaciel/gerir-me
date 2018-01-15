@@ -114,7 +114,9 @@ object UserCreateActors extends LiftActor {
   }  
 
   def createUnit(company:Company):Long = {
-    val unit = CompanyUnit.create.company(company).name(company.name).showInCalendar_?(true)
+    val unit = CompanyUnit.create.company(company).
+    name(company.name).showInCalendar_?(true).
+    appTypeU (company.appType)
     if (company.appType.isEbelle) {
       unit.defaultSex("F") // só o ebelle o default é feminino
     } else {
