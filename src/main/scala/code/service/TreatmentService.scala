@@ -202,6 +202,19 @@ object  TreatmentService extends net.liftweb.common.Logger {
 		}
 	}
 
+	def loadTreatmentByCommand(command:String,dateIni:Date,unit:Long):List[Treatment] = {
+		val statusSql =
+			" status not in (5,8,1,4) "
+		// vai pela comanda
+		Treatment.findAllInCompany(By(Treatment.command,command),
+		  By(Treatment.unit,unit),
+		  By(Treatment.hasDetail,true),
+		  BySql(statusSql,IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00")),
+		  BySql("dateevent = date(?)",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"),dateIni),
+		  OrderBy(Treatment.id, Ascending)
+		 )
+	}
+
 	def factoryTreatment(id:String,customerCode:String,userCode:String,date:String,hour_start:String, hour_end:String,command:String, obs:String="", conflit:String="", force:Boolean = false):Box[Treatment] = {
 		lazy val startDate = Project.strToDate(date+" "+hour_start)
 		lazy val endDate = Project.strToDate(date+" "+hour_end)

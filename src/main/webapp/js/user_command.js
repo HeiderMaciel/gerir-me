@@ -372,6 +372,24 @@
       });
     };
 
+    Manager.getCustomerbyCommand = function () {
+      dataaux = $("#day").val();
+      command = $("#command").val();
+      return $.post("/command/getcustomer", {
+        "command": command,
+        "day": dataaux
+      }, function(results) {
+        eval("var resultCommandCall = " + results);
+        if (resultCommandCall.status == 'success') {
+          treatments = resultCommandCall.data;
+          $("#customer").val(treatments[0].customerId).change();
+          //alert ("vaiii ==== " + treatments[0].customerId)
+        } else {
+          alert(resultCommandCall.message);
+        }
+      });
+    };
+
     var callApiLock = false;
 
     Manager.save = function() {
@@ -535,6 +553,11 @@
       });
 */
     });
+
+    $("#command_get_from_server").click(function() {
+      return Manager.getCustomerbyCommand();
+    });
+
     $(".b_add_command").click(function() {
       return Manager.save();
     });Manager

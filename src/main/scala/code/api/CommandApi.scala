@@ -164,6 +164,33 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 			  case e: Exception => JString(e.getMessage)
 			}			
 		}
+
+		case "command" :: "getcustomer" :: Nil Post _ => {
+				def command:String = S.param("command") openOr "0"
+				def day:Date = S.param("day") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+				TreatmentService.loadTreatmentByCommand(
+					command, day, AuthUtil.unit.id.is) match {
+						case tl:List[Treatment] if(tl.size >0) => {
+							JsObj(("status","success"),("data",JsArray(
+										tl.map((t) => {
+											JsObj(
+												("treatmentStatus",t.status.is.toString),
+												("customerName",t.customerName),
+												("customerId",t.customer.is)
+												)
+											})
+										)
+									)
+								)
+						}
+						case e:Exception => JsObj(("status","error"),("message",e.getMessage()))
+						case _ => JsObj(("status","error"),("message","Comanda não existe.\n\nVerifique comanda, caixa, data e unidade selecionada, caso vocẽ tenha mais de uma."))
+				}
+		}
+
 		case "command" :: "getCustomers" :: Nil JsonGet _ =>{
 			def day:Date = S.param("day") match {
 				case Full(p) => Project.strToDateOrToday(p)

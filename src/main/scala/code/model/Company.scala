@@ -360,6 +360,16 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
     override def dbColumnName = "packCommissionOnMissed"
   }
 
+  object cmdChangeDate_? extends MappedBoolean(this) {
+    override def defaultValue = false;
+    override def dbColumnName = "cmdChangeDate"
+  }
+
+  object cmdAskCommand_? extends MappedBoolean(this) {
+    override def defaultValue = false;
+    override def dbColumnName = "cmdAskCommand"
+  }
+
   object categoryOnProduct_? extends MappedBoolean(this) {
     override def defaultValue = false
     override def dbColumnName = "categoryOnProduct"

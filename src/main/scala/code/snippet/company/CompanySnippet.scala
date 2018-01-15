@@ -195,6 +195,8 @@ object CompanySnippet{
 			"name=offCommissionOnMissed" #> (SHtml.checkbox(ac.offCommissionOnMissed_?, ac.offCommissionOnMissed_?(_)))&
 			"name=packCommissionOnReady" #> (SHtml.checkbox(ac.packCommissionOnReady_?, ac.packCommissionOnReady_?(_)))&
 			"name=packCommissionOnMissed" #> (SHtml.checkbox(ac.packCommissionOnMissed_?, ac.packCommissionOnMissed_?(_)))&
+			"name=cmdChangeDate" #> (SHtml.checkbox(ac.cmdChangeDate_?, ac.cmdChangeDate_?(_)))&
+			"name=cmdAskCommand" #> (SHtml.checkbox(ac.cmdAskCommand_?, ac.cmdAskCommand_?(_)))&
 			"name=categoryOnProduct" #> (SHtml.checkbox(ac.categoryOnProduct_?, ac.categoryOnProduct_?(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is,ac.short_name(_)))&
 		    "name=phone" #>(SHtml.text(ac.phone.is,ac.phone(_)))&

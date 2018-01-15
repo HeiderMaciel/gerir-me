@@ -236,6 +236,20 @@ object SecuritySnippet {
         }
       }
 
+      // mostrar/trocar data na comanda terminal
+      def isCmdChangeDate(in:NodeSeq):NodeSeq ={
+        if (AuthUtil.company.cmdChangeDate_?)
+        in
+        else
+        NodeSeq.Empty
+      }
+      // pedir comanda e não cliente na comanda terminal
+      def isCmdAskCommand(in:NodeSeq):NodeSeq ={
+        if (AuthUtil.company.cmdAskCommand_?)
+        in
+        else
+        NodeSeq.Empty
+      }
 
       //PermissionModule
       def hasFinancialModule(in:NodeSeq):NodeSeq ={
