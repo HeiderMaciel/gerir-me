@@ -48,7 +48,7 @@ object ContactsUtil extends net.liftweb.common.Logger {
         "c:\\vilarika\\"
       }
      scala.tools.nsc.io.File(filePath + origin + ".sql").writeAll(sqlInsert);
-     //println ("vaiiiii ======= " + sqlInsert)
+     println ("vaiiiii ======= " + sqlInsert)
     }
     details.map((d) => {
 /*

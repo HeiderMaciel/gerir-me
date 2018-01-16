@@ -2,6 +2,16 @@ select id, name as nome, commission as comissao, saleprice as preco, duration as
 order by name
 
 
+ver badblocks
+sudo badblocks -sv /dev/sda
+
+atualizar ubuntu linux
+sudo apt-get update
+
+se der erro na mergelist
+sudo rm /var/lib/apt/lists/* -vf
+sudo apt-get update
+
 rever o IP no 
 boot.scala
 no toolbar.html
