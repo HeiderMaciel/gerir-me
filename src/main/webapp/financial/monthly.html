@@ -8,13 +8,25 @@
 	    var isSuperAdmin = $('.is-super-admin').length > 0;
 	    var fields = [];
 	    fields[3] = "date";
-	    fields[5] = "boolean"; 
-	    fields[6] = "date";
-	    fields[7] = {
+	    fields[4] = {
+	      type : "format",
+	      decode: function(name, row) {
+	        var color = "red"
+	        if (row[3] != row[4]) {
+	        return "<p style='color:" + color + "'>" + 
+	            dateDecode(row[4]) + "<p/>"
+	        } else {
+	          return dateDecode(row[4])
+	        }
+	      }
+	    }
+	    fields[6] = "boolean"; 
+	    fields[7] = "date";
+	    fields[8] = {
 		    type : "format",
 		    decode : function(id,row){
-		    	if(!row[6]) {
-		        	return "<a target='_blank' href='http://boleto.vilarika.com.br/boleto/boleto.php?data="+(new Date(row[3]).getDateBr())+"&valor="+parseFloat(row[4]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[8]+"'><img width='32' src='/images/bar_code.png'/>"
+		    	if(!row[7]) {
+		        	return "<a target='_blank' href='http://boleto.vilarika.com.br/boleto/boleto.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/bar_code.png'/>"
 /*
 		        	return "<a target='_blank' href='/docs/notice.html'><img width='32' src='/images/bar_code.png'/>"
 */
@@ -23,9 +35,9 @@
 		    	}
 		    }
 		};
-	    fields[8] = "none"; // nome da company_customer
+	    fields[9] = "none"; // nome da company_customer
 	    if (!isSuperAdmin) {
-	    	fields[9] = "none";
+	    	fields[10] = "none";
 		}
 	    var request = function(){
 	      renderReport("/report/monthly", fields,{});
@@ -48,6 +60,7 @@
 	        <th>Id</th>
 	        <th>Cod.</th>
 	        <th>Obs</th>
+	        <th>Original</th>
 	        <th>Vencimento</th>
 	        <th>Valor</th>
 	        <th>Pago?</th>

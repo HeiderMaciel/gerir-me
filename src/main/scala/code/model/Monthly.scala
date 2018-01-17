@@ -217,14 +217,16 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
 
 object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with OnlyCurrentCompany[Monthly] with OnlyActive[Monthly] {
 
-  lazy val SQL_REPORT = """SELECT mo.id, mo.idforcompany, mo.description, 
-                             mo.dateexpiration, mo.value, 
-                             mo.paid, mo.paymentdate, mo.id, co.name,
-                             mo.obs 
-                             FROM monthly mo
-                             inner join company co on co.id = mo.company_customer
-                             where mo.company_customer=? and mo.status = 1 order by mo.dateexpiration desc, mo.id desc
-                          """
+  lazy val SQL_REPORT = """
+    SELECT mo.id, mo.idforcompany, mo.description, 
+     mo.originaldate, 
+     mo.dateexpiration, mo.value, 
+     mo.paid, mo.paymentdate, mo.id, co.name,
+     mo.obs 
+     FROM monthly mo
+     inner join company co on co.id = mo.company_customer
+     where mo.company_customer=? and mo.status = 1 order by mo.dateexpiration desc, mo.id desc
+  """
   def createMonthly(company: Company, company_customer: Company, value:Double, dateToPayment: Date, description: String) = {
     val monthly = Monthly.create
       monthly.company(company)
