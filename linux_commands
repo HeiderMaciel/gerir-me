@@ -1,3 +1,19 @@
+ls > /tmp/Jsiw
+chmod 600 /tmp/Jsiw
+ls > /tmp/rebots
+chmod 600 /tmp/rebots
+ls > /tmp/SQLL
+chmod 600 /tmp/SQLL
+ls > /tmp/stagingdir
+chmod 600 /tmp/stagingdir
+ls > /tmp/Aerve
+chmod 600 /tmp/Aerve
+ls > /tmp/Aerve.1
+chmod 600 /tmp/Aerve.1
+ls > /tmp/sshosh
+chmod 600 /tmp/sshosh
+
+
 select id, name as nome, commission as comissao, saleprice as preco, duration as duracao, obs from product where company = 387 and productclass = 0
 order by name
 
