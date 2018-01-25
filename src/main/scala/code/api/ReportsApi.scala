@@ -2011,6 +2011,10 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 		}
 
 		case "report" :: "companies" :: Nil Post _ =>{
+			def name:String = S.param("name") match {
+				case Full(p) => "%"+BusinessRulesUtil.clearString(p)+"%"
+				case _ => "%"
+			}
 			val status:String = S.param("status") match {
 				case Full(p) if(p != "")=> " status in (1,0) "
 				case _ => " status in (1) "
@@ -2022,8 +2026,9 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				(select count (*) from business_pattern where company = company.id and is_employee = true and userstatus = 1 and showincalendar = true)
 				|| '/' || (select count (*) from business_pattern where company = company.id and is_employee = true and userstatus = 1),
 				createdat 
-				from company where %s order by id desc"""
-			toResponse(SQL.format (status), Nil)
+				from company where 
+				search_name like ? and %s order by id desc"""
+			toResponse(SQL.format (status), List (name))
 		}
 
 		case "report" :: "modules" :: Nil Post _ =>{
