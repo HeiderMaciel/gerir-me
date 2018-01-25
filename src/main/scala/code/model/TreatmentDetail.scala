@@ -412,7 +412,6 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
     def priceActivity:BigDecimal = {
         activity.obj match {
             case Full(t) => {
-                println ("vaiiii ============= activity")
                             if(isAMonthlyService && BpMonthly.countBpMonthlyByProduct(t, customer, start) > 0){
                                 BigDecimal(BpMonthly.monthlyByProduct(t, 
                                     customer, start).valueSession.is)

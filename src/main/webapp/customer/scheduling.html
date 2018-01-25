@@ -135,6 +135,7 @@
 			</span>
 		</div>
 	</div>
+	<input type="hidden" class="has-gerirme-system lift:SecuritySnippet.isGerirmeSystem" value="1">
 	<table id="grid_scheduling" class="bordered-table zebra-striped">
 		<thead>
 			<th></th>
@@ -142,6 +143,8 @@
 			<th>Fim</th>
 			<th>Dia</th>
 			<th><span data-i18n='Serviço'></span></th>
+			<th class="lift:SecuritySnippet.isGerirmeSystem">Qtde</th>
+			<th class="lift:SecuritySnippet.isGerirmeSystem">Preço</th>
 			<th><span data-i18n='Profissional'></span></th>
 			<th>Mensagem</th>		
 			<th>Ações</th>
@@ -203,6 +206,7 @@
 			})[0];
 		}
 		var generate_treatments = function(type, start, end, hour_start, hour_end,service, service_name,customer,user, obs_treatment, allowDays, user_name, num_max, price, amount){
+	      	var hasGerirmeSystem = $('.has-gerirme-system').length > 0;
 
 			if(!customer){
 				alert("Selecione um cliente");
@@ -234,7 +238,12 @@
 				return;
 			}
 			if(!price){
-				price = 0
+				if (hasGerirmeSystem) {
+					price = getActivity(service).price;
+					$('#price').val(price)
+				} else {
+					price = 0
+				}
 			}
 			if(!amount){
 				amount = 1
@@ -288,12 +297,24 @@
 		}
 		var render = function(treatments){
 			var j = 0
+	      	var hasGerirmeSystem = $('.has-gerirme-system').length > 0;
 			$("#grid_scheduling tbody").html(treatments.map(function(item){
 				if(!item.message){
 					item.message = "";
 				}
 				j ++;
-				return "<tr><td>"+j+"</td><td>"+item.start+"</td><td>"+item.end+"</td><td>"+i18n_days[item.date.getDay()]+"</td><td>"+item.service_name+"</td><td>"+item.user_name+"</td><td>"+item.message+"</td><td><input type='button' onclick='removeTreatment("+item.id+")' class='btn danger' value='Excluir'></td></tr>"
+				return "<tr>" +
+					"<td>"+j+"</td>" +
+					"<td>"+item.start+"</td>" +
+					"<td>"+item.end+"</td>" +
+					"<td>"+i18n_days[item.date.getDay()]+"</td>" +
+					"<td>"+item.service_name+"</td>" +
+            		(hasGerirmeSystem ? "<td>"+item.amount+"</td>" : '') +
+            		(hasGerirmeSystem ? "<td>"+item.price+"</td>" : '') +
+					"<td>"+item.user_name+"</td>" +
+					"<td>"+item.message+"</td>" +
+					"<td><input type='button' onclick='removeTreatment("+item.id+")' class='btn danger' value='Excluir'></td>"+
+				"</tr>"
 			}).join());
 		};
 		var removeTreatment = function(id){
