@@ -40,7 +40,8 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 		}
 	}
 
-	val sqlname = " business_pattern in (select id from business_pattern where search_name like '%"+BusinessRulesUtil.clearString(name)+"%')"
+	val sqlname = " business_pattern in (select id from business_pattern where search_name like '%"+
+		BusinessRulesUtil.clearString(name)+"%' and company = " + AuthUtil.company.id.is + " )"
 
 	def findForListParams: List[QueryParam[Monthly]] = 
 	List(//Like(Monthly.description,"%"+BusinessRulesUtil.clearString(name)+"%"),
