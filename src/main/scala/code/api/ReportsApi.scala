@@ -2019,16 +2019,21 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				case Full(p) if(p != "")=> " status in (1,0) "
 				case _ => " status in (1) "
 			}			
+			val profs:String = S.param("profs") match {
+				case Full(p) if(p != "")=> """				(select count (*) from business_pattern where company = company.id and is_employee = true and userstatus = 1 and showincalendar = true)
+				|| '/' || (select count (*) from business_pattern where company = company.id and is_employee = true and userstatus = 1),
+				"""
+				case _ => " null, "
+			}			
 			AuthUtil.checkSuperAdmin
 			def SQL = """select id, name,id, phone, 
 				contact, email, status, 
 				fu_dt_age (date (now()), date (createdat)), 
-				(select count (*) from business_pattern where company = company.id and is_employee = true and userstatus = 1 and showincalendar = true)
-				|| '/' || (select count (*) from business_pattern where company = company.id and is_employee = true and userstatus = 1),
+				%s
 				createdat 
 				from company where 
 				search_name like ? and %s order by id desc"""
-			toResponse(SQL.format (status), List (name))
+			toResponse(SQL.format (profs, status), List (name))
 		}
 
 		case "report" :: "modules" :: Nil Post _ =>{
