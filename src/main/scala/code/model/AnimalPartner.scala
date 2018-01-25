@@ -27,6 +27,12 @@ class AnimalPartner extends BusinessPattern[AnimalPartner]{
       //info ("************************* caixa fechado alteracao")
       throw new RuntimeException("Não é permitido cadastrar Pet sem tutor e quem indicou")
     }
+    if (this.image.is == "" || this.image.is == "cliente.png") {
+        this.image.set ("animal.png")
+    }
+    if (this.imagethumb.is == "" || this.imagethumb == "cliente.png") {
+        this.imagethumb.set ("animal.png")
+    }
     super.save
   }
 
