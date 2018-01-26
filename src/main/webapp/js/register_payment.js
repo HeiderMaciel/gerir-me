@@ -804,9 +804,19 @@
 
     $("#discount_percent").change(function() {
       if ($(this).data("value_in") != $(this).val()) {
-        $(this).data("changed", true);
-        var discount_percent = $(this).val();
-        ajustPrice((window.parseFloat(discount_percent) / 100) * -1.0);
+        var discount_percent = window.parseFloat($(this).val());
+        if (discount_percent > 100.0) {
+          alert ("Desconto " + $(this).val() + 
+            "% não pode ser maior que 100% ");
+          $(this).val(0);
+          return;
+        }
+        if (confirm ("Confirma desconto de " + $(this).val() + "% ?")) {
+          $(this).data("changed", true);
+          ajustPrice((window.parseFloat(discount_percent) / 100) * -1.0);
+        } else {
+          $(this).val(0);
+        }  
       }
     }).focusout(function() {
       if (!$(this).data("changed")) {
@@ -820,11 +830,21 @@
     // rigel - fiz o desconto de valor
     $("#discount_value").change(function() {
       if ($(this).data("value_in") != $(this).val()) {
-        $(this).data("changed", true);
-        var discount1_percent = $(this).val();
-        var totalaux = $("#value").val();
-        discount1_percent = window.parseFloat(discount1_percent) * 100 / window.parseFloat(totalaux);
-        ajustPrice((window.parseFloat(discount1_percent) / 100) * -1.0);
+        var discount1_value = window.parseFloat($(this).val());
+        var totalaux = window.parseFloat($("#value").val());
+        if (discount1_value > totalaux) {
+          alert ("Desconto " + $(this).val() + 
+            " não pode ser maior que o valor a pagar " + $("#value").val());
+          $(this).val(0);
+          return;
+        }
+        if (confirm ("Confirma desconto de " + $(this).val() + " ?")) {
+          $(this).data("changed", true);
+          discount1_value = window.parseFloat(discount1_value) * 100 / window.parseFloat(totalaux);
+          ajustPrice((window.parseFloat(discount1_value) / 100) * -1.0);
+        } else {
+          $(this).val(0);
+        }
       }
     }).focusout(function() {
       if (!$(this).data("changed")) {
@@ -833,7 +853,7 @@
       $(this).data("changed", true);
     }).focusin(function() {
       $(this).data("changed", false);
-      //$(this).data("value_in", $(this).val());
+      $(this).data("value_in", $(this).val());
     })
     $("#command_remove_from_server").click(function() {
       // rigel 11/06/2014
