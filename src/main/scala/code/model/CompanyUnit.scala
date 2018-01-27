@@ -163,6 +163,35 @@ class CompanyUnit
       " (id = %s or (id in (select uu.unit from usercompanyunit uu where uu.user_c = %s and uu.company = %s))) ".format(AuthUtil.user.unit, AuthUtil.user.id, AuthUtil.user.company)
   }
 
+  def replaceMessage (ac:CompanyUnit, message:String) = {
+      var message_aux = message;
+      //val extenso = WrittenForm (123.999.467.89)
+      //println ("vaiiii ===================== " + extenso.humanize());
+
+      message_aux = ac.company.obj.get.replaceMessage (AuthUtil.company, message_aux);
+
+      message_aux = message_aux.replaceAll ("##unid_logo##", "<img width='100px' src='" + ac.thumb_web + "'/>");
+
+      message_aux = message_aux.replaceAll ("##unid_nome##", ac.name.is)
+      message_aux = message_aux.replaceAll ("##unid_apelido##", ac.short_name.is)
+      message_aux = message_aux.replaceAll ("##unid_razao_social##", ac.getPartner.company_name)
+      message_aux = message_aux.replaceAll ("##unid_telefone##", ac.getPartner.phone)
+      message_aux = message_aux.replaceAll ("##unid_celular##", ac.getPartner.mobilePhone)
+      message_aux = message_aux.replaceAll ("##unid_telefone2##", ac.getPartner.email_alternative)
+      message_aux = message_aux.replaceAll ("##unid_email##", ac.getPartner.email)
+      message_aux = message_aux.replaceAll ("##unid_doc##", ac.getPartner.document + ac.getPartner.document_company)
+      
+      message_aux = message_aux.replaceAll ("##unid_end_rua##", ac.getPartner.street)
+      message_aux = message_aux.replaceAll ("##unid_end_nro##", ac.getPartner.number)
+      message_aux = message_aux.replaceAll ("##unid_end_compl##", ac.getPartner.complement)
+      message_aux = message_aux.replaceAll ("##unid_end_cep##", ac.getPartner.postal_code)
+      message_aux = message_aux.replaceAll ("##unid_end_cid##", ac.getPartner.cityName)
+      message_aux = message_aux.replaceAll ("##unid_end_bairro##", ac.getPartner.district)
+      message_aux = message_aux.replaceAll ("##unid_end_ref##", ac.getPartner.pointofreference)
+      message_aux = message_aux.replaceAll ("##unid_end_uf##", ac.getPartner.stateShortName)
+      message_aux
+  }
+
 }
 
 object CompanyUnit extends CompanyUnit with LongKeyedMapperPerCompany[CompanyUnit] with OnlyActive[CompanyUnit] with SitebleMapper[CompanyUnit] {

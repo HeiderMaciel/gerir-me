@@ -20,7 +20,8 @@ trait Imageble{
   self: BaseMapper =>
   object image extends MappedPoliteString(this.asInstanceOf[MapperType],455)
   object imagethumb extends MappedPoliteString(this.asInstanceOf[MapperType],455)
-  def thumb_web = Props.get("photo.urlbase").get+imagethumb.is
+  // rigel - 27/01/2018 thumb_web estava sem imagePath
+  def thumb_web = Props.get("photo.urlbase").get+imagePath+"/"+imagethumb.is
   def logo_web = Props.get("photo.urlbase").get+imagePath+"/"+image.is
   //def logo_web = Props.get("photo.urlbase").get+image.is
   def image_web = Props.get("photo.urlbase").get+image.is

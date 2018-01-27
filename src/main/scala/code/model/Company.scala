@@ -537,6 +537,22 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
       }
     }
   }
+  def replaceMessage (ac:Company, message:String) = {
+      var message_aux = message;
+      if (ac.name.is != "") {
+          message_aux = message_aux.replaceAll ("##hoje##", Project.dateToExt(new Date()));
+          message_aux = message_aux.replaceAll ("##mescorrente##", Project.monthToExt(new Date()));
+          message_aux = message_aux.replaceAll ("##messeguinte##", Project.monthToExt(Project.nextMonth (new Date())));
+          message_aux = message_aux.replaceAll ("##mesanterior##", Project.monthToExt(Project.prevMonth (new Date())));
+
+          message_aux = message_aux.replaceAll ("##logo##", "<img width='100px' src='" + ac.thumb_web + "'/>");
+
+      } else {
+          throw new RuntimeException("Empresa chegou vazia no replace message")
+      }
+      message_aux
+  }
+
 }
 
 object Company extends Company with LongKeyedMapperPerCompany[Company] with SitebleMapper[Company] {

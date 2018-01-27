@@ -199,12 +199,14 @@ var Pet = {
 	},
 };
 
-var Envitoment = {
-	replaseEnviromentVars: function (value) {
+var Environment = {
+	replaceEnvironmentVars: function (value) {
 		if (value) {
-			for (var key in Envitoment) {
-				if (!$.isFunction(Envitoment[key])) {
-					value = value.replaceAll("#" + key + "#", Envitoment[key]);
+			for (var key in Environment) {
+				//alert (key + " ===== key ")
+				if (!$.isFunction(Environment[key])) {
+					value = value.replaceAll("##" + key + "##", Environment[key]);
+					value = value.replaceAll("##" + key.toLowerCase() + "##", Environment[key]);
 				}
 			}
 		}
@@ -212,7 +214,7 @@ var Envitoment = {
 	},
 	reprocess: function () {
 		var $termsElements = $(".terms_and_conditions");
-		$termsElements.html(Envitoment.replaseEnviromentVars($termsElements.data("terms")));
+		$termsElements.html(Environment.replaceEnvironmentVars($termsElements.data("terms")));
 	}
 };
 

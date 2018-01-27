@@ -72,16 +72,22 @@ jQuery.fn.serializeObject = function() {
     });
     return o;
 };
-jQuery.fn.valueToEnvitoment = function(allow_null, callback) {
+jQuery.fn.valueToEnvironment = function(allow_null, callback) {
     var field = this;
     $(field).change(function() {
-        var value = $(field).val();
+        // rigel - 27/01/2018 - alterei as refrencias de field para this
+        // pq só tava pegando o primeiro field da classe
+        var value = $(this).val();
         var name = "";
-        if ($(field).is("select")) {
-            name = $("option:selected", field).html();
-        };
-        Envitoment[$(field).data("env-value") || $(field).attr("id")] = value;
-        Envitoment[$(field).data("env-name") || $(field).attr("id") + "_NAME"] = name;
-        Envitoment.reprocess();
+        if ($(this).is("select")) {
+            name = $("option:selected", this).html();
+        } else {
+            name = value;
+        }
+//        alert ("nao foi select " + name + "  value " + value)
+//        alert ("env value " + $(this).data("env-value") + "  envname " + $(field).data("env-name") + " attr " + $(this).attr("id"))
+        Environment[$(this).data("env-value") || $(this).attr("id")] = value;
+        Environment[$(this).data("env-name") || $(this).attr("id") + "_NAME"] = name;
+        Environment.reprocess();
     });
 };

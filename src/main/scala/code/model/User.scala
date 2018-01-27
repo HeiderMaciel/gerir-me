@@ -388,9 +388,7 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         //val extenso = WrittenForm (123.999.467.89)
         //println ("vaiiii ===================== " + extenso.humanize());
 
-        // DOBRADO DE CUSTOMER - ver se é necessário mesmo
-        message_aux = message_aux.replaceAll("##hoje##", Project.dateToExt(new Date()));
-        message_aux = message_aux.replaceAll("##logo##", "<img width='100px' src='" + AuthUtil.company.thumb_web + "'/>");
+        message_aux = ac.unit.obj.get.replaceMessage (ac.unit.obj.get, message_aux);
 
         message_aux = message_aux.replaceAll ("##prof_nome##", ac.name.is)
         message_aux = message_aux.replaceAll ("##prof_apelido##", ac.short_name.is)

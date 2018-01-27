@@ -84,7 +84,7 @@ jQuery.fn.termsField = function(allow_all, callback, termsSelector) {
 		});
 		filtered.forEach(function(item) {
 			$(_termsSelector).data("terms", item.message);
-			Envitoment.reprocess();
+			Environment.reprocess();
 		});
 	});
 	DataManager.getTerms(function(terms) {

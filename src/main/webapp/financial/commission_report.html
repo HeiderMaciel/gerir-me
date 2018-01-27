@@ -30,6 +30,8 @@
     $("#unit").unitField(true);
     var hasUnitModule = $('.has-unit-module').length > 0;
     var hasAuxiliarModule = $('.has-auxiliar-module').length > 0;
+    $("#start").change();
+    $("#end").change();
     var startDate = function(){
       return  encodeURIComponent($("#start").val() != "" ? $("#start").val() : getDateBr(new Date().getStartOfMonth()));
     }
@@ -162,11 +164,11 @@
                 <div class="inline-inputs">
                   <div class="input-prepend" style="float:left; padding-right:10px">
                     <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
-                    <input type="text" class="input-small date to_day" id='start' name="start" placeholder="Início"/>
+                    <input type="text" class="input-small date to_day value_to_env" data-env-value="DTINI" id='start' name="start" placeholder="Início"/>
                   </div>
                   <div class="input-prepend" style="float:left; padding-right:10px">
                     <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
-                    <input type="text" class="input-small date to_day" id='end' name="end" placeholder="Fim"/>
+                    <input type="text" class="input-small date to_day value_to_env" data-env-value="DTFIM" id='end' name="end" placeholder="Fim"/>
                   </div>
                 </div>
               </div>

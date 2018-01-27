@@ -7,6 +7,7 @@ import http._
 import net.liftweb.http.js.JE._
 import SHtml._ 
 import util._
+import code.util._
 import _root_.java.math.MathContext
 import net.liftweb.mapper.DB
 
@@ -19,9 +20,11 @@ class Terms extends Audited[Terms] with PerCompany with PerUnit with IdPK with C
     object message extends MappedPoliteString(this,40000)
     object obs extends MappedPoliteString(this,255)
     override def asJsToSelect = {
-      JsObj(
+     var message_aux = this.message.is;
+     message_aux = CompanyUnit.replaceMessage (AuthUtil.unit, message_aux);
+     JsObj(
             ("name",this.name.is),
-            ("message",this.message.is),
+            ("message", message_aux),
             ("id",this.id.is)
         )
     }    

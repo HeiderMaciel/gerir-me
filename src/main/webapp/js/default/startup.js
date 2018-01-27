@@ -136,7 +136,7 @@ $(function() {
 			}
 		return result;
 	});
-	$('.value_to_env').valueToEnvitoment();
+	$('.value_to_env').valueToEnvironment();
 	$(".login_form [name=user]").val(gup("user"));
 	$(".login_form [name=company]").val(gup("company"));
 	loginInformationProcess();
