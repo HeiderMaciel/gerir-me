@@ -547,6 +547,9 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
 
           message_aux = message_aux.replaceAll ("##logo##", "<img width='100px' src='" + ac.thumb_web + "'/>");
 
+          message_aux = message_aux.replaceAll ("##quebrapagina##", 
+            "<span class='quebrapagina'></span>");
+
       } else {
           throw new RuntimeException("Empresa chegou vazia no replace message")
       }

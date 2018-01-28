@@ -87,6 +87,7 @@ jQuery.fn.valueToEnvironment = function(allow_null, callback) {
 //        alert ("nao foi select " + name + "  value " + value)
 //        alert ("env value " + $(this).data("env-value") + "  envname " + $(field).data("env-name") + " attr " + $(this).attr("id"))
         Environment[$(this).data("env-value") || $(this).attr("id")] = value;
+        Environment[$(this).data("env-ext") || $(this).attr("id") + "_EXT"] = writtenForm (parseFloat(value.replace(".","").replace(",",".")),"real", "reais");
         Environment[$(this).data("env-name") || $(this).attr("id") + "_NAME"] = name;
         Environment.reprocess();
     });

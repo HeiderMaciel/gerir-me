@@ -203,8 +203,8 @@ var Environment = {
 	replaceEnvironmentVars: function (value) {
 		if (value) {
 			for (var key in Environment) {
-				//alert (key + " ===== key ")
 				if (!$.isFunction(Environment[key])) {
+					//alert (key + " ===== key " + Environment[key])
 					value = value.replaceAll("##" + key + "##", Environment[key]);
 					value = value.replaceAll("##" + key.toLowerCase() + "##", Environment[key]);
 				}

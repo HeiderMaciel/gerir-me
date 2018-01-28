@@ -2,6 +2,7 @@
   <link rel="stylesheet" type="text/css" href="/select2/select2.css" />
   <script src="/select2/select2.js"></script><script src="/select2/select2_locale_pt-BR.js"></script>
   <script src="/js/reports.js"></script>
+  <script src="/js/writtenform.js"></script>
   <script src="/js/jquery.tablesorter.pager.js"></script>
   <script type="text/javascript">
     // função replicada de total_to_payment.js
@@ -106,6 +107,9 @@
           total_commission += parseFloat(row[8]);
         });
         $("#total_commission").val(total_commission.formatMoney());
+        $("#total_commission").change();
+//        alert ("vaiii ==== " + // total_commission + "  " + 
+//          writtenForm(18.06, "real", "reais"))
         total_to_pay = total_commission;
         var unitparm = $("#unit").val() || '0';
         $.get("/accountpayable/list_user/"+startDate()+"/"+endDate()+"/"+unitparm+"/"+$("#user").val()+"/"+$("#dttype").val(),function(results){
@@ -135,10 +139,11 @@
                 "</tr>";
               };
               $("#grid_payments tbody").html(ret);
-              $("#total_paid").val((total).formatMoney());
               total_to_pay += total;
               $("#to_pay").val((total_to_pay).formatMoney())
+              $("#to_pay").change();
               $("#total_in_advance").val((pay_in_advance).formatMoney())
+              $("#total_in_advance").change();
         });
         $.post("/report/commissions_fat", $("#form_report").serializeObject(), function(r){
           var total = parseFloat(eval(r)[0][0]);
@@ -260,17 +265,17 @@
             </div>
             <div class="input-prepend" style="float:left; padding-right:10px">
               <span class="add-on"><img src="/images/user.png" width="16"></span>
-              <input class="small disabled" id="total_commission" name="total_commission" size="19" placeholder="0.00" type="text" disabled='true'>
+              <input class="small disabled value_to_env" data-env-value="COMISSAO" data-env-ext="COMISSAO_EXT" id="total_commission" name="total_commission" size="19" placeholder="0.00" type="text" disabled='true'>
               <span class="help-block">Total de comissões</span>
             </div>
             <div class="input-prepend" style="float:left; padding-right:10px">
               <span class="add-on"><img src="/images/cheque.png" width="16"></span>
-              <input class="small disabled" id="total_in_advance" name="total_in_advance" size="19" placeholder="0.00" type="text" disabled='true'>
+              <input class="small disabled value_to_env" data-env-value="VALE" data-env-ext="VALE_EXT"" id="total_in_advance" name="total_in_advance" size="19" placeholder="0.00" type="text" disabled='true'>
               <span class="help-block">Vales e outros</span>
             </div>
             <div class="input-prepend" style="float:left; padding-right:10px">
               <span class="add-on"><img src="/images/money.png" width="16"></span>
-              <input class="small disabled" id="to_pay" name="to_pay" size="19" placeholder="0.00" type="text" disabled='true'>
+              <input class="small disabled value_to_env" data-env-value="LIQUIDO" data-env-ext="LIQUIDO_EXT"" id="to_pay" name="to_pay" size="19" placeholder="0.00" type="text" disabled='true'>
               <span class="help-block">Líquido para pagamento</span>
             </div>
           </div>
