@@ -201,16 +201,40 @@ var Pet = {
 
 var Environment = {
 	replaceEnvironmentVars: function (value) {
+		var user = "";
 		if (value) {
 			for (var key in Environment) {
 				if (!$.isFunction(Environment[key])) {
-					//alert (key + " ===== key " + Environment[key])
-					value = value.replaceAll("##" + key + "##", Environment[key]);
-					value = value.replaceAll("##" + key.toLowerCase() + "##", Environment[key]);
+					if (key.toLowerCase() == 'user') {
+						user = Environment[key];
+					} else {
+						value = value.replaceAll("##" + key + "##", Environment[key]);
+						value = value.replaceAll("##" + key.toLowerCase() + "##", Environment[key]);
+//						alert ("vaiiii ==== fim " + Environment[key] + " " + value)
+					}
 				}
 			}
 		}
-		return value;
+		if (user != "") {
+			$.post("/api/v2/terms/user", {
+	          "id": user,
+	          "msg": value
+	        }, function(r){
+	          var msg = (eval(r));
+	          value = msg;
+//	          alert (value);
+	        });
+		    setTimeout(function() {
+		    	// rigel 28/01/2018
+		    	// marretei o set do reprocess aqui 
+		    	// pq não consegui fazer o timeou segurar
+				var $termsElements = $(".terms_and_conditions");
+				$termsElements.html(value);
+		       return value;
+		    }, 1000);
+  		} else {
+			return value;
+		}
 	},
 	reprocess: function () {
 		var $termsElements = $(".terms_and_conditions");

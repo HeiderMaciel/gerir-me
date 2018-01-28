@@ -42,9 +42,13 @@ function writtenForm(valor, moeda, moedas){
   var restante = valor;
   var retorno = '';
 
+
   if (restante == 0) {
     return ("zero " + moedas)    
+  } else if (restante < 0) {
+    restante = restante * -1;
   }
+  
   var trilhao =   1000000000000,
     bilhao  =   1000000000,
     milhao  =   1000000;
