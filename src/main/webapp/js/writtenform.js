@@ -98,6 +98,10 @@ function writtenForm(valor, moeda, moedas){
       retorno += extenso[milhoes] + ' milhão';
     }
 
+    if (restante < 1 && restante > 0) {
+      retorno += " de " + moedas
+    }
+
     if(restante > 0){
       retorno += ', ';
     }
@@ -106,9 +110,13 @@ function writtenForm(valor, moeda, moedas){
 
   if(restante >= 1000){
 
-    var milhas = Math.round(restante / 1000)
+    var milhas = Math.floor(restante / 1000)
     restante = restante - (milhas * 1000);
     retorno += getCentena(milhas, "", "") + ' mil';
+
+    if (restante < 1 && restante > 0) {
+      retorno += " " + moedas
+    }
 
     if(restante > 0){
       retorno += ', ';
@@ -128,12 +136,20 @@ function getCentena(restante, moeda, moedas){
 
   if(restante >= 100){
 
-    var milhas = Math.round(restante / 100)
+    var milhas = Math.floor(restante / 100)
     restante = restante - (milhas * 100);
     if(milhas === 1){
-      retorno += 'cento';
+      if (restante == 0) {
+        retorno += 'cem';
+      } else {
+        retorno += 'cento';
+      }
     }else{
       retorno += ' '+ extenso[milhas * 100];
+    }
+
+    if (restante < 1 && restante > 0) {
+      retorno += " " + moedas
     }
 
     if(restante > 0){
@@ -162,6 +178,10 @@ function getCentena(restante, moeda, moedas){
       teens = Math.floor(restante / 10.0)
       restante = restante - (teens * 10);
       retorno += ' '+extenso[teens * 10];
+    }
+
+    if (restante < 1 && restante > 0) {
+      retorno += " " + moedas
     }
 
     if(restante > 0){

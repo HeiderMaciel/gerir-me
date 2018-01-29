@@ -24,6 +24,7 @@ import java.util.Date
 object ContactsUtil extends net.liftweb.common.Logger {
   var sqlInsert = "";
   def execute(file:File, origin:String, nameasis: Long, generatesql: Long){
+    sqlInsert = "";
     val lines = fromFile(file).getLines.toList
     val separator:String = if (lines(1).count(_ == '.') >
       lines(1).count(_ == ';')) {

@@ -506,3 +506,14 @@ drwxr-xr-x 4 postgres postgres      4096 Abr 22  2014 Jetty_0_0_0_0_8081_test___
 drwx------ 2 postgres postgres      4096 Jun 25 13:31 Run.sh
 -rwxrwxrwx 1 postgres postgres   1334372 Jun  3 13:46 scsi_eh_320
 
+
+
+    -- testa se é nro	
+    --if (st_out ~ '^[0-9\.]+$') then
+    -- está abaixo  mais segura evita por emxemplo multiplos pontos - mas eu não consigo ler
+    -- por isso guardei essa aqui acima 
+    if (st_out ~ '^\d+(.\d+)?$') then
+	return to_number (st_out,'999999999.99');    
+    else
+	return (0);
+    end if;

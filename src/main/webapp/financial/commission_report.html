@@ -108,8 +108,8 @@
         });
         $("#total_commission").val(total_commission.formatMoney());
         $("#total_commission").change();
-//        alert ("vaiii ==== " + // total_commission + "  " + 
-//          writtenForm(18.06, "real", "reais"))
+//        alert ("vaiii ==== " + 2201900.37 + "  " + 
+//          writtenForm(2201900.37, "real", "reais"))
         total_to_pay = total_commission;
         var unitparm = $("#unit").val() || '0';
         $.get("/accountpayable/list_user/"+startDate()+"/"+endDate()+"/"+unitparm+"/"+$("#user").val()+"/"+$("#dttype").val(),function(results){
