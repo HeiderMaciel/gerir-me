@@ -241,9 +241,14 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
     monthly
   }
 
+  // pega as mensalidades vencendo hoje e se for segunda feira
+  // pega as que venceram sábado e domingo tb e envia novamete
   def findAllToday = findAll(By(Monthly.paid, false), 
-                             By(Monthly.status, Monthly.STATUS_OK), 
-                             BySql("date (dateexpiration) = date(now())",IHaveValidatedThisSQL("1 = 1","")))
+      By(Monthly.status, Monthly.STATUS_OK), 
+      BySql("""date (dateexpiration) = date(now()) 
+        or (extract (DOW from now()) = 1 -- segunda feira
+        and (dateexpiration between date(now())-2 and date(now())))""",
+        IHaveValidatedThisSQL("1 = 1","")))
 
 
   def usersToNotify(company:Company) = {
