@@ -14,62 +14,6 @@ import scala.xml.{ NodeSeq, Text }
 import java.util.Random
 
 object LoginSnippet extends net.liftweb.common.Logger {
-/* PARECE QUE NAO USA MAIS - 07/2016
-  def unLoggedMail(in: NodeSeq): NodeSeq = {
-
-      for {
-          r <- S.request if r.post_?
-            email <- S.param("email")
-            password <- S.param("password")
-        } {
-        LogActor ! "Tentativa de Login "+email
-        try {
-            val loginStatus: LoginStatus = User.loginEmail(email, password)
-            loginStatus.status match{
-                case true =>  {
-                  LogActor ! "Login succeed "+email        
-                  AuthUtil << loginStatus.user
-                  if (AuthUtil.company.appType.isEgrex) {
-                    println ("vaiii egrex =========== ");
-                    if (AuthUtil.user.isCustomer) {
-                      S.redirectTo("/customer/list")
-                    } else {
-                      S.redirectTo("/financial/account_register")
-                    }
-                  } else if(PermissionModule.treatment_? && (AuthUtil.user.isSimpleUserCalendar || AuthUtil.user.isCalendarUser)){
-                    S.redirectTo("/calendar")
-                  } else if(PermissionModule.treatment_? && (AuthUtil.user.isSimpleUserCommand || AuthUtil.user.isCommandUser)){
-                    S.redirectTo("/command/user_command")
-                  } else if (AuthUtil.user.isSimpleUserCommission) {
-                    S.redirectTo("/commission_conference_user")
-                  }else if(PermissionModule.inventory_?){
-                    S.redirectTo("/product/control_panel")
-                  }else if(PermissionModule.financial_?){
-                    S.redirectTo("/financial/account_register")
-                  } else if (PermissionModule.peopleManager_?) {
-                    S.redirectTo("/user/list")
-                  }else{
-                    S.redirectTo("/customer/list")
-                  }
-                }
-                case _ =>{
-                      LogActor ! "Login failed "+email;    
-                      S.error("Usuário ou senha inválida!")
-                      S.redirectTo("/login_mail")
-                }
-          }
-        } catch {
-          case e: NoSuchElementException => { S.error("E-mail não existe!");   }
-          case _ => { S.error("Erro desconhecido no login!");   }
-        }
-      }
-    
-    if (!AuthUtil.?)
-      in
-    else
-      NodeSeq.Empty
-  }
-*/  
   val rand = new Random(System.currentTimeMillis())
 
   def randomNumber = rand.nextInt(4)
@@ -79,6 +23,9 @@ object LoginSnippet extends net.liftweb.common.Logger {
     val isegrex = AuthUtil.company.appType.isEgrex
     val website = "http://"+AuthUtil.company.website
     val user = AuthUtil.user.id.is
+    // pra ver se é cliente simples de agenda online
+    // não é profissional
+    val userTrue = AuthUtil.user.is_employee_?;
     AuthUtil >>;
 
 /*  voltar quando estabilizar o login por e-mail
@@ -94,7 +41,8 @@ object LoginSnippet extends net.liftweb.common.Logger {
       // para diferenciar ebelle e gerirme
       if (!isegrex) {
         // se local ou meu usuario rigel - volta pro login
-        if (S.hostName.contains ("local")) {
+        // se não for user true é cliente, ai vai no random mesmo
+        if (S.hostName.contains ("local") && userTrue) {
           S.redirectTo("http://"+S.hostName+":7171/v2/login")
         } else if (user == 3 /* rigel*/) {
           S.redirectTo("http://"+S.hostName+"/v2/login")

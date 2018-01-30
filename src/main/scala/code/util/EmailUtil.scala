@@ -187,7 +187,8 @@ object EmailUtil {
           // acho que nao precisa desse log pq acho que nao é erro
           case e:Exception => {
             //e.printStackTrace
-            println ("vaiiii ========================= Erro ao enviar email GENERICO - "+e.getMessage)
+            println ("vaiiii ========================= Erro ao enviar email GENERICO - " + 
+              prefix + email + " \n\n" +e.getMessage)
             log.subject(title + " ERRO ======= ").save
 //            LogActor ! "Erro ao enviar email - "+e.getMessage
             Thread.sleep (60000);
@@ -250,7 +251,8 @@ object EmailUtil {
           // acho que nao precisa desse log pq acho que nao é erro
           case e:Exception => {
             //e.printStackTrace
-            println ("vaiiii ========================= Erro ao enviar email - "+e.getMessage)
+            println ("vaiiii ========================= Erro ao enviar email - " +
+              prefix + email + " \n\n" +e.getMessage)
             log.subject(title + " ERRO ======= ").save
 //            LogActor ! "Erro ao enviar email - "+e.getMessage
             Thread.sleep (60000);
@@ -336,23 +338,27 @@ object EmailUtil {
     val ct = User.countByEmail(email)
     if (ct > 0) {
       User.findByEmail(email).map((ac)=>{
-        //println ("vaiii ===================== " + ac.email)
-        //sendMailTo(ac.email.is, rememberPasswordEMail(ac.company.obj.get, user, product1, lnkProduct1), "Recuperar senha" + product1 + local1)
-        sendMailCustomer(CompanyUnit.findByKey(ac.unit).get,
-            Company.findByKey (ac.company).get, 
-            ac.email.is, rememberPasswordEMailUser(ac.company.obj.get, ac, product1, lnkProduct1), 
-            "Recuperar senha" + product1 + local1, ac.id.is)
+        ac.email.is.trim.split(",|;").foreach((email1) => {
+          if (email1 == email) {
+              sendMailCustomer(CompanyUnit.findByKey(ac.unit).get,
+                Company.findByKey (ac.company).get, 
+                ac.email.is, rememberPasswordEMailUser(ac.company.obj.get, ac, product1, lnkProduct1), 
+                "Recuperar senha" + product1 + local1, ac.id.is)
+          }
+        })
       })
     } else {
       val cl = Customer.countByEmail(email)
       if (cl > 0) {
         Customer.findByEmail(email).map((ac)=>{
-          //println ("vaiii ===================== " + ac.email)
-          //sendMailTo(ac.email.is, rememberPasswordEMail(ac.company.obj.get, user, product1, lnkProduct1), "Recuperar senha" + product1 + local1)
-          sendMailCustomer(CompanyUnit.findByKey(ac.unit).get,
-              Company.findByKey (ac.company).get, 
-              ac.email.is, rememberPasswordEMailCustomer(ac.company.obj.get, ac, product1, lnkProduct1), 
-              "Recuperar senha" + product1 + local1, ac.id.is)
+          ac.email.is.trim.split(",|;").foreach((email1) => {
+            if (email1 == email) {
+              sendMailCustomer(CompanyUnit.findByKey(ac.unit).get,
+                  Company.findByKey (ac.company).get, 
+                  ac.email.is, rememberPasswordEMailCustomer(ac.company.obj.get, ac, product1, lnkProduct1), 
+                  "Recuperar senha" + product1 + local1, ac.id.is)
+            }
+          })
         })
       } else {
         throw new RuntimeException ("Email " + email + " não foi encontrado em nossa base de dados, por favor verifique.")
