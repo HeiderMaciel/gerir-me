@@ -131,6 +131,33 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
                 ("id",u.id.is)
             )
         )
+        val hoptions = AgHM.findAll(
+        BySql(""" 
+agh between ? and ?
+and agm % ? = 0
+and 1 > (select count (1) from treatment tr where tr.user_c = ? and tr.company = ?
+and (to_char (date (now()), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp 
+between tr.start_c and tr.end_c- (1 * interval '1 minute'))
+and 1 > (select count (1) from busyevent tr where tr.user_c = ? and tr.company = ?
+and (to_char (date (now()), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp 
+between tr.start_c and tr.end_c- (1 * interval '1 minute'))
+ """, 
+        IHaveValidatedThisSQL("1=1","01-01-2012 00:00:00"),
+        userObj.company.obj.get.calendarInterval.is,
+        userObj.company.obj.get.calendarStart.is,
+        userObj.company.obj.get.calendarEnd.is,
+        user.toLong,
+        customer.company,
+        user.toLong,
+        customer.company
+        )
+          ).map( (u) =>
+          JsObj(
+                ("hour",u.agh.is),
+                ("min",u.agm.is)
+            )
+        )
+
         /*
         val calendar = java.util.Calendar.getInstance
         val today = calendar.getTime
@@ -145,7 +172,8 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
           ("interval", userObj.company.obj.get.calendarInterval.is),
           ("start", userObj.company.obj.get.calendarStart.is),
           ("end", userObj.company.obj.get.calendarEnd.is),
-          ("activities", JsArray(activities))
+          ("activities", JsArray(activities)),
+          ("hoptions", JsArray(hoptions))
         )
       }
     }
@@ -179,7 +207,7 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
         var ac = Customer.findAll (By(Customer.company, companyLong),
           Like (Customer.email, "%"+email+"%"));
         if (ac.length > 0) {
-          println ("vaiiiii ======================= JA existe ")
+          println ("vaiiiii ======================= JA existe na company " + companyLong)
           JString("Email já cadastrado use a opção Esqueci minha Senha")
         } else {
           var customer = Customer.create
