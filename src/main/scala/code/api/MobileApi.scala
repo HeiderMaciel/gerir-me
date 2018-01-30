@@ -136,26 +136,29 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
 agh between ? and ?
 and agm % ? = 0
 and 1 > (select count (1) from treatment tr where tr.user_c = ? and tr.company = ?
+and tr.status not in (5,4,8,1) 
 and (to_char (date (now()), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp 
 between tr.start_c and tr.end_c- (1 * interval '1 minute'))
 and 1 > (select count (1) from busyevent tr where tr.user_c = ? and tr.company = ?
+and tr.deleted = false
 and (to_char (date (now()), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp 
 between tr.start_c and tr.end_c- (1 * interval '1 minute'))
  """, 
         IHaveValidatedThisSQL("1=1","01-01-2012 00:00:00"),
-        userObj.company.obj.get.calendarInterval.is,
         userObj.company.obj.get.calendarStart.is,
         userObj.company.obj.get.calendarEnd.is,
+        userObj.company.obj.get.calendarInterval.is,
         user.toLong,
         customer.company,
         user.toLong,
         customer.company
         )
-          ).map( (u) =>
-          JsObj(
+          ).map( (u) => {
+            JsObj(
                 ("hour",u.agh.is),
                 ("min",u.agm.is)
             )
+          } 
         )
 
         /*
