@@ -334,19 +334,23 @@ object EmailUtil {
     sendNotificationRegistration(company)
   }
 
-  def sendRememberEMail(email:String) = {
-    val ct = User.countByEmail(email)
-    if (ct > 0) {
-      User.findByEmail(email).map((ac)=>{
-        ac.email.is.trim.split(",|;").foreach((email1) => {
-          if (email1 == email) {
-              sendMailCustomer(CompanyUnit.findByKey(ac.unit).get,
-                Company.findByKey (ac.company).get, 
-                ac.email.is, rememberPasswordEMailUser(ac.company.obj.get, ac, product1, lnkProduct1), 
-                "Recuperar senha" + product1 + local1, ac.id.is)
-          }
+  def sendRememberEMail(email:String, is_user:Boolean) = {
+    if (is_user) {
+      val ct = User.countByEmail(email)
+      if (ct > 0) {
+        User.findByEmail(email).map((ac)=>{
+          ac.email.is.trim.split(",|;").foreach((email1) => {
+            if (email1 == email) {
+                sendMailCustomer(CompanyUnit.findByKey(ac.unit).get,
+                  Company.findByKey (ac.company).get, 
+                  ac.email.is, rememberPasswordEMailUser(ac.company.obj.get, ac, product1, lnkProduct1), 
+                  "Recuperar senha profissional " + product1 + local1, ac.id.is)
+            }
+          })
         })
-      })
+      } else {
+        throw new RuntimeException ("Email " + email + " não foi encontrado para nenhum profssional em nossa base de dados, por favor verifique.")
+      }
     } else {
       val cl = Customer.countByEmail(email)
       if (cl > 0) {
@@ -356,7 +360,7 @@ object EmailUtil {
               sendMailCustomer(CompanyUnit.findByKey(ac.unit).get,
                   Company.findByKey (ac.company).get, 
                   ac.email.is, rememberPasswordEMailCustomer(ac.company.obj.get, ac, product1, lnkProduct1), 
-                  "Recuperar senha" + product1 + local1, ac.id.is)
+                  "Recuperar senha cliente/paciente" + product1 + local1, ac.id.is)
             }
           })
         })

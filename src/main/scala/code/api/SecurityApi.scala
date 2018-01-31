@@ -97,13 +97,26 @@ object SecurityApi extends RestHelper with net.liftweb.common.Logger {
       }
     }
 
-    case "security" :: "remember_password" :: Nil Post (r) => {
+    case "security" :: "remember_user_password" :: Nil Post (r) => {
       val json = parse(new String(r.body.get))
       val remember = json.extract[RememberDto]
       try {
-        println ("vaiiii ====================== remember " + remember.email)
-        EmailUtil.sendRememberEMail(remember.email);
+        EmailUtil.sendRememberEMail(remember.email,
+          true /*user */); 
         JInt(1)
+      }catch{
+        case e:Exception => JString(e.getMessage)
+      }     
+    }
+
+    case "security" :: "remember_customer_password" :: Nil Post (r) => {
+      val json = parse(new String(r.body.get))
+      val remember = json.extract[RememberDto]
+      try {
+        println ("vaiiii ====================== remember customer " + remember.email)
+        EmailUtil.sendRememberEMail(remember.email, 
+          false/*customer*/);
+        JsObj (("success","1"));
       }catch{
         case e:Exception => JString(e.getMessage)
       }     
