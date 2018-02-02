@@ -114,44 +114,52 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
         JInt(1)
       }
     }    
-    case "mobile" :: "api" :: "activities" :: Nil Post _ => {
+
+    case "mobile" :: "api" :: "hoptions" :: Nil Post _ => {
       for {
         email <- S.param("email") ?~ "email parameter missing" ~> 400
         password <- S.param("password") ?~ "password parameter missing" ~> 400
         company <- S.param("company") ?~ "company parameter missing" ~> 400
         user <- S.param("user") ?~ "user parameter missing" ~> 400
+        date <- S.param("date") ?~ "date parameter missing" ~> 400
       } yield {
+        val date1 = Project.strToDateOrToday(date)
+
         val customer = Customer.login(email, password, company)
         val userObj = User.findAll(
           By(User.company, customer.company),
           By(User.id, user.toLong))(0)
+
         val activities = TreatmentService.activitiesMapByUser(userObj, true).map( (u) =>
           JsObj(
                 ("name",u.name.is),
                 ("id",u.id.is)
             )
         )
+
         val hoptions = AgHM.findAll(
         BySql(""" 
-agh between ? and ?
-and agm % ? = 0
-and 1 > (select count (1) from treatment tr where tr.user_c = ? and tr.company = ?
-and tr.status not in (5,4,8,1) 
-and (to_char (date (now()), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp 
-between tr.start_c and tr.end_c- (1 * interval '1 minute'))
-and 1 > (select count (1) from busyevent tr where tr.user_c = ? and tr.company = ?
-and tr.deleted = false
-and (to_char (date (now()), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp 
-between tr.start_c and tr.end_c- (1 * interval '1 minute'))
- """, 
+          agh between ? and ?
+          and agm % ? = 0
+          and 1 > (select count (1) from treatment tr where tr.user_c = ? and tr.company = ?
+          and tr.status not in (5,4,8,1) 
+          and (to_char (date(?), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp 
+          between tr.start_c and tr.end_c- (1 * interval '1 minute'))
+          and 1 > (select count (1) from busyevent tr where tr.user_c = ? and tr.company = ?
+          and tr.deleted = false
+          and (to_char (date (?), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp 
+          between tr.start_c and tr.end_c- (1 * interval '1 minute'))
+           """, 
         IHaveValidatedThisSQL("1=1","01-01-2012 00:00:00"),
         userObj.company.obj.get.calendarStart.is,
-        userObj.company.obj.get.calendarEnd.is,
+        userObj.company.obj.get.calendarEnd.is-1,
         userObj.company.obj.get.calendarInterval.is,
         user.toLong,
         customer.company,
+        date1,
         user.toLong,
-        customer.company
+        customer.company,
+        date1
         )
           ).map( (u) => {
             JsObj(
