@@ -1,6 +1,7 @@
   var treatments_del = [];
   var hasUnitModule = $('.has-unit-module').length > 0;
   var hasFinancialAccess = $('.has-financial-access').length > 0;
+  var hasAuditModule = $('.has-audit-module').length > 0;
 
   var removeTreatmentById = function(id, element){
     var hasDeleteCalendar = $('.has-delete-calendar').length > 0;
@@ -96,11 +97,13 @@
             "<td>"+obj.details+"</td>" +
             "<td>"+obj.payments+"</td>" +
             (hasFinancialAccess ? "<td>"+obj.total.formatMoney()+"</td>" : '') +
-            "<td>"+obj.cashier+
-            "</td>" +
-            "<td><a target='_commission' href='/financial/commission_report_filter?treatment="+obj.id+"' ><img class='hide_on_print' alt='Ver comissões deste atendimento' src='/images/commision_payment.png' width='24'></a>" +
+            "<td>"+obj.cashier+"</td>" +
+            "<td>"+
+            "<a target='_commission' href='/financial/commission_report_filter?treatment="+obj.id+"' ><img class='hide_on_print' alt='Ver comissões deste atendimento' src='/images/commision_payment.png' width='24'></a>" +
             "<a href='#' onclick='removeTreatmentById("
-              +obj.id+", this)'><img class='hide_on_print' alt='excluir este atendimento'  src='/images/delete.png'></a></td>";
+              +obj.id+", this)'><img class='hide_on_print' alt='excluir este atendimento'  src='/images/delete.png'></a>"+
+              "</td>"+
+            (hasAuditModule ? "</td><td><a title='" + obj.auditstr + "' href='#' ><img width='24px' src='/images/audit.png'/></a></td>" : "");
           };
           $("#grid tbody").html(ret);
           $("#count").val(treatments.length);

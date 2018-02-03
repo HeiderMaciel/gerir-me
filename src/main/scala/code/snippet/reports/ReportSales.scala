@@ -178,7 +178,7 @@ object  ReportSales extends net.liftweb.common.Logger{
 							"commandprint" -> <a target="_command_maste" href={"/financial_cashier/print_command?command="+p.command.is.toString+ "&unit="+p.unitId.toString+"&date="+Project.dateToStr(p.datePayment.is)+"&customerId="+p.customer.is.toString+""}><img alt="Imprimir comanda" src="/images/print.png" width="24"/></a>,
 							"ticket" -> <a target="_command_maste" href={"/financial_cashier/expense_ticket?command="+p.command.is.toString+"&date="+Project.dateToStr(p.datePayment.is)+"&customerId="+p.customer.is.toString+""}><img alt="Imprimir ticket" src="/images/print.png" width="24"/></a>,
 							"receipt" -> <a target="_command_maste" href={"/financial_cashier/expense_receipt?command="+p.command.is.toString+"&date="+Project.dateToStr(p.datePayment.is)+"&customerId="+p.customer.is.toString+""}><img alt="Imprimir recibo" src="/images/print.png" width="24"/></a>,
-							"audit" -> <a href= '#' title={p.auditStr}><img src="/images/audit.png" width="24"/></a>
+							"auditstr" -> <a href= '#' title={p.auditStr}><img src="/images/audit.png" width="24"/></a>
 				)
 			)
 	}
