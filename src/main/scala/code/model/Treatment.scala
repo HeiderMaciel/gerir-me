@@ -122,6 +122,8 @@ with WithCustomer with net.liftweb.common.Logger{
 
     def hasOffSale = details.filter(_.isAOffSaleService).size > 0
 
+    def hasThisOffSale (offsaleparm : OffSale) = details.filter(_.hasThisOffSaleService(offsaleparm)).size > 0
+
     def hasAccount = details.filter(_.isPreviousDebts).size > 0
     def accounts = details.filter(_.isPreviousDebts)
 
@@ -177,6 +179,29 @@ with WithCustomer with net.liftweb.common.Logger{
     def descritionDetails = {
         descritionByDetails//detailTreatmentAsText.is
     }
+
+    def offsaleByDetails = {
+        details match { 
+            case (dl) if(dl.size >0 ) => { 
+               // diferente da atividade/produto ue se tiver + de 1 detalhe 
+               // deve dobrar o convênio não precisa
+               //(details map(_.nameOffSale) reduceLeft(_+", "+_))
+               var str = "";
+               details.map ( t => {
+                    if (str.indexOf(t.nameOffSale) == -1) {
+                       if (str.length > 0) {
+                          str += ","
+                       }
+                       str += t.nameOffSale;
+                    }
+               })
+               str
+            }
+            case _ => {
+                ""
+            }
+        }
+    }    
 
     def descritionByDetails = {
         details match { 

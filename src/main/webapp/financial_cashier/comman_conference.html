@@ -37,6 +37,27 @@
                           </div>
                         </div>
                     </div>
+                    <input type="hidden" class="has-unit-module lift:SecuritySnippet.hasUnitModule" value="1">
+                    <div class="clearfix lift:SecuritySnippet.hasUnitModule">
+                      <label for="unit">Unidade</label>
+                       <div class="input">
+                          <select class="url_parameter local_storage xlarg url_parameter" name="unit" id='unit'></select>
+                       </div>
+                    </div>
+                    <div class="clearfix lift:SecuritySnippet.hasOffSaleModule">
+                      <label for="offsale">Convênio</label>
+                      <div class="input">
+                        <div class="inline-inputs">
+                        <span>
+                          <div style="float:left; padding-right:10px" class="input-prepend">
+                            <span class="add-on"><img width="16" src="/images/agreement.png"></span> 
+                            <select class= 'url_parameter local_storage xlarge' id='offsale'  name="offsale"></select>
+                          </div>
+                          </span>
+                          <span class="help-block">Convênio no cadastro de <span data-i18n='Clientes'></span>, não no atendimento</span>
+                        </div>
+                      </div>
+                    </div>
                     <div class="clearfix">
                       <label for="productclass">Tipo</label>
                         <div class="input">
@@ -73,7 +94,7 @@
                       </div>
                     </div>
                     <div class="clearfix">
-                      <label for="user">
+                      <label for="payment_type">
                         Formas de Pagamento
                       </label>
                         <div class="input">
@@ -152,6 +173,10 @@
         <th>Serv/Prod</th>
         <th>F Pagto</th>
         <th>Total Pago</th>
+        <th class="lift:SecuritySnippet.hasUnitModule">
+            Unidade</th>
+        <th class="lift:SecuritySnippet.hasOffSaleModule">
+            Convênio</th>
         <th>Comissão</th>
         <th>Comanda</th>
         <th>Ticket</th>
@@ -186,6 +211,12 @@
         </td>
         <td>
           <f:total></f:total>
+        </td>
+        <td class="lift:SecuritySnippet.hasUnitModule">
+          <f:unit></f:unit>
+        </td>
+        <td class="lift:SecuritySnippet.hasOffSaleModule">
+          <f:offsale></f:offsale>
         </td>
         <td>
           <div class="hide_on_print">

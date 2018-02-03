@@ -16,6 +16,8 @@ $(function(){
   $("#payment_type").paymentTypeField(true, true, function(){
     $("#payment_type").val(gup('payment_type')).change();
   });
+  $("#offsale").offSaleField(true);
+  $("#unit").unitField(true);
   var total = 0.0;
   var count = 0;
   $("#in_commands tr").each(function(i, item){

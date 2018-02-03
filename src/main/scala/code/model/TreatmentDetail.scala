@@ -334,6 +334,13 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
         }
     }
 
+    def nameOffSale:String = {
+       offsale.obj match {
+        case Full(a) => a.name.is
+        case _ => ""
+       }  
+    }
+
     def nameActivityTooth:String = {
          activity.obj match {
             case Full(a) => (a.name.is + " " + tooth).trim
@@ -398,6 +405,8 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
     }
 
     lazy val isAOffSaleService:Boolean = !(offsale == Empty || offsale == null)
+
+    def hasThisOffSaleService (offsaleparm : OffSale):Boolean = (offsale == offsaleparm)
 
     lazy val pointsOnBuy:Double = {
         activity.obj match {

