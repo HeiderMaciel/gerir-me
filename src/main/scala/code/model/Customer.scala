@@ -83,6 +83,13 @@ class Customer extends BusinessPattern[Customer]{
             message_aux = message_aux.replaceAll ("##nasc_anos##", Project.dateToYears(ac.birthday))
             message_aux = message_aux.replaceAll ("##nasc_ext##", Project.dateToExt(ac.birthday))
 
+            message_aux = message_aux.replaceAll ("##saldo##", ac.valueInAccount.toString)
+            val extenso = WrittenForm (ac.valueInAccount);
+            message_aux = message_aux.replaceAll ("##saldo_ext##", extenso.humanize ());
+            message_aux = message_aux.replaceAll ("##pontos##", ac.valueInPoints.toString)
+            val ptextenso = WrittenForm (ac.valueInPoints);
+            message_aux = message_aux.replaceAll ("##pontos_ext##", ptextenso.humanize ());
+
             message_aux = message_aux.replaceAll ("##peso##", ac.weight.toString)
             message_aux = message_aux.replaceAll ("##altura##", ac.height.toString)
             message_aux = message_aux.replaceAll ("##imc_num##", ac.BMI.substring(0,scala.math.min(ac.BMI.length, 5)))

@@ -696,6 +696,16 @@ with PerCity{
         case _ => ""
     }
 
+    def councilShortName: String = {
+        if (council != 0 && council != null) {
+          DomainTable.findAll(
+          By(DomainTable.domain_name,"conselhoprofissional"),
+          By(DomainTable.cod,council.toString))(0).name.is
+        } else {
+          ""
+        }
+    }
+
     def occupationShortName = occupation.obj match {
         case Full(t) => t.name.is
         case _ => ""

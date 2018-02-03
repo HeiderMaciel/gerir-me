@@ -747,6 +747,10 @@ object BusinessRulesUtil{
 class WrittenForm(val valor: Double) {
 
   def humanize():String = {
+
+    if(valor == 0.0){
+      return ("zero " + "reais")
+    }
     val parteInteira = valor.toInt
     val parteFracionaria = BigDecimal(valor).remainder(parteInteira)
     var centavos = ""
@@ -757,7 +761,7 @@ class WrittenForm(val valor: Double) {
       }
       centavos = " e " + humanize(valorCentavos.toInt) + " centavos"
     }
-    humanize(parteInteira) + " reais" + centavos
+    humanize(parteInteira) + " " + "reais" + centavos
   }
 
   private def humanize(valorEntrada: Int): String = {

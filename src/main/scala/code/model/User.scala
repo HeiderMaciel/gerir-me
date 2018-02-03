@@ -399,10 +399,15 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         message_aux = message_aux.replaceAll ("##prof_email##", ac.email)
         message_aux = message_aux.replaceAll ("##prof_doc##", ac.document + ac.document_company)
         message_aux = message_aux.replaceAll ("##prof_doc_rg##", ac.document_identity)
+
+        message_aux = message_aux.replaceAll ("##prof_doc_prof##", ac.document_council)
+        message_aux = message_aux.replaceAll ("##prof_conselho##", ac.councilShortName)
+
         message_aux = message_aux.replaceAll ("##prof_nasc_data##", Project.dateToStr(ac.birthday))
         message_aux = message_aux.replaceAll ("##prof_nasc_idade##", Project.dateToAge(ac.birthday))
         message_aux = message_aux.replaceAll ("##prof_nasc_anos##", Project.dateToYears(ac.birthday))
         message_aux = message_aux.replaceAll ("##prof_nasc_ext##", Project.dateToExt(ac.birthday))
+
         message_aux = message_aux.replaceAll ("##prof_end_rua##", ac.street)
         message_aux = message_aux.replaceAll ("##prof_end_nro##", ac.number)
         message_aux = message_aux.replaceAll ("##prof_end_compl##", ac.complement)
