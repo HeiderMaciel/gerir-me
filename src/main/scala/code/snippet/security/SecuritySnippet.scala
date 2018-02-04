@@ -421,6 +421,12 @@ object SecuritySnippet {
         else
           NodeSeq.Empty
       }      
+      def hasInvoiceModule(in:NodeSeq):NodeSeq ={
+        if (PermissionModule.invoice_?)
+          in
+        else
+          NodeSeq.Empty
+      }      
 
 //
       def calendarFixed (in:NodeSeq):NodeSeq ={

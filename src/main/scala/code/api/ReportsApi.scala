@@ -126,7 +126,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 						bp.short_name Profissional, bp.id, pr.id, pr.productclass
 						from product pr
 						inner join useractivity ua on ua.activity = pr.id
-						inner join business_pattern bp on bp.id = ua.user_c and bp.status = 1
+						inner join business_pattern bp on bp.id = ua.user_c and bp.userstatus = 1 and bp.is_employee = true
 						left join producttype pt on pt.id = pr.typeproduct
 						where  pr.company = ? and ua.company=pr.company and pr.status = 1 and bp.userStatus = 1 
 						and pr.productclass in (%s) 
