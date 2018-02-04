@@ -1,197 +1,210 @@
 <div id="main" class="lift:surround?with=calendar;at=content">
-      <script type="text/javascript" src="/js/treatment_history.js"></script>
-      <script type="text/javascript">
-        $(function(){
-        	$('#user').userField();
-        	var eventName = {
-        		"afterSave" : "Atualização",
+   <script type="text/javascript" src="/js/treatment_history.js"></script>
+   <script type="text/javascript">
+     $(function(){
+       $('#user').userField();
+       var eventName = {
+       	  "afterSave" : "Atualização",
         		"afterInsert" : "Inclusão",
         		"afterDelete" : "Exclusão",
         		"afterLogicalDelete" : "Exclusão Lógica"
-        	}
-        	var request = function(){
-					        	var users;
-					        	DataManager.getUsers(function(data_users){
-					        		users = data_users;
-									var promise = $.post('/report/treatment_audit',$('#form_report').serializeObject()).then(function(){
-										var objects = JSON.parse(promise.responseText);
-										objects = objects.map(function(obj){
-											//alert (obj[1])
-											 var result = JSON.parse(obj[1]);
-											 result.__event = eventName[obj[3]];
-											 result.__createdby = obj[4];
-											 result.__createat = obj[2];
-											 return result;
-										});
-										var DiffManagerImpl = new DiffManager(users);
-							            var list = DiffManagerImpl.buildListDiff(objects);
-							            var notShowValidator = function(name){
-							              return name == 'updatedAtx'
-							               //|| name == 'createat';
-							            };
-							            var htmls = list.map(function(item){
-							              var tr = "<tr>";
-							              tr += "<td>"+item._complete.__createdby+"</td>"
-							              tr += "<td>"+item._complete.__createat+"</td>"
-							              tr += "<td>"+item._complete.__event+"</td>"
-							              tr += "<td>"+DiffManagerImpl.toHtml(item._complete, notShowValidator)+"</td>";
-							              tr += "</tr>";
-							              return tr;
-							            });
-							            $("#diff_data>tbody").html(htmls.join(""));					
-									});
-
-					        	});
+       }
+       var request = function(){
+		  var users;
+		  DataManager.getUsers(function(data_users){
+			users = data_users;
+		    var total = 0;
+			var promise = $.post('/report/treatment_audit',$('#form_report').serializeObject()).then(function(){
+				var objects = JSON.parse(promise.responseText);
+				objects = objects.map(function(obj){
+				//alert (obj[1])
+				   var result = JSON.parse(obj[1]);
+					 result.__event = eventName[obj[3]];
+					 result.__createdby = obj[4];
+					 result.__createat = obj[2];
+					 result.__user = obj[5];
+					 return result;
+				});
+				var DiffManagerImpl = new DiffManager(users);
+				var list = DiffManagerImpl.buildListDiff(objects);
+				var notShowValidator = function(name){
+				    return name == 'updatedAtx'
+				    //|| name == 'createat';
+				};
+				var htmls = list.map(function(item){
+					total += 1;
+					var tr = "<tr>";
+					tr += "<td>"+item._complete.__createdby+ " " + item._complete.__user + "</td>"
+					tr += "<td>"+item._complete.__createat+"</td>"
+					tr += "<td>"+item._complete.__event+"</td>"
+					tr += "<td>"+DiffManagerImpl.toHtml(item._complete, notShowValidator)+"</td>";
+					tr += "</tr>";
+					return tr;
+				});
+        $('#total').val(total);
+				$("#diff_data>tbody").html(htmls.join(""));	
+			   });
+             	});
 			}
 			$('#send').click(request);
         });
-      </script>
-      <div class="span16">
-        <form id="form_report" class="well  form-search" method='get'>
-			<h1>
-			<span class="lift:CompanySnippet.thumb"> </span>Relatório de Auditoria
-			</h1>
-	      	<div class="row">
-		        <div class="span8">
-					<div class="clearfix">
-					  <label for="table_c">
-					    Tabela
-					  </label>
-					    <div class="input">
-					      <div class="inline-inputs">
-					        <select class="url_parameter notselect2 local_storage" name="table_c" id='table_c'>
-					          <option value="All">
-					            Todas
-					          </option>
-					          <option value="treatment">
+   </script>
+   <div class="span16">
+     <form id="form_report" class="well  form-search" method='get'>
+	   <h1>
+		<span class="lift:CompanySnippet.thumb"> </span>Relatório de Auditoria
+	   </h1>
+	   <div class="row">
+		  <div class="span8">
+	     	<div class="clearfix">
+			  <label for="table_c">Tabela</label>
+			  <div class="input">
+			     <div class="inline-inputs">
+			       <select class="url_parameter notselect2 local_storage" name="table_c" id='table_c'>
+			          <option value="All">Todas</option>
+					  <option value="treatment">
 					            Atendimento
 					          </option>
-					          <option value="treatmentdetail">
+					  <option value="treatmentdetail">
 					            Atendimento/detalhe
-					          </option>
-					          <option value="busyevent">
+					  </option>
+					  <option value="busyevent">
 					            Bloqueio de Agenda
 					          </option>
-					          <option value="cashier">
+					  <option value="cashier">
 					            Caixa
-					          </option>                  <option value="business_pattern">
+					          </option>                  
+					  <option value="business_pattern">
 					            Cliente/Profissional
 					          </option>                                  
-					          <option value="commision">
+					  <option value="commision">
 					            Comissão
 					          </option>                                  
-					          <option value="company">
+					  <option value="company">
 					            Empresa
 					          </option>                                  
-					          <option value="accountpayable">
+					  <option value="accountpayable">
 					            Fluxo de Caixa
-					          </option>                                  
-					          <option value="paymenttype">
+					          </option>        
+					  <option value="paymenttype">
 					            Forma de pagamento
-					          </option>                                  
-					          <option value="bpmonthly">
+					          </option>                  
+					  <option value="bpmonthly">
 					            Mensalidade
-					          </option>                                  
-					          <option value="payment">
+					          </option>                  
+					  <option value="payment">
 					            Pagamento
 					          </option>
-					          <option value="paymentdetail">
+					  <option value="paymentdetail">
 					            Pagamento/detalhe
 					          </option>
-					          <option value="product">
+					  <option value="product">
 					            Produto/Serviço
-					          </option>                                  
-					          <option value="useractivity">
+					          </option>                
+					  <option value="useractivity">
 					            Profissional/Serviço
-					          </option>                                  
-					          <option value="companyunit">
+					          </option>                   
+					  <option value="companyunit">
 					            Unidade
-					          </option>                                  
-					          <option class="lift:SecuritySnippet.isSuperAdmin" value="monthly">
-					            Mensalidade Bol *
-					          </option>                                  
-					        </select>
-					        <span class="help-block" >Tabela/entidade a ser auditada</span>
-					      </div>
-					    </div>
-					</div>
-		            <div class="clearfix">
-		              <label for="idobj">Id </label>
-		               <div class="input">
-		                  <input class="medium" id="idobj" name="idobj" size="30" type="text"/>
-		                  <a href="" class="_popover_basic" rel="popover" data-content="Normalmente o Id é o primeiro campo da opção Lista de produtos, serviços, clientes, profissionais, etc. No relatório de auditoria de serviços temos os Ids do atendimento e do detalhe" data-original-title="Informação">
-		                  <img width='20' src="/images/info.gif"/>
-		                  </a>
-		                  <span class="help-block">Id do item na tabela</span>
-		               </div>
-		            </div>            
-		            <div class="clearfix">
-		              <label for="idobj">Js obj </label>
-		               <div class="input">
-		                  <input class="medium" id="jsobj" name="jsobj" size="30" type="text" placeholder="Contendo"/>
-		                  <a href="" class="_popover_basic" rel="popover" data-content="Js Obj " data-original-title="Informação">
-		                  <img width='20' src="/images/info.gif"/>
-		                  </a>
-		               </div>
-		            </div>            
-					<div class="clearfix">
-					  <label for="event">
-					    Evento
-					  </label>
-					    <div class="input">
-					      <div class="inline-inputs">
-					        <select class="url_parameter notselect2 local_storage" name="event" id='event'>
-					          <option value="All">
-					            Todos
-					          </option>
-					          <option value="afterInsert">
-					            Inclusão
-					          </option>
-					          <option value="afterSave">
-					            Atualização
-					          </option>
-					          <option value="afterDelete">
-					            Exclusão
-					          <option value="afterLogicalDelete">
-					            Exclusão Lógica
-					          </option>                                  
-					        </select>
-					        <span class="help-block" >Tipo de evento</span>
-					      </div>
-					    </div>
-					</div>
-					<div class="clearfix">
-						<label for="start">Intervalo</label>
-					  	<div class="input">
-					    	<div class="inline-inputs">
-                              <div class="input-prepend" style="float:left; padding-right:10px">
-                                <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
-					            <input type="text" class="input-small date to_day" id='start' name="start" placeholder="Início"/>
-					          </div>
-                              <div class="input-prepend" style="float:left; padding-right:10px">
-                                <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
-					            <input type="text" class="input-small date to_day" id='end' name="end" placeholder="Fim"/>
-					          </div>
-					    	</div>
-					  	</div>
-					</div>
-                    <div class="clearfix">
-	                    <label for="user"><span data-i18n='Profissional'></span></label>
-	                    <div class="input">
-	                      <div class="inline-inputs">
-	                        <select class="url_parameter" name="user" id='user'></select>
-	                        <span class="help-block"><span data-i18n='Profissionais'></span></span>
-	                      </div>
-	                    </div>
+					          </option>                  
+			          <option class="lift:SecuritySnippet.isSuperAdmin" value="monthly">Mensalidade Bol *
+				      </option>                          
+			      </select>
+				  <span class="help-block" >Tabela/entidade a ser auditada</span>
+				</div>
+			  </div>
+			</div>
+	            <div class="clearfix">
+	              <label for="idobj">Id </label>
+	               <div class="input">
+	                  <input class="medium" id="idobj" name="idobj" size="30" type="text"/>
+	                  <a href="" class="_popover_basic" rel="popover" data-content="Normalmente o Id é o primeiro campo da opção Lista de produtos, serviços, clientes, profissionais, etc. No relatório de auditoria de serviços temos os Ids do atendimento e do detalhe" data-original-title="Informação">
+	                  <img width='20' src="/images/info.gif"/>
+	                  </a>
+	                  <span class="help-block">Id do item na tabela</span>
+	               </div>
+	            </div>            
+	            <div class="clearfix">
+	              <label for="idobj">Js obj </label>
+	               <div class="input">
+	                  <input class="medium" id="jsobj" name="jsobj" size="30" type="text" placeholder="Contendo"/>
+	                  <a href="" class="_popover_basic" rel="popover" data-content="Js Obj " data-original-title="Informação">
+	                  <img width='20' src="/images/info.gif"/>
+	                  </a>
+	               </div>
+	            </div>            
+				<div class="clearfix">
+				  <label for="event">
+				    Evento
+				  </label>
+				    <div class="input">
+				      <div class="inline-inputs">
+				        <select class="url_parameter notselect2 local_storage" name="event" id='event'>
+				          <option value="All">
+				            Todos
+				          </option>
+				          <option value="afterInsert">
+				            Inclusão
+				          </option>
+				          <option value="afterSave">
+				            Atualização
+				          </option>
+				          <option value="afterDelete">
+				            Exclusão
+				          <option value="afterLogicalDelete">
+				            Exclusão Lógica
+				          </option>                                  
+				        </select>
+				        <span class="help-block" >Tipo de evento</span>
+				      </div>
+				    </div>
+				</div>
+				<div class="clearfix">
+					<label for="start">Intervalo</label>
+				  	<div class="input">
+				    	<div class="inline-inputs">
+                          <div class="input-prepend" style="float:left; padding-right:10px">
+                            <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
+				            <input type="text" class="input-small date to_day" id='start' name="start" placeholder="Início"/>
+				          </div>
+                          <div class="input-prepend" style="float:left; padding-right:10px">
+                            <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
+				            <input type="text" class="input-small date to_day" id='end' name="end" placeholder="Fim"/>
+				          </div>
+				    	</div>
+				  	</div>
+				</div>
+                <div class="clearfix">
+                    <label for="user"><span data-i18n='Profissional'></span></label>
+                    <div class="input">
+                      <div class="inline-inputs">
+                        <select class="url_parameter" name="user" id='user'></select>
+                        <span class="help-block"><span data-i18n='Profissionais'></span></span>
+                      </div>
                     </div>
-		        </div>
+                </div>
 	        </div>
+            </div>
 	        <div class="clearfix">
 	          <label for="send"></label>
 	            <div class="input">
 	                <button type="button" id="send" class="btn success">Buscar</button>
 	            </div>
 	        </div>	        
+            <div class="clearfix">
+              <label for="total">Total </label>
+              <div class="input">
+                <div class="inline-inputs">
+                  <div class="input-prepend" style="float:left; padding-right:10px">
+                    <div style="float:left; padding-right:10px" class="input-prepend">
+                      <span class="add-on"><img src="/images/count.png" width="16"></span>
+                      <input class="small" id="total" name="total" size="19" placeholder="0" type="text">
+                      <span class="help-block">Total</span>
+                    </div>
+                  </div>
+                </div>
+              </div>                      
+            </div>
         </form>
         <table id='diff_data' class="bordered-table zebra-striped">
             <thead>

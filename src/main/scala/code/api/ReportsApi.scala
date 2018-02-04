@@ -1454,7 +1454,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 			}
 
 			def user_where:String = S.param("user") match {
-				case Full(p) if(p != "") => " createdby = %s".format(p)
+				case Full(p) if(p != "") => " am.createdby = %s".format(p)
 				case _ => "1=1"
 			}			
 
@@ -1464,16 +1464,17 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 			}			
 
 			val SQL = """
-				select idobj,jsobj,createdat,event, createdby
-				from log.auditmapper 
-				where table_c like ?
-				and jsobj like ?
-				and company=?
-				and date(createdat) between date(?) and date(?)
-				and event like ?
+				select am.idobj,am.jsobj,am.createdat,am.event, am.createdby, bu.short_name
+				from log.auditmapper am
+				left join business_pattern bu on bu.id = am.createdby
+				where am.table_c like ?
+				and am.jsobj like ?
+				and am.company=?
+				and date(am.createdat) between date(?) and date(?)
+				and am.event like ?
 				and %s
 				and %s
-				order by createdat desc
+				order by am.createdat desc
 				limit 1000
 			"""
 			toResponse(SQL.format(user_where,idobj),List(table_c, jsobj, AuthUtil.company.id.is, start, end, event))
