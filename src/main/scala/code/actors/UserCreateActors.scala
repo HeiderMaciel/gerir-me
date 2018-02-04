@@ -12,18 +12,29 @@ import java.util.Date
 
 object UserCreateActors extends LiftActor {
 
+  var activityName = "Serviço";
+  var reorgCompany = false;
+
   val rand = new Random(System.currentTimeMillis())
   def treat(company:Company) {
     val unit = createUnit(company)
     val user = createUser(company)
     user.unit(unit).save
-    EmailUtil sendWelcomeEMail user
+
+    // passei o email para o final - rigel 03/02/2018
+    //EmailUtil sendWelcomeEMail user
+
     updatePermissionModuleInfos(company)
 
+    println ("vaiiii ================ conta")
     createAccount(company)
+    println ("vaiiii ================ category")
     createAccountCategoriesForStart(company)
+    println ("vaiiii ================ customer na 1 ")
     createCustomerAtCompanyAdmin(company)
+    println ("vaiiii ================ activity")
     createActivities(company)
+    println ("vaiiii ================ product")
     createProducts(company)
     NotficationMessageSqlMigrate.createNotificationMessage(company);
     updateAccessMasterCompany(company)
@@ -31,6 +42,10 @@ object UserCreateActors extends LiftActor {
     LogActor ! "Criando Usuario["+company.name+"] para empresa ["+company.id.is+"] "
     //company.calendarInterval(30)
     company.save
+    // se dava erro no envio de email não acabava de gerar os registros
+    if (!reorgCompany) {
+      EmailUtil sendWelcomeEMail user
+    }
   }
 
   def updatePermissionModuleInfos(company:Company) = {
@@ -42,6 +57,7 @@ object UserCreateActors extends LiftActor {
       PermissionModule.setModule (company, "CRM");
       //"gerirme"
     } else if (company.appType == Company.SYSTEM_ESMILE) {
+      activityName = "Procedimento";
       PermissionModule.setModule (company, "QUIZ");
       PermissionModule.setModule (company, "BUDGET");
       PermissionModule.setModule (company, "ANVISA");
@@ -50,6 +66,7 @@ object UserCreateActors extends LiftActor {
       PermissionModule.resetModule (company, "FIDELITY");
       //"esmile"
     } else if (company.appType == Company.SYSTEM_EDOCTUS) {
+      activityName = "Procedimento";
       PermissionModule.setModule (company, "QUIZ");
       PermissionModule.setModule (company, "OFFSALE");
       PermissionModule.setModule (company, "ANVISA");
@@ -65,11 +82,13 @@ object UserCreateActors extends LiftActor {
       PermissionModule.resetModule (company, "FIDELITY");
       PermissionModule.resetModule (company, "PACKAGE");
     } else if (company.appType == Company.SYSTEM_EPHYSIO) {
+      activityName = "Procedimento";
       PermissionModule.setModule (company, "BPMONTHLY");
       PermissionModule.setModule (company, "QUIZ");
       PermissionModule.setModule (company, "BMINDEX");
       //"ephysio"
     } else if (company.appType == Company.SYSTEM_EBELLEPET) {
+      activityName = "Procedimento";
       PermissionModule.setModule (company, "RELATION");
       PermissionModule.setModule (company, "QUIZ");
     } else {
@@ -104,19 +123,30 @@ object UserCreateActors extends LiftActor {
   }  
 
   def createCustomerAtCompanyAdmin(company:Company){
-    val customer = _createCustomer(company)
-    .company(1)
-    .idForCompany(company.id.is.toInt)
-    .obs("cadastro pelo site")
-    .mapIcon(7) // icone exclusivo da 1
-    customer.save();
-    company.partner(customer)
+    if (company.partner.isEmpty) {
+      val customer = _createCustomer(company)
+      .company(1)
+      .idForCompany(company.id.is.toInt)
+      .obs("cadastro pelo site")
+      .mapIcon(7) // icone exclusivo da 1
+      customer.save();
+      company.partner(customer)
+    } else {
+      println ("vaiii ================ empresa já tinha partner " )
+    }
   }  
 
   def createUnit(company:Company):Long = {
-    val unit = CompanyUnit.create.company(company).
-    name(company.name).showInCalendar_?(true).
-    appTypeU (company.appType)
+    val ulist = CompanyUnit.findAll (
+      By (CompanyUnit.company,company));
+    val unit = if (ulist.length > 0) {
+      reorgCompany = true;
+      ulist (0)
+    } else {
+      CompanyUnit.create.company(company).
+      name(company.name).showInCalendar_?(true).
+      appTypeU (company.appType)
+    }
     if (company.appType.isEbelle) {
       unit.defaultSex("F") // só o ebelle o default é feminino
     } else {
@@ -125,23 +155,79 @@ object UserCreateActors extends LiftActor {
     unit.save
     unit.id.is
   }
+
+  def createUser(company:Company) = {
+    val ulist = User.findAll (
+      By (User.company,company));
+    val user = if (ulist.length > 0) {
+      reorgCompany = true;
+      ulist (0)
+    } else {
+      User.create.name(BusinessRulesUtil.clearString(company.contact))
+          .phone(company.phone)
+          .userName(company.contact.split(" ")(0))
+          .password(randomNumber+""+randomNumber+""+randomNumber+""+randomNumber+""+randomNumber+""+randomNumber)
+          .company(company)
+          .showInCalendar_?(true)
+          .email(company.email)
+          .groupPermission("1") // administrador
+    }
+    user 
+  }
+
   def createProducts(company:Company){
-    val exampletype = ProductType.create.name("Tipo produto exemplo").company(company).createdBy(1).updatedBy(1)
-    exampletype.save();
-    Product.create.typeProduct(exampletype).name("Produto exemplo").purchasePrice(139.20).salePrice(141.50).minStock(0).commission(10.0).company(company).createdBy(1).updatedBy(1).save()
-    Product.create.name("Conta Cliente").purchasePrice(0.0).salePrice(0.0).minStock(0).commission(0.0).company(company).createdBy(1).updatedBy(1).productClass(ProductType.Types.PreviousDebts).save()
-    Product.create.name("Crédito Cliente").purchasePrice(0.0).salePrice(0.0).minStock(0).commission(0.0).company(company).createdBy(1).updatedBy(1).productClass(ProductType.Types.CustomerCredits).save()
+    try {
+      val exampletype = ProductType.create.name("Tipo produto exemplo").
+      company(company).createdBy(1).updatedBy(1)
+      exampletype.save();
+      Product.create.typeProduct(exampletype).name("Produto exemplo").
+      purchasePrice(139.20).salePrice(141.50).minStock(0).
+      commission(10.0).company(company).createdBy(1).updatedBy(1).save()
+      Product.create.name("Conta Cliente").purchasePrice(0.0).
+      salePrice(0.0).minStock(0).commission(0.0).company(company).createdBy(1).updatedBy(1).productClass(ProductType.Types.PreviousDebts).save()
+      Product.create.name("Crédito Cliente").purchasePrice(0.0).
+      salePrice(0.0).minStock(0).commission(0.0).company(company).createdBy(1).updatedBy(1).productClass(ProductType.Types.CustomerCredits).save()
+    }catch{
+      case e:RuntimeException  => {
+        println ("vaiii ================= " + e.getMessage)
+      }       
+      case _ => {
+        println ("vaiii ================= erro criando activity ")
+      }
+    }
   }
 
   def createAccount(company:Company) = {
-    Account.create.company(company).name("Padrão: Seu Banco").allowCashierOut_?(false).save//.value(0).save
-    Account.create.company(company).name("Caixa").allowCashierOut_?(true).save//.value(0).save    
+    try {
+      Account.create.company(company).name("Padrão: Seu Banco").allowCashierOut_?(false).save//.value(0).save
+      Account.create.company(company).name("Caixa").allowCashierOut_?(true).save//.value(0).save    
+    }catch{
+      case e:RuntimeException  => {
+        println ("vaiii ================= " + e.getMessage)
+      }       
+      case _ => {
+        println ("vaiii ================= erro criando account ")
+      }
+    }
   }
 
   def createActivities(company:Company){
-    val extype = ProductType.create.typeClass(ProductType.Types.Service).name("Tipo serviço exemplo").company(company).createdBy(1).updatedBy(1)
-    extype.save();
-    Activity.create.company(company).name("Serviço exemplo").duration("00:30").typeProduct(extype).salePrice(50.0).commission(50).createdBy(1).updatedBy(1).save()
+    try {
+      val extype = ProductType.create.typeClass(ProductType.Types.Service).
+      name("Tipo " + activityName + " exemplo").company(company).
+      createdBy(1).updatedBy(1)
+      extype.save();
+      Activity.create.company(company).name(activityName + " exemplo").
+      duration("00:30").typeProduct(extype).salePrice(50.0).
+      commission(50).createdBy(1).updatedBy(1).save()
+    }catch{
+      case e:RuntimeException  => {
+        println ("vaiii ================= " + e.getMessage)
+      }       
+      case _ => {
+        println ("vaiii ================= erro criando activity ")
+      }
+    }
   }
 
   def createAccountCategoriesForStart (company:Company){
@@ -150,15 +236,6 @@ object UserCreateActors extends LiftActor {
     FinancialSqlMigrate.createPaymentType(company)
   }
 
-  def createUser(company:Company) =  User.create.name(BusinessRulesUtil.clearString(company.contact))
-      .phone(company.phone)
-      .userName(company.contact.split(" ")(0))
-      .password(randomNumber+""+randomNumber+""+randomNumber+""+randomNumber+""+randomNumber+""+randomNumber)
-      .company(company)
-      .showInCalendar_?(true)
-      .email(company.email)
-      .groupPermission("1") // administrador
-  
   def randomNumber = rand.nextInt(10)
   protected def messageHandler = {
     case a:Company => treat(a)
@@ -288,7 +365,7 @@ object FinancialSqlMigrate{
 
   def createAccountCategories(company:Company) = {
     val id = company.id.is
-    DB.runUpdate(CREATE_ACCOUNT_CATEGORIES,id::id::id::Nil)
+    DB.runUpdate(CREATE_ACCOUNT_CATEGORIES,id::id::id::id::Nil)
   }
 
   def createPaymentType(company:Company) = {
@@ -315,7 +392,8 @@ object FinancialSqlMigrate{
         short_name, mintreenode, maxtreenode, "parent_$qmark", orderinreport, 
         parentaccount, isparent, id,fullname, status, parentreg, managerlevel,
         treelevel, treelevelstr
-        FROM accountcategory a where a.company=26;
+        FROM accountcategory a where a.company=26
+        and a.name not in (select name from accountcategory where company = ?);
         update accountcategory 
         set parentaccount=(select a.id from accountcategory a where a.aux_id=accountcategory.parentaccount and a.company=?) 
         where company=?;"""

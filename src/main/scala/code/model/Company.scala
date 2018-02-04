@@ -291,7 +291,10 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
       if (!hasCompanyWhithEMail()) {
         List[FieldError]()
       } else {
-        List(FieldError(this, Text("E-mail já cadastado em outra empresa! Favor entrar em contato através de suporte@vilarika.com.br ou 31-99169-3247 (whatsapp)")))
+        List(FieldError(this, Text(
+          "E-mail já cadastado em outra empresa! " + 
+          "Se ele for seu, e por acaso tiver esquecido sua senha use a opção <esqueci minha senha> na parte inferior esquerda da tela de login. " +
+          "Caso não consiga criar ou acessar sua empresa, favor entrar em contato através de suporte@vilarika.com.br ou 31-99169-3247 (whatsapp)")))
       }
     }
     def emailValidation: List[FieldError] = {
