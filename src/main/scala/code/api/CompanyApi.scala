@@ -37,7 +37,19 @@ object CompanyApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					JInt(company.id.is.toInt)
 				}catch{
 					case e:RuntimeException => JString(e.getMessage)
-					case _ => JString("Erro desconhecido, tente novamente!")
+					case _ => JString("Erro desconhecido registrando empresa, tente novamente!")
+				}
+			}	
+
+			case "api" :: "company" :: "registryagain" :: Nil Post _ =>{
+				try{
+					def id:String = S.param("id") openOr "0"
+					val company = Company.findByKey (id.toLong).get
+					UserCreateActors ! company
+					JInt(company.id.is.toInt)
+				}catch{
+					case e:RuntimeException => JString(e.getMessage)
+					case _ => JString("Erro desconhecido atualizando empresa, tente novamente!")
 				}
 			}	
 		}

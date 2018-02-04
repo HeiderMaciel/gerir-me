@@ -1,0 +1,36 @@
+<div id="main" class="lift:surround?with=calendar;at=content">
+  <link rel="stylesheet" type="text/css" href="/select2/select2.css" />
+  <script src="/select2/select2.js"></script><script src="/select2/select2_locale_pt-BR.js"></script>
+  <script src="/js/reports.js"></script>
+  <script src="/js/jquery.tablesorter.pager.js"></script>
+  <script type="text/javascript">
+  $(function () {
+    $("#send").click(function(){
+      $.post('/api/company/registryagain', {
+            "id": AuthUtil.company.id}, function(){
+        alert('Processo iniciado com sucesso. Este processamento pode demorar alguns minutos!');
+      });
+    });
+  });
+  </script>
+<div class="page-header">
+          <h1>
+            <span class="lift:CompanySnippet.thumb"> </span>Reorganizar Empresa
+          </h1>
+        </div>  
+    <div>
+      <form id="form_report" class="well  form-search" method='get'>
+      <h1>
+        <span>Só execute caso tenha havido problema na criação da empresa</span>
+      </h1>
+        <div class="span8">        
+        </div>      
+        <div class="clearfix">
+          <label for="send"></label>
+            <div class="input">
+                <button type="button" id="send" class="btn danger">Gerar</button>
+            </div>
+        </div>                     
+      </form>
+  </div>
+ </div>
