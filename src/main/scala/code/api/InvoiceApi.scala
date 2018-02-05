@@ -91,17 +91,18 @@ object InvoiceApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				from treatment tr 
 				inner join business_pattern bc on bc.id = tr.customer
 				left join business_pattern bp on bp.id = tr.user_c
-				left join treatedoctus ted on ted.treatment = tr.id
+				left join treatedoctus ted on ted.treatment = tr.id %s
 				left join offsale of on of.id = ted.offsale
 				left join companyunit cu on cu.id = tr.unit 
-				where tr.company = ? and tr.dateevent between ? and ? and tr.id not in 
+				where tr.company = ? and tr.dateevent between ? and ? and tr.hasdetail = true
+				and tr.id not in 
 				(select it.treatment from invoicetreatment it where it.company = tr.company and it.treatment = tr.id)
-				%s %s %s %s
+				%s %s %s 
 				order by tr.dateevent desc
 				"""
 //				println ("vai ======= user " + users + " datas " + start + "  " + end);
 //println ("vaiii SQL " + SQL_REPORT.format(users, units, offsales, types));
-			toResponse(SQL_REPORT.format(users, units, offsales, types),List(AuthUtil.company.id.is, start, end))
+			toResponse(SQL_REPORT.format(types, users, units, offsales),List(AuthUtil.company.id.is, start, end))
 		}
 
 		case "invoice" :: "xmltiss" :: invoice :: Nil JsonGet _ => {
