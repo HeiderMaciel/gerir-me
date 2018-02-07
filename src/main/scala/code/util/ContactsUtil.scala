@@ -49,7 +49,7 @@ object ContactsUtil extends net.liftweb.common.Logger {
         "c:\\vilarika\\"
       }
      scala.tools.nsc.io.File(filePath + origin + ".sql").writeAll(sqlInsert);
-     println ("vaiiiii ======= " + sqlInsert)
+     //println ("vaiiiii ======= " + sqlInsert)
     }
     details.map((d) => {
 /*
@@ -162,6 +162,8 @@ object ContactsUtil extends net.liftweb.common.Logger {
         }
   //      println ("vaiii ====== " + column);
       });
+      // poderia ser um parm mostrar linha caso cancele 
+      //println ("vaiiiii ====== " + lines(i));
     } else {
       saveContacts (listCol, origin, nameasis);
     }
@@ -184,6 +186,7 @@ case class DetailContacts(
                   private val _qtty:String, 
                   private val _value:String){
 
+/*
   val today = Project.date_format_db.parse(Project.date_format_db.format(new Date()));
   def iCause = AuthUtil.company.inventoryCauseSale.obj.get
   def unit = AuthUtil.unit
@@ -196,6 +199,7 @@ case class DetailContacts(
   def product = Product.findByName (_product);
 
   def customer = Customer.findByName (_customer);
+*/
 
 }
 

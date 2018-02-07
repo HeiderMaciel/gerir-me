@@ -61,7 +61,7 @@ class UploadContacts extends Logger {
       case x if x.length == 0 => info("File size is 0")
       case x =>{
         
-        val filePath = "/tmp/vilarikatmp/"
+        val filePath = "/tmp/"
 
         val oFile = new File(filePath,  fileName.is.openOr("BrokenLink") + fp.fileName.takeRight(4))
         val output = new FileOutputStream(oFile)
