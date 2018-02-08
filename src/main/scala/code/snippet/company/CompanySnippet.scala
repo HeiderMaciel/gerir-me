@@ -137,11 +137,15 @@ object CompanySnippet{
 		// tem que tirar o false do if para validar
 		// verificar 
 		// vilarika  exemplo  pierre sergio hugo aptus
-		val logoUnit = AuthUtil.unit.imagethumb.is match {
+		val logoUnit = if(AuthUtil.?) {
+			AuthUtil.unit.imagethumb.is match {
 			case img:String if(img != "") => {
 				AuthUtil.unit.thumb_web
 			}
 			case _ => ""
+			}
+		} else {
+			""
 		}
 		ac.imagethumb.is match {
 			case img:String if(img != "") => {
