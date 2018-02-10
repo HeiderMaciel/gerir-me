@@ -9,6 +9,7 @@
   <script type="text/javascript">
   var customers = [];
   $(function(){
+    var hasUnitModule = $('.has-unit-module').length > 0;
     $("#send_message").notificationField(true);
     $("#user").userField();
     $("#offsale").offSaleField(true);
@@ -77,6 +78,9 @@
         return "<p style='line-height: 120%'>" + 
             row[9] + "<p/>"
       }
+    }
+    if (!hasUnitModule) {
+     fields[10] = "none";
     }
     fields[11] = { // prof responsavel atividade CRM
       type: "format",
@@ -210,6 +214,7 @@
                 </select>
               </div>
             </div>
+            <input type="hidden" class="has-unit-module lift:SecuritySnippet.hasUnitModule" value="1">
             <div class="clearfix lift:SecuritySnippet.hasUnitModule">
               <label for="unit">Unidade </label>
                 <div class="input">
