@@ -78,26 +78,40 @@
             row[9] + "<p/>"
       }
     }
-    fields[11] = {
+    fields[11] = { // prof responsavel atividade CRM
       type: "format",
       decode: function(name, row) {
-        return "<a href='/user/edit?id=" + row[13] + "' target='_user_maste'>" + name + "</a>";
+        return "<a href='/user/edit?id=" + row[15] + "' target='_user_maste'>" + name + "</a>";
       }
     };
-    fields[12] = {
+    fields[12] = { // orçamento projeto
+      type: "format",
+      decode: function(name, row) {
+        return "<a href='/budget/budget?id=" + row[19] + "' target='_user_maste'>" + name + "</a>";
+      }
+    };
+    fields[13] = { // prof orçamentp
+      type: "format",
+      decode: function(name, row) {
+        return "<a href='/user/edit?id=" + row[18] + "' target='_user_maste'>" + name + "</a>";
+      }
+    };
+    fields[14] = {
       type : "format",
       decode: function(name, row) {
-        return "<a class='btn' href='/treatment/treatment?id="+row[12]+"' title='Editar a atividade' target='_treatment_maste'>Editar</a>" + "<a class='btn primary' onclick='new_detail(" + row[0] +',"' +row[3]+ '"' + ", " + row[13] + "," + row[15] + ")'" + " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir_novo</a> " 
+        return "<a class='btn' href='/treatment/treatment?id="+row[14]+"' title='Editar a atividade' target='_treatment_maste'>Editar</a>" + "<a class='btn primary' onclick='new_detail(" + row[0] +',"' +row[3]+ '"' + ", " + row[15] + "," + row[17] + ")'" + " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir_novo</a> " 
       }
     };
-    fields[13] = {
+    fields[15] = {
       type : "format",
       decode: function(name, row) {
-        return "<a class='btn danger' onclick='del_detail(" + row[14] +")'  target=''>Excluir</a>"
+        return "<a class='btn danger' onclick='del_detail(" + row[16] +")'  target=''>Excluir</a>"
       }
     };
-    fields[14] = "none"; // id treatmentdetail
-    fields[15] = "none"; // id product
+    fields[16] = "none"; // id treatmentdetail
+    fields[17] = "none"; // id product
+    fields[18] = "none"; // id bm mnager
+    fields[19] = "none"; // id pj project
 
     $("#unit").unitField(true,false);
     DataManager.getActivities(function(userObj){
@@ -173,6 +187,9 @@
                   <div class="input-prepend" style="float:left; padding-right:10px">
                     <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
                     <input type="text" class="input-small date end_of_month" id='end_date' name="end_date" placeholder="Fim"/>
+                  </div>
+                  <div class="input-prepend" style="float:left; padding-right:10px">
+                    <input type="number" class="mini local_storage" id='daysahead' name="daysahead" value="7"/>
                   </div>
                 </div>
               </div>
@@ -288,7 +305,9 @@
         <th>Descrição</th>
         <th>Fone Email</th>
         <th class="lift:SecuritySnippet.hasUnitModule" title="Unidade da atividade, não necessariamente a do cliente/paciente">Unidade</th>
-        <th>Profissional</th>
+        <th title="Profissional responsável por essa atividade">Prof Atividade</th>
+        <th title="Orçamento/Projeto">Orçamento</th>
+        <th title="Profissional responsável pelo Orçamento">Prof Orçamento</th>
         <th>Ações</th>
       </thead>
       <tbody>
@@ -354,6 +373,14 @@
                       <div style="float:left; padding-right:10px" class="input-prepend">
                         <span class="add-on"><img width="16" src="/images/cut.png"></span> 
                         <select name="activity" id='activity' class="local_storage"></select>
+                      </div>
+                      <div style="float:left; padding-right:10px" class="input-prepend">
+                        <span class='label-inline'>
+                                        Projeto</span>
+                      </div>
+                      <div style="float:left; padding-right:10px" class="input-prepend">
+                        <span class="add-on"><img width="16" src="/images/cut.png"></span> 
+                        <select name="project" id='project' class="local_storage"></select>
                       </div>
                   </div>
                 </div>

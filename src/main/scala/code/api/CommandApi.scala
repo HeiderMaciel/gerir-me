@@ -226,6 +226,12 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				def customerId:String = S.param("customer") openOr "0"
 				def auxiliarId:String = S.param("auxiliar") openOr "0"
 
+				val ps = if (projectSection == "") {
+				   "0";
+				} else {
+					projectSection
+				}
+
 				if (AuthUtil.user.isCommandPwd) {
 					if (!User.loginCommand(userId.toLong, password)) {
 						throw  new Exception("Senha inválida!");
@@ -254,9 +260,9 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					if (obs != "") {
 						tempd1.get.obs(obs).save
 					}
-					if (status == "9" && project != "") { // budget
+					if (/*status == "9" && */project != "") { // budget
 						ProjectTreatment.createProjectTreatment(project.toLong, 
-							projectSection.toLong, tempt.get.id, tempd1.get.id)
+							ps.toLong, tempt.get.id, tempd1.get.id)
 					}
 				} else {
 					var tempd = TreatmentService.addDetailTreatmentWithoutValidate(tempt.get.id, activity.toLong, 
@@ -270,9 +276,9 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					if (obs != "") {
 						tempd.get.obs(obs).save
 					}
-					if (status == "9" && project != "") { // budget
+					if (/*status == "9" &&*/project != "") { // budget
 						ProjectTreatment.createProjectTreatment(project.toLong, 
-							projectSection.toLong, tempt.get.id, tempd.get.id)
+							ps.toLong, tempt.get.id, tempd.get.id)
 					}
 				}
 				if (end != "" && end.length > 11) {

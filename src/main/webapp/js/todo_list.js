@@ -1,4 +1,8 @@
 $(function() {
+    $("#cutomer_id_treatment").change(function () {
+      return getProjects();
+    });
+
     $("#new_todo").click(function() {
       var agora = getHourBr(FactoryDate.byTime(Date.toDay().getTime()));
       $("#cutomer_id_treatment").val("")
@@ -56,6 +60,22 @@ var getActivities = function() {
   });
 };
 
+var getProjects = function() {
+  if ($("#cutomer_id_treatment").val() == "") {
+    return
+  }
+  DataManager.getProjects($("#cutomer_id_treatment").val(), function(projectsObj) {
+    global_projectsObj = projectsObj;
+    $('#project option').remove();
+    var ret = "<option value=''>Selecione um projecto/orçamento</option>";
+    for (var i in projectsObj) {
+      ret += "<option value='" + projectsObj[i].id + "'>" + projectsObj[i].name + "</option>";
+    }
+    $('#project').append(ret);
+    //$('#project').change().select2('open');
+  });
+};
+
 var getUsersCurrentUnitCommand = function() {
   var url;
   url = "/cash/getUsersCurrentUnitCommand";
@@ -106,7 +126,7 @@ var newTodo = function() {
 var callApiLock = false;
 
 var saveTodo = function() {
-  var end, obs, start, user, password, auxiliar, animal, offsale;
+  var end, obs, start, user, password, auxiliar, animal, offsale, project;
   start = $("#start").val() + " " + $("#hour_start").val();
   // aqui é start mesmo pq dt fim não é informada
   end = $("#start").val() + " " + $("#hour_end").val();
@@ -121,6 +141,7 @@ var saveTodo = function() {
   obs = $("#obs").val();
   activity = $("#activity").val();
   product = "" //$("#product").val();
+  project = $("#project").val();
   var valid = false;
   if ((!$("#cutomer_id_treatment").val()) || (parseFloat($("#cutomer_id_treatment").val()) == 0)) {
     return alert('Um cliente precisa ser selecionado');
@@ -155,7 +176,8 @@ var saveTodo = function() {
         "price": price,
         "amount": amount,
         "activity": activity,
-        "product": product
+        "product": product,
+        "project": project
       }, function(results) {
         if(results === 1 || results == "1"){
           alert("Cadastrado com sucesso");

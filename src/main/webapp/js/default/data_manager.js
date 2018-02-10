@@ -9,6 +9,7 @@ var DataManagerClass = function() {
 	var cheques = [];
 	var activitys = [];
 	var projectsections = [];
+	var projects = [];
 	var units = [];
 	var chashiers = [];
 	var causes = [];
@@ -158,6 +159,18 @@ var DataManagerClass = function() {
 		$.get(url, function(t) {
 			eval("projectsections[project] = " + t);
 			callback(projectsections[project])
+		});
+	};
+
+	this.getProjects = function(customer, callback) {
+		if (arguments.length == 1) {
+			callback = customer;
+			customer = false;
+		}
+		url = "/project/getProjectByCustomer/" + customer;
+		$.get(url, function(t) {
+			eval("projects[customer] = " + t);
+			callback(projects[customer])
 		});
 	};
 

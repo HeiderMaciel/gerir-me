@@ -163,7 +163,7 @@ object ContactsUtil extends net.liftweb.common.Logger {
   //      println ("vaiii ====== " + column);
       });
       // poderia ser um parm mostrar linha caso cancele 
-      //println ("vaiiiii ====== " + lines(i));
+      println ("vaiiiii ====== " + lines(i));
     } else {
       saveContacts (listCol, origin, nameasis);
     }

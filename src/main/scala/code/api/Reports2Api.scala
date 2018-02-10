@@ -572,6 +572,11 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case _ => new Date()
 				}
 
+				def daysahead:Long = S.param("daysahead") match {
+					case Full(p) if(p != "") => p.toLong
+					case _ => 0;
+				}			
+
 				def unit:String = S.param("unit") match {
 					case Full(p) if(p != "") => " and tr.unit =%S".format(p) 
 					case _ => " and " + Treatment.unitsToShowSql
@@ -608,22 +613,28 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					trim (bc.mobile_phone || ' ' || bc.phone || ' ' || bc.email_alternative || ' ' || bc.email) as telefone ,
 					cu.short_name,
 					bp.name as profissional, 
+					pj.name,
+					bm.short_name,
 					tr.id, 
 					/* action troca status atendido */ 
 					/* action edita obs */
 					/* action desmarca e cria outro */
 					bp.id,
 					td.id,
-					pr.id
+					pr.id,
+					bm.id,
+					pj.id
 					from treatment tr 
 					inner join business_pattern bc on bc.id = tr.customer
 					inner join business_pattern bp on bp.id = tr.user_c
 					inner join treatmentdetail td on td.treatment = tr.id
 					inner join companyunit cu on cu.id = tr.unit
 					inner join product pr on pr.id = td.activity and pr.crmservice = true
-					--left join project po ligar ao treatment para orçamento etc
+					left join projecttreatment pt on pt.treatmentdetail = td.id
+					left join project pj on pj.id = pt.project
+					left join business_pattern bm on bm.id = pj.bp_manager
 					where tr.status in (0,3) and tr.company = ? 
-					and tr.dateevent between (?) and (?)
+					and tr.dateevent between (?) and (date(?) + ?::integer)
 					%s
 					%s
 					%s
@@ -636,7 +647,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					order by tr.dateevent desc, bp.name asc
 				"""
 				toResponse(SQL.format(customer, status, unit, offsale, user, prod),
-					List(AuthUtil.company.id.is, start, end))
+					List(AuthUtil.company.id.is, start, end, daysahead))
 			}
 
 			case "report" :: "birthdays" :: Nil Post _ => {

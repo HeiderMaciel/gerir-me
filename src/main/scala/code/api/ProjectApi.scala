@@ -106,6 +106,18 @@ object ProjectApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					}))
 			}
 
+			case "project" :: "getProjectByCustomer" :: customerId :: Nil JsonGet _ =>{
+				JsArray(Project1.findAllInCompany(
+					By(Project1.bp_sponsor, customerId.toLong),
+					OrderBy (Project1.startAt, Descending)).
+					map((a) => {
+					JsObj(
+							("name",a.name.is),
+							("id",a.id.is)
+						)
+					}))
+			}
+
 			case "project" :: budget :: projectId :: Nil Post _ =>{
 				val SQL = """
 					select pj.name, 
@@ -125,7 +137,7 @@ object ProjectApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					from project pj
 					inner join projectsection ps on ps.project = pj.id
 					inner join projecttreatment pt on pt.project = pj.id and pt.projectsection = ps.id
-					inner join treatment tr on tr.id = pt.treatment
+					inner join treatment tr on tr.id = pt.treatment and tr.status = 9 -- para nao mostrar CRM - rever
 					inner join treatmentdetail td on td.id = pt.treatmentdetail
 					inner join product pr on pr.id = td.activity or pr.id = td.product
 					left join tdedoctus tdd on tdd.treatmentDetail = td.id

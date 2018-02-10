@@ -306,12 +306,18 @@ class ProjectTreatment extends Audited[ProjectTreatment]
     }
      
     def createProjectTreatment(project:Long, projectSection:Long, treatment:Long, treatmentDetail:Long):Long = {
-        val itcount = ProjectTreatment.countProjectTreatment (treatment, treatmentDetail)
+        var psl = projectSection
+        if (psl == 0) {
+            val ac = ProjectSection.findAll (
+                By(ProjectSection.project, project)) (0)
+            psl = ac.id.is
+        }
+        val itcount = ProjectTreatment.countProjectTreatment (treatment, treatmentDetail);
         if (itcount < 1) {
             val projectTreatment = ProjectTreatment.createInCompany.project(project)
             .treatment(treatment)
             .treatmentDetail(treatmentDetail)
-            .projectSection (projectSection)
+            .projectSection (psl)
             .obs("teste")
             projectTreatment.save
             projectTreatment.id.is
