@@ -393,11 +393,23 @@ object  PaymentService extends  net.liftweb.common.Logger  {
                           ByList(Payment.command,commans),
                           BySql("date(datepayment) between date(?) and date(?)",IHaveValidatedThisSQL("datepayment","01-01-2012 00:00:00"),start,end)//fica preso ao postgress
      					)
-			case Nil => Payment.findAll(
+			case Nil => {
+				if (start == end) {
+					Payment.findAll(
+						  OrderBy(Payment.command,Ascending),
         				  OrderBy(Payment.datePayment,Ascending),
                           By(Payment.company,AuthUtil.company),
                           BySql("date(datepayment) between date(?) and date(?)",IHaveValidatedThisSQL("datepayment","01-01-2012 00:00:00"),start,end)//fica preso ao postgress
-     					)
+                          )
+                } else {
+					Payment.findAll(
+        				  OrderBy(Payment.datePayment,Ascending),
+						  OrderBy(Payment.command,Ascending),
+                          By(Payment.company,AuthUtil.company),
+                          BySql("date(datepayment) between date(?) and date(?)",IHaveValidatedThisSQL("datepayment","01-01-2012 00:00:00"),start,end)//fica preso ao postgress
+                          )
+                }
+     		}
 		}
     }
 
@@ -427,18 +439,32 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 	def paymentsBetween(start:Date, end:Date, cashier:Int, commans:List[String]) = {
 		commans match {
 			case a:List[Int] if(a.size > 0) => Payment.findAll(
+						  OrderBy(Payment.command,Ascending),
         				  OrderBy(Payment.datePayment,Ascending),
                           By(Payment.company,AuthUtil.company),
                           By(Payment.cashier,cashier),
                           ByList(Payment.command,commans),
                           BySql("date(datepayment) between date(?) and date(?)",IHaveValidatedThisSQL("datepayment","01-01-2012 00:00:00"),start,end)//fica preso ao postgress
 			)
-			case Nil => Payment.findAll(
+			case Nil => {
+				if (start == end) {
+					Payment.findAll(
+						  OrderBy(Payment.command,Ascending),
         				  OrderBy(Payment.datePayment,Ascending),
                           By(Payment.company,AuthUtil.company),
                           By(Payment.cashier,cashier),
                           BySql("date(datepayment) between date(?) and date(?)",IHaveValidatedThisSQL("datepayment","01-01-2012 00:00:00"),start,end)//fica preso ao postgress
      				)
+					} else {
+					Payment.findAll(
+        				  OrderBy(Payment.datePayment,Ascending),
+						  OrderBy(Payment.command,Ascending),
+                          By(Payment.company,AuthUtil.company),
+                          By(Payment.cashier,cashier),
+                          BySql("date(datepayment) between date(?) and date(?)",IHaveValidatedThisSQL("datepayment","01-01-2012 00:00:00"),start,end)//fica preso ao postgress
+     				)
+					}
+			}
 		}
 		
     }    
