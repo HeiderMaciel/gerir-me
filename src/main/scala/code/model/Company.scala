@@ -195,6 +195,14 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
     override def defaultValue = false
     override def dbColumnName = "calendarShowDifUnit"
   }
+  object calendarAllAsConfirmed_? extends MappedBoolean(this) {
+    override def defaultValue = true
+    override def dbColumnName = "calendarAllAsConfirmed"
+  }
+  object calendarAllAsArrived_? extends MappedBoolean(this) {
+    override def defaultValue = true
+    override def dbColumnName = "calendarAllAsArrived"
+  }
 
 /*
   object senNotifications_? extends MappedBoolean(this) {

@@ -229,6 +229,8 @@ object CompanySnippet{
 			"name=calendarShowInterval" #> (SHtml.checkbox(ac.calendarShowInterval_?, ac.calendarShowInterval_?(_)))&
 			"name=calendarShowActivity" #> (SHtml.checkbox(ac.calendarShowActivity_?, ac.calendarShowActivity_?(_)))&
 			"name=calendarShowDifUnit" #> (SHtml.checkbox(ac.calendarShowDifUnit_?, ac.calendarShowDifUnit_?(_)))&
+			"name=calendarAllAsConfirmed" #> (SHtml.checkbox(ac.calendarAllAsConfirmed_?, ac.calendarAllAsConfirmed_?(_)))&
+			"name=calendarAllAsArrived" #> (SHtml.checkbox(ac.calendarAllAsArrived_?, ac.calendarAllAsArrived_?(_)))&
 		    "name=contact" #>  (SHtml.text(ac.contact.is,ac.contact(_)))&
 		    "name=website" #> (SHtml.text(ac.website.is, ac.website(_))) &
 		    "name=email" #> (SHtml.text(ac.email.is,ac.email(_)))&

@@ -120,10 +120,30 @@ object  TreatmentService extends net.liftweb.common.Logger {
 	}
 */
 	def markAsArrived(id:Long) = {
-		Treatment.findByKey(id).get.markAsArrived
+		val ac = Treatment.findByKey(id).get
+		ac.markAsArrived;
+		val aclist = loadTreatmentByCustomer(ac.customer.obj.get, ac.dateEvent, 
+			ac.company.obj.get)
+		aclist.foreach ((ac1)=>{
+			if (ac1.status != Treatment.Paid &&
+				ac1.id != ac.id) {
+				ac1.markAsArrived
+				ac1.save
+			}
+		});
 	}
 	def markAsConfirmed(id:Long) = {
-		Treatment.findByKey(id).get.markAsConfirmed
+		val ac = Treatment.findByKey(id).get
+		ac.markAsConfirmed
+		val aclist = loadTreatmentByCustomer(ac.customer.obj.get, ac.dateEvent, 
+			ac.company.obj.get)
+		aclist.foreach ((ac1)=>{
+			if (ac1.status != Treatment.Paid &&
+				ac1.id != ac.id) {
+				ac1.markAsConfirmed
+				ac1.save
+			}
+		});
 	}
 	def loadTreatmentByUser(user:User,date:Date,company:Company):List[Treatment] = {
 		Treatment.findAll(By(Treatment.user,user.id.is),
@@ -347,22 +367,30 @@ object  TreatmentService extends net.liftweb.common.Logger {
 			// isso já era feito sempre
 			treatment.end(end)
 		}
-		if(status == Treatment.Arrived){
-			treatment.markAsArrived
-		}else if(status == Treatment.Missed){
-			treatment.markAsMissed
-		}else if(status == Treatment.ReSchedule){
-			treatment.markAsReSchedule
-		}else if(status == Treatment.Confirmed){
-			treatment.markAsConfirmed
-		}else if(status == Treatment.Ready){
-			treatment.markAsReady
-		}else if(status == Treatment.PreOpen){
-			treatment.markAsPreOpen
-		}else if(status == Treatment.Open){
-			treatment.markAsOpen
-		}else if(status == Treatment.Budget){
-			treatment.markAsBudget
+		if (status != treatment.status.toInt) {
+			if(status == Treatment.Arrived){
+				treatment.markAsArrived
+				if (AuthUtil.company.calendarAllAsArrived_?) {
+				 	markAsArrived (treatment.id)
+				}
+			}else if(status == Treatment.Missed){
+				treatment.markAsMissed
+			}else if(status == Treatment.ReSchedule){
+				treatment.markAsReSchedule
+			}else if(status == Treatment.Confirmed){
+				treatment.markAsConfirmed
+				if (AuthUtil.company.calendarAllAsConfirmed_?) {
+					markAsConfirmed (treatment.id)
+				}
+			}else if(status == Treatment.Ready){
+				treatment.markAsReady
+			}else if(status == Treatment.PreOpen){
+				treatment.markAsPreOpen
+			}else if(status == Treatment.Open){
+				treatment.markAsOpen
+			}else if(status == Treatment.Budget){
+				treatment.markAsBudget
+			}
 		}
 		if(validate){
 			treatment.save
