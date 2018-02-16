@@ -740,7 +740,12 @@ with WithCustomer with net.liftweb.common.Logger{
 
     def toXmlTiss (treatment:Long) = {
        val ted = getTreatEdoctus
-       var os = OffSale.findByKey (ted.offsale).get;
+       var os = if (ted.hasOffSale) {
+            OffSale.findByKey (ted.offsale).get;
+        } else {
+            // fixo convenio teste da 1
+            OffSale.findByKey (44).get;
+        }
        var typeHosp = ted.hospitalizationType;
        val tag = if (typeHosp == "") {
             "<ans:guiaSP-SADT>"
@@ -789,7 +794,6 @@ with WithCustomer with net.liftweb.common.Logger{
             """
        }
 
-
        var strXml:String = tag + """
                             <ans:cabecalhoGuia>
                                 <ans:registroANS>"""+ os.document_ans.is+"""</ans:registroANS>
@@ -803,7 +807,8 @@ with WithCustomer with net.liftweb.common.Logger{
                                 <ans:dataValidadeSenha>""" + Project.dateToDb(this.dateEvent) + """</ans:dataValidadeSenha>
                             </ans:dadosAutorizacao>
                             """ + this.customer.obj.get.toXmlTiss (1) + """   """ +
-                            this.user.obj.get.toXmlTissSolicitante (getTreatEdoctus.offsale) + """   """ +
+                            // getTreatEdoctus.offsale troquei para os
+                            this.user.obj.get.toXmlTissSolicitante (os.id.is) + """   """ +
                             // antes aqui vinha o bloco da solicitacao
                             this.user.obj.get.toXmlTissExecutante (1) + """    
                             """ + tagInternacao  + 
@@ -816,7 +821,7 @@ with WithCustomer with net.liftweb.common.Logger{
        println ("========= treatmentdetail " + td.id + " " + td.price + " " + td.nameActivity)
             //var td = Treatment.findByKey(it.treatment).get
             //info (tr.toXmlTiss(it.treatment).toString)
-            strXml += td.toXmlTiss
+            strXml += td.toXmlTiss (os.id.is)
        })
        strXml += """
 </ans:procedimentosExecutados>""" + 
@@ -851,7 +856,7 @@ with WithCustomer with net.liftweb.common.Logger{
 
         if (this.totalValue(0) != InvoiceService.totalValuesVal (this)) {
             throw new RuntimeException("Valor total " + this.totalValue(0) + " diferente da soma de subtotais " +
-                InvoiceService.totalValuesVal (this))
+                InvoiceService.totalValuesVal (this) + "\n\nVerique se os serviços/procedimentos envolvidos <" + this.detailTreatmentAsText + "> têm grupo de faturamento associado ao tipo")
         }
         strXml
     }

@@ -22,8 +22,12 @@ class TreatEdoctus extends Audited[TreatEdoctus] with IdPK with CreatedUpdated w
     object newBornAttendance extends MappedString(this, 20) {//Recem nascido
         override def defaultValue = "N"
     }    
-    object hospitalizationType extends MappedString(this, 20) //tipoInternacao
-    object hospitalizationRegime extends MappedString(this, 20) //regimeInternacao
+    object hospitalizationType extends MappedString(this, 20) {//tipoInternacao
+        override def defaultValue = "1"
+    }
+    object hospitalizationRegime extends MappedString(this, 20) {//regimeInternacao
+        override def defaultValue = "1"
+    }
     object accidentIndicator extends MappedString(this, 20) {//indicadorAcidente
         override def defaultValue = "9" // não acidente
     }    
@@ -37,7 +41,12 @@ class TreatEdoctus extends Audited[TreatEdoctus] with IdPK with CreatedUpdated w
     object arrivedAt extends EbMappedDateTime(this)
     object startAtt extends EbMappedDateTime(this) // attendance
     object endAtt extends EbMappedDateTime(this)
-    
+
+    def hasOffSale = offsale.obj  match {
+        case Full(a) => true
+        case _ => false
+    }
+
     override def delete_! = {
         treatment.obj match {
             case Full(t)  if(t.isPaid)=> { throw new RuntimeException(" Não é permitido excluir atendimento pago!") }

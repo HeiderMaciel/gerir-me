@@ -73,7 +73,7 @@ object InvoiceApi extends RestHelper with ReportRest with net.liftweb.common.Log
 			}
 
 			def offsales:String = S.param("offsale") match {
-				case Full(s) if(s != "") => " and ted.offsale = %s".format(s)
+				case Full(s) if(s != "") => " and (ted.offsale = %s or td.offsale = %s) ".format(s,s)
 				case _ => " and 1 = 1 "
 			}
 
@@ -90,9 +90,10 @@ object InvoiceApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				(select sum (price) from treatmentdetail td where td.treatment = tr.id) as valor 
 				from treatment tr 
 				inner join business_pattern bc on bc.id = tr.customer
+				inner join treatmentdetail td on td.treatment = tr.id
 				left join business_pattern bp on bp.id = tr.user_c
 				left join treatedoctus ted on ted.treatment = tr.id %s
-				left join offsale of on of.id = ted.offsale
+				left join offsale of on (of.id = ted.offsale or of.id = td.offsale)
 				left join companyunit cu on cu.id = tr.unit 
 				where tr.company = ? and tr.dateevent between ? and ? and tr.hasdetail = true
 				and tr.id not in 

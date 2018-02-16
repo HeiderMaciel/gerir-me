@@ -97,5 +97,18 @@ object OffSaleProduct extends OffSaleProduct with LongKeyedMapperPerCompany[OffS
             }
         }
     }
+    def offSaleProductExternalId (offsale : Long, 
+        product : Long) : String = {
+        // procura o produto no convênio
+        val ac = OffSaleProduct.findAllInCompany (
+            By (OffSaleProduct.status, 1),
+            By (OffSaleProduct.offsale, offsale),
+            By (OffSaleProduct.product, product));
+        if (ac.length > 0) {
+            return ac(0).external_id
+        } else {
+            ""
+        }
+    }
 }
 

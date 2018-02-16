@@ -51,6 +51,7 @@ class  OffSaleProductSnippet extends net.liftweb.common.Logger {
 			"name=product" #> (SHtml.text(ac.product.is.toString, (p:String) => ac.product(p.toLong)))&
 			"name=productName" #> (SHtml.text(ac.productName, (a:String) => {}))&
 			"name=productTypeName" #> (SHtml.text(ac.productTypeName, (a:String) => {}))&
+			"name=external_id" #> (SHtml.text(ac.external_id.is, ac.external_id(_)))&
 			"name=suggestedprice" #> (SHtml.text(ac.suggestedPrice.is.toString, (v:String) => { if(v !="")ac.suggestedPrice(v.toDouble)} ))&
 			"name=offprice" #> (SHtml.text(ac.offPrice.is.toString, (v:String) => { if(v !="")ac.offPrice(BusinessRulesUtil.snippetToDouble(v))} ))&
 			"name=percentoff" #> (SHtml.text(ac.percentOff.is.toString, (v:String) => { if(v !="")ac.percentOff(BusinessRulesUtil.snippetToDouble(v))} ))&

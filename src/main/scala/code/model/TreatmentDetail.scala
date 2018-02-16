@@ -580,7 +580,7 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
     }
 
 
-    def toXmlTiss = {
+    def toXmlTiss (offsale:Long) = {
        def descricaoProcedimento = if (isService) {
             this.activity.obj.get.search_name.toUpperCase
         } else if (isProduct) {
@@ -588,7 +588,11 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
         } else {
             " sem produto e servico "
         }
-        if(this.external_id == ""){
+       def codigoProcedimento = if (this.external_id != "") {
+            this.external_id
+        } else if (OffSaleProduct.offSaleProductExternalId(offsale, this.activity) != "") {
+            OffSaleProduct.offSaleProductExternalId(offsale, this.activity)
+        } else {
           println ("************************* código vazio " + descricaoProcedimento + " " + this.treatment.obj.get.customer.obj.get.name.is)
           throw new RuntimeException(descricaoProcedimento + " sem código informado " + this.treatment.obj.get.customer.obj.get.name.is)
         }
@@ -599,7 +603,7 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
             <ans:horaFinal>"""+ Project.dateToHourss(this.end) +"""</ans:horaFinal>
             <ans:procedimento>
                 <ans:codigoTabela>98</ans:codigoTabela>
-                <ans:codigoProcedimento>""" + this.external_id + """</ans:codigoProcedimento>
+                <ans:codigoProcedimento>""" + codigoProcedimento + """</ans:codigoProcedimento>
                 <ans:descricaoProcedimento>""" + descricaoProcedimento +
                 """</ans:descricaoProcedimento>
             </ans:procedimento>

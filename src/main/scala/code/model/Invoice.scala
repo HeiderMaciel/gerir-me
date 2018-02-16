@@ -127,6 +127,10 @@ object Invoice extends Invoice with LongKeyedMapperPerCompany[Invoice]
         }else{
           "c:\\vilarika\\"
         }
+        
+        println ("vaiiii ================ gerar " + filePath + "tiss_" + AuthUtil.company.id.toString + "_" 
+        + os.xmlname.is + "_" + invoice.toString +".xml")
+
        scala.tools.nsc.io.File(filePath + "tiss_" + AuthUtil.company.id.toString + "_" 
         + os.xmlname.is + "_" + invoice.toString +".xml").writeAll(strXml)
     }
