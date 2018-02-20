@@ -93,6 +93,15 @@ class Commision
     override def dbIndexed_? = true 
   }
   override def save = {
+    if(this.company.is < 1) {
+      if(AuthUtil.?) {
+        this.company.set (AuthUtil.company.id.is) 
+        LogObj.wLogObj (AuthUtil.company.id.is,"commission sem company resolvido - produto " + this.product, "erro");
+      } else {
+        LogObj.wLogObj (1,"commission sem company não resolvido - produto " + this.product, "erro");
+        throw new RuntimeException("erro ao salvar pagamento");
+      }
+    }
     val result = super.save
     result
   }

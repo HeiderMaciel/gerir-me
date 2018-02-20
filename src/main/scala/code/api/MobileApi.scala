@@ -80,12 +80,17 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
           By(User.company, customer.company),
           By(User.userStatus, 1),
           By(User.showInCalendarPub_?, true),
-          OrderBy (User.name, Ascending)).map( (u) =>
+          OrderBy (User.name, Ascending)).map( (u) => {
+          var strGroup = if (u.userGroupName != "") {
+            " - " + u.userGroupName
+          } else {
+            ""
+          }
           JsObj(
-                ("name",u.name.is),
+                ("name",u.name.is + strGroup),
                 ("id",u.id.is),
                 ("group",u.group.is)
-            )
+            )}
         )
         JsArray(users)
       }

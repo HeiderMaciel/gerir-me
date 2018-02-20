@@ -73,6 +73,19 @@ class PaymentDetail extends LongKeyedMapper[PaymentDetail]  with IdPK with Creat
     def categoryByType (category:AccountCategory) = payment.obj.get.categoryByType (category)
     def discountCategoryByType (category:AccountCategory) = payment.obj.get.discountCategoryByType (category)
 
+    override def save()={
+      if(this.company.is < 1) {
+        if(AuthUtil.?) {
+          this.company.set (AuthUtil.company.id.is) 
+          LogObj.wLogObj (AuthUtil.company.id.is,"paymentdetail sem company resolvido " + this.payment.is, "erro");
+        } else {
+          LogObj.wLogObj (1,"paymentdetail sem company não resolvido " + this.payment.is, "erro");
+          throw new RuntimeException("erro ao salvar pagamento");
+        }
+      }
+      super.save();
+    }
+
 }
 
 object PaymentDetail extends PaymentDetail with LongKeyedMapperPerCompany[PaymentDetail] with OnlyCurrentCompany[PaymentDetail] {
