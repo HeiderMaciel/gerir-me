@@ -119,6 +119,24 @@ object  TreatmentService extends net.liftweb.common.Logger {
 		Treatment.findByKey(id).get.markAsPreOpen
 	}
 */
+	// chamado da mobileApi
+	def markAsReSchedule(id:Long) = {
+		val ac = Treatment.findByKey(id).get
+		ac.markAsReSchedule;
+		ac.save;
+		/*
+		val aclist = loadTreatmentByCustomer(ac.customer.obj.get, ac.dateEvent, 
+			ac.company.obj.get)
+		aclist.foreach ((ac1)=>{
+			if (ac1.status != Treatment.Paid &&
+				ac1.id != ac.id) {
+				ac1.markAsArrived
+				ac1.save
+			}
+		});
+		*/
+	}
+
 	def markAsArrived(id:Long) = {
 		val ac = Treatment.findByKey(id).get
 		ac.markAsArrived;

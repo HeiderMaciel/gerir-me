@@ -120,6 +120,29 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
       }
     }    
 
+    case "mobile" :: "api" :: "reschedule" :: Nil Post _ => {
+      for {
+        email <- S.param("email") ?~ "email parameter missing" ~> 400
+        password <- S.param("password") ?~ "password parameter missing" ~> 400
+        company <- S.param("company") ?~ "company parameter missing" ~> 400
+        trid <- S.param("trid") ?~ "trid parameter missing" ~> 400
+        status <- S.param("status") ?~ "status parameter missing" ~> 400
+      } yield {
+        val customer = Customer.login(email, password, company)
+        val customerAsUser = User.findByKey(customer.id.is).get
+        AuthUtil << customerAsUser
+
+        if (status == "7") { // preopen
+          TreatmentService.delete(trid)
+        } else if (status == "0") { // open
+          var treatment = TreatmentService.markAsReSchedule(trid.toLong)
+        } else {
+          println ("vaiiiii ========= Status não previsto mobile api delete ")
+        }
+        JInt(1)
+      }
+    }    
+
     case "mobile" :: "api" :: "hoptions" :: Nil Post _ => {
       for {
         email <- S.param("email") ?~ "email parameter missing" ~> 400
