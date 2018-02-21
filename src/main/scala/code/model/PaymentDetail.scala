@@ -74,7 +74,7 @@ class PaymentDetail extends LongKeyedMapper[PaymentDetail]  with IdPK with Creat
     def discountCategoryByType (category:AccountCategory) = payment.obj.get.discountCategoryByType (category)
 
     override def save()={
-      if(this.company.is < 1) {
+      if(this.company.is == null) {
         if(AuthUtil.?) {
           this.company.set (AuthUtil.company.id.is) 
           LogObj.wLogObj (AuthUtil.company.id.is,"paymentdetail sem company resolvido " + this.payment.is, "erro");

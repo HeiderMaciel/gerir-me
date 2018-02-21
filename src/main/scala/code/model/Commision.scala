@@ -93,7 +93,7 @@ class Commision
     override def dbIndexed_? = true 
   }
   override def save = {
-    if(this.company.is < 1) {
+    if(this.company.is == null) {
       if(AuthUtil.?) {
         this.company.set (AuthUtil.company.id.is) 
         LogObj.wLogObj (AuthUtil.company.id.is,"commission sem company resolvido - produto " + this.product, "erro");

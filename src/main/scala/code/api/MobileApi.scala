@@ -246,8 +246,7 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
         var ac = Customer.findAll (By(Customer.company, companyLong),
           Like (Customer.email, "%"+email+"%"));
         if (ac.length > 0) {
-          println ("vaiiiii ======================= JA existe na company " + companyLong)
-          JString("Email já cadastrado use a opção Esqueci minha Senha")
+          JString("Email já cadastrado, use a opção Esqueci minha Senha")
         } else {
           var customer = Customer.create
           customer.company(companyLong).

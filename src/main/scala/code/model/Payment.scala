@@ -213,7 +213,7 @@ class Payment extends LongKeyedMapper[Payment] with PerCompany with IdPK with Cr
     }
 
     override def save()={
-      if(this.company.is < 1) {
+      if(this.company.is == null) {
         if(AuthUtil.?) {
           this.company.set (AuthUtil.company.id.is) 
           LogObj.wLogObj (AuthUtil.company.id.is,"payment sem company resolvido", "erro");

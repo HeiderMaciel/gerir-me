@@ -315,6 +315,10 @@ cd /var/log/jenkins
 
 jetty stop
 
+os arquivos de apontamento ficam em
+/etc/nginx/sites-available
+dentro de remessa e tissxml tem um add header que faz o dowload acontecer
+
 nginx -k reload
 nginx -s reload
 
