@@ -713,7 +713,8 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					//LogActor ! SQL
 				toResponse(SQL.format(productclass,unit,user),List(margin_value, margin_value, AuthUtil.company.id.is, start, end))
 			}
-
+/* seria chamado de um dashboard - tinha um sql_dre praticamente duplicado
+no account payable - 22/02/2018 - rigel
 			case "report" :: "dre" :: Nil Post _ => {
 				def start:Date = S.param("start") match {
 					case Full(p) => Project.strToDateOrToday(p)
@@ -725,7 +726,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				}
 				toResponse(AccountPayable.SQL_DRE,List(start, end, start, end, AuthUtil.company.id.is))
 			}
-
+*/
 			case "report" :: "dre_tree" :: Nil Post _ => {
 				def dttypes:String = S.param("dttype") match {
 					case Full(p) => p
@@ -781,7 +782,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				    select id,name, mintreenode, maxtreenode, parentaccount,isparent,
 				(
 				(
-				  select COALESCE(sum(value),0) as total    
+    		      select COALESCE(sum(case when ap.typemovement = 0 then ap.value when ap.typemovement = 1 then ap.value * (-1) end),0) as total    
 				  from accountpayable ap where 
 				  ap.toconciliation = false and
 				  ap.company=? and 
@@ -790,39 +791,29 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				      accountcategory acc 
 				      where acc.company=? and acc.mintreenode between ac.mintreenode and ac.maxtreenode
 				      )
-				      and ap.paid=true and ap.typemovement=0 """ + sqldt + """
+				      and ap.paid=true """ + sqldt + """
 				      and ap.value <> 0
 				      and (%s) and (%s)
 				) 
-				-
-				(
-				  select COALESCE(sum(value),0) as total    
-				  from accountpayable ap where 
-				  ap.toconciliation = false and
-				  ap.company=? and 
-				  ap.category in (
-				      select id from 
-				      accountcategory acc 
-				      where acc.company=? and acc.mintreenode between ac.mintreenode and ac.maxtreenode
-				      )
-				      and ap.paid=true and ap.typemovement=1 """ + sqldt + """
-				      and ap.value <> 0
-				      and (%s) and (%s)
-				)
 				)
 				as total
 				from 
 				accountcategory ac
 				where company=? and (%s)
+         	          and (ac.status = 1 or ac.updatedat >=  date(?))
 				order by maxtreenode desc,orderinreport
 				) as data where total <>0
 				"""
 
 				if(idsToshow.isEmpty) {
-					toResponse(SQL_DRE_TREE.format(unit, costcenters, unit, costcenters, accounts),List(AuthUtil.company.id.is, AuthUtil.company.id.is, start, end, AuthUtil.company.id.is, AuthUtil.company.id.is,start, end, AuthUtil.company.id.is));
+					toResponse(SQL_DRE_TREE.format(unit, costcenters, 
+						accounts),
+					List(AuthUtil.company.id.is, AuthUtil.company.id.is, 
+						start, end, AuthUtil.company.id.is, start));
 				} else  {
-					toResponse(AccountPayable.SQL_DRE_TREE_WITHID.format(sqldt, idsToshowStr, 
-					sqldt, idsToshowStr),List(AuthUtil.company.id.is, AuthUtil.company.id.is, start, end, AuthUtil.company.id.is, AuthUtil.company.id.is,start, end, AuthUtil.company.id.is))
+					toResponse(AccountPayable.SQL_DRE_TREE_WITHID.
+						format(sqldt, idsToshowStr),
+					List(AuthUtil.company.id.is, AuthUtil.company.id.is, start, end, AuthUtil.company.id.is, start))
 				}
 
 			}
@@ -997,7 +988,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				select * from (
 				    select dates.short_name_year, ac.treelevelstr || ac.name,
 				    ( (
-				      select COALESCE(sum(value),0) as total    
+				      select COALESCE(sum(case when ap.typemovement = 0 then ap.value when ap.typemovement = 1 then ap.value * (-1) end),0) as total    
 				      from accountpayable ap where
 					  ap.toconciliation = false and
 				      ap.company=ac.company and 
@@ -1006,34 +997,22 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				          accountcategory acc 
 				          where acc.company= ac.company and acc.mintreenode between ac.mintreenode and ac.maxtreenode
 				          )
-				          and ap.paid=true and ap.typemovement=0 """ + sqldt + """
+				          and ap.paid=true """ + sqldt + """
 				          and (%s) and (%s)
 				    ) 
-				    -
-				    (
-				      select COALESCE(sum(value),0) as total    
-				      from accountpayable ap where
-					  ap.toconciliation = false and
-				      ap.company=ac.company and
-				      ap.category in (
-				          select id from 
-				          accountcategory acc 
-				          where acc.company=ac.company and acc.mintreenode between ac.mintreenode and ac.maxtreenode
-				          )
-				          and ap.paid=true and ap.typemovement=1 """ + sqldt + """
-				          and (%s) and (%s)
-				    )
 				    )
 				    as total, ac.id, to_char (dates.start_of_month,'DD/MM/YYYY'), to_char (dates.end_of_month,'DD/MM/YYYY')
 				    from 
 				    accountcategory ac
 				    inner join dates on(day=1)
 				    where ac.company=? and dates.start_of_month between date(?) and date(?) and (%s)
+         	          and (ac.status = 1 or ac.updatedat >=  date(?))
 				    order by dates.date_c, maxtreenode desc, orderinreport
 				    ) as data where total <>00
 				"""
 				//if(!inverse)
-					toResponse(SQL_REPORT_ACCOUNTPAYABLE.format(unit, costcenters, unit, costcenters, accounts),List(AuthUtil.company.id.is, start, end)) 
+					toResponse(SQL_REPORT_ACCOUNTPAYABLE.format(unit, costcenters, //unit, costcenters, 
+						accounts),List(AuthUtil.company.id.is, start, end, start)) 
 				//else
 				//	toResponse(AccountPayable.SQL_REPORT_ACCOUNT_MONTH,List(AuthUtil.company.id.is, unit, start, end, true, true))
 			} 

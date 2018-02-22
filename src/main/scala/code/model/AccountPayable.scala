@@ -761,39 +761,7 @@ object AccountPayable extends AccountPayable with LongKeyedMapperPerCompany[Acco
       }
     });
   }
-
-  //acho que nao usa  
-  def findAllByStartEndOnlyPaidxxxx(start: Date, end: Date, company: Company) = {
-    AccountPayable.fildAllInUnit(
-      By(AccountPayable.company, company),
-      By(AccountPayable.paid_?, true), BySql("date(dueDate) between date(?) and date(?)", IHaveValidatedThisSQL("dueDate", "01-01-2012 00:00:00"), start, end))
-  }
-
-  def totalPaidXXXX(start: Date, end: Date, company: Company) = {
-    val r = DB.performQuery("select sum(value) from accountpayable where company = ? date(paymentDate) between date(?) and date(?)", List(company.id.is, start, end))
-    r._2(0)(0) match {
-      case a: Any => a.toString.toFloat
-      case _ => 0.0f
-    }
-  }
-  val SQL_REPORT = """select %s,sum(value) as value,  min(dt.duedate) as duedate from (
-          select date_part('year', ap.duedate)||'/'||date_part ('month', ap.duedate) as period,
-                 ac.name,
-                 (ap.value*(CASE WHEN ap.typemovement=1 THEN -1 ELSE 1 END)) as value, duedate
-          from  accountpayable ap
-          inner join accountcategory ac on(ac.id = ap.category)
-          where 
-            ap.toConciliation = false and
-            ap.company = ? and
-            ap.unit = ? and
-            duedate between ? and ? and
-            ap.paid in(? , ?)
-          ) as dt
-          group by name, period
-          order by duedate"""
-
-  val SQL_REPORT_ACCOUNT_MONTH = SQL_REPORT.format("name, period");
-  val SQL_REPORT_MONTH_ACCOUNT = SQL_REPORT.format("period, name");
+  
   val SQL_REPORT_CASHIER_OUTS = """select ap.duedate, ac.short_name as category, substr(ap.obs,1,40), 
       ap.value, ap.typemovement, bp.short_name, cs.idForcompany, acc.short_name as account, 
       bc.short_name, bk.short_name
@@ -811,47 +779,12 @@ object AccountPayable extends AccountPayable with LongKeyedMapperPerCompany[Acco
       ap.company=? and ap.cashier=? and ap.autocreated = false
     """
 
-  val SQL_DRE = """
-    select * from (
-    select name,
-(
-(
-  select COALESCE(sum(value),0) as total    
-  from accountpayable ap where 
-  ap.toConciliation = false and
-  ap.category in (
-      select id from 
-      accountcategory acc 
-      where acc.mintreenode between ac.mintreenode and ac.maxtreenode
-      and ap.paid=true and ap.typemovement=0 and date(ap.duedate) between date(?) and date(?)
-      )
-) 
--
-(
-  select COALESCE(sum(value),0) as total    
-  from accountpayable ap where 
-  ap.toConciliation = false and
-  ap.category in (
-      select id from 
-      accountcategory acc 
-      where acc.mintreenode between ac.mintreenode and ac.maxtreenode
-      and ap.paid=true and ap.typemovement=1 and date(ap.duedate) between date(?) and date(?)
-      )
-)
-)
-as total
-from 
-accountcategory ac
-where company=?
-order by orderinreport
-) as data where total <>0
-"""
 val SQL_DRE_TREE_WITHID = """
 select * from (
     select id,name, mintreenode, maxtreenode, parentaccount,isparent,
 (
 (
-  select COALESCE(sum(value),0) as total    
+  select COALESCE(sum(case when ap.typemovement = 0 then ap.value when ap.typemovement = 1 then ap.value * (-1) end),0) as total    
   from accountpayable ap where 
   ap.toConciliation = false and
   ap.company=? and 
@@ -860,30 +793,15 @@ select * from (
       accountcategory acc 
       where acc.company=? and acc.mintreenode between ac.mintreenode and ac.maxtreenode
       )
-      and ap.typemovement=0 
       %s
       and ap.id in(%s)
 ) 
--
-(
-  select COALESCE(sum(value),0) as total    
-  from accountpayable ap where 
-  ap.toConciliation = false and
-  ap.company=? and 
-  ap.category in (
-      select id from 
-      accountcategory acc 
-      where acc.company=? and acc.mintreenode between ac.mintreenode and ac.maxtreenode
-      )
-      and ap.typemovement=1 
-      %s
-      and ap.id in(%s)
-)
 )
 as total
 from 
 accountcategory ac
 where company=?
+    and (ac.status = 1 or ac.updatedat >=  date(?))
 order by maxtreenode desc,orderinreport
 ) as data where total <>0
 """
