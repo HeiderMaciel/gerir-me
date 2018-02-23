@@ -23,7 +23,14 @@ import java.util.Date
 
 object ContactsUtil extends net.liftweb.common.Logger {
   var sqlInsert = "";
+  var bi = 0;
+  var filePath = if(Project.isLinuxServer){
+    "/tmp/"
+  }else{
+    "c:\\vilarika\\"
+  }
   def execute(file:File, origin:String, nameasis: Long, generatesql: Long){
+    bi = 0;
     sqlInsert = "";
     val lines = fromFile(file).getLines.toList
     val separator:String = if (lines(1).count(_ == '.') >
@@ -37,32 +44,33 @@ object ContactsUtil extends net.liftweb.common.Logger {
       }
     // o for começa de um para saltar a primeira linha 
     // cabeçalho das colunas - parametrizar
-    val details = for(i <- 1 to (lines.size)-1 ) yield {
+    //val details = 
+    println ("vaiiii ======== gerar " + lines.size + " linhas!")
+    for(i <- 1 to (lines.size)-1 ) {
       //println ("vaiii ====== " + lines(i) + " === " + i + " serapardor " + separator)
-      factory(i, lines, separator, origin, nameasis, generatesql)
+      var line = lines(i);
+      factory(i, line, separator, origin, nameasis, generatesql)
     }
     // gerar arquivo aqui
     if (generatesql > 0) {
-      val filePath = if(Project.isLinuxServer){
-        "/tmp/"
-      }else{
-        "c:\\vilarika\\"
-      }
-     scala.tools.nsc.io.File(filePath + origin + ".sql").writeAll(sqlInsert);
+     scala.tools.nsc.io.File(filePath + origin + bi + ".sql").
+     writeAll(sqlInsert);
      //println ("vaiiiii ======= " + sqlInsert)
-    }
-    details.map((d) => {
-/*
+    } else {
+/*    details.map((d) => {
+
       removeInventory(d.customer.id, d.purchasePrice, 0l, d.price, d.amount, 
         d.product, "venda importada", " sem doc", d.unit, 
         d.iCause, d.today)
       if (d.product.salePrice == 0 && d.amount != 0) {
         d.product.salePrice (d.price / d.amount).save
       }
+
+      })
 */
-    })
-    // verificar email no bp e ligar
-    UtilSqlContacts.updateContacts(AuthUtil.company, origin);
+      // verificar email no bp e ligar
+      UtilSqlContacts.updateContacts(AuthUtil.company, origin);
+    } 
   }
 
   def linkContactCustomer (ac:Contact) = {
@@ -146,9 +154,9 @@ object ContactsUtil extends net.liftweb.common.Logger {
   }
 */
 
-  def factory(i:Int, lines:List[String], separator:String, origin:String, nameasis:Long, generatesql:Long):DetailContacts ={
+  def factory(i:Long, lines:String, separator:String, origin:String, nameasis:Long, generatesql:Long):DetailContacts ={
     sqlInsert += "\ninsert into diversos." + origin + " values ("
-    val listCol = lines(i).split(separator)
+    val listCol = lines.split(separator)
     var j = 0;
 
     if (generatesql > 0) {
@@ -163,7 +171,16 @@ object ContactsUtil extends net.liftweb.common.Logger {
   //      println ("vaiii ====== " + column);
       });
       // poderia ser um parm mostrar linha caso cancele 
-      println ("vaiiiii ====== " + lines(i));
+      if (i % 500 == 0) {
+        println ("vaiiiii ====== i " + i + " bi -> " + bi + " " + sqlInsert.length + " lin " + lines);
+      } 
+      if (sqlInsert.length > 700000) {
+        println ("vaiiiii ====== vai gerar um arq " + bi + " " + sqlInsert.length + " lin " + lines);
+        scala.tools.nsc.io.File(filePath + origin + bi + ".sql").
+        writeAll(sqlInsert);
+        sqlInsert = "";
+        bi += 1;
+      }
     } else {
       saveContacts (listCol, origin, nameasis);
     }

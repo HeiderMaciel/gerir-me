@@ -82,6 +82,12 @@ class Payment extends LongKeyedMapper[Payment] with PerCompany with IdPK with Cr
         case _ => ""
       }
     }
+    def customerShortName = {
+      customer.obj match {
+        case Full(c) => c.short_name.is.toString
+        case _ => ""
+      }
+    }
     object commision_processed_? extends MappedBoolean(this){
       override def dbColumnName = "commission_processed"
     }
