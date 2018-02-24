@@ -334,7 +334,7 @@ object EmailUtil {
     sendNotificationRegistration(company)
   }
 
-  def sendRememberEMail(email:String, is_user:Boolean) = {
+  def sendRememberEMail(email:String, is_user:Boolean, company:String) = {
     if (is_user) {
       val ct = User.countByEmail(email)
       if (ct > 0) {
@@ -349,23 +349,28 @@ object EmailUtil {
           })
         })
       } else {
-        throw new RuntimeException ("Email " + email + " não foi encontrado para nenhum profssional em nossa base de dados, por favor verifique.")
+        throw new RuntimeException ("Email " + email + " não foi encontrado para nenhum profssional em nossa base de dados\n\npor favor verifique o email" +
+        "\n\nou contate o administrador de sua empresa")
       }
     } else {
       val cl = Customer.countByEmail(email)
       if (cl > 0) {
+        val companyLong = Company.calPubCompany (company)
         Customer.findByEmail(email).map((ac)=>{
-          ac.email.is.trim.split(",|;").foreach((email1) => {
-            if (email1 == email) {
-              sendMailCustomer(CompanyUnit.findByKey(ac.unit).get,
-                  Company.findByKey (ac.company).get, 
-                  ac.email.is, rememberPasswordEMailCustomer(ac.company.obj.get, ac, product1, lnkProduct1), 
-                  "Recuperar senha cliente/paciente" + product1 + local1, ac.id.is)
-            }
-          })
+          if (ac.company.is == companyLong || companyLong == 1) { 
+            ac.email.is.trim.split(",|;").foreach((email1) => {
+              if (email1.trim == email.trim) {
+                sendMailCustomer(CompanyUnit.findByKey(ac.unit).get,
+                    Company.findByKey (ac.company).get, 
+                    ac.email.is, rememberPasswordEMailCustomer(ac.company.obj.get, ac, product1, lnkProduct1), 
+                    "Recuperar senha cliente/paciente" + product1 + local1, ac.id.is)
+              }
+            })
+          }
         })
       } else {
-        throw new RuntimeException ("Email " + email + " não foi encontrado em nossa base de dados, por favor verifique.")
+        throw new RuntimeException ("Email " + email + " não foi encontrado em nossa base de dados\n\npor favor verifique o email" +
+          "\n\nou faça seu cadastro \n\nou entre em contato com o estabelecimento desejado.")
       }
     }
   }

@@ -60,7 +60,7 @@ var LoginController = function($scope, $http){
 		} else {
 			//alert ('E-mail ok!\n')
 		}
-		$http.post("/security/remember_user_password", {email : email}).success(function(results){
+		$http.post("/security/remember_user_password", {email : email, company : "1"}).success(function(results){
 	        if(results === 1 || results == "1"){
 				alert("Enviado com sucesso para " + email);
 	        }else{

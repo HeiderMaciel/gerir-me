@@ -101,8 +101,9 @@ object SecurityApi extends RestHelper with net.liftweb.common.Logger {
       val json = parse(new String(r.body.get))
       val remember = json.extract[RememberDto]
       try {
+println ("vaiiiii ===== remember user company " + remember.company)
         EmailUtil.sendRememberEMail(remember.email,
-          true /*user */); 
+          true /*user */, remember.company); 
         JInt(1)
       }catch{
         case e:Exception => JString(e.getMessage)
@@ -113,10 +114,10 @@ object SecurityApi extends RestHelper with net.liftweb.common.Logger {
       val json = parse(new String(r.body.get))
       val remember = json.extract[RememberDto]
       try {
-        println ("vaiiii ====================== remember customer " + remember.email)
+println ("vaiiiii ===== remember customer company " + remember.company)
         EmailUtil.sendRememberEMail(remember.email, 
-          false/*customer*/);
-        JsObj (("success","1"));
+          false/*customer*/, remember.company);
+        JString ("1")
       }catch{
         case e:Exception => JString(e.getMessage)
       }     
@@ -256,5 +257,5 @@ case class LoginEmailDto(email: String, password: String, company: String) {
   def hasCompany = company != ""
 }
 
-case class RememberDto(email: String) {
+case class RememberDto(email: String, company: String) {
 }

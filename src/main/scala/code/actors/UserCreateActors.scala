@@ -128,6 +128,7 @@ object UserCreateActors extends LiftActor {
       .company(1)
       .idForCompany(company.id.is.toInt)
       .obs("cadastro pelo site")
+      .unit (7) // vilarika
       .mapIcon(7) // icone exclusivo da 1
       customer.save();
       company.partner(customer)
