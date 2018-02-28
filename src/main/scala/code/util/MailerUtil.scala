@@ -21,6 +21,7 @@ case class MailerUtil(companyUnit:CompanyUnit) extends Mailer with net.liftweb.c
   if(companyUnit.smtpServer.is == "" || companyUnit.passwordSmtp.is == "" || companyUnit.passwordSmtp.is == ""){
     // Seta os valores default de configuração
     companyUnit.
+    smtpServer(companyUnit.smtpServer.defaultValue).
     userSmtp(companyUnit.userSmtp.defaultValue).
     passwordSmtp(companyUnit.passwordSmtp.defaultValue).
     port(companyUnit.port.defaultValue).
