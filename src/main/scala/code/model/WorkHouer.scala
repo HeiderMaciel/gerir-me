@@ -110,7 +110,10 @@ class WorkHouer extends Audited[WorkHouer] with PerCompany with PerUnit with IdP
         BusyEvent.findAllInCompanyWithDeleteds(
             By_>=(BusyEvent.dateEvent,new Date),
             By(BusyEvent.user,this.user),
-            By(BusyEvent.unit,AuthUtil.unit.id)
+            By(BusyEvent.unit,AuthUtil.unit.id),
+            // só deleta se for horario de trabalho
+            // rigel 28/02/2018
+            By(BusyEvent.is_employee_lanche_?,true) 
             ).foreach((be) =>{
             be.insecureDelete_!
         })
