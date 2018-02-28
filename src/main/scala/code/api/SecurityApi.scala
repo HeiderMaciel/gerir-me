@@ -51,7 +51,14 @@ object SecurityApi extends RestHelper with net.liftweb.common.Logger {
       }
     }
     case "security" :: "changePassword" :: Nil Post _ => {
-      AuthUtil.user.password(S.param("password").get).save
+      if (AuthUtil.user.is_employee_$qmark) {
+        AuthUtil.user.password(S.param("password").get).save
+      } else {
+        // é cliente de agenda publica
+        // ai não pode validar por exemplo email duplicado
+        val ac = Customer.findByKey (AuthUtil.user.id.is).get
+        ac.password(S.param("password").get).save
+      }
       JInt(1)
     }
     case "security" :: "unRegisterFacebook" :: Nil Post _ => {
