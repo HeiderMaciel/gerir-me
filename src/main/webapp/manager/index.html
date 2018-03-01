@@ -1,13 +1,16 @@
 <div id="main" class="lift:surround?with=bootstrap;at=content">
   <span class="span12">
       <span class="span3" style="float:left">
-        <h5>Gerais</h5>
+        <h5>Empresa</h5>
         <ul>
           <li>
            <a href="/manager/companies.html" class="_popover" rel="popover" data-content="Mudar de empresa" data-original-title="Mudar de empresa">
               <img width='32' src="/images/icon_company.png"/>
            </a>
           </li>
+        </ul>
+        <h5 class="lift:SecuritySnippet.isSuperAdmin">Gerais</h5>
+        <ul class="lift:SecuritySnippet.isSuperAdmin">
           <li>
            <a href="/company_log/list_sqlcommand.html" target="_blancccck" class="_popover" rel="popover" data-content="Executar SQL" data-original-title="Executar SQL">
               <img width='32' src="/images/generate.png"/>
@@ -19,6 +22,11 @@
            </a>
           </li>
           <li>
+           <a href="/manager/support.html" class="_popover" rel="popover" data-content="Suporte" data-original-title="Suporte">
+              <img width='32' src="/images/configure.png"/>
+           </a>
+          </li>
+          <li>
            <a href="/customer/upload_migration_file.html" class="_popover" rel="popover" data-content="Migrar planilha" data-original-title="Migrar Planilha">
               <img width='32' src="/images/icon_company.png"/>
            </a>
@@ -26,8 +34,8 @@
         </ul>
     </span>
     <span class="span3" style="float:left">
-      <h5>Financeiros</h5>
-      <ul>
+      <h5 class="lift:SecuritySnippet.isSuperAdmin">Financeiros</h5>
+      <ul class="lift:SecuritySnippet.isSuperAdmin">
         <li>
            <a href="/manager/upload_cnab_file.html" target="_blancccck" class="_popover" rel="popover" data-content="Enviar Cnab 240" data-original-title="Enviar Cnab 240">
               <img width='32' src="/images/money.png"/>
@@ -51,8 +59,8 @@
       </ul>    
     </span>
     <span class="span3">
-      <h5>Diversos</h5>
-      <ul>
+      <h5 class="lift:SecuritySnippet.isSuperAdmin">Diversos</h5>
+      <ul class="lift:SecuritySnippet.isSuperAdmin">
         <li>
           <a href="/map.html" class="_popover" rel="popover" data-content="Geolocalização" data-original-title="Mapa">
             <img width='32' src="/images/earth.png"/>
@@ -69,8 +77,8 @@
            </a>
         </li>
       </ul>
-      <h5>Migração</h5>
-      <ul>
+      <h5 class="lift:SecuritySnippet.isSuperAdmin">Migração</h5>
+      <ul class="lift:SecuritySnippet.isSuperAdmin">
         <li>
            <a href="/financial_admin/commission_reprocess.html" target="_blancccck" class="_popover" rel="popover" data-content="Reprocessar comissão" data-original-title="Reprocessar comissão">
               <img width='32' src="/images/money.png"/>

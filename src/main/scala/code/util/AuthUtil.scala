@@ -58,6 +58,12 @@ object AuthUtil {
     }
   }
 
+  def checkSupportAdmin {
+    if(!AuthUtil.user.isSupportAdmin){
+      throw new SecurityException("Acesso negado")
+    }
+  }
+
   def unit :CompanyUnit = {
       curUnit.is match {
         case Full(unit) => unit

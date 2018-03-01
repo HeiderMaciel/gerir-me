@@ -13,6 +13,7 @@ import json._
 import http.js._
 import JE._
 import net.liftweb.util.Helpers
+import net.liftweb.mapper._ 
 
 import scala.xml._
 
@@ -130,7 +131,21 @@ println ("vaiiiii ===== remember customer company " + remember.company)
       }     
     }
     case "security" :: "useCompany" :: Nil JsonGet (r) => {
-      AuthUtil.checkSuperAdmin
+      def coid:String = S.param("id") match {
+        case Full(p) => p
+        case _ => "0"
+      }
+      AuthUtil.checkSupportAdmin
+      if (!AuthUtil.user.isSuperAdmin) {
+        val ac = User.findByKey (AuthUtil.user.id).get
+        if (UserCompanyUnit.findAll (
+          By(UserCompanyUnit.status,1),
+          By(UserCompanyUnit.company,coid.toLong),
+          By(UserCompanyUnit.user,AuthUtil.user.id)
+          ).length < 1 && (coid.toLong != ac.company.is)) {
+          AuthUtil.checkSuperAdmin
+        }
+      }
       val company = Company.findByKey((S.param("id") openOr "0").toLong).get
       AuthUtil.user.company(company).unit(company.mainUnit)
       AuthUtil << AuthUtil.user
@@ -148,6 +163,27 @@ println ("vaiiiii ===== remember customer company " + remember.company)
       }
       ac.save
       S.redirectTo("/manager/modules")
+      JInt(1)
+    }
+    case "security" :: "attrSupport" :: Nil JsonGet (r) => {
+      AuthUtil.checkSuperAdmin
+      def id:String = S.param("id") match {
+        case Full(p) => p
+        case _ => "0"
+      }
+      val ac = UserCompanyUnit.findAll(
+        By (UserCompanyUnit.company, AuthUtil.company.id),
+        By (UserCompanyUnit.user, id.toLong))
+      if (ac.length < 1) {
+        UserCompanyUnit.createInCompany.user(id.toLong).save
+      } else {
+        if (ac(0).status == 1) {
+          ac(0).status (0).save;
+        } else {
+          ac(0).status (1).save;
+        }
+      }
+      S.redirectTo("/manager/support")
       JInt(1)
     }
     case "security" :: "login_face" :: Nil Post (r) => {

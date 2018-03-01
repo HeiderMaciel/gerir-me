@@ -154,7 +154,7 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
 
   var booleanDecode = function (value) {
     var _ = function () {
-      return value == "true" ? "good.png" : "bad.png"
+      return (value == "true" || value == "1") ? "good.png" : "bad.png"
     }
     return "<img src='/images/" + _() + "'/>";
   }

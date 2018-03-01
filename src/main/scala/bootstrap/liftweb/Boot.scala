@@ -111,6 +111,10 @@ class Boot {
                        ()=> toAccessDenied
                       )
 
+    val supportAdmin = If( ()=> ( AuthUtil.? && AuthUtil.user.isSupportAdmin),
+                       ()=> toAccessDenied
+                      )
+
     val unLoggedIn = If( ()=> AuthUtil !, 
                          ()=> toAccessDenied
                       )
@@ -481,10 +485,8 @@ class Boot {
         Menu(Loc("rank", Link(List("rank"), true, "/rank"),"rank",crudeAccess,Hidden)),
         Menu(Loc("Relatórios", Link(List("/reports/center"), true, "/reports/center"),"Relatórios",reportNotEgrexAccess)),
         Menu(Loc("Relatórios egrex", Link(List("/reports/center_egrex"), true, "/reports/center_egrex"),"Relatórios",isEgrex)),
-        Menu(Loc("Ad", Link(List("manager"), true, "/manager/index"), "Ad",superAdmin))
-        
-        
-        
+        Menu(Loc("Ad", Link(List("manager"), true, "/manager/index"), "Ad",supportAdmin))
+       
     )
 //println ("vaiiii ====================== " + sitemap)
 

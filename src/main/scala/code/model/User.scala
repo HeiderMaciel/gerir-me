@@ -421,7 +421,9 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 
     def isSuperAdmin = groupPermissionList.filter(_==UserGroupPermission.SUPER_ADMIN).size > 0
 
-    def isAdmin = groupPermissionList.filter(_==UserGroupPermission.ADMIN_USER).size > 0 || isSuperAdmin
+    def isSupportAdmin = groupPermissionList.filter(_==UserGroupPermission.SUPPORT_ADMIN).size > 0 || isSuperAdmin
+
+    def isAdmin = groupPermissionList.filter(_==UserGroupPermission.ADMIN_USER).size > 0 || isSuperAdmin || isSupportAdmin
 
     def isAdminRead = groupPermissionList.filter(_==UserGroupPermission.ADMIN_READ).size > 0
 

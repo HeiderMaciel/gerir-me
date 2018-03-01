@@ -149,6 +149,7 @@ object UserGroupPermission{
 	lazy val COMMAND_USER = 20;
 	lazy val SIMPLE_USER_CALENDAR_VIEW = 21;
 	lazy val BUDGET = 22; // orçamento/planejamento
+	lazy val SUPPORT_ADMIN = 900; // parceiros que dão suporte à outras empresas
 	lazy val SUPER_ADMIN = 1000;
 }
 

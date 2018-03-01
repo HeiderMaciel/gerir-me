@@ -5,20 +5,22 @@
   <script type="text/javascript">
   $(function(){
     var fields = [];
-    fields[0] = {
+    fields[2] = {
       type : "format",
       decode : function(name, row){
-        return "<a href='/security/useModule?id="+row[3]+"'>"+name+"</a>"
+        return "<a href='/security/attrSupport?id="+row[5]+"'>"+name+"</a>"
       }
     };     
-    fields[2] = 'boolean';
-    fields[3] = {
+    fields[3] = 'boolean';
+    fields[4] = {
       type : "format",
-      decode : function(id){
-        return "<a class='btn' href='/security/useModule?id="+id+"'>Alterar</a>"
+      decode : function(name, row){
+        return "<a class='btn' href='/security/attrSupport?id="+row[5]+"'>Alterar</a>"
       }
     };    
-    var url = "/report/modules";
+    fields[5] = 'none';
+
+    var url = "/report/support";
     var request = function(){
       renderReport(url,fields,$("#form_report").serializeObject(),"#grid",function(data){
       });
@@ -30,20 +32,10 @@
   <div class="">
       <form id="form_report" class="well form-search" method='get'>
         <h1>
-          <span class="lift:CompanySnippet.thumb"> </span>Acesso aos Módulos
+          <span class="lift:CompanySnippet.thumb"> </span>
+          <input class="report_title local_storage" id="title_report_support" name="title_report_support" size="30" type="text" value="Lista/Atribui Profissionais de Suporte"/>
         </h1>
         <div class="row">
-          <div class="clearfix">
-            <label for="status">
-              Mostrar Todas? 
-            </label>
-              <div class="input">
-                <div class="inline-inputs">
-                  <input class="url_parameter" name="status" id='status' type='checkbox' />
-                  <span class="help-block">Mostrar módulos inativos</span>
-                </div>
-              </div>
-          </div>
           <div class="clearfix">
             <label for="send"></label>
               <div class="input">
@@ -55,8 +47,9 @@
   </div>
   <table id="grid" class="bordered-table zebra-striped">
       <thead>
-        <th>Modulo</th>
-        <th>Descrição</th>
+        <th>Empr Id</th>
+        <th>Empresa</th>
+        <th>Profissional</th>
         <th>Status</th>
         <th>Ações</th>
       </thead>

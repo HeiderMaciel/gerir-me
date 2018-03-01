@@ -22,8 +22,9 @@ trait LongKeyedMapperPerCompany[A <: LongKeyedMapper[A]] extends OnlyCurrentComp
       val ret = super.findByKey(id)
       ret match {
         case Full(obj) => {
-          if( (AuthUtil.? && obj.asInstanceOf[PerCompany].company.is != AuthUtil.company.id.is) && (!AuthUtil.user.isSuperAdmin)){
-            throw new RuntimeException("Não Encontrado")
+          if( (AuthUtil.? && obj.asInstanceOf[PerCompany].company.is != AuthUtil.company.id.is) && 
+            (!AuthUtil.user.isSuperAdmin && !AuthUtil.user.isSupportAdmin)){
+            throw new RuntimeException("Não Encontrado " + id)
           }
         }
         case _ => 

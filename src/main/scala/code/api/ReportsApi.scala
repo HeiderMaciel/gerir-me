@@ -2005,15 +2005,23 @@ no account payable - 22/02/2018 - rigel
 				"""
 				case _ => " null, "
 			}			
-			AuthUtil.checkSuperAdmin
+			AuthUtil.checkSupportAdmin
+			val compl = if (!AuthUtil.user.isSuperAdmin) {
+				val ac = User.findByKey (AuthUtil.user.id).get
+				""" (id = %s or id in (select ucu.company from usercompanyunit ucu
+				    where ucu.user_c = %s and ucu.status = 1)) 
+				""".format (ac.company, AuthUtil.user.id)
+			} else {
+				" 1 = 1 "
+			}
 			def SQL = """select id, name,id, phone, 
 				contact, email, status, 
 				fu_dt_age (date (now()), date (createdat)), 
 				%s
 				createdat 
 				from company where 
-				search_name like ? and %s order by id desc"""
-			toResponse(SQL.format (profs, status), List (name))
+				search_name like ? and %s and %s order by id desc"""
+			toResponse(SQL.format (profs, status, compl), List (name))
 		}
 
 		case "report" :: "modules" :: Nil Post _ =>{
@@ -2027,6 +2035,23 @@ no account payable - 22/02/2018 - rigel
 				left join domaintable dt on dt.domain_name = 'modulos' and dt.cod = pm.name
 				where pm.company = ? and %s order by pm.name;"""
 			toResponse(SQL.format (status), List (AuthUtil.company.id.is));
+		}
+
+		case "report" :: "support" :: Nil Post _ =>{
+			val status:String = S.param("status") match {
+				case Full(p) if(p != "")=> " pm.status in (1,0) "
+				case _ => " pm.status in (1) "
+			}			
+			AuthUtil.checkSuperAdmin
+			def SQL = """
+				select su.company, co.name, su.name, ucu.status, ucu.id, su.id from business_pattern su 
+				inner join company co on co.id = su.company
+				left join usercompanyunit ucu on ucu.user_c = su.id and ucu.company = ?
+				where su.grouppermission like '%900%' and su.userstatus = 1
+				and su.company <> ?
+				order by su.company, su.name;
+				"""
+			toResponse(SQL, List (AuthUtil.company.id.is,AuthUtil.company.id.is));
 		}
 
 		case "report" :: "paymenttype_summary" :: Nil Post _ => {
