@@ -189,8 +189,10 @@ class User extends  BusinessPattern[User] with UserIdAsString{
                     if (user.groupPermission  == ""){
                         LoginStatus(false, "Este usuário não possui nenhuma permissão atribuida")
                     }else{
-                        LogActor ! "Login email user company " + user.company.is.toString + "       id " + user.id.is.toString +
-                         "      user " + user.name.is + "       date " +new Date().toString
+                        LogObj.wLogObj (user.company.is, "Login email user company " + user.company.is.toString + "       id " + user.id.is.toString +
+                         "      user " + user.name.is + "       date " +new Date().toString, "Info");
+//                        LogActor ! "Login email user company " + user.company.is.toString + "       id " + user.id.is.toString +
+//                         "      user " + user.name.is + "       date " +new Date().toString
                         user.lastLogin(new Date()).insecureSave
                         LoginStatus(true, "", user, listCompany)
                     }

@@ -26,15 +26,10 @@ object UserCreateActors extends LiftActor {
 
     updatePermissionModuleInfos(company)
 
-    println ("vaiiii ================ conta")
     createAccount(company)
-    println ("vaiiii ================ category")
     createAccountCategoriesForStart(company)
-    println ("vaiiii ================ customer na 1 ")
     createCustomerAtCompanyAdmin(company)
-    println ("vaiiii ================ activity")
     createActivities(company)
-    println ("vaiiii ================ product")
     createProducts(company)
     NotficationMessageSqlMigrate.createNotificationMessage(company);
     updateAccessMasterCompany(company)

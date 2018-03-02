@@ -593,8 +593,10 @@ with PerCity{
     
     def alerts_messages:List[String] = {
         def message_birthday = if (birthdayThisMonth && !AuthUtil.company.appType.isEgrex) this.name.is + " faz aniversário este mês dia %s!".format(Project.dateToMonthAndDay(this.birthday.is)) else ""
-        def message_debit  = if (hasDebits) this.name.is + " possui débitos anteriores no valor de %s!".format(totalDebit.toString) else "" 
-        def message_credit  = if (hasCredits) this.name.is + " possui créditos anteriores no valor de %s!".format(totalDebit.toString) else ""
+        // já tentei colocar \n\n aqui mas provoca o erro  abaixo - 02/03/2018 rigel
+        // The server cannot be contacted at this time
+        def message_debit  = if (hasDebits) this.name.is + " possui Débitos anteriores no valor de >>  %s!".format(totalDebit.toString) else "" 
+        def message_credit  = if (hasCredits) this.name.is + " possui Créditos anteriores no valor de >>  %s!".format(totalDebit.toString) else ""
 //        def message_email = if (incomplete_email) "Email não informado!" else ""
         def validateMessage = {
             try{

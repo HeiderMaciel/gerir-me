@@ -157,7 +157,8 @@ class Customer extends BusinessPattern[Customer]{
                               .payment(payment)
                               .description(obs).save
     }
-    override def totalDebit:Double = this.valueInAccount.is
+    // 02/03/2018 coloquei o round pq as vezes perdia precisão
+    override def totalDebit:Double = BusinessRulesUtil.roundHalfUp (this.valueInAccount.is);
 //    def thumb = Gravatar(email,16,"R")
     def images = ImageCustomer.findAll(By(ImageCustomer.customer,this))
 
