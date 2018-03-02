@@ -181,6 +181,18 @@ ver site font awesome
 https://fortawesome.github.io/Font-Awesome/icons/
 http://glyphicons.com/
 
+a diferença de config de acesso no postgres do local para produção éa porta 
+local 5432
+producao 5433
+nos 2 o hostname e' 
+localhost
+não tem nada na aba tunnel na produção
+e o maintenace DB e o user em produção 
+gerir-me
+no local
+postgres
+no dir de sql tem 2 pgconfigXXXX.xml
+
 para acessar o banco novo no linode novo tunel tunnel gerir-me
 ssh -f -L 5433:127.0.0.1:5432 root@45.33.99.152 -N
 

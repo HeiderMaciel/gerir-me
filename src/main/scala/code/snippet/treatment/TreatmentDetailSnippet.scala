@@ -148,18 +148,10 @@ class  TreatmentDetailSnippet extends PaginatorSnippet [TreatmentDetail] {
 			"name=product" #> (SHtml.text(ac.product.is.toString, (p:String) => ac.product(p.toLong)))&
 			"name=wayofaccess" #> (SHtml.text(ac.getTdEdoctus.wayOfAccess.is, ac.getTdEdoctus.wayOfAccess(_)))&
 			"name=tooth" #> (SHtml.select(teeth,Full(ac.getTdEdoctus.tooth.is), ac.getTdEdoctus.tooth(_)))&
-//			"name=hospitalizationType" #> (SHtml.select(hospitalizationtypes,Full(ac.getTreatEdoctus.hospitalizationType.is), ac.getTreatEdoctus.hospitalizationType(_)))&
-//			"name=price" #> (SHtml.text(ac.price.is.toString, (v:String) => { if(v !="")ac.price(v.toDouble)} ))&
-			"name=price" #> (SHtml.text(ac.price.is.toString, (f:String) => { 
-					if(f != "")
-						ac.price(f.toDouble)
-					else
-						ac.price(0.0)
-
-			}))&
+			"name=price" #> (SHtml.text(ac.price.is.toString, 
+				(f:String) => ac.price(BusinessRulesUtil.snippetToDouble(f))))&
 			"name=amount" #> (SHtml.text(ac.amount.is.toString, (v:String) => { if(v !="")ac.amount(v.toDouble)} ))&
 			"name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_))++SHtml.hidden(process))
-//			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v))++SHtml.hidden(process))			
 		}catch {
 		    case e: NoSuchElementException => S.error("Detalhe de Atendimento não existe!")
 		    "#TreatmentDetail_form *" #> NodeSeq.Empty

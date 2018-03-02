@@ -23,17 +23,35 @@ class TreatEdoctus extends Audited[TreatEdoctus] with IdPK with CreatedUpdated w
         override def defaultValue = "N"
     }    
     object hospitalizationType extends MappedString(this, 20) {//tipoInternacao
-        override def defaultValue = "1"
+        override def defaultValue = ""
+        // tipo internacao
+        //1 Clínica
+        //2 Cirúrgica
+        //3 Obstétrica
+        //4 Pediátrica
+        //5 Psiquiátrica 
     }
     object hospitalizationRegime extends MappedString(this, 20) {//regimeInternacao
         override def defaultValue = "1"
+        // regime de internação 
+        //1 Hospitalar
+        //2 Hospital–dia
+        //3 Domiciliar 
     }
     object accidentIndicator extends MappedString(this, 20) {//indicadorAcidente
         override def defaultValue = "9" // não acidente
+        //0 Trabalho 
+        //1 Trânsito 
+        //2 Outros 
+        //9 Não Acidente
     }    
     object closingCause extends MappedString(this, 20) // motivoEncerramento
     object InvoiceType extends MappedString(this, 20) {// tipoFaturamento
         override def defaultValue = "4"
+        //1 Parcial 
+        //2 Final 
+        //3 Complementar
+        //4 Total
     }
     object offsale extends MappedLongForeignKey(this,OffSale)
     object obs extends MappedString(this, 4000)
