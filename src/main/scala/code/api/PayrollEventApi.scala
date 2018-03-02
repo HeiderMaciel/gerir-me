@@ -80,12 +80,13 @@ object PayrollEventApi extends RestHelper with ReportRest with net.liftweb.commo
 				JsArray(BusinessPatternPayroll.findAllInCompany(
 					 OrderBy(BusinessPatternPayroll.business_pattern, Ascending),
 					 OrderBy(BusinessPatternPayroll.date, Ascending),
+					 OrderBy(BusinessPatternPayroll.value, Descending),
 					 BySql("date_c between date(?) and date(?)",IHaveValidatedThisSQL("",""), start, end), 
 					 ByList(BusinessPatternPayroll.business_pattern, users), 
 					 ByList(BusinessPatternPayroll.event, events)).map(toJson))
 			}
 			case "payroll" :: "events" :: Nil JsonGet _ =>{
-				JsArray(PayrollEvent.findAllInCompany.map(eventToJson))
+				JsArray(PayrollEvent.findAllInCompany(OrderBy(PayrollEvent.name, Ascending)).map(eventToJson))
 			}
 			case "payroll" :: "process_start" :: Nil Post _ =>{
 				for{

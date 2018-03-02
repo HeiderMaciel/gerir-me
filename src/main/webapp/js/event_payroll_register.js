@@ -42,6 +42,14 @@ var PayrollEventController = function($scope){
       payrollEvents.forEach(function(payrollEvent){
           $scope.total += payrollEvent.value;
       })
+      // acerta erro de preciao que colocava numero na notação
+      // exponencial
+      $scope.total = $scope.total.toFixed(2)
+      // acerta o -0.00
+      if ($scope.total > -0.0000009 && $scope.total < 0.00000001) {
+        $scope.total = 0.0;
+        $scope.total = $scope.total.toFixed(2)
+      }
       $scope.$apply();
     });
 
@@ -79,6 +87,12 @@ $(function() {
         return
       }
 
+      var events_filter = $('#events_filter').val();
+      if (!events_filter || events_filter == "") {
+        alert("Verba inválida!");
+        return
+      }
+
       PayrollEventController.updateList($(".filter_form form").serializeObject());
   });
   $("#user, #user_select").userField(true);
@@ -94,6 +108,11 @@ $(function() {
   });
   $("#new_account").click(function(){
     $('#id').val(0);
+    var user = $('#user').val();
+    if (user && user.length == 1) {
+      $('#user_select').val(user)
+      $('#user_select').change()
+    }
     $("#account_modal").modal({"show":true,"keyboard":true,"backdrop":true});
   });
 })
