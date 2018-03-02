@@ -1375,6 +1375,9 @@
   }
   var editQtd = function(treatmentIndex, activityIndex, element) {
     var value = $(element).val();
+    if (!value || value == "") { // 02/03/2018 rigel
+      value = "1"; // evita exception na conversao pra número
+    }
     treatments[treatmentIndex].activitys[activityIndex].amount = parseInt(value);
     saveTreatments(); // rigel 02/2017
     prepareTreatmentsInUi();
