@@ -14,7 +14,7 @@
             transcription.textContent = "";
             for (var i = event.resultIndex; i < event.results.length; i++) {
               if(event.results[i].isFinal){
-                transcription.textContent = event.results[i][0].transcript+' (Taxa de acerto [0/1] : ' + event.results[i][0].confidence + ')';
+                transcription.textContent = event.results[i][0].transcript //+' (Taxa de acerto [0/1] : ' + event.results[i][0].confidence + ')';
               }else{
                   transcription.textContent += event.results[i][0].transcript;
               }
