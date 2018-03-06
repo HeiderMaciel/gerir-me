@@ -356,6 +356,14 @@ class Customer extends BusinessPattern[Customer]{
             animals
         }
 
+    def customerObs = { 
+        if (this.is_employee_?) {
+        " (Profissional)"
+        } else {
+        ""
+        }
+    }
+
 }
 
 object Customer extends Customer with BusinessPatternMeta[Customer]{
@@ -581,6 +589,7 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
             )
 
     }
+
     def unificCustomer(customerSource:Customer, customerDesc:Customer, bptype:String){
         if(customerSource.id.is == customerDesc.id.is && bptype == "customer"){
             throw new RuntimeException("Não é permitido unificar um cliente com ele mesmo!")

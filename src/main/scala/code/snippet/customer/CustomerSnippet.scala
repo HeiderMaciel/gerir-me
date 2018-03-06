@@ -133,7 +133,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 		
 		page.flatMap(ac => 
 			bind("f", xhtml,
-							"name" -> Text(ac.name.is),
+							"name" -> Text(ac.name.is + ac.customerObs),
 
 							"idforcompany" -> Text(ac.idForCompany.is.toString),
 							"short_name" -> Text(ac.short_name.is),
@@ -178,7 +178,10 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 		//var id =  openOr "0"
 		S.param("id") match {
 			case Full(s) if (s == "0") => Customer.create
-			case Full(id) => Customer.findByKey(id.toLong).get
+			case Full(id) => {
+				println ("vaiiii custsnippet ============== " + id)
+				Customer.findByKey(id.toLong).get
+			}
 			case _ => Customer.create
 		}
 	}
