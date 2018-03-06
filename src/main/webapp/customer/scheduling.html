@@ -68,6 +68,9 @@
 								<img src="/images/info.gif" width="20">
 								</a>
 		                 	</div>
+                              <div class="input-prepend" style="float:left; padding-right:10px">
+		                    	<input placeholder="Hoje" class="date small to_day" id="date_today" type="hidden"/>
+		                      </div>
 		                 </div>
 		              </div>
 		              <div class="clearfix">
@@ -207,6 +210,13 @@
 		}
 		var generate_treatments = function(type, start, end, hour_start, hour_end,service, service_name,customer,user, obs_treatment, allowDays, user_name, num_max, price, amount){
 	      	var hasGerirmeSystem = $('.has-gerirme-system').length > 0;
+
+			if (start) {
+				if (start < $("#date_today").datepicker("getDate")) {
+					alert ("Data de início " + $("#date_start").val() + " não pode ser anterior ao dia de hoje")
+				    return;
+				}
+			}
 
 			if(!customer){
 				alert("Selecione um cliente");

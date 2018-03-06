@@ -3,7 +3,9 @@ Date.toDay = function(){
 };
 //Date Utilvi
 Date.prototype.getYearGap = function(){
-	var ret = new Date(this.getTime());
+	// 05/05/2018 - rigel antes instanciava ret com this.gettime
+	// sempre retornava 0
+	var ret = new Date();
 	return this.getFullYear() - ret.getFullYear();
 };
 Date.prototype.getStartOfMonth = function(){

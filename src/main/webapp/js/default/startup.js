@@ -68,10 +68,15 @@ $(function() {
 			}, 0);
 		}
 	}).change(function() {
+		// 05/03/2018 - rigel previne data inválida editada manualmente
+		if ($(this).val() != getDateBr ($(this).datepicker('getDate'))) {
+			alert ("Data inválida " + $(this).val())
+			$(this).val(getDateBr (new Date()))
+		}
 		if ($(this).datepicker('getDate') && $(this).datepicker('getDate').getYearGap() > 10) {
-			alert('Verifique data futura!');
-		} else if ($(this).datepicker('getDate') && $(this).datepicker('getDate').getYearGap() < -50) {
-			alert('Verifique data passada!');
+			alert('Verifique data futura, 10 anos ou mais à frente!');
+		} else if ($(this).datepicker('getDate') && $(this).datepicker('getDate').getYearGap() < -80) {
+			alert('Verifique data passada há mais de 80 anos!');
 		}
 	}); //Validar datas 10 anos para frente 50 anos para traz....
 	$(".date").each(function() {
