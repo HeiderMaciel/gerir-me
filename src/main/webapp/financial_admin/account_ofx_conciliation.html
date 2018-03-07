@@ -11,8 +11,8 @@
     $("#category_select").categoryAccountField(true);
     //$("#start").val(getDateBr(new Date().getStartOfMonth()));
     if (AuthUtil.company.id == 13) {
-      $("#start").val('01/07/2017');
-      $("#end").val('31/07/2017');
+      $("#start").val('01/01/2018');
+      $("#end").val('31/01/2018');
     } else {
       $("#start").val(getDateBr(new Date().getStartOfMonth()));
     }
@@ -85,8 +85,18 @@
               "data-id='" + row [10] + "' " +
               "data-idofx='" + row [4] + "' " +
               "data-vaggreg='" + row [9] + "' " +
-              "class='action_conciliate_aggreg'><img width='16px' title='conciliar lançamentos agregados' src='/images/tick.png'></a>" 
-          }
+              "class='action_conciliate_aggreg'><img width='16px' title='conciliar lançamentos agregados' src='/images/tick.png'></a>" +
+              "<a href='#' " +
+              "data-id='" + row [10] + "' " + 
+              "data-idofx='" + row [4] + "' " +
+              "data-vaggreg='" + row [9] + "' " +
+              "class='action_consolidate_aggreg_partial'><img width='16px' title='consolidar parcialmente lançamentos agregados' src='/images/partial_consol.png'></a>" +
+              "<img width='16px' src='/images/transparent1.png'>" +
+              "<a href='#' " + 
+              "data-id='" + row [10] + "' " +
+              "data-idofx='" + row [4] + "' " +
+              "data-vaggreg='" + row [9] + "' " +
+              "class='action_conciliate_aggreg_partial'><img width='16px' title='conciliar parcialmente lançamentos agregados' src='/images/partial_concil.png'></a>"          }
         } else {
           ret = ""
         }
@@ -156,16 +166,22 @@
         //total_gap = ($('#end_value').val()-conciliated);
         //$("#total_gap").val((total_gap).formatMoney());
         $(".action_consolidate").click(function() {
-          return consolidateOne($(this).attr("data-id"), $(this).attr("data-idofx"), false, 0);
+          return consolidateOne($(this).attr("data-id"), $(this).attr("data-idofx"), false, 0, false);
         });
         $(".action_conciliate").click(function() {
-          return conciliateOne($(this).attr("data-id"), $(this).attr("data-idofx"), false, 0);
+          return conciliateOne($(this).attr("data-id"), $(this).attr("data-idofx"), false, 0, false);
         });
         $(".action_consolidate_aggreg").click(function() {
-          return consolidateOne($(this).attr("data-id"), $(this).attr("data-idofx"), true, $(this).attr("data-vaggreg"));
+          return consolidateOne($(this).attr("data-id"), $(this).attr("data-idofx"), true, $(this).attr("data-vaggreg"), false);
         });
         $(".action_conciliate_aggreg").click(function() {
-          return conciliateOne($(this).attr("data-id"), $(this).attr("data-idofx"), true, $(this).attr("data-vaggreg"));
+          return conciliateOne($(this).attr("data-id"), $(this).attr("data-idofx"), true, $(this).attr("data-vaggreg", false));
+        });
+        $(".action_consolidate_aggreg_partial").click(function() {
+          return consolidateOne($(this).attr("data-id"), $(this).attr("data-idofx"), true, $(this).attr("data-vaggreg"), true);
+        });
+        $(".action_conciliate_aggreg_partial").click(function() {
+          return conciliateOne($(this).attr("data-id"), $(this).attr("data-idofx"), true, $(this).attr("data-vaggreg", true));
         });
         $(".action_remove").click(function() {
           return deleteOne($(this).attr("data-idofx"));
@@ -228,15 +244,22 @@
       }
     };
 
-    var conciliateOne = function(id, idofx, aggreg) {
+    var conciliateOne = function(id, idofx, aggreg, 
+      vaggreg, partial) {
       var msg = "";
-      if (aggreg) {
-         msg = "Tem certeza que deseja conciliar os lançamentos agregados?" 
+      var msgAux = "";
+      if (partial) {
+        msgAux = " parcialmente "
       } else {
-         msg = "Tem certeza que deseja conciliar o lançamento?" 
+        msgAux = " "
+      }
+      if (aggreg) {
+         msg = "Tem certeza que deseja conciliar" + msgAux + "os lançamentos agregados?" 
+      } else {
+         msg = "Tem certeza que deseja conciliar" + msgAux + "o lançamento?" 
       }
       if (confirm(msg)) {
-        return $.get("/accountpayable/conciliateofx/" + id +"/" + idofx + "/" + aggreg, function(results) {
+        return $.get("/accountpayable/conciliateofx/" + id +"/" + idofx + "/" + aggreg + "/" + partial, function(results) {
           if(results === 1 || results == "1"){
             alert("Lançamento(s) conciliado(s) com sucesso!");  
           }else{
@@ -247,16 +270,22 @@
       }
     };
 
-    var consolidateOne = function(id, idofx, aggreg) {
+    var consolidateOne = function(id, idofx, aggreg, 
+      vaggreg, partial) {
       var msg = "";
-      alert (aggreg)
-      if (aggreg) {
-        msg = "Tem certeza que deseja consolidar os lançamentos agregados?"
+      var msgAux = "";
+      if (partial) {
+        msgAux = " parcialmente "
       } else {
-        msg = "Tem certeza que deseja consolidar o lançamento?"
+        msgAux = " "
+      }
+      if (aggreg) {
+        msg = "Tem certeza que deseja consolidar" + msgAux + "os lançamentos agregados?"
+      } else {
+        msg = "Tem certeza que deseja consolidar" + msgAux + "o lançamento?"
       }
       if (confirm(msg)) {
-        return $.get("/accountpayable/consolidateofx/" + id +"/" + idofx + "/" + aggreg, function(results) {
+        return $.get("/accountpayable/consolidateofx/" + id +"/" + idofx + "/" + aggreg + "/" + partial, function(results) {
           if(results === 1 || results == "1"){
             alert("Lançamento(s) consoliado(s) com sucesso!");  
           }else{

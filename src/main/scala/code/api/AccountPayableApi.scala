@@ -139,9 +139,10 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 					case e:Exception => JString(e.getMessage)
 				}
 			}
-			case "accountpayable" :: "conciliateofx" :: id :: idofx :: aggreg :: Nil JsonGet _ => {
+			case "accountpayable" :: "conciliateofx" :: 
+				id :: idofx :: aggreg :: partial :: Nil JsonGet _ => {
 				try{
-					AccountPayable.conCilSol (id,idofx,(aggreg == "true"), 1)
+					AccountPayable.conCilSol (id,idofx,(aggreg == "true"), 1, (partial == "true"))
 					JInt(1)
 				} catch {
 					case e:Exception => JString(e.getMessage)
@@ -160,9 +161,11 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 					case e:Exception => JString(e.getMessage)
 				}
 			}
-			case "accountpayable" :: "consolidateofx" :: id :: idofx :: aggreg :: Nil JsonGet _ => {
+			case "accountpayable" :: "consolidateofx" :: 
+				id :: idofx :: aggreg :: partial :: Nil JsonGet _ => {
 				try{
-					AccountPayable.conCilSol (id,idofx,(aggreg == "true"), 2);
+					println ("vaiiiiiii =============== consol " + partial)
+					AccountPayable.conCilSol (id,idofx,(aggreg == "true"), 2, (partial == "true"));
 					JInt(1)
 				} catch {
 					case e:Exception => JString(e.getMessage)
@@ -183,11 +186,15 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 			}
 
 			case "accountpayable"::"remove_checked" :: Nil Post _ => {
-				val ids = S.param("ids").get
-				ids.split(",").map(_.toLong).map((l:Long) => {
-					AccountPayable.findByKey(l).get.delete_!
-				})
-				JInt(1)
+				try {
+					val ids = S.param("ids").get
+					ids.split(",").map(_.toLong).map((l:Long) => {
+						AccountPayable.findByKey(l).get.delete_!
+					})
+					JInt(1)
+				} catch {
+					case e:Exception => JString(e.getMessage)
+				}
 			}
 			case "accountpayable" :: "add" :: Nil Post _ => {
 				for {

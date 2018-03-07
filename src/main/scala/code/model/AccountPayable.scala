@@ -462,7 +462,7 @@ with CanCloneThis[AccountPayable] {
 */
 
   def conCilSol (id : String, idofx : String, 
-    aggreg : Boolean, conciliation : Int) = {
+    aggreg : Boolean, conciliation : Int, partial : Boolean) = {
     val apofx = AccountPayable.findByKey(idofx.toLong).get
     var aplist = if (!aggreg) {
       AccountPayable.findAllInCompany(
@@ -471,27 +471,31 @@ with CanCloneThis[AccountPayable] {
       AccountPayable.findAllInCompany(
         By(AccountPayable.aggregateId, id.toLong))
     }
-    aplist.map((ap) => {
-      if (!ap.paid_?) {
-        ap.paid_? (true);
+    val ap = AccountPayable.findByKey(id.toLong).get
+    var partialValue = ap.aggregateValue;
+    var dif = apofx.value - ap.aggregateValue
+    if (dif < 0.0 && partial) {
+      throw new RuntimeException("Conciliação/Consolidação Parcial só é possível se valor do ofx for maior que o valor agregado")
+    }
+    aplist.map((apl) => {
+      if (!apl.paid_?) {
+        apl.paid_? (true);
       }
       // no ofx duedate sempre = data pagamento
       // o arq é importado sem pagto para não alterar saldo 
       // por isso usa duedate
-      ap.paymentDate (apofx.dueDate)
-      ap.account (apofx.account)
+      apl.paymentDate (apofx.dueDate)
+      apl.account (apofx.account)
       ap.ofxId (apofx.ofxId)
-      var compl = ap.complement
-      ap.complement (compl + " " + apofx.obs)
-      if (conciliate == 1) {
-        ap.makeAsConciliated
+      var compl = apl.complement
+      apl.complement (compl + " " + apofx.obs)
+      if (conciliation == 1) {
+        apl.makeAsConciliated
       } else {
-        ap.makeAsConsolidated
+        apl.makeAsConsolidated
       }
     });
-    val ap = AccountPayable.findByKey(id.toLong).get
-    var dif = apofx.value - ap.aggregateValue
-    val auxTm = if (apofx.value > ap.aggregateValue) {
+    val auxTm:Int = if (apofx.value > ap.aggregateValue) {
         apofx.typeMovement
       } else if (apofx.typeMovement == AccountPayable.IN) {
         AccountPayable.OUT
@@ -499,14 +503,14 @@ with CanCloneThis[AccountPayable] {
         AccountPayable.IN
       }
 
-    if (aggreg && dif != 0.0) {
+    if (aggreg && dif != 0.0 && !partial) {
       if (dif < 0.0) {
         dif = dif * -1
       }
       val ap1 = AccountPayable.createInCompany
       .account (apofx.account) // ofx mesmo
       .paymentDate (apofx.dueDate)
-      .typeMovement(apofx.typeMovement) // ofx mesmo
+      .typeMovement(auxTm) 
       .category (ap.category)
       .dueDate (ap.dueDate)
       .value (dif)
@@ -514,13 +518,22 @@ with CanCloneThis[AccountPayable] {
       .complement ((ap.complement + " " + apofx.obs).trim)
       .obs ("====complemento agregado " + ap.obs)
       ap1.save
-      if (conciliate == 1) {
+      if (conciliation == 1) {
         ap1.makeAsConciliated
       } else {
         ap1.makeAsConsolidated
       }
     }
-    apofx.delete_!
+    if (partial) {
+      if (aggreg && dif != 0.0) {
+        println ("vaiiii ================ tualizar ofx pq partial != 0 " + (apofx.value - partialValue));
+        apofx.value(apofx.value - partialValue).save
+      } else {
+        apofx.delete_!
+      }
+    } else {
+      apofx.delete_!
+    }
   }
 
   def consolidate(accountId:Long, value:Double, paymentStart: Date,

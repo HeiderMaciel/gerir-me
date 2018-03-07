@@ -2007,12 +2007,19 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					ap.category, ap1.category
 					from accountpayable ap 
 					left join accountpayable ap1 on 
-					  ((ap1.paymentdate = ap.paymentdate or ap1.duedate = ap.paymentdate 
-					  or ap1.paymentdate = ap.duedate or ap1.duedate = ap.duedate) 
-					  and (ap1.value = ap.value or (ap1.aggregatevalue > (ap.value * ((100-?)/100)) and ap1.aggregatevalue < (ap.value * ((100+?)/100))))
-					  or (ap1.duedate between date(ap.duedate-?) and date (ap.duedate+?) and
+-- alterado 06/03/2018					
+--					  ((ap1.paymentdate = ap.paymentdate or ap1.duedate = ap.paymentdate 
+--					  or ap1.paymentdate = ap.duedate or ap1.duedate = ap.duedate) 
+--					  and (ap1.value = ap.value or (ap1.aggregatevalue > (ap.value * ((100-?)/100)) and ap1.aggregatevalue < (ap.value * ((100+?)/100))))
+--					  or (ap1.duedate between date(ap.duedate-?) and date (ap.duedate+?) and
 					  --or (ap1.duedate between date(?) and date (?) and
-					     (ap1.value = ap.value or (ap1.aggregatevalue > (ap.value * ((100-?)/100)) and ap1.aggregatevalue < (ap.value * ((100+?)/100))))))
+--					     (ap1.value = ap.value or (ap1.aggregatevalue > (ap.value * ((100-?)/100)) and ap1.aggregatevalue < (ap.value * ((100+?)/100))))))
+					  (
+					  ((ap1.duedate between date(ap.duedate-?) and date (ap.duedate+?)) or
+					  ap1.paymentdate = ap.duedate) and
+					  ((ap1.value > (ap.value * ((100.0-?)/100.0)) and ap1.value < (ap.value * ((100.0+?)/100.0))
+					  or (ap1.aggregatevalue > (ap.value * ((100.0-?)/100.0)) and ap1.aggregatevalue < (ap.value * ((100.0+?)/100.0))))) 
+					  )
 					  and ap1.toconciliation = false and ap.company = ap1.company
 					  and ap1.typemovement = ap.typemovement
 					  %s
@@ -2025,8 +2032,9 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					ap.duedate, ap.id, (ap1.value = ap.value)
 					"""
 				toResponse(SQL_REPORT.format(account_fin, show_conciliated, account_ofx),
-					List(margin, margin, days, days,
-						margin, margin, AuthUtil.company.id.is, start, end))
+					List(days, days, margin, margin, 
+						margin, margin, 
+						AuthUtil.company.id.is, start, end))
 			}
 			case "report" :: "offsaleproduct_cost" :: Nil Post _ =>{
 				val offsales_param_name = S.param("offsales[]") match {
