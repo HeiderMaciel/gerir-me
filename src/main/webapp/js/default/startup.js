@@ -145,7 +145,12 @@ $(function() {
 	$(".login_form [name=user]").val(gup("user"));
 	$(".login_form [name=company]").val(gup("company"));
 	loginInformationProcess();
-	processMessages();
+	// 07/03/2018 - evita mostrar msg nas novas telas de usuário
+	// vai ter que fazer qdo colocar a tela de agenda nova tb
+	// se não resolver
+	if (document.location.href.indexOf("/user/") == -1) {
+		processMessages();
+	}
 	try {
 		$("select:not(.notselect2)").select2();
 		$("select.alow_all").change(function() {
