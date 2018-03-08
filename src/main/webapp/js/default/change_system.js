@@ -87,7 +87,13 @@ var toEbellepet = function() {
 var toEbelle = function() {
 	I18nManager.changeLang("ebelle");
 	$('title').html('e-belle ' + $('title').html());
-	$('.system-name').html('e-belle');
+	// 08/03/2018 ACHO QUE isso nao é mais excutado, vale o do 
+	// util.js
+	if (document.location.href.indexOf("localhost") != -1) {
+		$('.system-name').html('<span style="background-color:blue"><b>e-belle BASE LOCAL no change_system.js</b></span>');
+	} else {
+		$('.system-name').html('e-belle');
+	}
 	$('.brand img').attr('width', '16');
 	$("img[src='/images/logo.png']").attr('src', '/images/logo_ftr_ebelle.png');
 	$("img[src='/images/web.jpg']").attr('src', '/images/logo_ftr_ebelle.png');
