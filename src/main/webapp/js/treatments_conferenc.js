@@ -26,8 +26,8 @@
           alert ("Para excluir vários atendimentos um cliente precisa ser informado!")
           return
       }
-      if (!$('#activity').val()) {
-          alert ("Para excluir vários atendimentos um serviço/procedimento precisa ser informado!")
+      if (!$('#activity').val() && !$('#product').val() ) {
+          alert ("Para excluir vários atendimentos um serviço/procedimento ou produto precisa ser informado!")
           return
       }
       if (treatments_del.length <= 1) {
@@ -56,6 +56,7 @@
         message += "Foram excluídos " + (treatments_del.length - count) + " de " + treatments_del.length + " atendimentos "
         if (message != "") {
           alert (message);
+          executa_rel();
         }
       }
     } else {

@@ -43,7 +43,7 @@ class DeliveryControl extends LongKeyedMapper[DeliveryControl]
 object DeliveryControl extends DeliveryControl with LongKeyedMapperPerCompany[DeliveryControl]  with  OnlyCurrentCompany[DeliveryControl]{
     val SQL_REPORT = """
                         select 
-                        id,
+                        cid,
                         customername,
                         pname,
                         pbomname,
@@ -55,11 +55,13 @@ object DeliveryControl extends DeliveryControl with LongKeyedMapperPerCompany[De
                         (price * un_used) as reamaining,
                         command,
                         idforcompany,
-                        datepayment
+                        datepayment,
+                        pid,
+                        pbomid
                         from
                             (                  
                                 select
-                                customer.id,
+                                customer.id as cid,
                                 customer.short_name as customername,
                                 p.name as pname,
                                 pbom.name as pbomname,
@@ -69,7 +71,9 @@ object DeliveryControl extends DeliveryControl with LongKeyedMapperPerCompany[De
                                 (select avg(price) from deliverydetail dd where dd.delivery=dc.id and dd.product=pbom.id ) as price,
                                 pay.command as command,
                                 c.idforcompany,
-                                pay.datepayment
+                                pay.datepayment,
+                                p.id as pid,
+                                pbom.id as pbomid
                                 from
                                 deliverycontrol dc
                                 inner join product p on(p.id = dc.product)
@@ -84,7 +88,7 @@ object DeliveryControl extends DeliveryControl with LongKeyedMapperPerCompany[De
                         """
     val SQL_REPORT_MINI = """
                             select 
-                        id,
+                        cid,
                         customername,
                         pname,
                         pbomname,
@@ -96,11 +100,13 @@ object DeliveryControl extends DeliveryControl with LongKeyedMapperPerCompany[De
                         ((price/total) * un_used) as reamaining,
                         command,
                         idforcompany,
-                        datepayment
+                        datepayment,
+                        pid,
+                        pid1 -- dobrado mesmo
                         from
                         (
                             select 
-                            customer.id, 
+                            customer.id as cid, 
                             customer.short_name as customername, 
                             p.name as pname, 
                             'Todos do pacote' as pbomname,
@@ -110,7 +116,9 @@ object DeliveryControl extends DeliveryControl with LongKeyedMapperPerCompany[De
                             (select sum (price) from treatmentdetail tdc where tdc.treatment in (select trc.id from treatment trc where trc.payment = dc.payment)) as price,
                             pay.command as command,
                             c.idforcompany,
-                            pay.datepayment
+                            pay.datepayment,
+                            p.id as pid,
+                            p.id as pid1 -- pbom.id p.id 2 vezes mesmo pq nao tem pbom aqui
                             from deliverycontrol dc 
                             inner join treatment tr on tr.id = dc.treatment
                             inner join product p on p.id = dc.product and p.is_bom = true

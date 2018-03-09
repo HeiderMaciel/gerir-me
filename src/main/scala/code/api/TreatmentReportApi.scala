@@ -506,12 +506,20 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 				case _ => BySql[code.model.Treatment]("1 =1",IHaveValidatedThisSQL("",""))
 			}
 
+			// aqui testa acticity ou product pq servico no pacote é vendido como product
 			lazy val activity = S.param("activity") match {
-				case Full(s) if(s != "") => BySql[code.model.Treatment]("id in (select distinct t.id from treatment t inner join treatmentdetail td on( td.treatment = t.id) where t.company=? and dateevent between date(?) and date(?) and td.activity =?)",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"), AuthUtil.company.id.is, startDate,endDate, s.toLong)
+				case Full(s) if(s != "") => BySql[code.model.Treatment](
+					"id in (select distinct t.id from treatment t inner join treatmentdetail td on( td.treatment = t.id) where t.company=? and dateevent between date(?) and date(?) and (td.activity =? or td.product =?))",
+					IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"), 
+					AuthUtil.company.id.is, startDate,endDate, s.toLong, s.toLong)
 				case _ => BySql[code.model.Treatment]("1 =1",IHaveValidatedThisSQL("",""))
 			}
+			// aqui testa acticity ou product pq servico no pacote é vendido como product
 			lazy val product = S.param("product") match {
-				case Full(s) if(s != "") => BySql[code.model.Treatment]("id in (select distinct t.id from treatment t inner join treatmentdetail td on( td.treatment = t.id) where t.company=? and dateevent between date(?) and date(?) and td.product =?)",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"), AuthUtil.company.id.is, startDate,endDate, s.toLong)
+				case Full(s) if(s != "") => BySql[code.model.Treatment](
+					"id in (select distinct t.id from treatment t inner join treatmentdetail td on( td.treatment = t.id) where t.company=? and dateevent between date(?) and date(?) and (td.activity =? or td.product =?))",
+					IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"), 
+					AuthUtil.company.id.is, startDate,endDate, s.toLong, s.toLong)
 				case _ => BySql[code.model.Treatment]("1 =1",IHaveValidatedThisSQL("",""))
 			}			
 

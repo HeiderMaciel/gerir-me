@@ -16,6 +16,22 @@
         return "<a href='/customer/edit?id=" + row[0] + "' target='_customer_maste'>" + name + "</a>";
       }
     }
+    fields[2] = {
+      type: "format",
+      decode: function(name, row) {
+        return "<a href='/product_admin/edit?id=" + row[13] + "' target='_product_maste'>" + name + "</a>";
+      }
+    }
+    fields[3] = {
+      type: "format",
+      decode: function(name, row) {
+        if (row[13] == row[14]) {
+          return name
+        } else {
+          return "<a href='/activity/edit?id=" + row[14] + "' target='_activity_maste'>" + name + "</a>";
+        }
+      }
+    }
     fields[7]={
       type : "format",
       decode : function(value){
@@ -44,6 +60,8 @@
       }
     };    
     fields[12]="date";
+    fields[13]="none";
+    fields[14]="none";
     var url = "/report/deliverydetail";
     var request = function(){
       customers = [];

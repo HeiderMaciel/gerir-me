@@ -898,6 +898,13 @@
     }
     var hasDeliveryToProduct = function(product) {
       var activitys = getAllActivitys();
+      // rodar com f12 para ver estrutura de objeto
+      //console.log(activitys)
+
+      for (var i in activitys) {
+        //console.log(activitys[i])
+        //alert (activitys[i].name)
+      }
       return activitys.filter(function(activity) {
         return activity.activityId == product.id;
       }).length > 0;
@@ -906,7 +913,7 @@
       var prodObj = getProduct();
       if (prodObj.is_bom) {
         if (hasDeliveryToProduct(prodObj)) {
-          alert("Já existe um pacote deste na tabela, para adicionar mais sessões aumente a quantidade! Para vender mais de um pacote faça em vendas separadas");
+          alert("Já existe um pacote " + prodObj.name + " na tabela, para adicionar mais sessões aumente a quantidade! Para vender mais de um pacote faça em vendas separadas");
           return;
         } else {
           for (var i in prodObj.products) {
