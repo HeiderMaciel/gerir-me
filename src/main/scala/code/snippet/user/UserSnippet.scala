@@ -120,7 +120,7 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 							"gp" -> Text(ac.groupPermission.is),
 							"actions" -> <a class="btn btn-default" href={"/user/edit?id="+ac.id.is}>Editar</a>,
 //							"actions" -> <a class="btn" href={"/user/edit_new?id="+user.id.is}>Editar</a>,
-							"thumb" -> ac.thumb ("36"),
+							"thumb" -> ac.thumbUser,
 							"delete" -> SHtml.submit("Excluir",delete,"class" -> "btn danger btn-danger","data-confirm-message" -> {" excluir o profissional "+ac.name.is}),
 							"_id" -> SHtml.text(ac.id.is.toString, id = _),
 							"id" ->Text(ac.id.is.toString)
@@ -178,7 +178,7 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 		    "name=sitetitle" #> (SHtml.text(ac.siteTitle.is, ac.siteTitle(_)))&
 		    "name=sitedescription" #> (SHtml.textarea(ac.siteDescription.is, ac.siteDescription(_)))&
 		    "name=external_id" #> (SHtml.text(ac.external_id.is, ac.external_id(_)))&
-			"#img_user" #> ac.thumb("192")&
+			"#img_user" #> ac.imageCircle("192")&
 //		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&

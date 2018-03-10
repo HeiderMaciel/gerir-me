@@ -36,6 +36,11 @@ trait Imageble{
     case img:String if(img!="") => <img style={"width:"+size+"px"} src={thumbPath}/>
     case _ => <span/>
   }  
+
+  def imageCircle(size:String) = imagethumb.is match {
+    case img:String if(img!="") => <img class="img-circle" style={"width:"+size+"px"} src={thumbPath}/>
+    case _ => <span/>
+  }  
   
   def thumbPath = imagethumb.is match {
     case img:String if(img!="") => 

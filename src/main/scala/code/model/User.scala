@@ -604,7 +604,7 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 
     def thumbUser = imagethumb.is match {
                 case img:String if(img!="") => <a href={"/user/edit?id="+id.is.toString} target='_user_maste'> 
-                    <img href={"/user/edit?id="+id.is.toString} target='_user_maste' style="width:24px" src={thumbPath}/>
+                    <img class="img-circle" href={"/user/edit?id="+id.is.toString} target='_user_maste' style="width:36px" src={thumbPath}/>
                     </a>
         case _ => <span/>
     }
