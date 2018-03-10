@@ -179,6 +179,26 @@ $(function() {
 				});
 		});
 		$("#add_paymentcondition").click(function() {
+			if (!$("#paymentconditions_days").val() &&
+				!$("#paymentconditions_paymentdate").val()) {
+				return alert ("Ou Qtde Dias ou a Data Pagamento precisam ser informados")
+			}
+			if (!$("#paymentconditions_days").val()) {
+				$("#paymentconditions_days").val("0")
+			} else {
+				$("#paymentconditions_paymentdate").val("null")
+			}
+
+			if (!$("#paymentconditions_percent").val() &&
+				!$("#paymentconditions_value").val()) {
+				return alert ("Ou Percentual ou Valor a ser pago precisam ser informados")
+			}
+			if (!$("#paymentconditions_percent").val()) {
+				$("#paymentconditions_percent").val("0")
+			} else {
+				$("#paymentconditions_value").val("0")
+			}
+
 			$.post("/project/add_paymentcondition/" + gup('id'), {
 					days: $("#paymentconditions_days").val(),
 					paymentdate: $("#paymentconditions_paymentdate").val(),
@@ -191,6 +211,12 @@ $(function() {
 				});
 		});
 		$("#add_section").click(function() {
+			if (!$("#sections_orderInReport").val()) {
+				return alert ("Uma Ordem para impressão da seção precisa ser informada")
+			}
+			if (!$("#sections_title").val()) {
+				return alert ("Um Título para a seção precisa ser informado")
+			}
 			$.post("/project/add_section/" + gup('id'), {
 					orderInReport: $("#sections_orderInReport").val(),
 					title: $("#sections_title").val(),

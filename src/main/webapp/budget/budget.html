@@ -196,14 +196,12 @@
       <span>
         <ul class="tabs">
           <li class="active tab"><a href="#items">Itens</a></li>
-          <li class="tab"><a href="#sections">Seções</a></li>
           <li class="tab"><a href="#paymentconditions">Condições de Pagamento</a></li>
+          <li class="tab"><a href="#sections">Seções</a></li>
         </ul>
         <div class="pill-content">
           <div class="active tab_content row" id="items">
             <form class='row'>
-              <div class='span6'>
-              </div>
               <div class ='span18'>
                 <div class="clearfix">
                   <div class="input">
@@ -261,64 +259,19 @@
             </div>
             </form>
           </div>
-          <div class="tab_content row" id="sections">
-            <form class='row'>
-              <div class='span6'>
-                <div class="clearfix">
-                    <label for="text">Ordem</label>
-                    <div class="input">
-                        <input class="mini" id="sections_orderInReport" size="30" type="text"/>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <label for="text">Título</label>
-                    <div class="input">
-                        <input class="xlarge" id="sections_title" size="30" type="text"/>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <label for="text">Obs</label>
-                    <div class="input">
-                        <input class="xlarge" id="sections_obs" size="30" type="textarea"/>
-                    </div>
-                </div>
-              </div>
-              <div class ='span18'>
-                <div class="clearfix">
-                  <div class="input">
-                    <input class="btn success" id="add_section" type="button" value="Adicionar">
-                  </div>
-                </div>
-              </div>
-              <div class ='span18'>
-                <table id="table_sections" class='bordered-table zebra-striped'>
-                  <thead>
-                    <tr>
-                      <th>Ordem</th>
-                      <th>Título</th>
-                      <th>Obs</th>
-                      <th>Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-              </div>
-            </form>
-          </div>
           <div class="tab_content row" id="paymentconditions">
             <form class='row'>
               <div class='span6'>
                 <div class="clearfix">
                     <label for="text">Dias</label>
                     <div class="input">
-                        <input class="small" id="paymentconditions_days" size="30" type="text"/>
+                        <input class="small" id="paymentconditions_days" size="30" type="number"/>
                     </div>
                 </div>
                 <div class="clearfix">
                     <label for="text">Percentual</label>
                     <div class="input">
-                        <input class="small" id="paymentconditions_percent" size="30" type="text"/>
+                        <input class="small currency" id="paymentconditions_percent" size="30" type="text"/>
                     </div>
                 </div>
               </div>
@@ -326,7 +279,10 @@
                 <div class="clearfix">
                     <label for="text">Data</label>
                     <div class="input">
+                      <div class="input-prepend" style="float:left; padding-right:10px">
+                        <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
                         <input class="small date" id="paymentconditions_datepayment" size="30" type="text"/>
+                      </div>
                     </div>
                 </div>
                 <div class="clearfix">
@@ -357,6 +313,51 @@
                       <th>Data</th>
                       <th>Percentual</th>
                       <th>Valor</th>
+                      <th>Obs</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </form>
+          </div>
+          <div class="tab_content row" id="sections">
+            <form class='row'>
+              <div class='span6'>
+                <div class="clearfix">
+                    <label for="text">Ordem</label>
+                    <div class="input">
+                        <input class="mini" id="sections_orderInReport" size="30" type="number"/>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <label for="text">Título</label>
+                    <div class="input">
+                        <input class="xlarge" id="sections_title" size="30" type="text"/>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <label for="text">Obs</label>
+                    <div class="input">
+                        <input class="xlarge" id="sections_obs" size="30" type="textarea"/>
+                    </div>
+                </div>
+              </div>
+              <div class ='span18'>
+                <div class="clearfix">
+                  <div class="input">
+                    <input class="btn success" id="add_section" type="button" value="Adicionar">
+                  </div>
+                </div>
+              </div>
+              <div class ='span18'>
+                <table id="table_sections" class='bordered-table zebra-striped'>
+                  <thead>
+                    <tr>
+                      <th>Ordem</th>
+                      <th>Título</th>
                       <th>Obs</th>
                       <th>Ações</th>
                     </tr>
