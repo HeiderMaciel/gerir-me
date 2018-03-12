@@ -230,7 +230,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 			"name=is_person" #> (SHtml.checkbox(ac.is_person_?, ac.is_person_?(_)))&
 			"name=is_member" #> (SHtml.checkbox(ac.is_member_?, ac.is_member_?(_)))&
 			"name=is_prospect" #> (SHtml.checkbox(ac.is_prospect_?, ac.is_prospect_?(_)))&
-			"#img_customer" #> ac.thumb("192")&
+			"#img_customer" #> ac.imageCircle("192")&
 			"#img_customer_short" #> ac.thumb("80")&
 			"name=custInfo" #> (SHtml.textarea(ac.custInfo, (a:String) => {}))&
 			"#img_mapicon" #> ac.mapIcon.obj.get.thumb ("36")&
