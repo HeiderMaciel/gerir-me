@@ -100,7 +100,7 @@ trait CreatedUpdatedBy extends CreatedByTrait with UpdatedByTrait
     Project.dateToStr(updatedAt)) {
     "Criado por " + createdByName + " " + 
       createdAtStr + " " +
-      Project.dateToHours(createdAt) + "\n" +
+      Project.dateToHours(createdAt) + " \n" +
     "Alterado em " + 
       updatedAtStr + " " +
       Project.dateToHours(updatedAt)
@@ -108,7 +108,7 @@ trait CreatedUpdatedBy extends CreatedByTrait with UpdatedByTrait
     Project.dateToHours(updatedAt)) {
     "Criado por " + createdByName + " " + 
       createdAtStr + " " +
-      Project.dateToHours(createdAt) + "\n" +
+      Project.dateToHours(createdAt) + " \n" +
     "Alterado em " + 
       Project.dateToHours(updatedAt)
   } else {

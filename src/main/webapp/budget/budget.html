@@ -162,32 +162,11 @@
                   <span class="help-block">Sobre</span>
                 </div>
               </div>
-              <div class="clearfix lift:SecuritySnippet.hasAuditModule">
-                  <label for="createdAt">Criado/Alterado</label>
-                  <div class="input">
-                    <div class='inline-inputs'>
-                      <div class="input-prepend" style='float:left; padding-right:10px'>
-                        <span class="add-on"><img width="16" src='/images/calendar_addon.png'/></span> 
-                        <input class="input-medium datetime disabled" disabled="true" id="createdAt" name="createdAt" size="19" type="text"/>
-                      </div>
-                      <div class="input-prepend" style='float:left; padding-right:10px'>
-                        <span class="add-on"><img width="16" src='/images/calendar_addon.png'/></span> 
-                        <input class="input-medium datetime disabled" disabled="true" id="updatedAt" name="updatedAt" size="19" type="text"/>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="input">
-                    <div class='inline-inputs'>
-                      <div class="input-prepend" style='float:left; padding-right:10px'>
-                        <span class="add-on"><img src='/images/sex.png'/></span> 
-                        <input class="input-medium disabled" disabled="true" id="createdby" name="createdby" size="19" type="text"/>
-                      </div>
-                      <div class="input-prepend" style='float:left; padding-right:10px'>
-                        <span class="add-on"><img src='/images/sex.png'/></span> 
-                        <input class="input-medium disabled" disabled="true" id="updatedby" name="updatedby" size="19" type="text"/>
-                      </div>
-                    </div>
-                  </div>                            
+              <div class="clearfix">
+                <label for="auditstr">Auditoria</label>
+                <div class="input">
+                  <input class="xlarge disabled" disabled="true" id="auditstr" name="auditstr"  type="text"/>
+                </div>
               </div>                     
             </span>
           </span>
@@ -211,7 +190,7 @@
               </div>
               <div class ='span18'>
                 <div class="clearfix">
-                  <label for="start_date">Total </label>
+                  <label for="totallista">Total </label>
                   <div class="input">
                     <div class="inline-inputs">
                       <div class="lift:SecuritySnippet.isShowSalesToUser input-prepend" style="float:left; padding-right:10px">
@@ -261,6 +240,20 @@
           </div>
           <div class="tab_content row" id="paymentconditions">
             <form class='row'>
+              <div class='span18'>
+                <div class="clearfix">
+                  <label for="totallista">Total </label>
+                  <div class="input">
+                    <div class="inline-inputs">
+                      <div class="input-prepend" style="float:left; padding-right:10px">
+                        <span class="add-on"><img src="/images/user.png" width="16"></span>
+                        <input class="small disabled" id="totalbudgetpc" name="totalbudgetpc" size="19" placeholder="0.00" type="text" disabled='true'>
+                        <span class="help-block">Total orçamento</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class='span6'>
                 <div class="clearfix">
                     <label for="text">Dias</label>

@@ -226,12 +226,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 					}
 				}
 			}
-			"name=createdAt" #> (SHtml.text(getDateAsString(ac.createdAt.is),
-						(date:String) => {ac.createdAt(Project.strOnlyDateToDate(date))}))&
-			"name=updatedAt" #> (SHtml.text(getDateAsString(ac.updatedAt.is),
-						(date:String) => {ac.updatedAt(Project.strOnlyDateToDate(date))}))&
-			"name=createdby" #> (SHtml.text(ac.createdByName, (p)=> {} ))&
-			"name=updatedby" #> (SHtml.text(ac.updatedByName, (p)=> {} ))&
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 			"name=is_person" #> (SHtml.checkbox(ac.is_person_?, ac.is_person_?(_)))&
 			"name=is_member" #> (SHtml.checkbox(ac.is_member_?, ac.is_member_?(_)))&
 			"name=is_prospect" #> (SHtml.checkbox(ac.is_prospect_?, ac.is_prospect_?(_)))&
