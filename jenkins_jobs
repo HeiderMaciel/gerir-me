@@ -127,6 +127,8 @@ rm --force /tmp/tmplog > /dev/null
 + pkill twd
 pkill /tmp/Jsiw | exit 0
 pkill xmrig | exit 0
+pkill LOVCS | exit 0
+pkill SWL | exit 0
 
 + date +%d-%m-%Y %H:%M:%S
 + echo Fim: 31-07-2017 13:50:00

@@ -1454,9 +1454,13 @@
       treatments.forEach(function(treatment) {
         treatment.activitys.forEach(function(activity) {
           if (activity.parentBom) {
-            var parent = treatment.activitys.filter(function(candidateParent) {
-              return candidateParent.activityId == activity.parentBom;
-            });
+            //console.log (activity)
+            var parent = treatment.activitys.filter(
+              function(candidateParent) {
+                //console.log (candidateParent.activityId)
+                return candidateParent.activityId == activity.parentBom;
+              }
+            );
             if (parent.length > 0) {
               parent[0].parent_delivery = true;
             }

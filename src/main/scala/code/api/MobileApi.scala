@@ -240,24 +240,53 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
         mobilephone <- S.param("mobilephone") ?~ "mobilephone parameter missing" ~> 400
         phone <- S.param("phone") ?~ "phone parameter missing" ~> 400
         email <- S.param("email") ?~ "email parameter missing" ~> 400
-        password <- S.param("password") ?~ "password parameter missing" ~> 400
+        doc <- S.param("doc") ?~ "doc parameter missing" ~> 400
       } yield {
         val companyLong = Company.calPubCompany (company)
         var ac = Customer.findAll (By(Customer.company, companyLong),
           Like (Customer.email, "%"+email+"%"));
         if (ac.length > 0) {
-          JString("Email já cadastrado, use a opção Esqueci minha Senha")
+          JString("Email já cadastrado, use a opção Esqueci minha Senha\n\n ou entre em contato com o estabelecimento")
         } else {
-          var customer = Customer.create
-          customer.company(companyLong).
-          name (name).
-          email (email).
-          phone (phone).
-          mobilePhone (mobilephone).
-          password (password).
-          obs ("agenda online").
-          save
-          JString("1")
+          //println ("vaiii ================== name clear " + BusinessRulesUtil.clearString(name))
+          //println ("vaiii ================== mobile clear " + BusinessRulesUtil.clearString(mobilephone))
+          var ac1 = Customer.findAll (By(Customer.company, companyLong),
+            By (Customer.search_name, BusinessRulesUtil.clearString(name)),
+            By (Customer.document, doc));
+          if (ac1.length > 0) {
+            if (ac1 (0).email == "" &&
+                phone != "" && 
+                ((ac1 (0).phone == phone 
+                || ac1 (0).mobilePhone == phone)) ||
+                (mobilephone != "" && (ac1 (0).phone == mobilephone 
+                || ac1 (0).mobilePhone == mobilephone))) {
+              // nome igual / phone ou mobile igual e // email ""
+              // atualiza o email em cliente que já existia e fala que cadastrou
+              ac1 (0).email (email).save
+              JString("1")
+            } else {
+              if (doc != "") {
+                JString("Seu nome e cpf já estão cadastrados, verifique seus telefones e tente novamente\n\nou entre em contato com o estabelecimento")
+              } else {
+                JString("Seu nome já está cadastrado, verifique seus telefones ou informe um cpf e tente novamente\n\nou entre em contato com o estabelecimento")
+              }
+            }
+          } else {
+            try {
+              var customer = Customer.create
+              customer.company(companyLong).
+              name (name).
+              email (email).
+              phone (phone).
+              mobilePhone (mobilephone).
+              document (doc).
+              obs ("agenda online").
+              save
+              JString("1")
+            } catch {
+              case e:Exception => JString(e.getMessage)
+            }
+          }
         }
       }
     }    

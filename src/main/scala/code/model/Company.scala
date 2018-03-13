@@ -478,14 +478,17 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
     OrderBy(ProductType.name, Ascending))
 
   def bmMonthlyPaymentType = {
-    if (PaymentType.count(By(PaymentType.bpmonthly_?, true)) < 1) {
+    if (PaymentType.count(
+      By(PaymentType.bpmonthly_?, true),
+      By(PaymentType.company, AuthUtil.company)) < 1) {
        throw new RuntimeException("É preciso que haja uma forma de pagamento marcada com comportamento especial de <baixa de sessão de mensalidade>" + "\n\n" +
         "E ela precisa estar ativa, para que seja gerada a comissão para o profissional");
     }
     PaymentType.findAllInCompany(By(PaymentType.bpmonthly_?, true))(0)
   }  
   def offSalePaymentType = {
-    if (PaymentType.count(By(PaymentType.offSale_?, true)) < 1) {
+    if (PaymentType.count(By(PaymentType.offSale_?, true),
+      By(PaymentType.company, AuthUtil.company)) < 1) {
        throw new RuntimeException("É preciso que haja uma forma de pagamento marcada com comportamento especial de <pagamento por convênio>" + "\n\n" +
         "E ela precisa estar ativa, para que seja gerada a comissão para o profissional");
     }
@@ -493,7 +496,8 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
   }
 
   def packagePaymentType = {
-    if (PaymentType.count(By(PaymentType.deliveryContol_?, true)) < 1) {
+    if (PaymentType.count(By(PaymentType.deliveryContol_?, true),
+      By(PaymentType.company, AuthUtil.company)) < 1) {
        throw new RuntimeException("É preciso que haja uma forma de pagamento marcada com comportamento especial de <baixa de sessão de pacote>" + "\n\n" +
         "E ela precisa estar ativa, para que seja gerada a comissão para o profissional");
     }
