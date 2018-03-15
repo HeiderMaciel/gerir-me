@@ -283,39 +283,59 @@ object Project{
 	}
 
 	def dateToHourss(date:Date) = {
-		date_format_hourss.format(date)
+    if(date != null) {
+  		date_format_hourss.format(date)
+    } else {
+      ""
+    }
 	}
 	def dateToHours(date:Date) = {
-		date_format_hour.format(date)
+    if(date != null) {
+  		date_format_hour.format(date)
+    } else {
+      ""
+    }
 	}
 	def dateToDb(date:Date) = {
-		date_format_db.format(date)
+    if(date != null) {
+      date_format_db.format(date)
+    } else {
+      ""
+    }
 	}
 
   def dateTimeToStr(date:Date) = {
-    if(date != null)
+    if(date != null) {
       dateTime_format.format(date)
-    else
+    } else {
       ""
+    }
   }
 
   def dateToYear(date:Date) = {
-    date_format_year.format(date)
+    if (date != null) {
+      date_format_year.format(date)
+    } else {
+      ""
+    }
   }
 
 	def dateToStr(date:Date) = {
-		if(date != null)
+		if(date != null) {
 			date_format.format(date)
-		else
+    } else {
 			""
+    }
 	}
 
 	def dateToStrOrEmpty(date:Date) = {
-		if(date != null)
+		if(date != null) {
 			dateToStr(date)
-		else
+    } else {
 			""
+    }
 	}
+
 	def dateToStrJs(date:Date) = {
 		date_format_js.format(date)
 	}
