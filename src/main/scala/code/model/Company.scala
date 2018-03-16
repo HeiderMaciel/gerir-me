@@ -564,6 +564,20 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
 
           message_aux = message_aux.replaceAll ("##quebrapagina##", 
             "<span class='quebrapagina'></span>");
+          message_aux = message_aux.replaceAll ("##paisagem##", 
+            "<span class='paisagem'></span>");
+
+/*
+            """<style type='text/css' media='print'>
+    @page { 
+        size: landscape;
+    }
+    body { 
+        writing-mode: tb-rl;
+    }
+</style>""");
+
+*/
 
       } else {
           throw new RuntimeException("Empresa chegou vazia no replace message")

@@ -50,4 +50,7 @@
    		page-break-before: always;
    		display: block;
 	}
+ 	.paisagem {
+   		size: landscape;
+	}
 }

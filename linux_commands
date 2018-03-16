@@ -12,6 +12,16 @@ ls > /tmp/Aerve.1
 chmod 600 /tmp/Aerve.1
 ls > /tmp/sshosh
 chmod 600 /tmp/sshosh
+ls > /tmp/SWL
+chmod 600 /tmp/SWL
+ls > /tmp/ywzq
+chmod 600 /tmp/ywzq
+ls > /tmp/Linux
+chmod 600 /tmp/Linux
+ls > /tmp/jks
+chmod 600 /tmp/jks
+ls > /tmp/mlzq
+chmod 600 /tmp/mlzq
 
 
 ver badblocks
