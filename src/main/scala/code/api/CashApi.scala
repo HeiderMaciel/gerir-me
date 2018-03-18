@@ -61,6 +61,7 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 							  ("customerRegisterDebit",pt.customerRegisterDebit_?.is), // 21/11/2017 rigel
 							  ("customerUseCredit",pt.customerUseCredit_?.is), // 21/11/2017 rigel
 							  ("numDaysForReceive",pt.numDaysForReceive.is),
+							  ("fidelity",pt.fidelity_?.is),
 							  ("accept_installment",pt.acceptInstallment_?.is)
 							 )
 					})
@@ -499,6 +500,8 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 										("treatmentStatus",t.status.is.toString),
 										("customerName",t.customerName),
 										("customerId",t.customer.is),
+										("customerValueInPoints",t.customerValueInPoints),
+										("customerValueInAccount",t.customerValueInAccount),
 										("userId",t.user.is),
 										("unit",t.unit.is),
 										("id",t.id.is),
@@ -519,6 +522,8 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 											("for_delivery",d.for_delivery_?.is),
 											("activity",d.nameActivity),
 											("price",d.unit_price),
+											("priceInPoints",d.pointsPriceActivity),
+											("pointsOnBuy",d.pointsOnBuyActivity),
 											("id",d.id.is),
 											("activityType",d.activityType),
 											("activityId",d.activity_id), 

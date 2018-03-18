@@ -808,12 +808,14 @@ object  TreatmentService extends net.liftweb.common.Logger {
 									treatment.totalValue(0).toDouble,  
 									false,
 									ChequeRequest("", "", 0, "",""),
-									Project.dateToStr(treatment.start.is)
+									Project.dateToStr(treatment.start.is),
+									0 // valueToPoints
 						)::Nil,
 						treatment.command.is,
 						Project.dateToStr(treatment.start.is),
 						cashier,
-						"" //status2 vazio
+						"", //status2 vazio
+						0 // valueToPoints
 			)
 
 	}

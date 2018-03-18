@@ -828,6 +828,11 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 			}
 
 			case "report" :: "customer_account" :: Nil Post _=> {
+				val strAux = if (PermissionModule.anvisa_?) {
+						" bp.barcode  || ' ' || "
+					} else {
+						""
+					}
 				def customer:String = S.param("customer") match {
 					case Full(p) if(p != "") => " and bp.id =%S".format(p) 
 					case _ => ""
@@ -844,11 +849,41 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case Full(p) if(p != "") => p.toDouble
 					case _ => 9999999;
 				}
-				val SQL = """select bp.id, bp.name, 
-				trim (mobile_phone || ' ' || phone || ' ' || email_alternative), email, valueinaccount ,cu.name, bp.id
+				val SQL = """select bp.id, """ + strAux + """ bp.name, 
+				trim (mobile_phone || ' ' || phone || ' ' || email_alternative), email, valueinaccount ,cu.name
 				from business_pattern bp  
 				left join companyunit cu on cu.id = bp.unit
 				where valueinaccount <>0 and valueinaccount between ? and ? and bp.company=? %s %s order by valueinaccount """
+				toResponse(SQL.format(customer, unit),List(start_value, end_value, AuthUtil.company.id.is))
+			}
+
+			case "report" :: "customer_fidelity" :: Nil Post _=> {
+				val strAux = if (PermissionModule.anvisa_?) {
+						" bp.barcode  || ' ' || "
+					} else {
+						""
+					}
+				def customer:String = S.param("customer") match {
+					case Full(p) if(p != "") => " and bp.id =%S".format(p) 
+					case _ => ""
+				}			
+				def unit:String = S.param("unit") match {
+					case Full(p) if(p != "") => " and bp.unit =%S".format(p) 
+					case _ => ""
+				}			
+				def start_value:Double = S.param("start_value") match {
+					case Full(p) if(p != "") => p.toDouble
+					case _ => -9999999;
+				}
+				def end_value:Double = S.param("end_value") match {
+					case Full(p) if(p != "") => p.toDouble
+					case _ => 9999999;
+				}
+				val SQL = """select bp.id, """ + strAux + """ bp.name, 
+				trim (mobile_phone || ' ' || phone || ' ' || email_alternative), email, valueinpoints ,cu.name
+				from business_pattern bp  
+				left join companyunit cu on cu.id = bp.unit
+				where valueinpoints <>0 and valueinpoints between ? and ? and bp.company=? %s %s order by valueinpoints """
 				toResponse(SQL.format(customer, unit),List(start_value, end_value, AuthUtil.company.id.is))
 			}
 

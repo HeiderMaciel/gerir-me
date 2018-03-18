@@ -78,19 +78,38 @@
               <span data-i18n='Cliente'></span> 
               <img src="/images/search.png" width="24" class="customer_search_button">  
             </label>
-              <div class="input">
-                <div class="inline-inputs">
-                  <span>
-                    <input id="customer" name="customer" class="mini id_customer_search" type="number"/>
-                    <input placeholder="Nome" type="text" size="30" name="name_customer" class="name_customer_search normal_name"/>
-                  </span>
-                  <span class="help-block">
-                        <span data-i18n='Cliente'></span> que será atendido
-                        <img alt="Cadastro rápido" src="/images/add.png" width="24" id="customer_add_button">
-                  </span>
-                </div>
+            <div class="input">
+              <div class="inline-inputs">
+                <span>
+                  <input id="customer" name="customer" class="mini id_customer_search" type="number"/>
+                  <input placeholder="Nome" type="text" size="30" name="name_customer" class="name_customer_search normal_name"/>
+                </span>
+                <img alt="Cadastro rápido" src="/images/add.png" width="24" id="customer_add_button">
               </div>
+            </div>
           </div>
+          <div class="clearfix">
+            <label for="name">Conta Cliente</label>
+            <div class="input">
+              <div class="inline-inputs">
+                <div style="float:left; padding-right:10px" class="input-prepend">
+                  <span class="add-on"><img src='/images/remove.png' alt="Total devido pelo cliente" width="16px"/></span> 
+                   <input style='color:red' disabled='true' class="mini" name="valueinaccount" id='valueinaccount' type="text">
+                </div>
+                <div style="float:left; padding-right:10px" class="input-prepend">
+                <img type='button' alt="Clique para quitar a conta cliente" class="btn danger" width="16px" src='/images/bills_to_receiver.png' id='add_customer_account_payment'/>
+                </div>
+                <div style="float:left; padding-right:10px" class="input-prepend">
+                  <span class="add-on"><img src='/images/add.png' alt="Total de crédito do cliente" width="16px"/></span> 
+                   <input style='color:green' disabled='true' class="mini" name="valueinaccountcredit" id='valueinaccountcredit' type="text">
+                </div>
+                <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/customer_account.html' rel="popover" class="_popover_basic _help">
+                    <img src="/images/info.gif" width="20">
+                </a>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" class="has-fidelity-module lift:SecuritySnippet.hasFidelityModule" value="1">
         </div>
       </div>
       <div>
@@ -116,13 +135,8 @@
                     <span style="float:left; padding-right:10px" class="input-prepend">
                       <span class="add-on"><img width="16" src="/images/cut.png"></span> 
                       <select class="notselect2" name="activity" id='activity'></select>
-                    </span><button type='button' class="btn" id='add_activity'><img src='/images/add.png' /></button>
+                    </span><button type='button' class="btn" id='add_activity'><img src='/images/add.png' width="16px" /></button>
                 </div>
-                <img type='button' class="btn" width="24" src='/images/bills_to_receiver.png' id='add_customer_account_payment'/>
-                <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/customer_account.html' rel="popover" class="_popover_basic _help">
-                    <img src="/images/info.gif" width="20">
-                </a>
-                <span class="help-block">Pagamento de conta cliente</span>
               </div>
             </div>              
             <div class="clearfix lift:SecuritySnippet.hasAuxiliarModule">
@@ -143,20 +157,40 @@
             </div>
           </div>
           <div class="span8">
+            <div class="clearfix lift:SecuritySnippet.hasFidelityModule">
+                <label for="valueinpoints">Pontos</label>
+                <div class="input">
+                  <div class="inline-inputs">
+                  <div class="input-prepend">
+                    <div style="float:left; padding-right:10px" class="input-prepend">
+                      <span class="add-on"><img src='/images/diamond-16.png' alt="Total de pontos acumulados pelo cliente antes desta transação"/></span> 
+                       <input disabled='true' class="mini" name="valueinpoints" id='valueinpoints' type="text">
+                    </div>
+                    <div style="float:left; padding-right:10px" class="input-prepend">
+                      <span class="add-on"><img src='/images/money.png' alt="Total em moeda corrente que pode ser quitado com os pontos fidelidade do cliente"/></span> 
+                       <input disabled='true' class="mini" name="canBePaidWithPoints" id='canBePaidWithPoints' type="text">
+                    </div>
+                    <div style="float:left; padding-right:10px" class="input-prepend">
+                       <input type="hidden" disabled='true' class="mini" name="valueToPoints" id='valueToPoints' type="text">
+                    </div>
+                  </div>
+                  </div>
+                </div>
+            </div>                  
             <div class="clearfix">
               <label for="name">Produto</label>
               <div class="input">
                 <div class="inline-inputs">
                   <div style="float:left; padding-right:10px" class="input-prepend">
                         <span class="add-on"></span> 
-                        <input class="xlarge process_product_field" name="product" id='product'/>
+                        <input class="large process_product_field" name="product" id='product'/>
                   </div>                                                    
                   <div style="float:left; padding-right:10px">
                     <button type='button' class="btn process_product_action" id='add_prduct'>
-                      <img type='button'  src='/images/add.png' />
+                      <img type='button'  src='/images/add.png' width="16px" />
                     </button>
                   </div>                         
-                </div>
+                </div> 
               </div>
             </div>
             <div>
@@ -167,7 +201,6 @@
                     <div style="float:left; padding-right:10px" class="input-prepend">
                       <span class="add-on"><img width="16" src="/images/categorie.png"></span> 
                       <input type="text" size="19" name="current_stock" id="current_stock" disabled='true' class="medium disabled inventory_product_search">
-                       <span class="help-block">Quantidade atual do produto em estoque</span>
                     </div>
                   </div>
                 </div>
@@ -181,8 +214,16 @@
                 <div class="inline-inputs">
                   <div class="input-prepend" style="float:left; padding-right:10px">
                     <div style="float:left; padding-right:10px" class="input-prepend">
-                      <span class="add-on"><img src="/images/money.png" width="16"></span>
+                      <span class="add-on"><img src="/images/money.png" alt="Total para pagamento em moeda corrente" width="16"></span>
                       <input disabled='true' class="mini currency" type="text" name='total' id='total' value="00.00">
+                    </div>
+                    <div style="float:left; padding-right:10px" class="input-prepend lift:SecuritySnippet.hasFidelityModule">
+                      <span class="add-on"><img src="/images/diamond-16.png" alt="Total para pagamento com pontos fidelidade" width="16"></span>
+                      <input disabled='true' class="mini currency" type="text" name='totalInPoints' id='totalInPoints' value="00.00">
+                    </div>
+                    <div style="float:left; padding-right:10px" class="input-prepend lift:SecuritySnippet.hasFidelityModule">
+                      <span class="add-on"><img src="/images/diamond-16.png" alt="Pontos fidelidade obtidos nesta transação" width="16"></span>
+                      <input disabled='true' class="mini currency" type="text" name='totalPointsOnBuy' id='totalPointsOnBuy' value="00.00">
                     </div>
                     <button class="btn success b_payment" type="button" id='b_payment'>
                         <img src='/images/paid.png' width="16px"/>
@@ -219,6 +260,7 @@
                 <th class="lift:SecuritySnippet.hasAuxiliarModule"><span data-i18n='Assistente'></span></th>
                 <th class="lift:SecuritySnippet.isEbellepetSystem">Pet</th>
                 <th><span data-i18n='Serviço'></span>/Produto</th>
+                <th class="lift:SecuritySnippet.hasFidelityModule">Pontos</th>
                 <th class="lift:SecuritySnippet.isEsmileSystem">Dente</th>
                 <th>Preço</th>
                 <th alt='Quantidade'>Qtde</th>
@@ -239,6 +281,14 @@
                 <div style="float:left; padding-right:10px" class="input-prepend">
                   <span class="add-on"><img src="/images/money.png" width="16"></span>
                   <input disabled='true' class="mini currency" type="text" name='total_baixo' id='total_baixo' value="00.00">
+                </div>
+                <div style="float:left; padding-right:10px" class="input-prepend lift:SecuritySnippet.hasFidelityModule">
+                  <span class="add-on"><img src="/images/diamond-16.png" alt="Total para pagamento com pontos fidelidade" width="16"></span>
+                  <input disabled='true' class="mini currency" type="text" name='totalInPoints_baixo' id='totalInPoints_baixo' value="00.00">
+                </div>
+                <div style="float:left; padding-right:10px" class="input-prepend lift:SecuritySnippet.hasFidelityModule">
+                  <span class="add-on"><img src="/images/diamond-16.png" alt="Pontos fidelidade obtidos nesta transação" width="16"></span>
+                  <input disabled='true' class="mini currency" type="text" name='totalPointsOnBuy_baixo' id='totalPointsOnBuy_baixo' value="00.00">
                 </div>
                 <button class="btn success b_payment" type="button" id='b_payment'>
                   <img src='/images/paid.png' width="16px"/>   Pagar

@@ -34,7 +34,7 @@
           total += floatValue;
           totalc += 1;
         }
-        return floatValue.formatMoney();
+        return floatValue;
       }
     };
     if (!hasUnitModule) {
@@ -42,7 +42,7 @@
     }
 
     $("#unit").unitField(true,false);
-    var url = "/report/customer_account";
+    var url = "/report/customer_fidelity";
     var request = function(){
       customers = [];
       totalc = 0.00;
@@ -51,9 +51,9 @@
       debit = 0.00;
       renderReport(url,fields,$("#form_report").serializeObject(), "#grid", function(){
         $('#totalc').val(totalc);
-        $('#total').val(total.formatMoney());
-        $('#credit').val(credit.formatMoney());
-        $('#debit').val(debit.formatMoney());
+        $('#total').val(total);
+        $('#credit').val(credit);
+        $('#debit').val(debit);
       });
     }
     $("#send").click(request);
@@ -82,7 +82,7 @@
       <form id="form_report" class="well form-search" method='get'>
         <h1>
           <span class="lift:CompanySnippet.thumb"> </span>
-          <input class="report_title local_storage" id="title_customer_account_report" name="title_customer_account_report" size="30" type="text" value="Relatório de Clientes - Saldo Credor/Devedor"/>
+          <input class="report_title local_storage" id="title_customer_fidelity_report" name="title_customer_fidelity_report" size="30" type="text" value="Relatório Fidelidade de Clientes - Saldo Credor/Devedor"/>
         </h1>
         <div class="row">
           <div class="span8">
@@ -198,7 +198,7 @@
         <th>Nome</th>
         <th>Telefone</th>
         <th>E-mail</th>
-        <th>Valor Conta</th>
+        <th>Pontos</th>
         <th class="clearfix lift:SecuritySnippet.hasUnitModule">Unidade</th>
       </thead>
       <tbody>

@@ -209,11 +209,17 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 	def createPaymentDetail(p:PaymentDTO,payment:Payment) = {
 		val paymentType = PaymentType.findByKey(p.typePayment).get
 		val paymentDetail = PaymentDetail.createInCompany
+		var valInPoints = if (paymentType.fidelity_?.is) {
+				p.value * p.valueToPoints
+			} else {
+				0.0
+			}
 		paymentDetail.typePayment(p.typePayment)
 					 .value(p.value)
 					 .customer(payment.customer)
 					 .payment(payment)
 					 .dueDate(p.dateDetailAsDate)
+					 .valueInPoints (valInPoints) // rigel 17/03/2018
 					 .save
 		payment.details += paymentDetail
 		if(p.cheque_?){
@@ -233,23 +239,11 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 		if(paymentType.deliveryContol_?.is){
 			validateDeliveryRules(paymentDetail)
 		}
-		// rigel 07/08/2017
-		// aqui na verdade tem "converter" reais em pontos
-		// talvez não deixar misturar ou fazer um proporcional
-		// mas neste caso todos os itens deveriam term preço em 
-		// pontos
-		// total total $           = xpontos total
-		//       val $ pt fidelity = y pontos
-		//
-		// mostrar os pontos que o cliente tem e o valor da compra 
-		// em pontos alertar se tem itens sem preço em pontos
-		// parametrizar se comprando com fidelidade gera pontos 
-		// fidelidade
-		// talvez salvar o valor em pontos no paymentdetail
-		//
+
 		if(paymentType.fidelity_?.is){
 			val customer = payment.customer.obj.get
-			customer.unRegisterPoints(p.value, payment, paymentDetail, "Adicionando valor a pontos fidelidade")
+			customer.unRegisterPoints(p.value * p.valueToPoints, 
+				payment, paymentDetail, "Retirando valor de pontos fidelidade")
 		}
 	}
 
@@ -260,7 +254,7 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 		}
 		if(paymentType.customerRegisterDebit_?.is){
 			val customer = detail.payment.obj.get.customer.obj.get
-			customer.registerDebit(detail.value.is.toDouble, 
+			customer.registerDebit(detail.value.is.toDouble / 0.95, 
 			detail.payment.obj.get,detail, 
 			"Removendo atendimento de conta cliente")//incremente customer account
 		}
@@ -269,9 +263,9 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 		}
 		if(paymentType.fidelity_?.is){
 			val customer = detail.payment.obj.get.customer.obj.get
-			customer.registerPointsPt(detail.value.is.toDouble, 
+			customer.registerPointsPt(detail.valueInPoints.is.toDouble, 
 			detail.payment.obj.get,detail, 
-			"Removendo atendimento de conta cliente")//incremente customer accountRegisterPoints(p.value*(-1), payment, paymentDetail, "Adicionando valor a pontos fidelidade")
+			"Devolvendo valor a pontos fdelidade")//incremente customer accountRegisterPoints(p.value*(-1), payment, paymentDetail, "Adicionando valor a pontos fidelidade")
 		}
 	}
 	private def validateDeliveryRulesToRemove(paymentDetail:PaymentDetail) = {
@@ -473,13 +467,13 @@ case class ActivityDTO(activityId:Int, activityType:String, id:Int, price:Double
 	removed:Boolean, amount:Float, for_delivery:Boolean, parentBom:Int, 
 	auxiliar:Int=0, animal:Int=0, tooth:String="", offsale:Int=0);
 
-case class PaymentDTO(typePayment:Int,value:Double,removed:Boolean,chequeInfo:ChequeRequest, dateDetailStr:String){
-	def this(typePayment:Int,value:Double,removed:Boolean, dateDetailStr:String) = this( typePayment, value, removed, null, dateDetailStr);
+case class PaymentDTO(typePayment:Int,value:Double,removed:Boolean,chequeInfo:ChequeRequest, dateDetailStr:String, valueToPoints:Double){
+	def this(typePayment:Int,value:Double,removed:Boolean, dateDetailStr:String, valueToPoints:Double) = this( typePayment, value, removed, null, dateDetailStr, valueToPoints);
 	def cheque_? = chequeInfo != null
 	def dateDetailAsDate = Project.strOnlyDateToDate(this.dateDetailStr)
 }
 case class TreatmentDTO(customerId:Int,userId:Int,treatmentStatus:String,activitys:List[ActivityDTO],removed:Boolean,id:Int, ignored:Boolean=false);
-case class PaymentRequst(treatments:List[TreatmentDTO],payments:List[PaymentDTO],command:String,dataTreatments:String,cashier:String, status2:String){
+case class PaymentRequst(treatments:List[TreatmentDTO],payments:List[PaymentDTO],command:String,dataTreatments:String,cashier:String, status2:String, valueToPoints:Double){
 	def dataTreatmentsAsDate  ={
 		dataTreatments match {
 			case (s:String) if(s.length >= 9) => Project.strOnlyDateToDate(s)

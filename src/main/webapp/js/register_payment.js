@@ -16,6 +16,7 @@
   var hasCustomerAccount = false;
   var prodCustomerCredit = 0;
   var hasCustomerCredit = false;
+  var canBePaidWithPoints = 0.0;
 
   mousePrepare = function() {
     Mousetrap.init();
@@ -76,6 +77,7 @@
     PaymentController.clearPayment();
     $('#command').val("");
     $('#command').val("");
+//    $('#valueinpoints').val("0.0");
     $('#user').val("").change();
     $('#payment_type').val("");
     prepareTreatmentsInUi();
@@ -365,6 +367,8 @@
     $("#treatments_details tbody tr").remove();
     var paid = false;
     var total = 0;
+    var totalInPoints = 0;
+    var totalPointsOnBuy = 0;
     if (treatments.length > 0) {
       treatment = treatments[0]; // rigel
       treatments = treatments.filter(function(t) {
@@ -417,6 +421,7 @@
           return price.toFixed(2);
         }
       }
+      var canUsePoints = true;
       for (var j = activitys.length - 1; j >= 0; j--) {
         activity = activitys[j];
         if (!activity.removed) {
@@ -424,6 +429,7 @@
           var hasUnitModule = $('.has-unit-module').length > 0;
           var hasAuxiliarModule = $('.has-auxiliar-module').length > 0;
           var hasOffSaleModule = $('.has-offsale-module').length > 0;
+          var hasFidelityModule = $('.has-fidelity-module').length > 0;
           var hasPetSystem = $('.has-pet-system').length > 0;
           var hasEsmileSystem = $('.has-esmile-system').length > 0;
           var amount = activity.amount = activity.amount || 1;
@@ -437,6 +443,11 @@
             //alert ("tem crédito cliente")
           }
           total += activity.price * amount;
+          if (activity.priceInPoints <= 0.0) {
+            canUsePoints = false;
+          }
+          totalInPoints += activity.priceInPoints * amount;
+          totalPointsOnBuy += activity.pointsOnBuy * amount;
           lines += "<tr>" + 
           "<td>" + getActivityIcon(activity) + "</td>" +
             "<td>" + treatment.userShortName + "</td>" +
@@ -444,6 +455,7 @@
             (hasAuxiliarModule ? "<td>" + activity.auxiliarShortName + "</td>" : "" ) +
             (hasPetSystem ? "<td>" + activity.animalShortName + "</td>" : "" ) +
             "<td>" + activity.activity + "</td>" +
+            (hasFidelityModule ? "<td>" + activity.priceInPoints + "</td>" : "" ) +
             (hasEsmileSystem ? "<td>" + activity.tooth + "</td>" : "" ) +
             "<td>" + getChagePrice(activity) + "</td>" +
             "<td><input type='number' step='1' min='0' class='mini' onchange='editQtd(" + i + "," + j + ",this)' value='" + amount + "'/></td>" +
@@ -458,10 +470,34 @@
             "</tr>";
         }
       }
+      var points = 0.0
+      var valueToPoints = 0.0;
+      points = $("#valueinpoints").val();
+      canBePaidWithPoints = 0.0;
+      var pointsAux = 0.0
+      pointsAux = parseFloat (points) + parseFloat (totalPointsOnBuy)
+      if (pointsAux >= totalInPoints) {
+        canBePaidWithPoints = total
+      } else {
+        canBePaidWithPoints = pointsAux * total / totalInPoints
+      }
+      if (!canUsePoints && canBePaidWithPoints > 0) {
+        // se tem itens que não podem ser pagos em pontos
+        canBePaidWithPoints = 0.0; 
+      }
+
+      $("#canBePaidWithPoints").val((canBePaidWithPoints).formatMoney());
+      valueToPoints = totalInPoints / total
+      $("#valueToPoints").val(valueToPoints); // nao fazer formatmoney a virgula dava erro 
+
       $("#treatments_details tbody").append(lines);
       $('.img_alt').qtip();
       $("#total").val((total).formatMoney());
       $("#total_baixo").val((total).formatMoney());
+      $("#totalInPoints").val((totalInPoints).formatMoney());
+      $("#totalInPoints_baixo").val((totalInPoints).formatMoney());
+      $("#totalPointsOnBuy").val((totalPointsOnBuy).formatMoney());
+      $("#totalPointsOnBuy_baixo").val((totalPointsOnBuy).formatMoney());
     }
   };
   var removeTreatmentbyCommand = function() {
@@ -505,6 +541,7 @@
           // 13/10/2017 rigel - salva o produto conta cliente
           prodCustomerAccount = prodObj.id
           prodCustomerCredit = prodObj.credit
+//          $('#valueinpoints').val(prodObj.customerValueInPoints);
         }, "text");
       }  
 
@@ -1100,11 +1137,13 @@
           url += "processPayment";
           var paymentsToSend = payments.map(function(item) {
             item.dateDetailStr = item.dateDetail.getDateBr();
+            item.valueToPoints = parseFloat ($("#valueToPoints").val());
             if (item.chequeInfo) {
               item.chequeInfo.cheque_date_str = item.chequeInfo.cheque_date;
             };
             return item;
           });
+          
           request_payment = {
             "treatments": treatments,
             "payments": paymentsToSend,
@@ -1112,7 +1151,8 @@
             "dataTreatments": $("#date_treatment").val(),
             'cashier': $("#cashiers_select").val(),
             "status2": 4,
-            "customer": $(".id_customer_search").val()
+            "customer": $(".id_customer_search").val(),
+            "valueToPoints": parseFloat ($("#valueToPoints").val())
           };
           $.post(url, {
             "data": JSON.stringify(request_payment)
@@ -1284,6 +1324,19 @@
            return;
         }
       }
+      if (paymentType.fidelity) {
+        if (canBePaidWithPoints > 0) {
+           if (canBePaidWithPoints >= parseFloat($('#payment_type_value').val())) {
+              canBePaidWithPoints -= parseFloat($('#payment_type_value').val());            
+           } else {
+             alert ("O valor máximo a ser pago com pontos fidelidade é de \n\n" + canBePaidWithPoints.formatMoney())
+             return;
+           }
+        } else {
+          alert ("Este cliente não pode pagar com pontos \nVerifique se existem ítens que não tem preço em pontos")
+        }
+      }
+
       if (paymentType.cheque) {
         chequeInfoObj = {
           agency: $(":input[name=agency]").val(),
@@ -1413,6 +1466,7 @@
         if (!commandData.isNew) {
           getTreatmentbyCommand(false, customerId);
         } else {
+          // parametrizar aqui o select prof automaticamente
           $("#user").select2('open');
         }
       }
@@ -1426,6 +1480,15 @@
         //return t.status != "Paid";
         return t.status != 4; // paid 
       });
+      // rigel 16/03/2018
+      if (treatmentsOpen.length > 0) {
+        $('#valueinpoints').val(treatmentsOpen[0].customerValueInPoints);
+        if (treatmentsOpen[0].customerValueInAccount < 0) {
+          $('#valueinaccount').val(treatmentsOpen[0].customerValueInAccount.formatMoney());
+        } else if (treatmentsOpen[0].customerValueInAccount > 0) {
+          $('#valueinaccountcredit').val(treatmentsOpen[0].customerValueInAccount.formatMoney());
+        }
+      }        
       treatmentsOpen.forEach(function(item) {
         if (customers[item.customerId]) {
           customers[item.customerId].push(item);

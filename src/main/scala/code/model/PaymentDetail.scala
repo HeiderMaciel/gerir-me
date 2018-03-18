@@ -27,6 +27,8 @@ class PaymentDetail extends LongKeyedMapper[PaymentDetail]  with IdPK with Creat
     object processed_? extends MappedBoolean(this){
       override def dbColumnName = "processed"
     }
+    object valueInPoints extends MappedCurrency(this)
+    
     def cheque = Cheque.findAll(By(Cheque.paymentDetail,this))(0)
     def percentInTotal = {
       if (value != 0.0) {

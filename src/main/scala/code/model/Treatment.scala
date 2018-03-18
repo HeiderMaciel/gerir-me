@@ -140,6 +140,18 @@ with WithCustomer with net.liftweb.common.Logger{
             this.customer.is+" - "+this.customerName + " " + this.customerInfo +" "+this.descritionDetails
         }
 
+    lazy val customerValueInPoints:Double = {
+        customer.obj match {
+            case Full(c)=> c.valueInPoints.is
+            case _ => 0.0
+        }
+    }
+    lazy val customerValueInAccount:Double = {
+        customer.obj match {
+            case Full(c)=> c.valueInAccount.is
+            case _ => 0.0
+        }
+    }
     lazy val customerInfo:String = {
         customer.obj match {
             case Full(c)=> c.mobilePhone.is + " " + c.phone.is

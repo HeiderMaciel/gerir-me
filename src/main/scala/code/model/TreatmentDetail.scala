@@ -464,6 +464,62 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
         }
     }
 
+    def pointsOnBuyActivity:Double = {
+        activity.obj match {
+            case Full(t) => {
+                            if(isAMonthlyService && BpMonthly.countBpMonthlyByProduct(t, customer, start) > 0){
+                                0.0
+                            } else {
+                                t.pointsOnBuy.is
+                            }
+                }
+            case _ => product.obj match {
+                case Full(p) => {
+                            if (p.is_bom_? && 
+                                p.productClass == ProductType.Types.Product) {
+                                // foi necessário testar o productclass pq 
+                                // activity com produtos de desconto são marcadas como pacote
+                                0.0 // 19/12/2017 - rigel - preço de pacote no revert price é zero
+                                // o preço é resultado dos itens configurados
+                            } else if (parentBom > 0) {
+                                0.0
+                            } else {
+                                p.pointsOnBuy.is
+                            }
+                    }
+                case _ => 0.0
+            }
+        }
+    }
+
+    def pointsPriceActivity:Double = {
+        activity.obj match {
+            case Full(t) => {
+                            if(isAMonthlyService && BpMonthly.countBpMonthlyByProduct(t, customer, start) > 0){
+                                0.0
+                            } else {
+                                t.pointsPrice.is
+                            }
+                }
+            case _ => product.obj match {
+                case Full(p) => {
+                            if (p.is_bom_? && 
+                                p.productClass == ProductType.Types.Product) {
+                                // foi necessário testar o productclass pq 
+                                // activity com produtos de desconto são marcadas como pacote
+                                0.0 // 19/12/2017 - rigel - preço de pacote no revert price é zero
+                                // o preço é resultado dos itens configurados
+                            } else if (parentBom > 0) {
+                                0.0
+                            } else {
+                                p.pointsPrice.is
+                            }
+                    }
+                case _ => 0.0
+            }
+        }
+    }
+
     def unit_price = (this.price.is / this.amount.is).toDouble
     def user = treatment.obj.get.user.obj.get
     def hasUser = treatment.obj.get.user.obj match {
