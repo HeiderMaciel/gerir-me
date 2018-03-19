@@ -1135,15 +1135,18 @@
           }
           url = $('#cash_form').attr('action');
           url += "processPayment";
+          var valToPoints = 0.0
+          if ($("#valueToPoints").val()) {
+            valToPoints = parseFloat ($("#valueToPoints").val())
+          }
           var paymentsToSend = payments.map(function(item) {
             item.dateDetailStr = item.dateDetail.getDateBr();
-            item.valueToPoints = parseFloat ($("#valueToPoints").val());
+            item.valueToPoints = valToPoints;
             if (item.chequeInfo) {
               item.chequeInfo.cheque_date_str = item.chequeInfo.cheque_date;
             };
             return item;
           });
-          
           request_payment = {
             "treatments": treatments,
             "payments": paymentsToSend,
@@ -1152,7 +1155,7 @@
             'cashier': $("#cashiers_select").val(),
             "status2": 4,
             "customer": $(".id_customer_search").val(),
-            "valueToPoints": parseFloat ($("#valueToPoints").val())
+            "valueToPoints": valToPoints
           };
           $.post(url, {
             "data": JSON.stringify(request_payment)
