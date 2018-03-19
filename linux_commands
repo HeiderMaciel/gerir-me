@@ -418,6 +418,23 @@ http://nb.transitobh.com.br/
 no ci.transitobh.com.br
 construir o PDF-server
 
+http://pm2.keymetrics.io/docs/usage/quick-start/
+cd /var/lib/jenkins/app/gerir-me
+pm2 start gerirme.json
+
+Se quiser que o pm2 inicie com o sistema:
+pm2 startup
+Os principais comandos são:
+# Listing
+
+pm2 list               # Display all processes status
+# Actions
+
+pm2 stop all           # Stop all processes
+pm2 restart all        # Restart all processes
+
+
+
 asset
 id company status
 product
