@@ -1,0 +1,10 @@
+{
+  "apps" : [{
+    "name"       : "gerir-me-PRD",
+    "script"     : "./sbt",
+    "args"       : "~;container:start; container:reload /",
+    "exec_interpreter": "bash",
+    "exec_mode"  : "fork_mode"
+  }
+  ]
+}
