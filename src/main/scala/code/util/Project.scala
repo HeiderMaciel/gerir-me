@@ -775,7 +775,11 @@ class WrittenForm(val valor: Double) {
     val parteFracionaria = BigDecimal(valor).remainder(parteInteira)
     var centavos = ""
     if(parteFracionaria > 0) {
-      var valorCentavos = parteFracionaria.toString.substring(2).toInt
+      var strCent = parteFracionaria.toString.substring(2)
+      // tive que fazer um slice aqui pq o substring 2 não estava resolvendo
+      // problema de perda de precisam que gerava parte frarcionaria
+      // muito grande - Rigel - 19/03/2018
+      var valorCentavos = strCent.slice(0,2).toInt
       if(valorCentavos <  10){
         valorCentavos *= 10
       }

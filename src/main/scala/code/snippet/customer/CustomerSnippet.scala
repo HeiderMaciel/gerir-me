@@ -203,7 +203,6 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 	}
 	def maintain() = {
 		try{
-
 			imageSave
 			var ac:Customer = getCustomer
 			def process(): JsCmd= {
@@ -318,9 +317,11 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 			"name=bp_indicatedby" #> (SHtml.text(ac.bp_indicatedby.is.toString, (p:String) => ac.bp_indicatedby(BusinessRulesUtil.snippetToLong(p))))&
 			"name=bp_manager" #> (SHtml.text(ac.bp_manager.is.toString, (p:String) => ac.bp_manager(BusinessRulesUtil.snippetToLong(p))))&
 			"name=name" #> (SHtml.text(ac.name.is, ac.name(_))++SHtml.hidden(process))
-
 		}catch {
 		    case (e:Exception) => {
+		    	if (AuthUtil.user.isSuperAdmin) {
+		    		println (e.printStackTrace);
+		    	}
 		    	S.error(AuthUtil.company.appCustName("Cliente") + " não existe! " + e.getMessage) 
 		    	"#costumer_form *" #> NodeSeq.Empty
 			}
