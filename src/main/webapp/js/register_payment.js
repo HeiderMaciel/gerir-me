@@ -77,7 +77,6 @@
     PaymentController.clearPayment();
     $('#command').val("");
     $('#command').val("");
-//    $('#valueinpoints').val("0.0");
     $('#user').val("").change();
     $('#payment_type').val("");
     prepareTreatmentsInUi();
@@ -1129,16 +1128,21 @@
       if (confirm("Tem certeza que deseja finalizar o pagamento?")) {
         if (!paymentRuning) {
           paymentRuning = true;
+          var valToPoints = 0.0;
+          if ($("#valueToPoints").val() && 
+              $("#valueToPoints").val() != 'NaN' &&
+              $("#valueToPoints").val() != 'undefined') {
+            alert (" tem valor " + $("#valueToPoints").val())
+            valToPoints = parseFloat ($("#valueToPoints").val());
+          }
           var value_current = $("#payment_type_value").val();
-          if (value_current !== "" && window.parseFloat(value_current) !== 0.0 && payments.length == 0) {
+          if ((value_current !== "" && 
+              window.parseFloat(value_current) !== 0.0) || 
+              (payments.length == 0)) {
             $("#add_payment").click();
           }
           url = $('#cash_form').attr('action');
           url += "processPayment";
-          var valToPoints = 0.0
-          if ($("#valueToPoints").val()) {
-            valToPoints = parseFloat ($("#valueToPoints").val())
-          }
           var paymentsToSend = payments.map(function(item) {
             item.dateDetailStr = item.dateDetail.getDateBr();
             item.valueToPoints = valToPoints;
@@ -1147,6 +1151,7 @@
             };
             return item;
           });
+          
           request_payment = {
             "treatments": treatments,
             "payments": paymentsToSend,

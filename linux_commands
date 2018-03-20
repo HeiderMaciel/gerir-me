@@ -420,6 +420,9 @@ construir o PDF-server
 
 http://pm2.keymetrics.io/docs/usage/quick-start/
 cd /var/lib/jenkins/app/gerir-me
+git reset --hard HEAD
+git pull
+
 pm2 start gerirme.json
 
 Se quiser que o pm2 inicie com o sistema:
@@ -536,3 +539,33 @@ se pontos + pontsonbuy >= total pontos
    total
 else 
    (pontos + pontsonbuy) * tota R$ / total pontos
+
+
+
+
+
+
+
+
+Exception occured while processing /cash/processPayment<pre>Message: net.liftweb.json.MappingException: Parsed JSON values do not match with class constructor
+args=List(
+TreatmentDTO(
+71,33,0,List(
+ActivityDTO(100214,activity,15089897,0.0,false,1.0,false,0,0,0,,0))
+,false,2018450,false)),
+List(),1,20/03/2018,47931,4,null
+arg types=scala.collection.immutable.$colon$colon,
+scala.collection.immutable.Nil$,
+java.lang.String,
+java.lang.String,
+java.lang.String,
+java.lang.String,
+null
+constructor=public code.service.PaymentRequst(
+scala.collection.immutable.
+List,scala.collection.immutable.List,
+java.lang.String,
+java.lang.String,
+java.lang.String,
+java.lang.String,
+double)
