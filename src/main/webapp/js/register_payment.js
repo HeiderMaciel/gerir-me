@@ -1132,7 +1132,6 @@
           if ($("#valueToPoints").val() && 
               $("#valueToPoints").val() != 'NaN' &&
               $("#valueToPoints").val() != 'undefined') {
-            alert (" tem valor " + $("#valueToPoints").val())
             valToPoints = parseFloat ($("#valueToPoints").val());
           }
           var value_current = $("#payment_type_value").val();

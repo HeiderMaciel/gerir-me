@@ -254,7 +254,7 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 		}
 		if(paymentType.customerRegisterDebit_?.is){
 			val customer = detail.payment.obj.get.customer.obj.get
-			customer.registerDebit(detail.value.is.toDouble / 0.95, 
+			customer.registerDebit(detail.value.is.toDouble, 
 			detail.payment.obj.get,detail, 
 			"Removendo atendimento de conta cliente")//incremente customer account
 		}
