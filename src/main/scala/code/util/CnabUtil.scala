@@ -44,33 +44,37 @@ object CnabUtil extends net.liftweb.common.Logger {
       //val mo = Monthly.findByKey(d.monthlyId)
       val mo = Monthly.findAllInCompany(
         By(Monthly.idForCompany,d.monthlyId))
-      //val company = Company.findByKey(mo.company)
-      val co = Customer.findByKey (mo(0).business_pattern).get
-      if (!mo.isEmpty) {
-        val obsAux : String = if (mo(0).obs.indexOf (" CnabUtil") != -1) {
-              mo(0).obs;
-           } else {
-              mo(0).obs + " CnabUtil";
-           }
-        if (!mo(0).paid) {
-                mo(0).paymentDate(d.paymentDate)
-                .efetiveDate(d.efetiveDate)
-                .paidValue(d.paidValue)
-                .increseValue(d.increseValue)
-                .liquidValue(d.liquid)
-                .obs(obsAux)
-                .paid(true) 
-                .save
-          str1 = "Boleto " + d.monthlyId + " pagamento confirmado " + co.name + " " + d.paidValue;
-          LogObj.wLogObj(AuthUtil.company.id, str1, "importação Cnab 240")
-        } else {
-          str1 = "Boleto " + d.monthlyId + " " + co.name + " JÁ ESTAVA MARCADO como pago " + d.paidValue;
-          println ("vaii =========== boleto " + str1)
-          LogObj.wLogObj(AuthUtil.company.id, str1, "importação Cnab 240")
-        }
+      if (mo.length < 1) {
+        str1 = "Boleto ***** " + d.monthlyId + " Não encontrado"; 
       } else {
-          str1 = "vaii =========== boleto NAO ECONTRADO " + d.monthlyId
-          println (str1)
+        //val company = Company.findByKey(mo.company)
+        val co = Customer.findByKey (mo(0).business_pattern).get
+        if (!mo.isEmpty) {
+          val obsAux : String = if (mo(0).obs.indexOf (" CnabUtil") != -1) {
+                mo(0).obs;
+             } else {
+                mo(0).obs + " CnabUtil";
+             }
+          if (!mo(0).paid) {
+                  mo(0).paymentDate(d.paymentDate)
+                  .efetiveDate(d.efetiveDate)
+                  .paidValue(d.paidValue)
+                  .increseValue(d.increseValue)
+                  .liquidValue(d.liquid)
+                  .obs(obsAux)
+                  .paid(true) 
+                  .save
+            str1 = "Boleto " + d.monthlyId + " pagamento confirmado " + co.name + " " + d.paidValue;
+            LogObj.wLogObj(AuthUtil.company.id, str1, "importação Cnab 240")
+          } else {
+            str1 = "Boleto " + d.monthlyId + " " + co.name + " JÁ ESTAVA MARCADO como pago " + d.paidValue;
+            println ("vaii =========== boleto " + str1)
+            LogObj.wLogObj(AuthUtil.company.id, str1, "importação Cnab 240")
+          }
+        } else {
+            str1 = "vaii =========== boleto NAO ECONTRADO " + d.monthlyId
+            println (str1)
+        }
       }
       strAux = strAux + str1 + "\n\r"
     })
