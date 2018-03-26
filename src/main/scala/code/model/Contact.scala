@@ -85,6 +85,10 @@ class Contact extends LongKeyedMapper[Contact]
 
   object business_pattern extends MappedLong(this)
 
+  object street extends MappedPoliteString(this,255) with LifecycleCallbacks {
+    override def defaultValue = "";
+  }
+
   def makeAsCustomer = {
     if (business_pattern.is == 0 || business_pattern == null) {
       val ac = Customer.createInCompany
