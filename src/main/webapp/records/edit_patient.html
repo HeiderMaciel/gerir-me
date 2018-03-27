@@ -7,7 +7,7 @@
         for (var i = 0; i < quizzes.length; i++) {
 /*          ret += '<input class="btn success quiz_addd" data-id="'+quizzes[i].id+'" type="button" value="'+ quizzes[i].short_name + '" href="#">'
           */
-          ret += '<ul><li><input class="btn success quiz_addd" data-id="'+quizzes[i].id+'" type="button" value="'+ quizzes[i].short_name + '" href="#"></li></ul>'
+          ret += '<ul><li><input style="width:85%" title="'+ quizzes[i].name +'" class="btn success quiz_addd" data-id="'+quizzes[i].id+'" type="button" value="'+ quizzes[i].short_name + '" href="#"></li></ul>'
         };
         $("#records").html(ret);
       });

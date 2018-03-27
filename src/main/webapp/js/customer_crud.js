@@ -251,6 +251,9 @@ $(function() {
       }
       fields[2] = "date"
       fields[3] = "date"
+      fields[4] = "real"
+      fields[5] = "real"
+      fields[6] = "real"
 /*
       fields[8] = {
         type: "format",
