@@ -18,7 +18,9 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 
     def getSingleton = User
     def userIdAsString = this.id.is.toString
-    def childs = User.findAll(By(User.parent, this))
+    def childs = User.findAll(
+        By(User.parent, this),
+        By(User.userStatus, User.STATUS_OK))
     override def updateShortName = false
     override def updateIdForCompany = if(AuthUtil.?) {
         AuthUtil.company.bpIdForCompany == 0 || AuthUtil.company.bpIdForCompany == 1
@@ -645,8 +647,8 @@ object User extends User with BusinessPatternMeta[User] with OnlyCurrentUnit[Use
             super.findAll(By(is_employee_?,true) :: params.toList :_*)
     }
 
-//    def findAllInCompanyOrdened = if(AuthUtil.user.isSimpleUserCommission || AuthUtil.user.isSimpleUserCommand) { 
-    def findAllInCompanyOrdened = if(AuthUtil.user.isSimpleUserCommand) { 
+    def findAllInCompanyOrdened = if(AuthUtil.user.isSimpleUserCommission || AuthUtil.user.isSimpleUserCommand) { 
+//    def findAllInCompanyOrdened = if(AuthUtil.user.isSimpleUserCommand) { 
         List(AuthUtil.user) ::: AuthUtil.user.childs
     }else{
         findAllInCompany(OrderBy(User.search_name, Ascending), By(User.userStatus, User.STATUS_OK))
@@ -658,9 +660,9 @@ object User extends User with BusinessPatternMeta[User] with OnlyCurrentUnit[Use
         findAllInCompany( listParamns :_*)
     }
 
-//    def findAllInCompanyOrdened(params: QueryParam[User]*) = if(AuthUtil.user.isSimpleUserCommission || AuthUtil.user.isSimpleUserCommand) {
-    def findAllInCompanyOrdened(params: QueryParam[User]*) = if(AuthUtil.user.isSimpleUserCommand) {
-            List(AuthUtil.user) 
+    def findAllInCompanyOrdened(params: QueryParam[User]*) = if(AuthUtil.user.isSimpleUserCommission || AuthUtil.user.isSimpleUserCommand) {
+//    def findAllInCompanyOrdened(params: QueryParam[User]*) = if(AuthUtil.user.isSimpleUserCommand) {
+            List(AuthUtil.user) ::: AuthUtil.user.childs
     }else{
         def listParamns = OrderBy(User.search_name, Ascending) :: By(User.userStatus, User.STATUS_OK) :: params.toList
         findAllInCompany( listParamns :_*)

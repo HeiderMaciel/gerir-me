@@ -394,7 +394,7 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
 
   def usersForCalendar(onlyCurrenunit: Boolean = true): List[User] = 
   if ((AuthUtil.user.isSimpleUserCalendar) && (!AuthUtil.user.isCalendarUser)) {
-    List(AuthUtil.user)
+    List(AuthUtil.user) ::: AuthUtil.user.childs
   } else {
 //    if (onlyCurrenunit)
 //      User.fildAllInUnit(By(User.showInCalendar_?, true), (By(User.userStatus, User.STATUS_OK)), OrderBy(User.orderInCalendar, Ascending), OrderBy(User.short_name, Ascending))
