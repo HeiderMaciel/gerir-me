@@ -132,6 +132,40 @@ object CompanySnippet{
 	def phone = {
 		<span>{ac.phone.is}</span>
 	}	
+
+	def thumbh = {	
+		// mostrar logo da unidade ao invés do da empresa
+		// tem que tirar o false do if para validar
+		// verificar 
+		// vilarika  exemplo  pierre sergio hugo aptus
+		val logoUnit = if(AuthUtil.?) {
+			AuthUtil.unit.imagethumb.is match {
+			case img:String if(img != "") => {
+				AuthUtil.unit.thumb_web
+			}
+			case _ => ""
+			}
+		} else {
+			""
+		}
+		ac.imagethumb.is match {
+			case img:String if(img != "") => {
+				if (logoUnit != "" && 
+					PermissionModule.unit_? && false) {
+					//<img width="70px" src={ac.thumb_web}/>
+	    			<img height="30px" src={logoUnit}/>
+				} else {
+					if (Project.isLocalHost) {
+						<img height="24px" class="borderLocal" src={ac.thumb_web}/>
+					} else {
+						<img height="30px" src={ac.thumb_web}/>
+					}
+				}
+			}
+			case _ => <img height="30px" style="padding-right: 10px" src="/images/logo.png"/>
+		}
+	}
+
 	def thumb = {	
 		// mostrar logo da unidade ao invés do da empresa
 		// tem que tirar o false do if para validar
@@ -159,6 +193,7 @@ object CompanySnippet{
 			case _ => <img width="70px" style="padding-right: 10px" src="/images/logo.png"/>
 		}
 	}
+
 	def logo = {	
 		ac.image.is match {
 			case img:String if(img != "") => {

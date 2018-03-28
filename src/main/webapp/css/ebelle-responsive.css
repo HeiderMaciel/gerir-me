@@ -181,3 +181,9 @@ table form{
   background-color:transparent;
   width:530px;
 }
+
+/*
+  Usado para diferencia logo em base local na agenda
+*/
+.borderLocal { border-width: 3px; border-color: red; border-style: solid; } 
+
