@@ -187,7 +187,11 @@ object CompanySnippet{
 					//<img width="70px" src={ac.thumb_web}/>
 	    			<img width="70px" src={logoUnit}/>
 				} else {
-					<img width="70px" src={ac.thumb_web}/>
+					if (Project.isLocalHost) {
+						<img width="64px" class="borderLocal" src={ac.thumb_web}/>
+					} else {
+						<img width="70px" src={ac.thumb_web}/>
+					}
 				}
 			}
 			case _ => <img width="70px" style="padding-right: 10px" src="/images/logo.png"/>

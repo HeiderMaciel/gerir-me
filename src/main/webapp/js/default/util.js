@@ -2442,11 +2442,11 @@ var toEbelle = function() {
 	I18nManager.changeLang("ebelle");
 	$('title').html('e-belle ' + $('title').html());
 	//$('.system-name').html('e-belle');
-	if (document.location.href.indexOf("localhost") != -1) {
-		$('.system-name').html('<span style="background-color:red"><b>e-belle BASE LOCAL </b></span>');
-	} else {
+//	if (document.location.href.indexOf("localhost") != -1) {
+//		$('.system-name').html('<span style="background-color:red"><b>e-belle BASE LOCAL </b></span>');
+//	} else {
 		$('.system-name').html('e-belle');
-	}
+//	}
 	$('.brand img').attr('width', '16');
 	$("img[src='/images/logo.png']").attr('src', '/images/logo_ftr_ebelle.png');
 	$("img[src='/images/web.jpg']").attr('src', '/images/logo_ftr_ebelle.png');
