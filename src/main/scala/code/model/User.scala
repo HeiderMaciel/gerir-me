@@ -382,7 +382,7 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 
     def locationsByDate (start:Date,end:Date) =  LocationHistory.findAll(By(LocationHistory.user,this),OrderBy(LocationHistory.createdAt, Descending),BySql(" date(createdAt) between ? and ?",IHaveValidatedThisSQL("datepayment","01-01-2012 00:00:00"),start,end))
 
-    lazy val groupPermissionList:List[Int] = groupPermission.is.split(",").toList match {
+    def groupPermissionList:List[Int] = groupPermission.is.split(",").toList match {
                 case Nil => List[Int]()
                 case a:List[String] => a.map((s) => if(s!="") s.toInt else 0)
         }
@@ -521,6 +521,13 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         if (this.parent_percent != 0.0 && this.parent.isEmpty) {
             throw new RuntimeException ("Um profissional superior precisa ser informado, caso o percentual de comissão para o superior seja diferente de zero")
         }
+        if (isAdmin && groupPermissionList.length > 1) {
+            throw new RuntimeException ("Se a permissão Administrador foi especificada, não é necessário especificar nenhuma outra")
+        }
+        if ((isSimpleUserCalendar || isSimpleUserCommand) 
+            && (isCalendarUser || isCommandUser)) {
+            throw new RuntimeException ("Se as permissões de Agenda Geral ou Comanda Geral forem especificadas, não faz sentido especificar permissões restritivas como Prof Agenda e Prof Comanda")
+        }
         if (this.is_person_?) {
             if (this.image.is == "" || this.image.is == "empresa.png") {
                 this.image.set ("cliente.png")
@@ -647,8 +654,8 @@ object User extends User with BusinessPatternMeta[User] with OnlyCurrentUnit[Use
             super.findAll(By(is_employee_?,true) :: params.toList :_*)
     }
 
-    def findAllInCompanyOrdened = if(AuthUtil.user.isSimpleUserCommission || AuthUtil.user.isSimpleUserCommand) { 
-//    def findAllInCompanyOrdened = if(AuthUtil.user.isSimpleUserCommand) { 
+//    def findAllInCompanyOrdened = if(AuthUtil.user.isSimpleUserCommission || AuthUtil.user.isSimpleUserCommand) { 
+    def findAllInCompanyOrdened = if(AuthUtil.user.isSimpleUserCommand) { 
         List(AuthUtil.user) ::: AuthUtil.user.childs
     }else{
         findAllInCompany(OrderBy(User.search_name, Ascending), By(User.userStatus, User.STATUS_OK))
@@ -660,8 +667,8 @@ object User extends User with BusinessPatternMeta[User] with OnlyCurrentUnit[Use
         findAllInCompany( listParamns :_*)
     }
 
-    def findAllInCompanyOrdened(params: QueryParam[User]*) = if(AuthUtil.user.isSimpleUserCommission || AuthUtil.user.isSimpleUserCommand) {
-//    def findAllInCompanyOrdened(params: QueryParam[User]*) = if(AuthUtil.user.isSimpleUserCommand) {
+//    def findAllInCompanyOrdened(params: QueryParam[User]*) = if(AuthUtil.user.isSimpleUserCommission || AuthUtil.user.isSimpleUserCommand) {
+    def findAllInCompanyOrdened(params: QueryParam[User]*) = if(AuthUtil.user.isSimpleUserCommand) {
             List(AuthUtil.user) ::: AuthUtil.user.childs
     }else{
         def listParamns = OrderBy(User.search_name, Ascending) :: By(User.userStatus, User.STATUS_OK) :: params.toList
