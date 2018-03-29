@@ -521,12 +521,16 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         if (this.parent_percent != 0.0 && this.parent.isEmpty) {
             throw new RuntimeException ("Um profissional superior precisa ser informado, caso o percentual de comissão para o superior seja diferente de zero")
         }
-        if (isAdmin && groupPermissionList.length > 1) {
+        // rigel março 2018 - nao sei pq o length vem com um a mais
+        if (isAdmin && groupPermissionList.length > 2) {
             throw new RuntimeException ("Se a permissão Administrador foi especificada, não é necessário especificar nenhuma outra")
         }
         if ((isSimpleUserCalendar || isSimpleUserCommand) 
             && (isCalendarUser || isCommandUser)) {
             throw new RuntimeException ("Se as permissões de Agenda Geral ou Comanda Geral forem especificadas, não faz sentido especificar permissões restritivas como Prof Agenda e Prof Comanda")
+        }
+        if (isRecords && !isCustomer) {
+            throw new RuntimeException ("Ao atribuir a permissão Prontuário você deve também atribuir Clientes/Pacientes")
         }
         if (this.is_person_?) {
             if (this.image.is == "" || this.image.is == "empresa.png") {
