@@ -764,7 +764,19 @@ object BusinessRulesUtil{
 /**
  * Created by 022280451 on 18/05/2015.
  */
-class WrittenForm(val valor: Double) {
+class WrittenForm(val val1: Double) {
+
+  val valor = if (val1 >= 0) {
+    val1
+  } else {
+    val1 * -1;
+  }
+
+  val negativo = if (val1 >= 0) {
+    ""
+  } else {
+    " negativos"
+  }
 
   def humanize():String = {
 
@@ -772,12 +784,16 @@ class WrittenForm(val valor: Double) {
       return ("zero " + "reais")
     }
     val parteInteira = valor.toInt
-    val parteFracionaria = BigDecimal(valor).remainder(parteInteira)
+    val parteFracionaria = if (parteInteira > 0) {
+      BigDecimal(valor).remainder(parteInteira)
+    } else {
+      BigDecimal (valor)
+    }
     var centavos = ""
     if(parteFracionaria > 0) {
       var strCent = parteFracionaria.toString.substring(2)
       // tive que fazer um slice aqui pq o substring 2 não estava resolvendo
-      // problema de perda de precisam que gerava parte frarcionaria
+      // problema de perda de precisao que gerava parte frarcionaria
       // muito grande - Rigel - 19/03/2018
       var valorCentavos = strCent.slice(0,2).toInt
       if(valorCentavos <  10){
@@ -785,7 +801,8 @@ class WrittenForm(val valor: Double) {
       }
       centavos = " e " + humanize(valorCentavos.toInt) + " centavos"
     }
-    humanize(parteInteira) + " " + "reais" + centavos
+//    println ("vaiii ========== " + humanize(parteInteira) + " " + "reais" + centavos + negativo)
+    humanize(parteInteira) + " " + "reais" + centavos + negativo
   }
 
   private def humanize(valorEntrada: Int): String = {
