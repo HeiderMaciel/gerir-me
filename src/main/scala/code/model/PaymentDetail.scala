@@ -56,7 +56,14 @@ class PaymentDetail extends LongKeyedMapper[PaymentDetail]  with IdPK with Creat
     }
 
     def typePaymentTranslated = typePaymentObj match {
-      case Full(o:PaymentType) => o.name.is
+      case Full(o:PaymentType) => {
+        if (o.cheque_? && o.needChequeInfo_?) {
+          o.name.is + " " + cheque.bank + " " + cheque.agency + 
+          " " + cheque.account + " " + cheque.number
+        } else {
+          o.name.is
+        }
+      }
       case _ => "Def"
     }
 

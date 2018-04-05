@@ -87,15 +87,15 @@
             "<td>"+getHourBr(FactoryDate.byTime(obj.end))+
             "</td>" + 
             "<td>"+obj.customerid+"</td>" + 
-            "<td>"+"<a href='/customer/edit?id="+obj.customerid+"' target='_customer_maste'>"+obj.customername+"</a>"+"</td>" +
-            "<td>"+"<p style='line-height: 120%'>" + 
+            "<td>"+"<a style='line-height: 105%' href='/customer/edit?id="+obj.customerid+"' target='_customer_maste'>"+obj.customername+"</a>"+"</td>" +
+            "<td>"+"<p style='line-height: 105%'>" + 
               obj.phone + "<p/>"+"</td>" + // tem tb email conctenado
-            "<td>"+"<p style='line-height: 120%'>" + 
+            "<td>"+"<p style='line-height: 105%'>" + 
               obj.obs + "<p/>"+"</td>" +
-            "<td>"+obj.username+"</td>"+
+            "<td> <p style='line-height: 105%'>"+obj.username+"</p> </td>"+
             (hasUnitModule ? "<td>"+obj.unitname+"</td>" : '')+ 
             "<td>"+decodeStatus(obj.status, obj.status2)+"</td>" + 
-            "<td>"+obj.details+"</td>" +
+            "<td> <p style='line-height: 105%'>" + obj.details + "</p> </td>" +
             "<td>"+obj.payments+"</td>" +
             (hasFinancialAccess ? "<td>"+obj.total.formatMoney()+"</td>" : '') +
             "<td>"+obj.cashier+"</td>" +
