@@ -392,6 +392,13 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
 
   def users = User.findAllInCompanyOrdened
 
+  def countUsersForCalendar(): Long = {
+    User.count(
+      BySql(" (unit = ? or (id in (select uu.user_c from usercompanyunit uu where uu.unit = ? and uu.company = ?))) ",IHaveValidatedThisSQL("",""), AuthUtil.unit.id, AuthUtil.unit.id, AuthUtil.company.id),
+      By(User.showInCalendar_?, true), (By(User.userStatus, User.STATUS_OK)) 
+      )
+  }
+
   def usersForCalendar(onlyCurrenunit: Boolean = true): List[User] = 
 //  if ((AuthUtil.user.isSimpleUserCalendar) && (!AuthUtil.user.isCalendarUser)) {
   if ((AuthUtil.user.isSimpleUserCalendar) || 

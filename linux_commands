@@ -444,7 +444,8 @@ no ci.transitobh.com.br
 construir o PDF-server
 
 http://pm2.keymetrics.io/docs/usage/quick-start/
-diretorio de logs /root/.pm2/logs
+diretorio de logs 
+cd /root/.pm2/logs
 cd /var/lib/jenkins/app/gerir-me
 git reset --hard HEAD
 git pull

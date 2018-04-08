@@ -437,7 +437,9 @@ object SecuritySnippet {
 
 //
       def calendarFixed (in:NodeSeq):NodeSeq ={
-        if (AuthUtil.user.calendarFixed_?)
+        if (AuthUtil.user.calendarFixed_? &&
+          (AuthUtil.user.isSimpleUserCalendar || 
+            AuthUtil.company.countUsersForCalendar < 7))
         in
         else
         NodeSeq.Empty
