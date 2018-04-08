@@ -143,15 +143,13 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
       }
     }    
 
-    case "mobile" :: "api" :: "hoptions" :: Nil Post _ => {
+    case "mobile" :: "api" :: "activities" :: Nil Post _ => {
       for {
         email <- S.param("email") ?~ "email parameter missing" ~> 400
         password <- S.param("password") ?~ "password parameter missing" ~> 400
         company <- S.param("company") ?~ "company parameter missing" ~> 400
         user <- S.param("user") ?~ "user parameter missing" ~> 400
-        date <- S.param("date") ?~ "date parameter missing" ~> 400
       } yield {
-        val date1 = Project.strToDateOrToday(date)
 
         val customer = Customer.login(email, password, company)
         val userObj = User.findAll(
@@ -165,6 +163,29 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
             )
         )
 
+        JsObj(
+          ("activities", JsArray(activities))
+        )
+      }
+    }
+
+    case "mobile" :: "api" :: "hoptions" :: Nil Post _ => {
+      for {
+        email <- S.param("email") ?~ "email parameter missing" ~> 400
+        password <- S.param("password") ?~ "password parameter missing" ~> 400
+        company <- S.param("company") ?~ "company parameter missing" ~> 400
+        user <- S.param("user") ?~ "user parameter missing" ~> 400
+        date <- S.param("date") ?~ "date parameter missing" ~> 400
+        activity <- S.param("activity") ?~ "activity parameter missing" ~> 400
+      } yield {
+
+        val date1 = Project.strToDateOrToday(date)
+        val activityObj = Activity.findByKey(activity.toLong).get
+        val customer = Customer.login(email, password, company)
+        val userObj = User.findAll(
+          By(User.company, customer.company),
+          By(User.id, user.toLong))(0)
+
         val hoptions = AgHM.findAll(
         BySql(""" 
           agh between ? and ?
@@ -174,10 +195,24 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
           and tr.status not in (5,4,8,1) 
           and (to_char (date(?), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp 
           between tr.start_c and tr.end_c- (1 * interval '1 minute'))
+
+          and 1 > (select count (1) from treatment tr where tr.user_c = ? and tr.company = ?
+          and tr.status not in (5,4,8,1) 
+          and tr.start_c 
+          between (to_char (date(?), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp and 
+          (to_char (date(?), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp + ((? - 1) * interval '1 minute'))
+
           and 1 > (select count (1) from busyevent tr where tr.user_c = ? and tr.company = ?
           and tr.deleted = false
           and (to_char (date (?), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp 
           between tr.start_c and tr.end_c- (1 * interval '1 minute'))
+
+          and 1 > (select count (1) from busyevent tr where tr.user_c = ? and tr.company = ?
+          and tr.deleted = false
+          and tr.start_c 
+          between (to_char (date(?), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp and 
+          (to_char (date(?), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp + ((? - 1) * interval '1 minute'))
+
            """, 
         IHaveValidatedThisSQL("1=1","01-01-2012 00:00:00"),
         userObj.company.obj.get.calendarStart.is,
@@ -187,9 +222,22 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
         user.toLong,
         customer.company,
         date1,
+
         user.toLong,
         customer.company,
-        date1
+        date1,
+        date1,
+        activityObj.durationMin,
+
+        user.toLong,
+        customer.company,
+        date1,
+
+        user.toLong,
+        customer.company,
+        date1,
+        date1,
+        activityObj.durationMin
         )
           ).map( (u) => {
             JsObj(
@@ -213,7 +261,7 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
           ("interval", userObj.company.obj.get.calendarInterval.is),
           ("start", userObj.company.obj.get.calendarStart.is),
           ("end", userObj.company.obj.get.calendarEnd.is),
-          ("activities", JsArray(activities)),
+//          ("activities", JsArray(activities)),
           ("hoptions", JsArray(hoptions))
         )
       }

@@ -83,6 +83,14 @@ class Activity extends ProductMapper[Activity] with Ordered[Activity] {
     object discountPercent extends MappedDecimal(this,MathContext.DECIMAL64,4) // desconto percentul mo preço pra calcular comissão
     object discountPercLimit extends MappedDecimal(this,MathContext.DECIMAL64,4) // percentual de desconto no caixa
 
+    // usado para agenda publica na verificação de outros agendamentos 
+    // em horarios pra fernte do desejado
+    def durationMin:Long = {
+        val h = duration.is.slice(0,2).toLong * 60
+        val m = duration.is.slice(3,5).toLong
+        return (h+m)
+    }
+
 /*
     def auxiliarCommissionValue = if(auxPrice.is.toDouble != 0) {
             auxPrice.is.toDouble

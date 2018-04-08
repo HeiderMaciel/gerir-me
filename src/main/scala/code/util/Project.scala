@@ -181,7 +181,7 @@ object Project{
 
         var strAux = years;
 
-        if (str != "YEARS") {
+        if (str != "YEARS" && str != "YEARSINT") {
           if (strAux != "" && (months + days) != "") {
             strAux += ", "
           }
@@ -192,8 +192,10 @@ object Project{
             }
           }
           strAux += days
+        } else if (str == "YEARSINT") {
+          strAux = ai_anos.toString
         }
-          
+
         strAux
   }
 
@@ -281,6 +283,15 @@ object Project{
 			"retornar idade"
     }
 	}
+
+  def dateToYearsInt(date:Date) = {
+    // rigel calcular só anos
+    if(date != null) {
+      diffYYMM (today, date, "YEARSINT").toLong
+    } else {
+      0
+    }
+  }
 
 	def dateToHourss(date:Date) = {
     if(date != null) {

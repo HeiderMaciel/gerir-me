@@ -510,10 +510,29 @@ with PerCity{
     object instructiondegree extends MappedLong(this) //
     object occupation extends MappedLongForeignKey(this,Occupation) // profissao
     object typeOfIndustry extends MappedLong(this) // ramo de atividade
-    object mapIcon extends MappedLongForeignKey(this,MapIcon) {
-      override def defaultValue = 1
+    object mapIcon extends MappedLongForeignKey(this,MapIcon) with LifecycleCallbacks {
+          override def defaultValue = 1
+          override def beforeSave() {
+          super.beforeSave;
+          if(birthday.is != null){
+            val years = Project.dateToYearsInt (birthday).toLong
+            if (years <= 12) {
+               if(mapIcon.isEmpty || mapIcon.toLong == 1){
+                  mapIcon(3); // criança
+               } 
+            } else {
+               if(mapIcon.toLong == 3){
+                if (sex == "F") {
+                    mapIcon (2); // mulher
+                  } else {
+                    mapIcon (1); // homem
+                }  
+               } 
+            }
+          }
+      } 
     }
-
+    
     def iconPath = mapIcon.obj match {
         case Full(t) => t.iconPath.is
         case _ => ""
