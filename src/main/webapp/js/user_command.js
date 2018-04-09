@@ -74,7 +74,10 @@
           ret += "<option value='" + activitysObj[i].id + "'>" + activitysObj[i].name + "</option>";
         }
         $('#activity').append(ret);
-        $('#activity').change().select2('open');
+        if (($("#customer").val()) && (parseFloat($("#customer").val()) != 0)) {
+          // só abre select de atividades se já tem serviço
+          $('#activity').change().select2('open');
+        }
       });
     };
 
@@ -197,26 +200,28 @@
       if (print) {
         fields[13] = "none";
       } else {
-        fields[13] = {
-          type : "format",
-          decode: function(name, row) {
-            var strAux = "";
-            var hasEdoctusSystem = $('.has-edoctus-system').length > 0;
-            var hasEphysioSystem = $('.has-ephysio-system').length > 0;
-            if (hasEdoctusSystem || hasEphysioSystem) {
-  //          if ((document.location.href.indexOf("edoctus") != -1) ||
-  //          (document.location.href.indexOf("ephysio") != -1)) {
-              strAux = '<a title="Novo prontuário" href="/quiz/quizapply?business_pattern=' + 
-              row[13] + '&quiz=' + row[15] + 
-              '"> <img width="24" src="/images/add.png"/></a>' +
-                  '<a title="Prontuário" href="/records/edit_patient?id=' + 
-                  row[13] + '"> <img width="24" src="/images/records.png"/></a>'
+        var hasEdoctusSystem = $('.has-edoctus-system').length > 0;
+        var hasEphysioSystem = $('.has-ephysio-system').length > 0;
+        if (hasEdoctusSystem || hasEphysioSystem) {
+          fields[13] = {
+            type : "format",
+            decode: function(name, row) {
+              var strAux = "";
+    //          if ((document.location.href.indexOf("edoctus") != -1) ||
+    //          (document.location.href.indexOf("ephysio") != -1)) {
+                strAux = '<a title="Novo prontuário" href="/quiz/quizapply?business_pattern=' + 
+                row[13] + '&quiz=' + row[15] + 
+                '"> <img width="24" src="/images/add.png"/></a>' +
+                    '<a title="Prontuário" href="/records/edit_patient?id=' + 
+                    row[13] + '"> <img width="24" src="/images/records.png"/></a>'
+              return strAux 
+               // agora ir para cadastro é link no nome
+               //+ <a title="Cadastro" href="/customer/edit?id=' + row[11] + '"> <img width="24" src="/images/customers.png"/></a>'
             }
-            return strAux 
-             // agora ir para cadastro é link no nome
-             //+ <a title="Cadastro" href="/customer/edit?id=' + row[11] + '"> <img width="24" src="/images/customers.png"/></a>'
           }
-        };
+        } else {
+          fields[13] = "none";
+        }
       }
       if (print) {
         fields[14] = "none"

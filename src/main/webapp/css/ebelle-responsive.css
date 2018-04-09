@@ -80,7 +80,7 @@ table form{
 
   }
   .hide_mobile{
-    display: none;
+    display: none !important;
   }
   .show_mobile{
     display: block;

@@ -463,6 +463,9 @@ pm2 list               # Display all processes status
 pm2 stop all           # Stop all processes
 pm2 restart all        # Restart all processes
 
+cd /var/www/html/portal_salao
+git reset --hard HEAD
+git pull
 
 
 asset
