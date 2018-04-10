@@ -24,7 +24,7 @@
 		});
 	</script>
 	<div class="well">
-        <label for="btn"></label>
+        <label class="hide_mobile" for="btn"></label>
 		<a class="btn primary" href="/customer/edit">Inserir novo</a>
 	</div>
 	<div class='filter block-message success"'>
@@ -92,18 +92,18 @@
 	</div>
 <table class="bordered-table zebra-striped">
 		<thead>
-			<th>Id</th>
+			<th class="hide_mobile">Id</th>
 			<th>Foto</th>			
 			<th>Ícone</th>			
 			<th>Nome</th>
 			<th>E-mail</th>
 			<th>Telefone</th>
-			<th class='lift:SecuritySnippet.isNotEgrexSystem'>Documento</th>			
+			<th class="hide_mobile">Documento</th>		
 			<th>Ações</th>
 		</thead>
 		<tbody>
 			<tr class="lift:CustomerSnippet:customers">
-				<td>
+				<td class="hide_mobile">
 					<f:id></f:id>
 				</td>
 				<td>
@@ -121,7 +121,7 @@
 				<td>
 					<f:phone></f:phone>
 				</td>
-				<td class='lift:SecuritySnippet.isNotEgrexSystem'>
+				<td class="hide_mobile">
 					<f:document></f:document>
 				</td>
 				</span>

@@ -2,7 +2,7 @@
     <div class="lift:CustomerSnippet.maintain">
         <form class="crud_form lift:form.ajax" id="customer_form">
             <div class="well">
-                <label for="btn"></label>
+                <label class="hide_mobile" for="btn"></label>
                 <a class="btn primary" href="/customer/list">Lista</a>
                 <input class="btn success lift:SecuritySnippet.isNotAdminRead" type="submit" value="Salvar">
                 <a class="btn primary" href="/customer/edit">Inserir novo</a>
@@ -177,16 +177,16 @@
                           </div>
                         </div>
                         <div class="clearfix">
-                            <label for="birthday">Estado Civíl</label>
+                            <label for="civilstatus">Estado Civíl</label>
                             <div class="input">
                                 <div class='inline-inputs'>
                                     <div class="input-prepend" style='float:left; padding-right:10px'>
-                                        <span class="add-on"><img src='/images/sex.png'/></span> 
+                                        <span class="hide_mobile add-on"><img src='/images/sex.png'/></span> 
                                         <select id="civilstatus" name="civilstatus" ></select>
                                         <span class="help-block">Estado civil</span>
                                     </div>
                                     <div class="input-prepend" style='float:left; padding-right:10px'>
-                                        <span class="add-on"><img src='/images/sex.png'/></span> 
+                                        <span class="hide_mobile add-on"><img src='/images/sex.png'/></span> 
                                         <select id="mapicon" name="mapicon" ></select>
                                         <span class="help-block">Icone</span>
                                     </div>
@@ -197,7 +197,7 @@
                             <label for="email">E-mail</label>
                             <div class="input">
                                 <div class="input-prepend">
-                                    <span class="add-on">@</span>
+                                    <span class="hide_mobile add-on">@</span>
                                     <input class="xlarge" id="email" name="email" size="16" type="text">
                                     <span class="help-inline">E-mail de contato</span>
                                 </div>
@@ -287,7 +287,7 @@
                             <label for="website">Web Site</label>
                             <div class="input">
                                 <div class="input-prepend">
-                                    <span class="add-on">@</span>
+                                    <span class="hide_mobile add-on">@</span>
                                     <input class="xlarge" id="website" name="website" size="16" type="text">
                                 </div>
                                 <span class="help-block">Web site </span>
@@ -371,7 +371,7 @@
                 </span>
             </span>
             <div class="well">
-                <label for="btn"></label>
+                <label class="hide_mobile" for="btn"></label>
                 <a class="btn primary" href="/customer/list">Lista</a>
                 <input class="btn success lift:SecuritySnippet.isNotAdminRead" type="submit" value="Salvar">
                 <a class="btn primary" href="/customer/edit">Inserir novo</a>
