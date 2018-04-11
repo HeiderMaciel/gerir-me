@@ -33,8 +33,18 @@ object ContactsUtil extends net.liftweb.common.Logger {
     bi = 0;
     sqlInsert = "";
     val lines = fromFile(file).getLines.toList
+    val schema = if (origin.indexOf (".") > 0) {
+      ""
+    } else {
+      "diversos."
+    }
+
+println ("vaiiii ======= " + lines(1))
+    println ("vaiiii virg " +lines(1).count(_ == ','));
+
     val separator:String = if (lines(1).count(_ == '.') >
-      lines(1).count(_ == ';')) {
+      lines(1).count(_ == ';') && lines(1).count(_ == '.') >
+      lines(1).count(_ == ',')) {
         "."
       } else if (lines(1).count(_ == ';') >
       lines(1).count(_ == ',')) {
@@ -45,11 +55,34 @@ object ContactsUtil extends net.liftweb.common.Logger {
     // o for começa de um para saltar a primeira linha 
     // cabeçalho das colunas - parametrizar
     //val details = 
-    println ("vaiiii ======== gerar " + lines.size + " linhas!")
+    println ("vaiiii ======== gerar " + lines.size + " linhas! separador " + separator)
+
+    sqlInsert += "--Drop table " + schema + origin  + ";\n\n"
+    sqlInsert += "Create table " + schema + origin  + " ( \n"
+    var listCol = lines(0).split(separator);
+    var j = 0;
+    listCol.foreach((column) => {
+      var colAux = column.replaceAll ("\"", "")
+      sqlInsert += colAux + " varchar (255)"
+      j += 1;
+      if (j < listCol.length) {
+        sqlInsert += ",\n"
+      } else {
+        sqlInsert += """)
+            WITH (
+            OIDS=FALSE
+            );
+            ALTER TABLE """ + schema + origin + 
+            " OWNER TO postgres;\n ";
+      }
+    })  
+
+    sqlInsert += "--Delete from " + schema + origin  + ";\n"
+
     for(i <- 1 to (lines.size)-1 ) {
       //println ("vaiii ====== " + lines(i) + " === " + i + " serapardor " + separator)
       var line = lines(i);
-      factory(i, line, separator, origin, nameasis, generatesql)
+      factory(i, line, separator, schema + origin, nameasis, generatesql)
     }
     // gerar arquivo aqui
     if (generatesql > 0) {
@@ -155,13 +188,23 @@ object ContactsUtil extends net.liftweb.common.Logger {
 */
 
   def factory(i:Long, lines:String, separator:String, origin:String, nameasis:Long, generatesql:Long):DetailContacts ={
-    sqlInsert += "\ninsert into diversos." + origin + " values ("
-    val listCol = lines.split(separator)
+    var listCol = lines.split(separator);
     var j = 0;
-
+    var colAux = "";
+    if (listCol.length < 1) {
+      if (i < 5) {
+        listCol = lines.split(';');
+        println ("vaiiii --------- cols " + listCol.length + " line " + lines)
+      }
+    }
+    if (listCol.length > 0) {
+      sqlInsert += "\ninsert into " + origin + " values (";
+    }
     if (generatesql > 0) {
       listCol.foreach((column) => {
-        sqlInsert += "'" + column + "'";
+        colAux = column.replaceAll ("\"","");
+        colAux = colAux.replaceAll ("'"," ");
+        sqlInsert += "'" + colAux + "'";
         j += 1;
         if (j < listCol.length) {
           sqlInsert += ","
