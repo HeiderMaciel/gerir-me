@@ -114,13 +114,13 @@ trait NameSearchble [self <: net.liftweb.mapper.Mapper[self]]{
       protected class MyShortName(obj: self) extends MappedPoliteString(obj,20) with LifecycleCallbacks {
         override def beforeCreate() {
           super.beforeCreate;
-          if(this.get == BusinessRulesUtil.EMPTY) {
+          if((this.get).trim == BusinessRulesUtil.EMPTY) {
             this.set(BusinessRulesUtil.toShortString(fieldOwner.asInstanceOf[NameSearchble[self]].name.is.trim()))
           }
         }
         override def beforeSave() {
           super.beforeSave;
-          if(updateShortName || this.is == BusinessRulesUtil.EMPTY){
+          if(updateShortName || this.is.trim == BusinessRulesUtil.EMPTY){
             this.set(BusinessRulesUtil.toShortString(fieldOwner.asInstanceOf[NameSearchble[self]].name.is.trim()))
           }
         }         
