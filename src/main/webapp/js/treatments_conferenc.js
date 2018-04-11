@@ -79,11 +79,16 @@
           treatments_del = treatments
           for (var i = treatments.length - 1; i >= 0; i--) {
             obj = treatments[i];
-            total += obj.total;              
+            total += obj.total;
+            var iniAux = "";
+            if (isMobile.any) {
+              iniAux = getHourBr(FactoryDate.byTime(obj.date))
+            }
             ret += "<tr>" +
             "<td>"+obj.command+"</td>" +
-            "<td>"+getDateBr(FactoryDate.byTime(obj.date))+"</td>" +
-            "<td>"+getHourBr(FactoryDate.byTime(obj.date))+"</td>" +
+            "<td>"+getDateBr(FactoryDate.byTime(obj.date))+ " " + iniAux + "</td>" +
+            //"<td>"+getHourBr(FactoryDate.byTime(obj.date))+"</td>" +
+            (!isMobile.any ? "<td>"+getHourBr(FactoryDate.byTime(obj.date))+"</td>" : '')+ 
             (!isMobile.any ? "<td>"+getHourBr(FactoryDate.byTime(obj.end))+"</td>" : '')+ 
             (!isMobile.any ? "<td>"+obj.customerid+"</td>" : '')+ 
             "<td>"+"<a style='line-height: 105%' href='/customer/edit?id="+obj.customerid+"' target='_customer_maste'>"+obj.customername+"</a>"+"</td>" +

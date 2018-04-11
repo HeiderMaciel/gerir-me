@@ -34,6 +34,7 @@ $(function() {
       endDate: $("#history_endDate").val()
     };
     var hasUnitModule = $('.has-unit-module').length > 0;
+    var hasNotSoloModule = $('.has-not-solo-module').length > 0;
     var fields = [];
     //fields[0] = "date";
     fields[0] = "time";
@@ -46,6 +47,10 @@ $(function() {
             row[3] + "<p/>"
       }
     }
+    if (hasNotSoloModule) {
+    } else {
+      fields[4] = "none"; //profissional
+    }
     if (!hasUnitModule) {
       fields[5] = "none";
     }
@@ -53,13 +58,22 @@ $(function() {
       type : "format",
       decode: function(name, row) {
         trStatus = 6;
-        trStatus2 = 15; // nao tem
+        trStatus2 = 16; // nao tem
         return trStatusdecode (name,row)
       }
     };
     fields[7] = "real";
     fields[12] = "none";
+    //fields[13] = "none";
     fields[14] = "none";
+    fields [15] = {
+      type : "format",
+      decode: function(name, row) {
+        return "<a title='" + row[15] + "' href='#' ><img width='24px' src='/images/audit.png'/></a>";
+      }
+    };
+    fields[16] = "none";
+
     renderReport("/treatments/getTreatmentsByFilter", fields, filter, "#grid_history");
   }
   if (gup("id")) {

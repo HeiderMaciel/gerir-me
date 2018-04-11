@@ -375,13 +375,13 @@ object SecuritySnippet {
           NodeSeq.Empty
       }      
       def hasAuxiliarModule(in:NodeSeq):NodeSeq ={
-        if (PermissionModule.auxiliar_?)
+        if (PermissionModule.auxiliar_? && !PermissionModule.solo_?)
           in
         else
           NodeSeq.Empty
       }      
       def hasNotAuxiliarModule(in:NodeSeq):NodeSeq ={
-        if (!PermissionModule.auxiliar_?)
+        if (!PermissionModule.auxiliar_? || PermissionModule.solo_?)
           in
         else
           NodeSeq.Empty
@@ -430,6 +430,13 @@ object SecuritySnippet {
       }      
       def hasInvoiceModule(in:NodeSeq):NodeSeq ={
         if (PermissionModule.invoice_?)
+          in
+        else
+          NodeSeq.Empty
+      }      
+      // ainda não fiz mesmo o has solo não sei se precisa
+      def hasNotSoloModule(in:NodeSeq):NodeSeq ={
+        if (!PermissionModule.solo_?)
           in
         else
           NodeSeq.Empty

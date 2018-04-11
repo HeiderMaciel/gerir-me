@@ -116,13 +116,19 @@ $(function() {
 		});
 	});
 	$("._help").click(function() {
-		var url = $(this).data('help-url');
-		$('#help_iframe').attr('src', url);
-		$('#help_modal').modal({
-			"backdrop": true,
-			'keyboard': true,
-			'show': true
-		});
+		// 11/04/2018 - evita mostrar help nas novas telas de usuário
+		// vai ter que fazer qdo colocar a tela de agenda nova tb
+		// se não resolver
+		// ver tb aqui as mensagens internas que tb não abre
+		if (document.location.href.indexOf("/user/") == -1) {
+			var url = $(this).data('help-url');
+			$('#help_iframe').attr('src', url);
+			$('#help_modal').modal({
+				"backdrop": true,
+				'keyboard': true,
+				'show': true
+			});
+		}
 
 	});
 	$("._popover_basic").popover();
@@ -148,6 +154,7 @@ $(function() {
 	// 07/03/2018 - evita mostrar msg nas novas telas de usuário
 	// vai ter que fazer qdo colocar a tela de agenda nova tb
 	// se não resolver
+	// ver tb aqui o _help que tb não abre
 	if (document.location.href.indexOf("/user/") == -1) {
 		processMessages();
 	}
