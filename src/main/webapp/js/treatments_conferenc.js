@@ -84,9 +84,8 @@
             "<td>"+obj.command+"</td>" +
             "<td>"+getDateBr(FactoryDate.byTime(obj.date))+"</td>" +
             "<td>"+getHourBr(FactoryDate.byTime(obj.date))+"</td>" +
-            "<td>"+getHourBr(FactoryDate.byTime(obj.end))+
-            "</td>" + 
-            "<td>"+obj.customerid+"</td>" + 
+            (!isMobile.any ? "<td>"+getHourBr(FactoryDate.byTime(obj.end))+"</td>" : '')+ 
+            (!isMobile.any ? "<td>"+obj.customerid+"</td>" : '')+ 
             "<td>"+"<a style='line-height: 105%' href='/customer/edit?id="+obj.customerid+"' target='_customer_maste'>"+obj.customername+"</a>"+"</td>" +
             "<td>"+"<p style='line-height: 105%'>" + 
               obj.phone + "<p/>"+"</td>" + // tem tb email conctenado
