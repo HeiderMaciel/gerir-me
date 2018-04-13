@@ -59,6 +59,8 @@ with PerCompany with PerUnit {
 				("command",false),
 				("customerId",false),
 				("id", this.id.is),
+				("color", ""), //"#E8AE9C"), // trazer aqui cor do bloqueio/serviço
+				("is_employee_hour", this.is_employee_lanche_?.is),
 				("status", "not_work" )
 		)
     }

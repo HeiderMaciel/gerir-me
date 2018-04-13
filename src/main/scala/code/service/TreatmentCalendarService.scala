@@ -74,6 +74,7 @@ object TreatmentCalendarService {
                 ("treatmentConflit", p(9).asInstanceOf[Long]),
                 ("status", p(10).asInstanceOf[Long]),
                 ("status2", p(14).asInstanceOf[Long]),
+                ("color", ""), //"#C7172D"), // trazer aqui cor do bloqueio/serviço
                 ("noConflits", p(11).asInstanceOf[Long])
 
                 )

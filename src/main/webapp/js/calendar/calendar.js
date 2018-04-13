@@ -122,14 +122,23 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 							return $(window).height() - $('h1').outerHeight(true);
 						},
 						eventRender : function(calEvent, $event) {
+							var colorAux = "";
 							if(calEvent.status == 'not_work'){
-								$event.css("backgroundColor", "#9C9C9C");
-								$event.find(".wc-time").css({backgroundColor: " #9C9C9C ", border:"1px solid #000000"});
+								if(calEvent.is_employee_hour){
+									colorAux ="#9C9C9C"; // bloqueio antigo horario cinza
+								} else {
+									colorAux ="#E8AEAE"; // bloqueio novo exceção rosado
+								}
+								if(calEvent.color != ""){
+									colorAux = calEvent.color
+								}
+								$event.css("backgroundColor", colorAux);
+								$event.find(".wc-time").css({backgroundColor: " " + colorAux + " ", border:"1px solid #000000"});
 							} else {
 								// antes nao tinha o else. isso vin direto depois do if
 								// por isso que refazia no final, eu acho
 								// o trecho comentado
-								var color = getColor(calEvent.status, calEvent.status2);
+								var color = getColor(calEvent.status, calEvent.status2, calEvent.color);
 								// antes o controno do header era preto - deixei da cor da agenda
 								//$event.find(".wc-time").css({backgroundColor: color.headColor, color:color.text, border:"1px solid #000000"});
 								if (!calendarShowLight) {

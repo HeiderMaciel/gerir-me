@@ -23,14 +23,13 @@ import java.util.Date
 
 object ContactsUtil extends net.liftweb.common.Logger {
   var sqlInsert = "";
-  var bi = 0;
+  //var bi = 0;
   var filePath = if(Project.isLinuxServer){
     "/tmp/"
   }else{
     "c:\\vilarika\\"
   }
   def execute(file:File, origin:String, nameasis: Long, generatesql: Long){
-    bi = 0;
     sqlInsert = "";
     val lines = fromFile(file).getLines.toList
     val schema = if (origin.indexOf (".") > 0) {
@@ -63,7 +62,8 @@ println ("vaiiii ======= " + lines(1))
     var j = 0;
     listCol.foreach((column) => {
       var colAux = column.replaceAll ("\"", "")
-      sqlInsert += colAux + " varchar (255)"
+      colAux = colAux.replaceAll (" ", "")
+      sqlInsert += BusinessRulesUtil.clearString(colAux) + " varchar (255)"
       j += 1;
       if (j < listCol.length) {
         sqlInsert += ",\n"
@@ -86,7 +86,7 @@ println ("vaiiii ======= " + lines(1))
     }
     // gerar arquivo aqui
     if (generatesql > 0) {
-     scala.tools.nsc.io.File(filePath + origin + bi + ".sql").
+     scala.tools.nsc.io.File(filePath + origin + ".sql").
      writeAll(sqlInsert);
      //println ("vaiiiii ======= " + sqlInsert)
     } else {
@@ -215,8 +215,9 @@ println ("vaiiii ======= " + lines(1))
       });
       // poderia ser um parm mostrar linha caso cancele 
       if (i % 500 == 0) {
-        println ("vaiiiii ====== i " + i + " bi -> " + bi + " " + sqlInsert.length + " lin " + lines);
+        println ("vaiiiii ====== i " + i + " " + sqlInsert.length + " lin " + lines);
       } 
+      /* excluir
       if (sqlInsert.length > 700000) {
         println ("vaiiiii ====== vai gerar um arq " + bi + " " + sqlInsert.length + " lin " + lines);
         scala.tools.nsc.io.File(filePath + origin + bi + ".sql").
@@ -224,6 +225,7 @@ println ("vaiiii ======= " + lines(1))
         sqlInsert = "";
         bi += 1;
       }
+      */
     } else {
       saveContacts (listCol, origin, nameasis);
     }

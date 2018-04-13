@@ -221,12 +221,18 @@ var getStatus = function(status, hasFlit){
       return "<img width='16' src='/images/clock.png'/>";
   }
 };
-var getColor = function(status,status2){    
+var getColor = function(status,status2,colorAux){    
   //if (!global_calendarShowLight) {
   if (true) {
     switch(status){
       case Open:
-        return { "color" : "#68a1e5", 'headColor':"#2b72d0", 'text':"#fff"};
+        if (colorAux != "") {
+          // cor veio do serviço/procedimento hj trata como borda
+          // definir o heard todo ou criar uma forma/figura antes do title
+          return { "color" : "#68a1e5", 'headColor': colorAux, 'text':"#fff"};
+        } else {
+          return { "color" : "#68a1e5", 'headColor':"#2b72d0", 'text':"#fff"};
+        }
       case PreOpen:
         return { "color" : "rgb(169, 239, 239)", 'headColor':"rgb(43, 178, 208)", 'text':"#0E0E0E"};
       case Confirmed:
