@@ -197,7 +197,8 @@ var Budget = 9;
 var getStatus = function(status, hasFlit){
   if(hasFlit){
     return "<img width='16' src='/images/bell.png'/>";
-  }     
+  }
+  return ""; // acaba com icone de status na agenda
   switch(status){
     case Open:
       return "<img width='16' src='./images/open.png'/>";

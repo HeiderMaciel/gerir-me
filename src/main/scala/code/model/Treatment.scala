@@ -727,7 +727,7 @@ with WithCustomer with net.liftweb.common.Logger{
       " (tr.unit = %s or (tr.unit in (select uu.unit from usercompanyunit uu where uu.user_c = %s and uu.company = %s))) ".format(AuthUtil.user.unit, AuthUtil.user.id, AuthUtil.user.company)
     }
 
-    val SQL_VALID_TREATMENT = " and hasDetail=true and t.status<>5 and dateevent between date(?) and date(?) ORDER BY u.name, start_c"
+    val SQL_VALID_TREATMENT = " and hasDetail=true and tr.status<>5 and dateevent between date(?) and date(?) ORDER BY u.name, start_c"
 
     def location = company.obj.get.name.is+" - Unidade : "+unit.obj.get.name
     def toIcs(title:String = "Atendimento ") = IcsFileUtil.buildIcsStr(

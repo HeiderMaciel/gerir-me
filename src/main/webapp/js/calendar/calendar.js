@@ -138,15 +138,26 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 								// antes nao tinha o else. isso vin direto depois do if
 								// por isso que refazia no final, eu acho
 								// o trecho comentado
+								colorAux = calEvent.color;
 								var color = getColor(calEvent.status, calEvent.status2, calEvent.color);
 								// antes o controno do header era preto - deixei da cor da agenda
 								//$event.find(".wc-time").css({backgroundColor: color.headColor, color:color.text, border:"1px solid #000000"});
 								if (!calendarShowLight) {
-									$event.find(".wc-time").css({backgroundColor: color.headColor, color:color.text, border:"1px solid " + color.headColor});
+									if (colorAux != "") {
+										// engrossa a borda do header pq vai ter a cor do serviço
+										$event.find(".wc-time").css({backgroundColor: color.color, color:color.text, border:"3px solid " + color.headColor});
+									} else {
+										$event.find(".wc-time").css({backgroundColor: color.headColor, color:color.text, border:"1px solid " + color.headColor});
+									}
 								} else {
 									// usa cores claras o que antes era header vira só a borda e usa a cor 
 									// do complemento no header
-									$event.find(".wc-time").css({backgroundColor: color.color, color:color.text, border:"1px solid " + color.headColor});
+									if (colorAux != "") {
+										// engrossa a borda do header pq vai ter a cor do serviço
+										$event.find(".wc-time").css({backgroundColor: color.color, color:color.text, border:"3px solid " + color.headColor});
+									} else {
+										$event.find(".wc-time").css({backgroundColor: color.color, color:color.text, border:"1px solid " + color.headColor});
+									}
 								}
 								$event.css("backgroundColor", color.color);
 								$event.css("color", color.text);
@@ -169,6 +180,7 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 							var one_hour = 3600000;
 							var displayTitleWithTime = calEvent.end.getTime() - calEvent.start.getTime() <= (one_hour / options.timeslotsPerHour);
 							var timeAux = "";
+							var icone = ""
 					      	var hasEdoctusSystem = $('.has-edoctus-system').length > 0;
 						    if (hasEdoctusSystem) {
 							//if (document.location.href.indexOf("edoctus") != -1) {
@@ -176,13 +188,15 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 									timeAux = calendar.weekCalendar('formatTime', calEvent.start) + " "
 								}
 							}
-
+							if (calEvent.icone != "") {
+								icone = "<img width='16' src='/images/" + calEvent.icone + "'/>"
+							}
 							if (displayTitleWithTime) {
 								//return calendar.weekCalendar('formatTime', calEvent.start) + " " + calEvent.title;
-								return timeAux + calEvent.title;
+								return icone + " " + timeAux + calEvent.title;
 							} else {
 								//return calendar.weekCalendar('formatTime', calEvent.start) + " " + calEvent.title+" "+getStatus(calEvent.status, calEvent.hasFlit);
-								return timeAux + calEvent.title+" "+getStatus(calEvent.status, calEvent.hasFlit);
+								return icone + " " + timeAux + calEvent.title+" "+getStatus(calEvent.status, calEvent.hasFlit);
 							}
 						},
 						freeBusyRender:function(freeBusy, $freeBusy, calendar){

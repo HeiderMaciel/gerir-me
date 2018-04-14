@@ -22,7 +22,16 @@ class AccountCategory extends Audited[AccountCategory] with PerCompany with IdPK
   def getSingleton = AccountCategory
   override def updateShortName = false
   object obs extends MappedPoliteString(this, 255)
-  object color extends MappedPoliteString(this, 55)
+  object color extends MappedPoliteString(this, 55) with LifecycleCallbacks {
+    override def defaultValue = "";
+    override def beforeSave() {
+        super.beforeSave;
+        // não deixa setar branco pq é o default do color picker
+        if(this.get == "#FFFFFF"){ 
+          this.set("")
+        }
+    } 
+  }
   object userAssociated extends MappedBoolean(this)
   object parent_? extends MappedBoolean(this) {
     override def dbColumnName = "isparent"

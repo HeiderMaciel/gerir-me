@@ -30,7 +30,17 @@ class ProductType extends Audited[ProductType]
     object typeClass extends MappedEnum(this,ProductType.Types){
         override def defaultValue = ProductType.Types.Product;
     }
-    object color extends MappedPoliteString(this, 55)
+    
+    object color extends MappedPoliteString(this, 55) with LifecycleCallbacks {
+      override def defaultValue = "";
+      override def beforeSave() {
+          super.beforeSave;
+          // não deixa setar branco pq é o default do color picker
+          if(this.get == "#FFFFFF"){ 
+            this.set("")
+          }
+      } 
+    }
 
     object showInCommand_? extends MappedBoolean(this){
         override def defaultValue = false

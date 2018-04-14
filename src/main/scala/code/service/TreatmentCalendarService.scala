@@ -22,32 +22,32 @@ import JE._
 
 object TreatmentCalendarService {
     def  treatmentsForCalendarAsJson(company:Company, cUnit:CompanyUnit,start:Date, end:Date) = {
-//        val where = " t.user_c in ( select id from business_pattern u where u.unit = ? ) "
-        val where = " (t.user_c in ( select id from business_pattern u where u.unit = ? ) " +
-                   "or t.user_c in (select user_c from usercompanyunit where unit = ?)) "
+//        val where = " tr.user_c in ( select id from business_pattern u where u.unit = ? ) "
+        val where = " (tr.user_c in ( select id from business_pattern u where u.unit = ? ) " +
+                   "or tr.user_c in (select user_c from usercompanyunit where unit = ?)) "
         treatmentsForCalendarQueryToJson(where,company.id.is::cUnit.id.is::cUnit.id.is::cUnit.id.is::start::end::Nil)
     }
 
     def treatmentsForCalendarAsJson(company:Company, cUnit:CompanyUnit, customer:Customer,start:Date, end:Date) = {
-        val where = " t.customer=? "
+        val where = " tr.customer=? "
         treatmentsForCalendarQueryToJson(where,company.id.is::cUnit.id.is::customer.id.is::start::end::Nil)
     }    
 
     def treatmentsForCalendarAsJson(company:Company, cUnit:CompanyUnit, user:User,start:Date, end:Date) = {
-        val where = " t.user_c=? "
+        val where = " tr.user_c=? "
         treatmentsForCalendarQueryToJson(where,company.id.is::cUnit.id.is::user.id.is::start::end::Nil)
     }
 
     def treatmentsForCalendarAsJson(company:Company, cUnit:CompanyUnit, group:UserGroup,start:Date, end:Date) = {
-//        val where = " t.user_c in (select id from business_pattern u where u.group_c = ?) "
-        val where = " (t.user_c in ( select id from business_pattern u where u.group_c = ? ) " +
-                   "or t.user_c in (select user_c from userusergroup where group_c = ?)) "
+//        val where = " tr.user_c in (select id from business_pattern u where u.group_c = ?) "
+        val where = " (tr.user_c in ( select id from business_pattern u where u.group_c = ? ) " +
+                   "or tr.user_c in (select user_c from userusergroup where group_c = ?)) "
         treatmentsForCalendarQueryToJson(where,company.id.is::cUnit.id.is::group.id.is::group.id.is::start::end::Nil)
     }
 
 /*
     def treatmentsForCalendarAsJson(company:Company, cUnit:CompanyUnit, group:UserGroup,start:Date, end:Date) = {
-        val where = " t.user_c in (select id from business_pattern u where u.group_c = ?) and t.unit=? "
+        val where = " tr.user_c in (select id from business_pattern u where u.group_c = ?) and tr.unit=? "
         treatmentsForCalendarQueryToJson(where,company.id.is::cUnit.id.is::group.id.is::cUnit.id.is::start::end::Nil)
     }     
 */
@@ -55,9 +55,15 @@ object TreatmentCalendarService {
         //info(SQL_TREATMENT_TO_CALENDAR_DATA+where+Treatment.SQL_VALID_TREATMENT)
         val query = SQL_TREATMENT_TO_CALENDAR_DATA+where+Treatment.SQL_VALID_TREATMENT
 
+        var icone = "";
         val r = DB.performQuery(query, params)
         r._2.map(
-            (p:List[Any])=> 
+            (p:List[Any])=> {
+            if (p(16).asInstanceOf[Double]>0) {
+                icone = "warning.png"
+              } else {
+                icone = ""
+              }
             JsObj(
                 ("title", p(7).toString+"<br/>"+p(0).toString),
  //               ("title", p(7).toString+"<br/>"+p(0).toString),
@@ -74,10 +80,12 @@ object TreatmentCalendarService {
                 ("treatmentConflit", p(9).asInstanceOf[Long]),
                 ("status", p(10).asInstanceOf[Long]),
                 ("status2", p(14).asInstanceOf[Long]),
-                ("color", ""), //"#C7172D"), // trazer aqui cor do bloqueio/serviço
+                ("color", p(15).toString), //"#C7172D"), // trazer aqui cor do bloqueio/serviço
+                ("icone", icone), //"#C7172D"), // trazer aqui cor do bloqueio/serviço
                 ("noConflits", p(11).asInstanceOf[Long])
 
                 )
+            }
             )        
     }
     def str_detail:String =  if (!AuthUtil.company.calendarShowActivity_?) {
@@ -111,58 +119,30 @@ object TreatmentCalendarService {
       }
 
     def str_unit:String = if (!AuthUtil.company.calendarShowDifUnit_?) {
-      " AND t.unit = ? "
+      " AND tr.unit = ? "
       } else {
-      " AND (t.unit = ? or 1 = 1) "
+      " AND (tr.unit = ? or 1 = 1) "
     }
     // trim (substr (c.short_name,1,15)) diminuir o nome na agenda pode ser uma opção
     // no short tratar qd quebrar nome no meio e cortar na pos branca anterior
     def SQL_TREATMENT_TO_CALENDAR_DATA = 
-      """ SELECT """ + str_detail + """, t.obs, start_c, end_c, user_c, 
+      """ SELECT """ + str_detail + """, tr.obs, start_c, end_c, user_c, 
           command, customer, trim (""" + str_cod + 
-          """ || ' ' || c.short_name || ' ' || """ + str_phone + """), t.id, t.treatmentConflit, t.status, 
+          """ || ' ' || c.short_name || ' ' || """ + str_phone + """), tr.id, tr.treatmentConflit, tr.status, 
           --(SELECT count(1) FROM treatment tt
-          --WHERE t.id = tt.treatmentConflit) 
+          --WHERE tr.id = tt.treatmentConflit) 
           0 AS conflits,
-          u.name, c.imagethumb, t.status2 
-          FROM treatment t
-          INNER JOIN business_pattern c on(t.customer=c.id)
-          INNER JOIN business_pattern u on(t.user_c=u.id)
-          WHERE t.showincalendar = TRUE
-            AND t.company = ?
+          u.name, c.imagethumb, tr.status2, coalesce (pr.color, ''), c.valueinaccount 
+          FROM treatment tr
+          INNER JOIN business_pattern c on(tr.customer=c.id)
+          INNER JOIN business_pattern u on(tr.user_c=u.id)
+          left JOIN treatmentdetail td on(td.treatment=tr.id and 
+            td.id = (select min (td1.id) from treatmentdetail td1 where td1.treatment = tr.id))
+          left join product pr on pr.id = td.activity
+          WHERE tr.showincalendar = TRUE
+            AND tr.company = ?
             """ + str_unit + """
             AND
       """
-/*
-    def SQL_TREATMENT_TO_CALENDAR_DATA = if (!AuthUtil.user.isCustomer) {
-      """ SELECT detailTreatmentAsText, t.obs, start_c, end_c, user_c, 
-          command, customer, """ + str_cod + 
-          """ || ' ' || c.short_name, t.id, t.treatmentConflit, t.status, 
-          --(SELECT count(1) FROM treatment tt
-          --WHERE t.id = tt.treatmentConflit) 
-          0 AS conflits,
-          u.name, c.imagethumb FROM treatment t
-          INNER JOIN business_pattern c on(t.customer=c.id)
-          INNER JOIN business_pattern u on(t.user_c=u.id)
-          WHERE t.showincalendar = TRUE
-            AND t.company = ?
-            AND
-      """
-    } else {
-      """ SELECT detailTreatmentAsText, t.obs, start_c, end_c, user_c, 
-          command, customer, """ + str_cod + 
-          """ || ' ' || c.short_name || ' ' || trim (c.mobile_phone || ' ' || c.phone || ' ' || c.email_alternative), t.id, t.treatmentConflit, t.status, 
-          --(SELECT count(1) FROM treatment tt
-          --WHERE t.id = tt.treatmentConflit) 
-          0 AS conflits,
-          u.name,  c.imagethumb FROM treatment t
-          INNER JOIN business_pattern c on(t.customer=c.id)
-          INNER JOIN business_pattern u on(t.user_c=u.id)
-          WHERE t.showincalendar = TRUE
-            AND t.company = ?
-            AND
-      """
-    }
-*/
 }
 

@@ -26,7 +26,16 @@ class QuizDomainItem extends Audited[QuizDomainItem] with PerCompany with IdPK w
     object valueStr extends MappedPoliteString (this,255)
     object valueNum extends MappedDecimal(this,MathContext.DECIMAL64,4)
     object valueNumEnd extends MappedDecimal(this,MathContext.DECIMAL64,4)
-    object color extends MappedPoliteString(this, 55)
+    object color extends MappedPoliteString(this, 55) with LifecycleCallbacks {
+      override def defaultValue = "";
+      override def beforeSave() {
+          super.beforeSave;
+          // não deixa setar branco pq é o default do color picker
+          if(this.get == "#FFFFFF"){ 
+            this.set("")
+          }
+      } 
+    }
     
     def quizDomainName = quizDomain.obj match {
         case Full(t) => t.short_name.is

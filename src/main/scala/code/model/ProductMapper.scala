@@ -90,7 +90,17 @@ trait ProductMapper[OwnerType <: ProductMapper[OwnerType]] extends Audited[Owner
         override def dbIndexed_? = true
     }
 
-    object color extends MappedPoliteString(this, 55)
+    object color extends MappedPoliteString(this, 55) with LifecycleCallbacks {
+      override def defaultValue = "";
+      override def beforeSave() {
+          super.beforeSave;
+          // não deixa setar branco pq é o default do color picker
+          if(this.get == "#FFFFFF"){ 
+            this.set("")
+          }
+      } 
+    }
+
     object unit extends MappedLongForeignKey(this,CompanyUnit) 
     object bpmCount extends MappedInt (this) {
         // mensal bimestral tri -etc para mensalidades
