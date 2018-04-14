@@ -55,14 +55,14 @@ object TreatmentCalendarService {
         //info(SQL_TREATMENT_TO_CALENDAR_DATA+where+Treatment.SQL_VALID_TREATMENT)
         val query = SQL_TREATMENT_TO_CALENDAR_DATA+where+Treatment.SQL_VALID_TREATMENT
 
-        var icone = "";
+        var icon = "";
         val r = DB.performQuery(query, params)
         r._2.map(
             (p:List[Any])=> {
             if (p(16).asInstanceOf[Double]>0) {
-                icone = "warning.png"
+                icon = "warning.png"
               } else {
-                icone = ""
+                icon = ""
               }
             JsObj(
                 ("title", p(7).toString+"<br/>"+p(0).toString),
@@ -81,7 +81,7 @@ object TreatmentCalendarService {
                 ("status", p(10).asInstanceOf[Long]),
                 ("status2", p(14).asInstanceOf[Long]),
                 ("color", p(15).toString), //"#C7172D"), // trazer aqui cor do bloqueio/serviço
-                ("icone", icone), //"#C7172D"), // trazer aqui cor do bloqueio/serviço
+                ("icon", icon), 
                 ("noConflits", p(11).asInstanceOf[Long])
 
                 )

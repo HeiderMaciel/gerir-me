@@ -55,6 +55,8 @@ class  ActivitySnippet extends BootstrapPaginatorSnippet[Activity] with SnippetU
         " 1 = 1 "
     }
 
+	def units = ("0", "Selecione uma Unidade") :: CompanyUnit.findAllInCompany(OrderBy(CompanyUnit.name, Ascending)).map(t => (t.id.is.toString, t.name.is))
+
 	def costcenters = ("0" -> "Selecione um Centro de Custo")::
 	CostCenter.findAllInCompany(OrderBy(CostCenter.name, Ascending)).map(cc => (cc.id.is.toString,cc.name.is))
 	def accountcategories = ("0" -> "Selecione uma Categoria")::
@@ -231,6 +233,7 @@ class  ActivitySnippet extends BootstrapPaginatorSnippet[Activity] with SnippetU
 		    "name=color" #> (SHtml.text(ac.color.is, ac.color(_)))&
 		    "name=duration" #> (SHtml.text(ac.duration.is, ac.duration(_))) &
 		    "name=type" #> (SHtml.select(types,Full(ac.typeProduct.is.toString),(v:String) => ac.typeProduct(v.toLong)))&
+		    "name=unit" #> (SHtml.select(units,Full(ac.unit.is.toString),(v:String) => ac.unit(v.toLong)))&
 		    "name=costcenter" #> (SHtml.select(costcenters,Full(ac.costCenter.is.toString),(s:String) => ac.costCenter( s.toLong)))&
 		    "name=accountCategory" #> (SHtml.select(accountcategories,Full(ac.accountCategory.is.toString),(s:String) => ac.accountCategory( s.toLong)))&
 		    "name=discountAccountCategory" #> (SHtml.select(accountcategories,Full(ac.discountAccountCategory.is.toString),(s:String) => ac.discountAccountCategory( s.toLong)))&

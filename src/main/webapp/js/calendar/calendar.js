@@ -180,7 +180,7 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 							var one_hour = 3600000;
 							var displayTitleWithTime = calEvent.end.getTime() - calEvent.start.getTime() <= (one_hour / options.timeslotsPerHour);
 							var timeAux = "";
-							var icone = ""
+							var icon = ""
 					      	var hasEdoctusSystem = $('.has-edoctus-system').length > 0;
 						    if (hasEdoctusSystem) {
 							//if (document.location.href.indexOf("edoctus") != -1) {
@@ -188,15 +188,15 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 									timeAux = calendar.weekCalendar('formatTime', calEvent.start) + " "
 								}
 							}
-							if (calEvent.icone != "") {
-								icone = "<img width='16' src='/images/" + calEvent.icone + "'/>"
+							if (calEvent.icon != "") {
+								icon = "<img width='16' src='/images/" + calEvent.icon + "'/>"
 							}
 							if (displayTitleWithTime) {
 								//return calendar.weekCalendar('formatTime', calEvent.start) + " " + calEvent.title;
-								return icone + " " + timeAux + calEvent.title;
+								return icon + " " + timeAux + calEvent.title;
 							} else {
 								//return calendar.weekCalendar('formatTime', calEvent.start) + " " + calEvent.title+" "+getStatus(calEvent.status, calEvent.hasFlit);
-								return icone + " " + timeAux + calEvent.title+" "+getStatus(calEvent.status, calEvent.hasFlit);
+								return icon + " " + timeAux + calEvent.title+" "+getStatus(calEvent.status, calEvent.hasFlit);
 							}
 						},
 						freeBusyRender:function(freeBusy, $freeBusy, calendar){

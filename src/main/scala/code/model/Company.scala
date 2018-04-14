@@ -454,6 +454,7 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
     } else {
       Activity.findAllActive(
         By(Activity.company, this.id), 
+        BySql(" unit is null or unit = ? ",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"),AuthUtil.unit.id.is),
         OrderBy(Activity.name, Ascending))
     }
   }

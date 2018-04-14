@@ -54,7 +54,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 
 	implicit val formats = DefaultFormats // Brings in default date formats etc.
 
-	def units = ("0", "Nenhuma Unidade") :: CompanyUnit.findAllInCompany(OrderBy(CompanyUnit.name, Ascending)).map(t => (t.id.is.toString, t.name.is))
+	def units = ("0", "Selecione uma Unidade") :: CompanyUnit.findAllInCompany(OrderBy(CompanyUnit.name, Ascending)).map(t => (t.id.is.toString, t.name.is))
 
 	//var itens = 200;
 	def itens = S.param("itenspp_customer") match {
