@@ -63,6 +63,9 @@
                       <select name='account_categories_filter' class="category_select alow_all url_parameter" id="account_categories_filter" multiple="multiple"></select>
                       <input name='account_categories_filter1' class="url_parameter" id="account_categories_filter1" type="hidden">Trans
                       <input class="local_storage url_parameter" name="showtransfer_filter" id='showtransfer_filter' type='checkbox' />
+                      <a href="" class="_popover_basic" rel="popover" data-content="Determina se os lançamentos de transferência serão listados" data-original-title="Informação">
+                        <img width='20' src="/images/info.gif"/>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -137,9 +140,9 @@
             </div>            
             <input type="hidden" class="has-unit-module lift:SecuritySnippet.hasUnitModule" value="1">
             <div class="clearfix lift:SecuritySnippet.hasUnitModule">
-                <label for="units">Unidades</label>
+                <label for="unit_select_filter">Unidades</label>
                 <div class="input">
-                    <select name='unit' class="unit" id="unit" multiple="multiple"></select>
+                    <select name='unit_select_filter' class="unit" id="unit_select_filter" multiple="multiple"></select>
                 </div>
             </div>          
             <div class="clearfix">
@@ -149,7 +152,7 @@
                 </div>
             </div>
             <div class="clearfix">
-                <label for="user">Parceiro</label>
+                <label for="customer">Parceiro</label>
                 <div class="input">
                   <span>
                     <input id="customer" name="customer" class="mini id_customer_search" type="number"/>
@@ -163,14 +166,14 @@
             </div>
             <input type="hidden" class="has-costcenter-module lift:SecuritySnippet.hasCostcenterModule" value="1">
             <div class="clearfix lift:SecuritySnippet.hasCostcenterModule">
-                <label for="type_select_filter">Centros de custo</label>
+                <label for="costcenter_select_filter">Centros de custo</label>
                 <div class="input">
                   <select id='costcenter_select_filter' multiple="true" name='costcenter_select_filter'>
                   </select>
                 </div>
             </div>
             <div class="clearfix">
-                <label for="type_select_filter">Formas de Pagamento</label>
+                <label for="paymenttype_select_filter">Formas de Pagamento</label>
                 <div class="input">
                   <select class="alow_all" id='paymenttype_select_filter' multiple="true" name='paymenttype_select_filter'>
                   </select>
@@ -536,10 +539,21 @@
                      </div>                     
                   </div>                   
                   <div class="clearfix">
+                    <label for="unit_select">Unidade</label>
+                      <div class="input">
+                        <div class="inline-inputs">
+                          <select id='unit_select' class="unit_select url_parameter notselect2" name='unit_select' disabled></select>
+                          <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/financial.html' rel="popover" class="_popover_basic _help">
+                            <img src="/images/info.gif" width="20">
+                          </a>
+                        </div>
+                      </div>
+                  </div>                     
+                  <div class="clearfix">
                     <label for="costcenter_select">Centro de Custo</label>
                       <div class="input">
                         <div class="inline-inputs">
-                          <select id='costcenter_select' class="costcenter_select url_parameter" name='costcenter'></select>
+                          <select id='costcenter_select' class="costcenter_select url_parameter" name='costcenter_select'></select>
                           <span class="help-block">Centro de custo do lançamento</span>
                         </div>
                       </div>
@@ -597,33 +611,22 @@
                     <label for="amount">Quantidade</label>
                     <div class="input">
                       <div class="input-prepend">
-                        <input class="mini" id="amount" name="amount" value="1" size="30" type="number"/>
-                        <span class="help-block">
-                          Quantidade do lançamento
-                        </span>
-                      </div>
-                    </div>
-                   </div>
-                  <div class="clearfix">
-                    <label for="unitvalue">Valor Unitário</label>
-                    <div class="input">
-                      <div class="input-prepend">
-                        <span class="add-on"><img src='/images/dre.png' width="16"/></span> 
+                        <input class="mini" id="amount" name="amount" value="1" size="30" type="number"/> Valor Unitário
                         <input class="mini currency disabled" disabled="true"  name="unitvalue" id="unitvalue" size="30" type="text"/>
                         <span class="help-block">
-                          Calculado com base no valor dividio pela quantidade
+                          Quantidade/Calculado com base no valor dividido pela quantidade
                         </span>
                       </div>
                     </div>
-                   </div>                   
+                  </div>
                   <div class="clearfix">
                     <label for="complement_account">Complemento</label>
-                     <div class="input">
-                        <div class="inline-inputs">
-                          <textarea name="complement_account" id="complement_account" class="large "></textarea>
-                          <span class="help-block">Descrição complementar do lançamento</span>
-                        </div>
-                      </div>                
+                    <div class="input">
+                      <div class="inline-inputs">
+                        <textarea name="complement_account" id="complement_account" class="large "></textarea>
+                        <span class="help-block">Descrição complementar do lançamento</span>
+                      </div>
+                    </div>                
                   </div>
                 </div>
                 <span class='span12'>

@@ -228,6 +228,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 					accountTo <- S.param("account_to") ?~ "account_to parameter missing" ~> 400
 
 					amount <- S.param("amount") ?~ "amount parameter missing" ~> 400
+					unit <- S.param("unit") ?~ "unit parameter missing" ~> 400
 					costcenter <- S.param("costcenter") ?~ "costcenter parameter missing" ~> 400
 					unitvalue <- S.param("unitvalue") ?~ "unitvalue parameter missing" ~> 400
 					parcelnum <- S.param("parcelnum") ?~ "parcelnum parameter missing" ~> 400
@@ -245,6 +246,11 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 							0l
 						}else{
 							user.toLong
+						}
+						def unitId = if(unit == "" || unit == "null") {
+							AuthUtil.unit.id.is
+						}else{
+							unit.toLong
 						}
 						def costCenterId = if(costcenter == "" || costcenter == "null") {
 							0l
@@ -274,7 +280,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 							val account =
 							AccountPayable
 							.createInCompany
-							.unit(AuthUtil.unit)
+							.unit(unitId)
 							.typeMovement(movementType.get.toInt)
 							.category(category.toLong)
 							.costCenter(costCenterId)
@@ -332,7 +338,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 								.lastExecuted(nextParcelDate)
 								.user(userId)
 								.account(accountStr.toLong)
-								.unit(AuthUtil.unit)
+								.unit(unitId)
 								.obs(obs)
 								.amount(amount.toDouble)
 								.paymentType(paymentTypeId);
@@ -401,6 +407,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 					cashier_number <- S.param("cashier_number") ?~ "cashier_number parameter missing" ~> 400
 					accountStr <- S.param("account") ?~ "account parameter missing" ~> 400
 					amount <- S.param("amount") ?~ "amount parameter missing" ~> 400
+					unit <- S.param("unit") ?~ "unit parameter missing" ~> 400
 					costcenter <- S.param("costcenter") ?~ "costcenter parameter missing" ~> 400
 					paymenttype <- S.param("paymenttype") ?~ "paymenttype parameter missing" ~> 400
 					cheque <- S.param("cheque") ?~ "cheque parameter missing" ~> 400
@@ -410,11 +417,15 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 					recurrence_all <- S.param("recurrence_all") ?~ "recurrence_all parameter missing" ~> 400
 					recurrence_just_this <- S.param("recurrence_just_this") ?~ "recurrence_just_this parameter missing" ~> 400
 				}yield {
+					def unitId = if(unit == ""  || unit == "null") {
+						AuthUtil.unit.id.is
+					}else{
+						unit.toLong
+					}
 					def costCenterId = if(costcenter == ""  || costcenter == "null") {
 						0l
 					}else{
 						costcenter.toLong
-
 					}
 					def paymentTypeId = if(paymenttype == ""  || paymenttype == "null") {
 						0l
@@ -459,6 +470,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 					.account(accountStr.toLong)
 					.cashier(cashierBox)
 					.amount(BusinessRulesUtil.snippetToDouble(amount))
+					.unit(unitId)
 					.costCenter(costCenterId)
 					.paymentType(paymentTypeId)
 					.cheque(chequeId)
@@ -492,7 +504,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 						showtransfer <- S.param("showtransfer") ?~ "showtransfer parameter missing" ~> 400
 						accounts <- S.param("accounts") ?~ "accounts parameter missing" ~> 400
 						cashiers <- S.param("cashier") ?~ "cashier parameter missing" ~> 400
-						units <- S.param("unit") ?~ "unit parameter missing" ~> 400
+						units <- S.param("units") ?~ "units parameter missing" ~> 400
 						users <- S.param("users") ?~ "users parameter missing" ~> 400
 						obs <- S.param("obsSearch") ?~ "obsSearch parameter missing" ~> 400
 						costcenters <- S.param("costcenters") ?~ "costcenters parameter missing" ~> 400

@@ -116,6 +116,7 @@
       this.amount = $("#amount").val();
       this.parcelnum = $("#parcelnum").val();
       this.parceltot = $("#parceltot").val();
+      this.unit = $("#unit_select").val();
       this.costcenter = $("#costcenter_select").val();
       this.paymenttype = $("#paymenttype_select").val();
       this.cheque = $("#cheque_select").val();
@@ -237,6 +238,7 @@
         $("#amount").val(obj.amount);
         $("#parcelnum").val(obj.parcelnum);
         $("#parceltot").val(obj.parceltot);
+        $("#unit_select").val(obj.unit_id).change();
         $("#costcenter_select").val(obj.costcenter_id).change();
         $("#paymenttype_select").val(obj.paymenttype_id).change();
         $("#cheque_select").val(obj.cheque_id).change();
@@ -277,6 +279,7 @@
     $("#recurrence_id").val("");
     $("#cashier_number").val("");
     $("#account_select").change();
+    $("#unit_select").val(AuthUtil.unit.id).change();
     $("#cheque_select").val("").change();
     $("#unitvalue").val(0.0);
     $("#amount").val(1);
@@ -354,8 +357,8 @@
   };
 
   Account.unitsToFilter = function() {
-    if ($('#unit').val()) {
-      return $('#unit').val().toString();
+    if ($('#unit_select_filter').val()) {
+      return $('#unit_select_filter').val().toString();
     } else {
       return 0;
     }
@@ -437,7 +440,7 @@
       "categories": Account.categoriesToFilter(),
       "showtransfer": Account.showtransferToFilter(),
       "cashier": Account.cashiersToFilter(),
-      "unit": Account.unitsToFilter(),
+      "units": Account.unitsToFilter(),
       "users": Account.usersToFilter(),
       "startCreate": Account.startCreateDate(),
       "endCreate": Account.endCreateDate(),
@@ -636,13 +639,13 @@
       if (confirm("Tem certeza que deseja excluir este(s) " + idsToMark.length + " lançamento(s)?")) {
         return $.post("/accountpayable/remove_checked", {
           "ids": idsToMark.join(',')
-        }, function(t) {
-          if (t) {
+        }, function(results) {
+          if(results === 1 || results == "1"){
             alert("Lançamento(s) excluído(s) com sucesso!");
-            return Account.getListFromServer();
-          } else {
-            return alert("Erro ao excluir lançamento(s)!");
+          }else{
+            alert(eval(results));
           }
+          return Account.getListFromServer();
         });
       }
     });
@@ -665,6 +668,7 @@
       }
       return $("#user_select").html(ret);
     });
+    $("#unit_select_filter, #unit_select").unitField(false, false, true);
     $("#costcenter_select_filter, #costcenter_select").costcenterField(true);
     $("#paymenttype_select_filter, #paymenttype_select").paymentTypeField(true, true);
     $("#cheque_select").chequeField(true);
@@ -779,7 +783,7 @@
           if (Account.actualId) {
             //alert ("vaiii ==== " + $("#recurrence_id").val())
             if ($("#recurrence_all").is(":checked")) {
-               if (confirm("Tem certeza que deseja atualizar este lançamentos e inclusive os futuros?")) {
+               if (confirm("Tem certeza que deseja atualizar este lançamento e inclusive os futuros?")) {
                } else {
                 callApiLock = false
                 return
