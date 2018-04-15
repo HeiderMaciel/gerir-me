@@ -56,7 +56,14 @@ class  AccountSnippet  extends BootstrapPaginatorSnippet[Account] {
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"allowcashierout" -> Text(if(ac.allowCashierOut_?.is){ "Sim" }else{ "Não" }),
 							// "value" -> Text(ac.value.is.toString),
-							"balanceunits" -> <table>{ac.balanceUnits.filter((au) => { units.size ==0 || units.contains(au.unit.is) }).map((au) => <tr><td>{au.unit.obj.get.short_name} </td> <td>{au.value.is.toString}</td></tr>)}</table>,
+							"balanceunits" -> <table>{ac.balanceUnits.filter((au) => { units.size ==0 || units.contains(au.unit.is) }).map((au) => <tr>
+								<td>{au.unit.obj.get.short_name} </td> 
+								<td>{au.short_name} </td> 
+								<td>{au.value.is.toString}</td> 
+								<td>{au.id.is.toString}</td>
+								<td><a class="btn" href={"/financial_admin/accountcompanyunit?id="+au.id.is}>Editar</a></td>
+							</tr>)}
+							</table>,
 							"actions" -> <a class="btn" href={"/financial_admin/account?id="+ac.id.is}>Editar</a>,
 							"delete" -> SHtml.submit("Excluir",delete,"class" -> "btn danger","data-confirm-message"->{" excluir a conta "+ac.name.is}),
 							"_id" -> SHtml.text(ac.id.is.toString, id = _),
@@ -77,10 +84,19 @@ class  AccountSnippet  extends BootstrapPaginatorSnippet[Account] {
 		try{
 			var ac:Account = getAccount
 			def process(): JsCmd= {
+			  try {
 				ac.company(AuthUtil.company)
 			   	ac.save	
 			   	S.notice("Conta salva com sucesso!")
 			   	S.redirectTo("/financial_admin/account?id="+ac.id.is)
+              }catch{
+				case (e:net.liftweb.http.ResponseShortcutException) =>{
+			      throw e
+				}
+				case (e:Exception) => {
+				  S.error(e.getMessage)
+				}
+			  }
 			}
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&

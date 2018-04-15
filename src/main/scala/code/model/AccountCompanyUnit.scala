@@ -14,6 +14,7 @@ import net.liftweb.common.{Box,Full}
 
 class AccountCompanyUnit extends Audited[AccountCompanyUnit] with PerCompany with IdPK 
     with CreatedUpdated with CreatedUpdatedBy 
+    with NameSearchble[AccountCompanyUnit] 
     with ActiveInactivable[AccountCompanyUnit] {
     def getSingleton = AccountCompanyUnit
     object account extends MappedLongForeignKey(this,Account)
@@ -43,7 +44,23 @@ class AccountCompanyUnit extends Audited[AccountCompanyUnit] with PerCompany wit
         }
     }
 
+    lazy val accountName:String = {
+        account.obj match {
+            case Full(c)=> c.name.is
+            case _ => ""
+        }
+    }
+    lazy val unitName:String = {
+        unit.obj match {
+            case Full(c)=> c.name.is
+            case _ => ""
+        }
+    }
+
   private def saveWithoutHistory() = {
+    if (this.name == "" || this.name == null) {
+       name.set (accountName + " " + unitName)
+    }
     super.save
   }
 
@@ -61,6 +78,9 @@ class AccountCompanyUnit extends Audited[AccountCompanyUnit] with PerCompany wit
   def valueChange:Boolean = this.value.is != this.lastValue.is
 
   override def save() = {
+    if (this.name == "" || this.name == null) {
+       name.set (accountName + " " + unitName)
+    }
     if (valueChange) {
       createDefaultHistory(this.value.is-this.lastValue.is, 
         "Alt Saldo Conta", new Date()).save
@@ -114,7 +134,8 @@ class AccountCompanyUnit extends Audited[AccountCompanyUnit] with PerCompany wit
 
 }
 
-object AccountCompanyUnit extends AccountCompanyUnit with LongKeyedMapperPerCompany[AccountCompanyUnit] with OnlyCurrentCompany[AccountCompanyUnit]{
+object AccountCompanyUnit extends AccountCompanyUnit with LongKeyedMapperPerCompany[AccountCompanyUnit] with OnlyCurrentCompany[AccountCompanyUnit]
+with OnlyActive[AccountCompanyUnit] {
     //override def dbTableName = "bpaccount"
 }
 

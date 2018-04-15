@@ -172,7 +172,10 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 					 )
 			}catch{
 				case e:NumberFormatException  => JsObj(("status","error"),("message","Caixa inválido!"))
-				case e:RuntimeException  => JsObj(("status","error"),("message","Caixa não existe! ou "+e.getMessage))
+				case e:RuntimeException  => {
+					e.printStackTrace;
+					JsObj(("status","error"),("message","Caixa não existe! ou "+e.getMessage))
+				}	
 				case e:Exception  => JsObj(("status","error"),("message",e.getMessage))
 				case _ => JsObj(("status","error"),("message",false))
 			}			
@@ -191,6 +194,7 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 				case e:AlreadyClosedCashier  => JsObj(("status","error"),("message",e.getMessage))
 				//case e:Exception => S.error (e.getMessage)
 				case e:RuntimeException  => {
+					e.printStackTrace;
 					JsObj(("status","error"),("message","Caixa não existe! ou " + e.getMessage))
 				}				
 				case e:Exception  => JsObj(("status","error"),("message",e.getMessage))
