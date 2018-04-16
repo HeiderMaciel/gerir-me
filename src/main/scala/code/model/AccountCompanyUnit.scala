@@ -46,13 +46,13 @@ class AccountCompanyUnit extends Audited[AccountCompanyUnit] with PerCompany wit
 
     lazy val accountName:String = {
         account.obj match {
-            case Full(c)=> c.name.is
+            case Full(c)=> c.short_name.is
             case _ => ""
         }
     }
     lazy val unitName:String = {
         unit.obj match {
-            case Full(c)=> c.name.is
+            case Full(c)=> c.short_name.is
             case _ => ""
         }
     }
