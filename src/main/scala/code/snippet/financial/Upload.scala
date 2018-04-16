@@ -28,8 +28,18 @@ class UploadOfx extends Logger {
     // dava erro com UTF8 - troquei para ISO como já tinha feito no
     // contaazul - rigel 21/07/2017 - lá 
     // val fileContent = Source.fromFile( file )(Codec.UTF8).mkString
-    val fileContent = Source.fromFile( file )(Codec.ISO8859).mkString
+    var fileContent = Source.fromFile( file )(Codec.ISO8859).mkString
     val out = new PrintWriter( file , "UTF-8")
+    if (fileContent.indexOf ("<FI>") == -1) {
+      // provavelmente é itau, geram essa tag
+      fileContent = fileContent.replaceAll ("<SONRS>",
+        """<SONRS>
+            <FI>
+                <ORG>ITAU
+                <FID>ITAU
+            </FI>
+        """)
+    }
     try{ 
         out.print( fileContent.replaceAll("\\,","\\.")
         // rigel 21/07/2017  
