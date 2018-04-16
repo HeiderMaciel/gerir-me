@@ -83,6 +83,7 @@ class BpRelationship extends Audited[BpRelationship] with KeyedMapper[Long, BpRe
             clearReverseRelationship
             addReverseRelationship
         }
+        addressSync (this.business_pattern);
         r
     }
     def saveWithouReverseRelationship = {
@@ -97,6 +98,77 @@ class BpRelationship extends Audited[BpRelationship] with KeyedMapper[Long, BpRe
                             By(BpRelationship.bp_related, bpRelated),
                             By(BpRelationship.relationship, relationship)
                         )
+    }
+
+    def addressSync (bpId:Long) {
+        val ac = Customer.findByKey(bpId).get  
+        val relList = BpRelationship.findAllInCompany (
+            By(BpRelationship.business_pattern, bpId),
+            //  1 pai 2 filho 3 conjuge 30 - 31 resp fin
+            BySql ("relationship in (1,2,3,30,31)",IHaveValidatedThisSQL("",""))
+            );
+        relList.foreach((rel)=>{
+            var saveac1 = false;
+            val ac1 = Customer.findByKey(rel.bp_related).get
+            if (ac.email != "" && ac1.email == "" && !ac1.is_employee_?) {
+                ac1.email (ac.email)
+                saveac1 = true
+            }             
+            if (ac.email_alternative != "" && ac1.email_alternative == "") {
+                ac1.email_alternative (ac.email_alternative)
+                saveac1 = true
+            }             
+            if (ac.phone != "" && ac1.phone == "") {
+                ac1.phone (ac.phone)
+                saveac1 = true
+            }             
+            if (ac.mobilePhone != "" && ac1.mobilePhone == "") {
+                ac1.mobilePhone (ac.mobilePhone)
+                saveac1 = true
+            }             
+            if (ac.street != "" && ac1.street == "") {
+                ac1.street (ac.street)
+                saveac1 = true
+            }             
+            if (ac.number != "" && ac1.number == "") {
+                ac1.number (ac.number)
+                if (ac.complement != "" && ac1.complement == "") {
+                    ac1.complement (ac.complement)
+                }
+                saveac1 = true
+            }             
+            if (ac.district != "" && ac1.district == "") {
+                ac1.district (ac.district)
+                saveac1 = true
+            }             
+            if (ac.postal_code != "" && ac1.postal_code == "") {
+                ac1.postal_code (ac.postal_code)
+                saveac1 = true
+            }             
+            if (ac.pointofreference != "" && ac1.pointofreference == "") {
+                ac1.pointofreference (ac.pointofreference)
+                saveac1 = true
+            }             
+            if (ac.city != "" && ac1.city == "") {
+                ac1.city (ac.city)
+                saveac1 = true
+            }             
+            if (ac.state != "" && ac1.state == "") {
+                ac1.state (ac.state)
+                saveac1 = true
+            }             
+            if (ac.cityName != "" && ac1.cityName == "") {
+                ac1.cityRef (ac.cityRef)
+                saveac1 = true
+            }             
+            if (ac.stateShortName != "" && ac1.stateShortName == "") {
+                ac1.stateRef (ac.stateRef)
+                saveac1 = true
+            }             
+            if (saveac1) {
+                ac1.insecureSave
+            }
+        });
     }
 
     def addBpRelationship(bpId:Long, bpRelated:Long, relationship:Long){

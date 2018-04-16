@@ -188,10 +188,20 @@ class  BpRelationshipSnippet extends BootstrapPaginatorSnippet[BpRelationship] {
 		try{
 			var ac:BpRelationship = getBpRelationship
 			def process(): JsCmd= {
-				ac.company(AuthUtil.company)
-				ac.save
-			   	S.notice("Relacionamento salvo com sucesso!")
+				try {
+					ac.company(AuthUtil.company)
+					ac.save
+				   	S.notice("Relacionamento salvo com sucesso!")
+			   	}catch{
+					case (e:net.liftweb.http.ResponseShortcutException) =>{
+						throw e
+					}
+					case (e:Exception) => {
+						S.error(e.getMessage)
+					}
+				}
 			}
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 			"name=business_pattern" #> (SHtml.text(ac.business_pattern.is.toString, (p:String) => ac.business_pattern(p.toLong)))&
 			"name=bp_related" #> (SHtml.text(ac.bp_related.is.toString, (p:String) => ac.bp_related(p.toLong)))&
 			"name=startat" #> (SHtml.text(getDateAsString(ac.startAt.is),
