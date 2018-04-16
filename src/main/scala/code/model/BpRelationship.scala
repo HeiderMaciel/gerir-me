@@ -165,6 +165,11 @@ class BpRelationship extends Audited[BpRelationship] with KeyedMapper[Long, BpRe
                 ac1.stateRef (ac.stateRef)
                 saveac1 = true
             }             
+            if (ac.lat != "" && ac1.lat == "") {
+                ac1.lat (ac.lat)
+                ac1.lng (ac.lng)
+                saveac1 = true
+            }             
             if (saveac1) {
                 ac1.insecureSave
             }
