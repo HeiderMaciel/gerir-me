@@ -10,7 +10,7 @@
     $("#account_fin").accountField(true);
     $("#category_select").categoryAccountField(true);
     //$("#start").val(getDateBr(new Date().getStartOfMonth()));
-    if (AuthUtil.company.id == 13) {
+    if (AuthUtil.company.id == 13333) {
       $("#start").val('01/01/2018');
       $("#end").val('31/01/2018');
     } else {
@@ -29,12 +29,32 @@
     fields[4] = {
       type : "format",
       decode: function(name, row) {
-        return "<a href='#' data-idofx='" + row [4] + "' data-obs='" + row [1] + "' data-categ='" + row [12] + "' class='action_change'><img width='16px' title='validar ofx' src='/images/tick.png'></a>" +
-            "<img width='16px' src='/images/transparent1.png'>" +
-              "<a href='#' data-idofx='" + row [4] + "' class='action_remove'><img width='16px' title='excluir ofx' src='/images/delete.png'></a>"
+        if (row[3] == row [6] &&
+            row[0] == row [7]) {
+          // se data e valor do ofx e do financeiro
+          // batem exatamente não dá opção nem de excluir
+          // o ofx nem validá-lo
+          return ""
+        } else {
+          return "<a href='#' data-idofx='" + row [4] + "' data-obs='" + row [1] + "' data-categ='" + row [12] + "' class='action_change'><img width='16px' title='validar ofx' src='/images/tick.png'></a>" +
+              "<img width='16px' src='/images/transparent1.png'>" +
+                "<a href='#' data-idofx='" + row [4] + "' class='action_remove'><img width='16px' title='excluir ofx' src='/images/delete.png'></a>"
+        }
       }
     };
-    fields[6] = "realNull";
+//    fields[6] = "realNull";
+    fields[6] = {
+      type : "format",
+      decode: function(name, row) {
+        var color = "green"
+        if (row[3] == row[6]) {
+          return "<p style='color:" + color + "'>" + 
+            realNullDecode(row[6]) + "<p/>"
+        } else {
+          return realNullDecode(row[6])
+        }
+      }
+    }
     fields[7] = {
       type : "format",
       decode: function(name, row) {
@@ -66,7 +86,19 @@
         return ret
       }
     }
-    fields[9] = "realNull";
+//    fields[9] = "realNull";
+    fields[9] = {
+      type : "format",
+      decode: function(name, row) {
+        var color = "green"
+        if (row[3] == row[9]) {
+          return "<p style='color:" + color + "'>" + 
+            realNullDecode(row[9]) + "<p/>"
+        } else {
+          return realNullDecode(row[9])
+        }
+      }
+    }
     fields[10] = {
       type : "format",
       decode: function(name, row) {

@@ -84,6 +84,17 @@ var realDecode = function (value) {
   return ret;
 }
 
+var realNullDecode = function (value) {
+  var ret = "";
+  //alert ("vaiiii   ="+value )
+  if (!value || value == "" || value == "0.0" || value == 0.0) {
+    ret = ""
+  } else {
+    ret = (parseFloat(value).formatMoney());
+  }
+  return ret;
+}
+
 /**
  * [renderReport description]
  * @param  {[type]}  url
@@ -137,17 +148,6 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
       ret = ""
     } else {
       ret = (parseInt(value));
-    }
-    return ret;
-  }
-
-  var realNullDecode = function (value) {
-    var ret = "";
-    //alert ("vaiiii   ="+value )
-    if (!value || value == "" || value == "0.0") {
-      ret = ""
-    } else {
-      ret = (parseFloat(value).formatMoney());
     }
     return ret;
   }
