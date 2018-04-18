@@ -55,14 +55,17 @@ object FatService extends net.liftweb.common.Logger {
 		// rigel 03/08/2017
 		// faz agregação dos lancameentos gerados pelo fechamento do caixa
 		// por forma de pagamento e data (duedate)
+		// desde que seja cartão de crédito
 		val aclist = AccountPayable.findAllInCompany(
-				By(AccountPayable.cashier, cashier.id.is),
-				By(AccountPayable.auto_?,true),
-				OrderBy (AccountPayable.paymentType, Ascending),
-				OrderBy (AccountPayable.dueDate, Ascending),
-				OrderBy (AccountPayable.id, Ascending) // para agregar sempre na 
-				//receita e conciliar o typemovement do ofx
-				);
+			By(AccountPayable.cashier, cashier.id.is),
+			By(AccountPayable.auto_?,true),
+            BySql ("paymentType in (select id from paymenttype where company = ? and creditcard = true)",
+            	IHaveValidatedThisSQL("",""), AuthUtil.company.id),
+			OrderBy (AccountPayable.paymentType, Ascending),
+			OrderBy (AccountPayable.dueDate, Ascending),
+			OrderBy (AccountPayable.id, Ascending) // para agregar sempre na 
+			//receita e conciliar o typemovement do ofx
+		);
 		if (aclist.length > 0) {
 			var dtAnt = new Date();
 			var pt = 0l;

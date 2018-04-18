@@ -460,6 +460,8 @@
         var hasUnitModule = $('.has-unit-module').length > 0;
         var hasCostcenterModule = $('.has-costcenter-module').length > 0;
         var hasFinancialadModule = $('.has-financialad-module').length > 0;
+        var aggregIcon = "";
+        var aggregTitle = "";
         eval("results = " + results);
         Account.list = results;
         Account.ids = Account.list.map(function(item) {
@@ -478,16 +480,28 @@
             total -= obj.value;
             debit += obj.value;
           }
+          if (obj.aggregateId > 0) {
+            if (obj.aggregateValue != 0.0) {
+              aggregIcon = "<img src='/images/aggregate.png' width='18'/>"
+              aggregTitle = " title='Total agredado = " + obj.aggregateValue.formatMoney() + "'";
+            } else {
+              aggregIcon = "<img src='/images/aggregate.png' width='14'/>"
+              aggregTitle = "";
+            }  
+          } else {
+            aggregIcon = "";
+            aggregTitle
+          }
           ret += "<tr>" + 
             "<td><input type='checkbox' class='account_payable' value='" + 
             obj.id + "'/></td>" +
             (obj.color == "" || obj.color == "#FFFFFF" ? "<td>" + 
-            "<a href='#' data-id='" + 
-            obj.id + "' class='action_edit'>" + obj.id + "</a>" + "</td>" : 
+            "<a " + aggregTitle + " href='#' data-id='" + 
+            obj.id + "' class='action_edit'>" + obj.id + aggregIcon + "</a>" + "</td>" : 
             "<td style='background-color:" + obj.color + "'>" + 
-            "<a href='#' data-id='" + 
+            "<a " + aggregTitle + " href='#' data-id='" + 
             obj.id + "' class='action_edit'>" + 
-            obj.id + "</a>" + "</td>" ) + 
+            obj.id + aggregIcon + "</a>" + "</td>" ) + 
             "<td>" + (getDateBr(new Date(obj.dueDate))) + "</td>" +
 //            "<td>" + obj.category + "</td>" +
             "<td>"+"<a href='/financial_admin/account_category?id="+obj.category_id+"' target='_customer_maste'>"+obj.category+"</a>"+"</td>" +
