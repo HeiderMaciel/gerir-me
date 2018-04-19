@@ -47,6 +47,8 @@ $(function() {
     return;
 })
 
+var hasNotSoloModule = $('.has-not-solo-module').length > 0;
+
 var getActivities = function() {
   DataManager.getCRMActivities(function(activitiesObj) {
     $('#activity option').remove();
@@ -82,7 +84,9 @@ var getUsersCurrentUnitCommand = function() {
   return $.get(url, function(t) {
     var obj, _i, _len, _results;
     eval("userObj = " + t);
-    $('#user_todo, #user_todo').append("<option value='0'>Selecione um profissional</option>");
+    if (hasNotSoloModule) {
+      $('#user_todo, #user_todo').append("<option value='0'>Selecione um profissional</option>");
+    }
     _results = [];
     for (_i = 0, _len = userObj.length; _i < _len; _i++) {
       obj = userObj[_i];

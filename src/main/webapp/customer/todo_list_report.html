@@ -10,6 +10,7 @@
   var customers = [];
   $(function(){
     var hasUnitModule = $('.has-unit-module').length > 0;
+    var hasNotSoloModule = $('.has-not-solo-module').length > 0;
     $("#send_message").notificationField(true);
     $("#user").userField();
     $("#offsale").offSaleField(true);
@@ -82,10 +83,14 @@
     if (!hasUnitModule) {
      fields[10] = "none";
     }
-    fields[11] = { // prof responsavel atividade CRM
-      type: "format",
-      decode: function(name, row) {
-        return "<a href='/user/edit?id=" + row[15] + "' target='_user_maste'>" + name + "</a>";
+    if (!hasNotSoloModule) {
+     fields[11] = "none";
+    } else {
+      fields[11] = { // prof responsavel atividade CRM
+        type: "format",
+        decode: function(name, row) {
+          return "<a href='/user/edit?id=" + row[15] + "' target='_user_maste'>" + name + "</a>";
+        }
       }
     };
     fields[12] = { // orçamento projeto
@@ -94,10 +99,14 @@
         return "<a href='/budget/budget?id=" + row[19] + "' target='_user_maste'>" + name + "</a>";
       }
     };
-    fields[13] = { // prof orçamentp
-      type: "format",
-      decode: function(name, row) {
-        return "<a href='/user/edit?id=" + row[18] + "' target='_user_maste'>" + name + "</a>";
+    if (!hasNotSoloModule) {
+     fields[13] = "none";
+    } else {
+      fields[13] = { // prof orçamentp
+        type: "format",
+        decode: function(name, row) {
+          return "<a href='/user/edit?id=" + row[18] + "' target='_user_maste'>" + name + "</a>";
+        }
       }
     };
     fields[14] = {
@@ -207,7 +216,8 @@
                   </select>
               </div>
             </div>
-            <div class="clearfix">
+            <input type="hidden" class="has-not-solo-module lift:SecuritySnippet.hasNotSoloModule" value="1">
+            <div class="clearfix lift:SecuritySnippet.hasNotSoloModule">
                 <label for="user"><span data-i18n='Profissionais'></span></label>
                 <div class="input">
                 <select class="local_storage" multiple="multiple"  id='user' name="user">
@@ -310,9 +320,9 @@
         <th>Descrição</th>
         <th>Fone Email</th>
         <th class="lift:SecuritySnippet.hasUnitModule" title="Unidade da atividade, não necessariamente a do cliente/paciente">Unidade</th>
-        <th title="Profissional responsável por essa atividade">Prof Atividade</th>
+        <th class="lift:SecuritySnippet.hasNotSoloModule" title="Profissional responsável por essa atividade">Prof Atividade</th>
         <th title="Orçamento/Projeto">Orçamento</th>
-        <th title="Profissional responsável pelo Orçamento">Prof Orçamento</th>
+        <th class="lift:SecuritySnippet.hasNotSoloModule" title="Profissional responsável pelo Orçamento">Prof Orçamento</th>
         <th>Ações</th>
       </thead>
       <tbody>

@@ -163,7 +163,9 @@ trait ProductMapper[OwnerType <: ProductMapper[OwnerType]] extends Audited[Owner
 
 
     override def save() = {
-        if(this.external_id.is != "" && getSingleton.asInstanceOf[OnlyCurrentCompany[OwnerType]].countInCompany(NotBy(self.id,this.id),By(self.external_id,this.external_id))>0){
+        if(this.external_id.is != "" && 
+            this.external_id.is != "0" && 
+            getSingleton.asInstanceOf[OnlyCurrentCompany[OwnerType]].countInCompany(NotBy(self.id,this.id),By(self.external_id,this.external_id))>0){
             throw new RuntimeException("Já existe um produto com o código externo %s".format(this.external_id.is))
         }
 /*
