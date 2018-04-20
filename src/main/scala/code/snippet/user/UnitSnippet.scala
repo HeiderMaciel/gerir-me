@@ -66,6 +66,8 @@ object  UnitSnippet extends BootstrapPaginatorSnippet[CompanyUnit] with SnippetU
 
 			page.flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
+							"shortname" -> Text(ac.short_name.is),
+							"showincalendar" -> Text(if(ac.showInCalendar_?.is){ "Sim" }else{ "Não" }),
 							"actions" -> {<span><a class="btn success user_this_unit" data-id={ac.id.is.toString}>Usar Essa unidade</a> <a class="btn" href={"/unit/edit?id="+ac.id.is}>Editar</a></span>},
 							"delete" -> SHtml.submit("Excluir",delete,"class" -> "btn danger","data-confirm-message" -> {" excluir a unidade "+ac.name.is}),
 							"_id" -> SHtml.text(ac.id.is.toString, id = _),
