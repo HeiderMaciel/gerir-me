@@ -141,6 +141,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 			}
 			case "accountpayable" :: "conciliateofx" :: 
 				id :: idofx :: aggreg :: partial :: Nil JsonGet _ => {
+					println ("vaiiii ======================== partial " + partial + "  bool  " + partial == "true")
 				try{
 					AccountPayable.conCilSol (id,idofx,(aggreg == "true"), 1, (partial == "true"))
 					JInt(1)

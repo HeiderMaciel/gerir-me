@@ -2031,6 +2031,16 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case _ => 0;
 				}
 
+				val payment_type_param_name = S.param("payment_type[]") match {
+							case Full(p) => "payment_type[]"
+							case _ => "payment_type"
+				}
+				def payment_type:String = S.param(payment_type_param_name) match {
+					case Full(s) if(s != "") => " and ap1.paymenttype in " +
+					"(%s) ".format(S.params(payment_type_param_name).foldLeft("0")(_+","+_))
+					case _ => " and 1=1 "
+				}
+
 				lazy val SQL_REPORT = """
 					select ap.duedate, ap.obs, ap.typemovement, 
 					ap.value, ap.id, 
@@ -2059,6 +2069,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					  and ap1.typemovement = ap.typemovement
 					  %s
 					  %s
+					  %s
 					where ap.company = ? 
 					and ap.duedate between date(?) and date (?)
 					and ap.toconciliation = true
@@ -2066,7 +2077,8 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					order by 
 					ap.duedate, ap.id, (ap1.value = ap.value)
 					"""
-				toResponse(SQL_REPORT.format(account_fin, show_conciliated, account_ofx),
+				toResponse(SQL_REPORT.format(account_fin, show_conciliated, 
+					account_ofx,payment_type),
 					List(days, days, margin, margin, 
 						margin, margin, 
 						AuthUtil.company.id.is, start, end))

@@ -9,6 +9,16 @@
     $("#account_ofx").accountField(true);
     $("#account_fin").accountField(true);
     $("#category_select").categoryAccountField(true);
+
+    DataManager.getPaymentTypes(function(paymentTypes){
+          var ret = "";
+          ret += "<option value='SELECT_ALL'>Todos</option>";
+          for(var i in paymentTypes){
+              ret += "<option value='"+paymentTypes[i].id+"'>"+paymentTypes[i].name+"</option>";
+          }
+      $('#payment_type').append(ret);
+    });
+
     //$("#start").val(getDateBr(new Date().getStartOfMonth()));
     if (AuthUtil.company.id == 13333) {
       $("#start").val('01/01/2018');
@@ -441,6 +451,18 @@
                   <select class="local_storage" name='account_fin' id="account_fin"></select>
               </div>
           </div>            
+          <div class="clearfix">
+            <label for="user">
+              Formas de Pagamento
+            </label>
+              <div class="input">
+                <div class="inline-inputs">
+                  <select class="url_parameter alow_all" multiple="multiple" name="payment_type" id='payment_type'>
+                  </select>
+                  <span class="help-block">Formas de pagamento</span>
+                </div>
+              </div>
+          </div> 
           <div class="clearfix">
             <label for="show_conciliated">
               Mostra Concil/Consol? 
