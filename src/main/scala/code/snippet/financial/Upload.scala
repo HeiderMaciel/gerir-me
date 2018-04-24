@@ -103,8 +103,17 @@ class UploadOfx extends Logger {
         output.close()
         prepareOfxFile(oFile)
         info("File uploaded!")
-        val msg = OfxUtil.execute(oFile, S.param("category").get.toLong, S.param("account").get.toLong);
-        S.notice("Arquivo importado com sucesso!" + msg)
+        try {
+          val msg = OfxUtil.execute(oFile, S.param("category").get.toLong, S.param("account").get.toLong);
+          S.notice("Arquivo importado com sucesso!" + msg)
+        } catch {
+          case (e:RuntimeException) => {
+            S.error(e.getMessage)
+          }
+          case (e:Exception) => {
+            S.error(e.getMessage)
+          }
+        }
       }
     }
   }

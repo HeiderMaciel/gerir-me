@@ -18,6 +18,12 @@ class AccountCompanyUnit extends Audited[AccountCompanyUnit] with PerCompany wit
     with ActiveInactivable[AccountCompanyUnit] {
     def getSingleton = AccountCompanyUnit
     object account extends MappedLongForeignKey(this,Account)
+    object accountStr extends MappedPoliteString(this,255) {
+      override def defaultValue = ""
+    }
+    object agency extends MappedPoliteString(this,255) {
+      override def defaultValue = ""
+    }
     object unit extends MappedLongForeignKey(this,CompanyUnit) 
     object obs extends MappedPoliteString(this,255)
     object value extends MappedCurrency(this) with LifecycleCallbacks {

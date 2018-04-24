@@ -486,7 +486,7 @@ with CanCloneThis[AccountPayable] {
       // por isso usa duedate
       apl.paymentDate (apofx.dueDate)
       apl.account (apofx.account)
-      ap.ofxId (apofx.ofxId)
+      apl.ofxId (apofx.ofxId)
       var compl = apl.complement
       apl.complement (compl + " " + apofx.obs)
       if (conciliation == 1) {

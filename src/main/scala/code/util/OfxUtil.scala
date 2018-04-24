@@ -35,8 +35,8 @@ object OfxUtil {
 
      //objeto contendo informações como instituição financeira, idioma, data da conta.
     val sr = re.getSignonResponse();
-     println("Banco: " + sr.getFinancialInstitution().getOrganization());
-     println("Banco: " + sr.getFinancialInstitution().getId());
+     println("Org: " + sr.getFinancialInstitution().getOrganization());
+     println("Org: " + sr.getFinancialInstitution().getId());
      // santander permite ofxid duplicado principalmente no caso 
      // de credito de operadora de cartão - verificado na getnet 
      val validate = !(sr.getFinancialInstitution().getId() == "SANTANDER")
@@ -47,13 +47,17 @@ object OfxUtil {
       if (message != null) {
         val bank = message.asInstanceOf[BankingResponseMessageSet].getStatementResponses().asScala;
         bank.foreach((b) => {
-           println("cc: " + b.getMessage().getAccount().getBankId());
+           println("bc: " + b.getMessage().getAccount().getBankId());
            println("cc: " + b.getMessage().getAccount().getAccountNumber());
            println("ag: " + b.getMessage().getAccount().getBranchId());
            println("balanço final: " + b.getMessage().getLedgerBalance().getAmount());
            println("dataDoArquivo: " + b.getMessage().getLedgerBalance().getAsOfDate());          
+           val strAccountId = BusinessRulesUtil.clearString (b.getMessage().getAccount().getBankId())+
+            BusinessRulesUtil.clearString (b.getMessage().getAccount().getAccountNumber())+
+            BusinessRulesUtil.clearString (b.getMessage().getAccount().getBranchId())
+           validateAccount (account, strAccountId);
            val list = b.getMessage().getTransactionList().getTransactions().asScala;
-          list.foreach((transaction)=>{
+           list.foreach((transaction)=>{
                val amount:Double = if(transaction.getAmount() != null){
                   transaction.getAmount()
                 }else{
@@ -108,6 +112,24 @@ object OfxUtil {
         });
       }
       //println ("vaiiii ============ Importadas " + trnGood + "\n\n Rejeitadas " + trnBad);
-      ("Importadas " + trnGood + "\n\nRejeitadas " + trnBad)
+      (" Importadas " + trnGood + "\n\nRejeitadas " + trnBad)
+  }
+  def validateAccount (account : Long, strAccountId : String) {
+    val acu = AccountCompanyUnit.findAll (
+        By (AccountCompanyUnit.account, account),
+        By (AccountCompanyUnit.unit, AuthUtil.unit.id.is))(0)
+     if (BusinessRulesUtil.clearString (acu.accountStr) == "") {
+        throw new RuntimeException("Número da conta no cadastro precisa ser informado");
+     } 
+     if (strAccountId.indexOf (BusinessRulesUtil.clearString (acu.accountStr)) == -1) {
+        throw new RuntimeException("Número da Conta " + BusinessRulesUtil.clearString (acu.accountStr) + " não encontrada no ofx " + strAccountId);
+     }
+     if (BusinessRulesUtil.clearString (acu.agency) == "") {
+        throw new RuntimeException("Número da agência no cadastro precisa ser informado");
+     } 
+     if (strAccountId.indexOf (BusinessRulesUtil.clearString (acu.agency)) == -1) {
+        throw new RuntimeException("Número da Agência " + BusinessRulesUtil.clearString (acu.agency) + " não encontrada no ofx " + strAccountId);
+     }
+    true
   }
 }

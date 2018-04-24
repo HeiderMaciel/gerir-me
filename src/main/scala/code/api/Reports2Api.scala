@@ -2030,6 +2030,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case Full(p) if(p != "") => p.toInt
 					case _ => 0;
 				}
+				def obsFilter = (" and lower (ap.obs) like '%"+(S.param("obs_search") openOr "")+"%' ").toLowerCase;
 
 				val payment_type_param_name = S.param("payment_type[]") match {
 							case Full(p) => "payment_type[]"
@@ -2067,21 +2068,25 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					  )
 					  and ap1.toconciliation = false and ap.company = ap1.company
 					  and ap1.typemovement = ap.typemovement
-					  %s
+					  and ap1.unit = ap.unit
 					  %s
 					  %s
 					where ap.company = ? 
 					and ap.duedate between date(?) and date (?)
 					and ap.toconciliation = true
+					and ap.unit = ?
+					%s
+					%s
 					%s
 					order by 
-					ap.duedate, ap.id, (ap1.value = ap.value)
+					ap.duedate, ap.id, ap1.duedate, (ap1.value = ap.value)
 					"""
 				toResponse(SQL_REPORT.format(account_fin, show_conciliated, 
-					account_ofx,payment_type),
+					account_ofx,payment_type, obsFilter),
 					List(days, days, margin, margin, 
 						margin, margin, 
-						AuthUtil.company.id.is, start, end))
+						AuthUtil.company.id.is, start, end,
+						AuthUtil.unit.id.is))
 			}
 			case "report" :: "offsaleproduct_cost" :: Nil Post _ =>{
 				val offsales_param_name = S.param("offsales[]") match {
