@@ -7,6 +7,8 @@
   <script type="text/javascript">
   $(function(){
     $("#account").accountField(false);
+    $("#unit_select").unitField(false, true, false);
+    $("#unit_select").val(AuthUtil.unit.id).change();
     //$("#start").val(getDateBr(new Date().getStartOfMonth()));
     if (AuthUtil.company.id == 13) {
       $("#start").val('01/07/2017');
@@ -382,6 +384,14 @@
           </div>
         </div>
         <div class="span8">
+          <div class="clearfix">
+            <label for="unit_select">Unidade</label>
+              <div class="input">
+                <div class="inline-inputs">
+                  <select id='unit_select' class="unit_select notselect2" name='unit_select' disabled></select>
+                </div>
+              </div>
+          </div>                     
           <div class="clearfix">
             <label for="conciliated">Conciliado / Diferença</label>
             <div class="input">
