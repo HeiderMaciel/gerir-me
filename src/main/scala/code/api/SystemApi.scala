@@ -91,10 +91,15 @@ object SystemApi extends RestHelper {
 		}
 		case "system" :: "sendDailyTreatmentsReport"  :: Nil JsonGet _ => {
 			//SendDailyTreatmentsReport.send(new Date(), Company.notifyForToday1Am)
+	        Company.findAllActiveToChangeFinancialToPaid.foreach( company => {
+	        	AccountPayable.findAllToChangeToPaid(new Date(), company)
+	        });
 			SendDailyTreatmentsReport.send
 			JInt(1)
 		}
 
+		// ESTA SENDO CHAMADA na sendDailyTreatment
+		// tirar de lá se colocar na cron
 		case "system" :: "autoChangeToPaid"  :: Nil JsonGet _ => {
 	        Company.findAllActiveToChangeFinancialToPaid.foreach( company => {
 	        	AccountPayable.findAllToChangeToPaid(new Date(), company)
