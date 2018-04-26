@@ -84,6 +84,12 @@
                </div>
             </div>            
             <div class="clearfix">
+              <label for="name">Código Externo</label>
+               <div class="input">
+                  <input class="medium" id="external_id" name="external_id" size="30" type="text"/>
+               </div>
+            </div>
+            <div class="clearfix">
               <label for="name">Observação</label>
                <div class="input">
                   <div class="input-prepend">
@@ -99,18 +105,24 @@
                   <span class="help-block">Cor que será mostrada no relatório</span>
                </div>
             </div>
-          <div class="clearfix">
-            <label for="status">Status</label>
-            <div class="input">
-              <div class="input-prepend">
-                <select class="medium" id="status" name="status" >
-                </select>
-                <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/status.html' rel="popover" class="_popover_basic _help">
-                  <img src="/images/info.gif" width="20">
-                </a>
+            <div class="clearfix">
+              <label for="status">Status</label>
+              <div class="input">
+                <div class="input-prepend">
+                  <select class="medium" id="status" name="status" >
+                  </select>
+                  <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/status.html' rel="popover" class="_popover_basic _help">
+                    <img src="/images/info.gif" width="20">
+                  </a>
+                </div>
               </div>
-            </div>
-          </div>                       
+            </div>                       
+            <div class="clearfix">
+                <label for="auditstr">Auditoria</label>
+                <div class="input">
+                  <input class="xlarge disabled" disabled="true" id="auditstr" name="auditstr"  type="text"/>
+                </div>
+            </div>                     
           </span>
       <div class="well">
         <label for="btn"></label>

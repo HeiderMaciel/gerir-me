@@ -112,8 +112,10 @@ class  AccountCategorySnippet  extends BootstrapPaginatorSnippet[AccountCategory
 			   		case e: RuntimeException => S.error(e.getMessage)
 			   	}
 			}
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
+			"name=external_id" #> (SHtml.text(ac.external_id, (v:String) => { ac.external_id(v)}))&
 		    "name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&
 		    "name=order" #> (SHtml.text(ac.orderInReport.is.toString, (s:String) => ac.orderInReport(s.toInt)))&
 		    "name=managerLevel" #> (SHtml.text(ac.managerLevel.is.toString, (s:String) => ac.managerLevel(s.toInt)))&

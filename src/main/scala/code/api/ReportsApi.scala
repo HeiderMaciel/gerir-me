@@ -822,7 +822,15 @@ no account payable - 22/02/2018 - rigel
 				toResponse(CostCenter.SQL_TREE,List(AuthUtil.company.id.is))
 			}
 			case "report" :: "accounts_tree" :: Nil Post _ => {
-				toResponse(AccountPayable.SQL_TREE,List(AuthUtil.company.id.is))
+				val SQL_TREE = """
+				  select id, trim (external_id || ' ' || name) as name, mintreenode, maxtreenode, parentaccount,isparent
+				  from 
+				  accountcategory ac
+				  where company=?
+				  and status = 1
+				  order by orderinreport, name
+				  """
+				toResponse(SQL_TREE,List(AuthUtil.company.id.is))
 			}			
 
 			case "report" :: "cashiers_payment_types" :: Nil Post _ =>{

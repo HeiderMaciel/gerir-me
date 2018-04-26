@@ -32,6 +32,7 @@ class AccountCategory extends Audited[AccountCategory] with PerCompany with IdPK
         }
     } 
   }
+  object external_id extends MappedPoliteString(this,200)
   object userAssociated extends MappedBoolean(this)
   object parent_? extends MappedBoolean(this) {
     override def dbColumnName = "isparent"

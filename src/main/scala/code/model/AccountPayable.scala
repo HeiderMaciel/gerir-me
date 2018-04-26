@@ -819,13 +819,4 @@ order by maxtreenode desc,orderinreport
 ) as data where total <>0
 """
 
-  val SQL_TREE = """
-  select id,name, mintreenode, maxtreenode, parentaccount,isparent
-  from 
-  accountcategory ac
-  where company=?
-  and status = 1
-  order by orderinreport
-  """
-
 }
