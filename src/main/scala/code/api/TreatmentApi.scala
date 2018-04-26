@@ -121,7 +121,8 @@ object TreatmentApi extends RestHelper with net.liftweb.common.Logger {
 						//
 						// Aqui faz deleção física mesmo
 						//
-						BusyEvent.findByKey(id.toLong).get.insecureDelete_!
+//						BusyEvent.findByKey(id.toLong).get.insecureDelete_!
+						BusyEvent.findByKey(id.toLong).get.delete_!
 						JString(e.getMessage())
 					}catch{
 						case e:Exception => {

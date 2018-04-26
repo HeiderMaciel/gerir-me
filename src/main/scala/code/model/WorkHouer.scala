@@ -107,7 +107,8 @@ class WorkHouer extends Audited[WorkHouer] with PerCompany with PerUnit with IdP
   }    
 
     def cleaHourOfUser {
-        BusyEvent.findAllInCompanyWithDeleteds(
+//        BusyEvent.findAllInCompanyWithDeleteds(
+        BusyEvent.findAllInCompany (
             By_>=(BusyEvent.dateEvent,new Date),
             By(BusyEvent.user,this.user),
             By(BusyEvent.unit,AuthUtil.unit.id),
@@ -115,7 +116,8 @@ class WorkHouer extends Audited[WorkHouer] with PerCompany with PerUnit with IdP
             // rigel 28/02/2018
             By(BusyEvent.is_employee_lanche_?,true) 
             ).foreach((be) =>{
-            be.insecureDelete_!
+//            be.insecureDelete_!
+            be.delete_!
         })
     }
     override def delete_! = {

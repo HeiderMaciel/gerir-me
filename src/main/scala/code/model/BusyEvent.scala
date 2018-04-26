@@ -19,7 +19,7 @@ import code.util._
 
 class BusyEvent extends  UserEvent 
 with Audited[BusyEvent] 
-with LogicalDelete[BusyEvent] 
+//with LogicalDelete[BusyEvent] 
 with IdPK 
 with CreatedUpdated with CreatedUpdatedBy 
 with PerCompany with PerUnit {
@@ -75,7 +75,10 @@ with PerCompany with PerUnit {
 
 }
 
-object BusyEvent extends BusyEvent with LongKeyedMapperPerCompany[BusyEvent] with LogicalDeleteMapper[BusyEvent]{
+object BusyEvent extends BusyEvent 
+with LongKeyedMapperPerCompany[BusyEvent] 
+//with LogicalDeleteMapper[BusyEvent]
+{
 	val SQL_CLEAR_BUSY_EVENT = """
 		delete from busyevent  where 
 		company =? and user_c=? 
@@ -96,8 +99,11 @@ object BusyEvent extends BusyEvent with LongKeyedMapperPerCompany[BusyEvent] wit
 	}
 
 	def hasLanchEventoToUser(user:Long, unit:Long, date:Date) = BusyEvent.
-	countWithDeleteds( 
-		By(BusyEvent.is_employee_lanche_?, true),
+		// rigel 26/04/2018 
+//	countWithDeleteds( 
+		count (
+		// tirei assim se tiver qq coisa no dia não gera mais
+//		By(BusyEvent.is_employee_lanche_?, true),
 		By(BusyEvent.unit, unit), // rigel 12/11/2016 
 		By(BusyEvent.user, user), BySql("dateevent=date(?)",IHaveValidatedThisSQL("",""), date)) > 0;
 
