@@ -339,10 +339,18 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
   object bpmDaysToEmail extends MappedInt(this) {
     override def defaultValue = 7
   }
-  object bpmCommissionOnSale_? extends MappedBoolean(this) {
+  object bpmCommissionOnSale_? extends MappedBoolean(this) with LifecycleCallbacks {
     override def defaultValue = false
     override def dbColumnName = "bpmCommissionOnSale"
+    override def beforeSave() {
+      super.beforeSave;
+      if (bpmCommissionOnSale_? && 
+        (bpmCommissionOnReady_? || bpmCommissionOnMissed_?)) {
+        throw new RuntimeException("Se calcula comissão na venda de uma mensalidade, não faz sentido calcular comissão no atendido ou na falta de uma determinada sessão!")
+      }
+    }
   }
+
   object bpmCommissionOnReady_? extends MappedBoolean(this) {
     override def defaultValue = false
     override def dbColumnName = "bpmCommissionOnReady"

@@ -1,3 +1,16 @@
+select * from treatment where dateevent = date (now()) and company = 229 and customer = 397795
+
+select * from payment where id = 861095; dateevent = date (now()) and company = 229 and customer = 397795
+
+select * from paymentdetail where payment = 861095 and company = 229
+
+delete from paymentdetail where payment = 861095 and company = 229
+
+src/main/scala/code/actors/FreeBusyActor.scala
+src/main/scala/code/api/TreatmentApi.scala
+src/main/scala/code/model/BusyEvent.scala
+src/main/scala/code/model/WorkHouer.scala
+
 
 INSERT INTO ESPECIALIDADESCLINICAS
 VALUES (1, 'Prevenção');
