@@ -331,6 +331,8 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
               mobilePhone (mobilephone).
               document (doc).
               obs ("agenda online").
+              createdBy(5). // usuario da 1 Agenda Online
+              updatedBy(5).
               save
               JString("1")
             } catch {
