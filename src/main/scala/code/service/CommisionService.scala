@@ -136,9 +136,13 @@ object CommissionService extends net.liftweb.common.Logger  {
   def $(paymentdetail: PaymentDetail) = {
     import CommissionGenerationStrategy._
     val paymentType = paymentdetail.typePaymentObj.get
-    if(paymentType.comissionAtSight_?){
+    println ("vaiiii -=========================== ver o tipo comissão")
+    if (paymentType.bpmonthly_?.is){
+println ("vaiii ======================== bpmonthly ")
+      MonthlyCommissionCalculator
+    } else if (paymentType.comissionAtSight_?){
       DefaultCommissionCalculator
-    }else if (!paymentType.generateCommision_?.is) {
+    } else if (!paymentType.generateCommision_?.is) {
       NotCommissionCalculator
     } else if (paymentType.comissionAtSight_?.is) {
       println ("vaiiii ===================== ACHO QUE NUNCA CHEGA AQUI - comissionAtSight_")
@@ -162,8 +166,6 @@ object CommissionService extends net.liftweb.common.Logger  {
                                     }
       //LogActor ! "[factory$] customerRegisterDebit payment(%s) valueToProcess(%s)".format(payment.id.is.toString(),valueToProcess.toString())
       CustomerAccountCommissionCalculator(valueToProcess, payment.datePayment.is)
-    }else if(paymentType.bpmonthly_?.is){
-      MonthlyCommissionCalculator
     }else{
       DefaultCommissionCalculator
     }
@@ -207,7 +209,7 @@ trait CommissionCalculator {
 */
   }
 
-  def canBeBuyingBpMonthly = true;
+  //def canBeBuyingBpMonthly = true;
 
   def discountPerPaymentType(value: Double, payment_detail: PaymentDetail, user:User, treatment_detail: TreatmentDetail): Double = {
     // rigel 18/10/2017
@@ -243,6 +245,9 @@ trait CommissionCalculator {
         case _ => false
       }
     }).filter((t)=> t.hasDetail)
+    val company = payment_detail.company.obj.get;
+    val pt = PaymentType.findByKey(payment_detail.typePayment.is).get;
+
     if (!treatmentsToCommission.isEmpty) {
       treatmentsToCommission.map((t) => {
         val user = t.userObj
@@ -250,12 +255,25 @@ trait CommissionCalculator {
         treatmentDetails.map((treatment_detail) => {
           val commision = Commision.create.company(payment_detail.company)
           commision.save
-          val percentCommission : BigDecimal = if (canBeBuyingBpMonthly && treatment_detail.isAMonthlyService) {
+          val percentCommission : BigDecimal = 
+            if ((!company.bpmCommissionOnSale_? 
+              && treatment_detail.isAMonthlyService 
+              && !pt.bpmonthly_?) || 
+                (company.bpmCommissionOnSale_?
+              && treatment_detail.isAMonthlyService 
+              && pt.bpmonthly_?)) {
+println ("vaiiii ================== zerar o percentual")
               0.0
             }else{
               treatment_detail.commissionActivity / 100.0;
             }
-          val absCommission : BigDecimal = if (canBeBuyingBpMonthly && treatment_detail.isAMonthlyService) {
+          val absCommission : BigDecimal = 
+            if ((!company.bpmCommissionOnSale_? 
+              && treatment_detail.isAMonthlyService 
+              && !pt.bpmonthly_?) || 
+                (company.bpmCommissionOnSale_?
+              && treatment_detail.isAMonthlyService 
+              && pt.bpmonthly_?)) {
               0.0
             }else{
               treatment_detail.commissionAbsActivity;
@@ -339,6 +357,8 @@ object CommissionGenerationStrategy {
           case _ => false
         }
       }).filter((t)=> t.hasDetail)
+      val company = payment_detail.company.obj.get;
+      val pt = PaymentType.findByKey(payment_detail.typePayment.is).get;
       if (!treatmentsToCommission.isEmpty && percent_in_total > 0.00) {
         treatmentsToCommission.map((t) => {
           val user = t.userObj
@@ -346,12 +366,25 @@ object CommissionGenerationStrategy {
           treatmentDetails.map((treatment_detail) => {
             val commision = Commision.create.company(payment_detail.company)
             commision.save
-            val percentCommission : BigDecimal = if (canBeBuyingBpMonthly && treatment_detail.isAMonthlyService) {
+            val percentCommission : BigDecimal = 
+              //if (canBeBuyingBpMonthly && treatment_detail.isAMonthlyService) {
+              if ((!company.bpmCommissionOnSale_? 
+                && treatment_detail.isAMonthlyService 
+                && !pt.bpmonthly_?) || 
+                  (company.bpmCommissionOnSale_?
+                && treatment_detail.isAMonthlyService 
+                && pt.bpmonthly_?)) {
                 0.0 
               }else{
                 treatment_detail.commissionActivity / 100.0;
               }
-            val absCommission : BigDecimal = if (canBeBuyingBpMonthly && treatment_detail.isAMonthlyService) {
+            val absCommission : BigDecimal = 
+              if ((!company.bpmCommissionOnSale_? 
+                && treatment_detail.isAMonthlyService 
+                && !pt.bpmonthly_?) || 
+                  (company.bpmCommissionOnSale_?
+                && treatment_detail.isAMonthlyService 
+                && pt.bpmonthly_?)) {
                 0.0             
               }else{
                 treatment_detail.commissionAbsActivity;
@@ -392,7 +425,7 @@ object CommissionGenerationStrategy {
 
   object MonthlyCommissionCalculator extends CommissionCalculator with net.liftweb.common.Logger  {
 
-    override def canBeBuyingBpMonthly = false;
+    //override def canBeBuyingBpMonthly = false;
 
     override def priceToCommission(treatmentDetail:TreatmentDetail) = {
       //info("val customer = treatmentDetail.customer")
