@@ -364,9 +364,23 @@ class Customer extends BusinessPattern[Customer]{
         }
     }
 
+    def thumbCustomer = imagethumb.is match {
+            case img:String if(img!="") => <a href={"/customer/edit?id="+id.is.toString} target='_customer_maste'> 
+                <img class="img-circle" href={"/customer/edit?id="+id.is.toString} target='_customer_maste' style="width:36px" src={thumbPath}/>
+                </a>
+        case _ => <span/>
+    }
+
+    def anvisaRecord = if (PermissionModule.anvisa_?) {
+          barcode + " "
+        } else {
+          ""
+    }
+
 }
 
 object Customer extends Customer with BusinessPatternMeta[Customer]{
+
     def login(email:String, password:String, company:String):Customer = {
         val pwdMd5 = Project.md5(password)
         val customers = if (company == "") {

@@ -133,7 +133,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 		
 		page.flatMap(ac => 
 			bind("f", xhtml,
-							"name" -> Text(ac.name.is + ac.customerObs),
+							"name" -> Text(ac.anvisaRecord + ac.name.is + ac.customerObs),
 
 							"idforcompany" -> Text(ac.idForCompany.is.toString),
 							"short_name" -> Text(ac.short_name.is),
@@ -156,7 +156,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 							"email" -> Text(ac.email.is), 
 							"phone" -> Text(ac.mobilePhone.is + " " + ac.phone.is + " " + ac.email_alternative.is),
 							"document" -> Text(ac.document.is + " " + ac.document_identity.is + " " + ac.document_company.is),
-							"thumb" -> ac.thumb ("36"),
+							"thumb" -> ac.thumbCustomer,
 							"iconthumb" -> {if (!ac.mapIcon.isEmpty) {
 								ac.mapIcon.obj.get.thumb ("32")
 								}else{
