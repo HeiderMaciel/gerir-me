@@ -37,9 +37,14 @@ object UserAddonsApi extends RestHelper with ReportRest {
 					user <- S.param("user") ?~ "user parameter missing" ~> 400
 					obs <- S.param("obs") ?~ "obs parameter missing" ~> 400
 					unit <- S.param("unit") ?~ "unit parameter missing" ~> 400
+					showincalendar <- S.param("showincalendar") ?~ "showincalendar parameter missing" ~> 400
 
 				} yield {
-					JBool(UserCompanyUnit.createInCompany.user(user.toLong).obs(obs).unit(unit.toLong).save)
+					val showcal = (showincalendar == "true" || showincalendar == "on");
+					JBool(UserCompanyUnit.createInCompany.
+						user(user.toLong).obs(obs).
+						showInCalendar_?(showcal).
+						unit(unit.toLong).save)
 				}
 			}
 			case "user_api" :: "companyunit" :: id :: Nil Delete _ => {
@@ -47,7 +52,7 @@ object UserAddonsApi extends RestHelper with ReportRest {
 			}
 			case "user_api" :: "list" :: "companyunit" :: Nil Post _ => {
 				val sql_companyunit = """
-				select cu.name, uu.obs, uu.id from usercompanyunit uu
+				select cu.name, uu.showincalendar, uu.obs, uu.id from usercompanyunit uu
 					inner join companyunit cu on cu.id = uu.unit
 					where uu.company = ? and uu.user_c = ?
 					order by cu.name;

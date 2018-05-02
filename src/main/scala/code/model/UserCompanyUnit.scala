@@ -21,6 +21,10 @@ class UserCompanyUnit extends Audited[UserCompanyUnit] with PerCompany with IdPK
         override def defaultValue = ""
     }
     object obs extends MappedPoliteString(this,255)
+    object showInCalendar_? extends MappedBoolean(this){
+        override def dbColumnName = "showInCalendar"
+        override def defaultValue = true
+    }
 }
 
 object UserCompanyUnit extends UserCompanyUnit with LongKeyedMapperPerCompany[UserCompanyUnit] with OnlyCurrentCompany[UserCompanyUnit]{

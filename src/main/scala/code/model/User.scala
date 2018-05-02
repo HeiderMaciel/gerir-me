@@ -86,7 +86,6 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 
     override def isUserDefaultValue = true
     
-
     object showInCalendar_? extends MappedBoolean(this){
         override def dbColumnName = "showInCalendar"
         override def defaultValue = true

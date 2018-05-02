@@ -420,8 +420,10 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
 //    if (onlyCurrenunit)
 //      User.fildAllInUnit(By(User.showInCalendar_?, true), (By(User.userStatus, User.STATUS_OK)), OrderBy(User.orderInCalendar, Ascending), OrderBy(User.short_name, Ascending))
       User.findAllInCompany(
-        BySql(" (unit = ? or (id in (select uu.user_c from usercompanyunit uu where uu.unit = ? and uu.company = ?))) ",IHaveValidatedThisSQL("",""), AuthUtil.unit.id, AuthUtil.unit.id, AuthUtil.company.id),
-        By(User.showInCalendar_?, true), (By(User.userStatus, User.STATUS_OK)), 
+        BySql(" (unit = ? or (id in (select uu.user_c from usercompanyunit uu where uu.unit = ? and uu.company = ? and uu.showInCalendar = true))) ",
+          IHaveValidatedThisSQL("",""), AuthUtil.unit.id, AuthUtil.unit.id, AuthUtil.company.id),
+        By(User.showInCalendar_?, true), 
+        By(User.userStatus, User.STATUS_OK), 
         OrderBy(User.orderInCalendar, Ascending), OrderBy(User.short_name, Ascending))
  //   else
  //     User.findAllInCompany(By(User.showInCalendar_?, true), (By(User.userStatus, User.STATUS_OK)), OrderBy(User.orderInCalendar, Ascending), OrderBy(User.short_name, Ascending))

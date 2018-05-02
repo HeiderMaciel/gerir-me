@@ -106,7 +106,8 @@ $(function() {
         user: gup("id")
       };
       var fields = [];
-      fields[2] = {
+      fields[1] = "boolean";
+      fields[3] = {
         type: "format",
         decode: function(value) {
           return '<input data-id="' + value + '" type="button" class="btn danger companyunit_remove" value="Excluir">';
@@ -192,9 +193,14 @@ $(function() {
       });
     });    
     $("#companyunit_add").click(function() {
+      var showincalendar = "false";
+      if ($('#companyunit_showincalendar').is(":checked")) {
+        showincalendar = "true";
+      }
       $.post("/user_api/companyunit", {
         unit: $("#companyunit_unit").val(),
         obs: $("#companyunit_obs").val(),
+        showincalendar : showincalendar,
         user: gup("id")
       }, function() {
         alert("Associação de unidade adicionada com sucesso!");
