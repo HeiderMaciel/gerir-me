@@ -250,7 +250,12 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 	def removePaymentDetails(detail:PaymentDetail) = {
 		val paymentType = detail.typePaymentObj.get
 		if(paymentType.cheque_?.is || paymentType.needCardInfo_?.is){
-			detail.cheque.delete_!
+			// rigel 02/05/2018
+			// fiz o count pq dava erro se pagava no cartão sem pedir dados
+			// e depois alteravao parm para os proximos pagamentos
+			if (detail.countCheque > 0) {
+				detail.cheque.delete_!
+			}
 		}
 		if(paymentType.customerRegisterDebit_?.is){
 			val customer = detail.payment.obj.get.customer.obj.get

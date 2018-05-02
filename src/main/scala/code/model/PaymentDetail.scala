@@ -29,7 +29,10 @@ class PaymentDetail extends LongKeyedMapper[PaymentDetail]  with IdPK with Creat
     }
     object valueInPoints extends MappedCurrency(this)
     
+    def countCheque = Cheque.count(By(Cheque.paymentDetail,this));
+
     def cheque = Cheque.findAll(By(Cheque.paymentDetail,this))(0)
+    
     def percentInTotal = {
       if (value != 0.0) {
           ((100.00 * value.is) / payment.obj.get.value.is)
