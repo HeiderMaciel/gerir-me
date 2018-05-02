@@ -136,9 +136,7 @@ object CommissionService extends net.liftweb.common.Logger  {
   def $(paymentdetail: PaymentDetail) = {
     import CommissionGenerationStrategy._
     val paymentType = paymentdetail.typePaymentObj.get
-    println ("vaiiii -=========================== ver o tipo comissão")
     if (paymentType.bpmonthly_?.is){
-println ("vaiii ======================== bpmonthly ")
       MonthlyCommissionCalculator
     } else if (paymentType.comissionAtSight_?){
       DefaultCommissionCalculator

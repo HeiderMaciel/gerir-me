@@ -167,6 +167,9 @@
     } else if (Customer.hasBpMonthly(activity.activityId)) {
       icon = "bpmonthly.png";
       alt = "Utilização de mensalidade, preço do valor da sessão!";
+    } else if (Customer.hasBudget(activity.activityId)) {
+      icon = "budget.png";
+      alt = "Utilização de orçamento, preço do item orçado!";
     }
     return "<img class='img_alt' width='16px' src='" + path + icon + "' alt='" + alt + "'/>";
   };

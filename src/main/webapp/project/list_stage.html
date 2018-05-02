@@ -4,6 +4,24 @@
 		<a class="btn primary" href="/project/edit_stage">Inserir novo</a>
 	    <a class="btn primary" alt="Cadastro de projetos" href="/project/list_event"><span data-i18n='Evento'></span></a>
 	</div>
+	<div class='filter block-message success"'>
+		<img style='float:left' src="/images/filter.png"/>
+		<span class="filter_form">
+		<script type="text/javascript">
+			$(function(){
+				$(".name_stage").val(gup("name"))
+				if(gup("all")){
+					$("#all").attr("checked", "checked");
+				}				
+			});
+		</script>
+			<form action=''>
+				<input class="local_storage xlarge name_stage" id="name_stage" name="name" size="30" type="text" placeholder="Nome"/>
+				<input class="all" id="all" name="all" type="checkbox"/> Mostrar todos?
+				<input class="btn success" type="submit" value="Buscar">
+			</form>
+		</span>
+	</div>
 <table class="bordered-table zebra-striped">
 		<thead>
 			<th>Id</th>

@@ -118,7 +118,18 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
 			
 			}
 
-			ProjectStage.findAllInCompany.flatMap(ac => 
+			def aclist = if (!showAll) {
+				ProjectStage.findAllInCompany(
+					By(ProjectStage.status,ProjectStage.STATUS_OK),
+					Like(ProjectStage.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+					OrderBy(ProjectStage.name, Ascending))
+			} else {
+				ProjectStage.findAllInCompanyWithInactive(
+					Like(ProjectStage.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+					OrderBy(ProjectStage.name, Ascending))
+			}
+
+			aclist.flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"obs" -> Text(ac.obs.is),
 							"actions" -> <a class="btn" href={"/project/edit_stage?id="+ac.id.is}>Editar</a>,
@@ -216,6 +227,8 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
 			}
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
+			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),
+				(v:String) => ac.status(v.toInt)))&
 			"name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_))++SHtml.hidden(process))
 
 		}catch {

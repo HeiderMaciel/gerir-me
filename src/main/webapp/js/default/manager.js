@@ -82,6 +82,9 @@ var Customer = {
 		if (strAux == "" || strAux == item.text) {
 			strAux = Customer.getBpMonthlyIcon(item) + item.text;
 		}
+		if (strAux == "" || strAux == item.text) {
+			strAux = Customer.getBudgetIcon(item) + item.text;
+		}
 		return strAux;
 	},
 	getDeliveryIcon: function (activity) {
@@ -97,6 +100,23 @@ var Customer = {
 				return item.product == productId;
 			});
 			return deliverys.length > 0;
+		} else {
+			return false;
+		}
+	},
+	getBudgetIcon: function (activity) {
+		var result = "";
+		if (Customer.hasBudget(activity.id)) {
+			result = "<img src='/images/budget.png' width='16px'/> ";
+		}
+		return result;
+	},
+	hasBudget: function (productId) {
+		if (Customer.current) {
+			var budgets = Customer.current.budgets.filter(function (item) {
+				return item.product == productId;
+			});
+			return budgets.length > 0;
 		} else {
 			return false;
 		}
@@ -140,6 +160,7 @@ var Customer = {
 				"messages": addons.messages,
 				"deliverys": addons.deliverys,
 				"offsale": addons.offsale,
+				"budgets": addons.budgets,
 				"bpmonthlys": addons.bpmonthlys
 			}
 			for (var i = addons.messages.length - 1; i >= 0; i--) {

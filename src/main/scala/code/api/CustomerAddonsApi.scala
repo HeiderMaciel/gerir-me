@@ -38,10 +38,15 @@ object CustomerAddonsApi extends RestHelper {
 				val customer = Customer.findByKey(customerId.toLong).get
 				val messages = JsArray(customer.alerts_messages.map((ms) => JsObj(("message", ms))))
 				val deliverys =  JsArray(DeliveryDetail.findByCustomer(customer).map(
-					(dd) => { JsObj(("id",dd.id.is), ("product", dd.product.is), ("price", dd.price.is.toDouble) ) }))
+					(dd) => { JsObj(("id",dd.id.is), ("product", dd.product.is), ("price", dd.price.is.toDouble) ) }));
+
+				val budgets =  JsArray(TreatmentDetail.findBudgetByCustomer(customerId.toLong).map(
+					(bud) => { JsObj(("id",bud.id.is), ("product", bud.activity.is), ("price", bud.price.is.toDouble) ) }));
+
 				val bpmonthlys =  JsArray(BpMonthly.findByCustomer(customer,today).map(
-					(bpm) => { JsObj(("id",bpm.id.is), ("product", bpm.product.is), ("valueSession", bpm.valueSession.is.toDouble) ) }))
-				JsObj(("messages", messages), ("deliverys", deliverys), ("offsale", customer.offsale.is), ("bpmonthlys", bpmonthlys))
+					(bpm) => { JsObj(("id",bpm.id.is), ("product", bpm.product.is), ("valueSession", bpm.valueSession.is.toDouble) ) }));
+
+				JsObj(("messages", messages), ("deliverys", deliverys), ("offsale", customer.offsale.is), ("budgets", budgets), ("bpmonthlys", bpmonthlys))
 			}	
 
 			case "customer_api" :: "consideration" :: Nil Post _ => {

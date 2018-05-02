@@ -681,5 +681,13 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
 }
 
 object TreatmentDetail extends TreatmentDetail with LongKeyedMapperPerCompany[TreatmentDetail] with OnlyCurrentCompany[TreatmentDetail]{
+
+    def findBudgetByCustomer(customer:Long) = {
+        TreatmentDetail.findAllInCompany(
+            //By(BpMonthly.business_pattern, customer), 
+            BySql(" treatment in (select id from treatment where customer = ? and status = 9)", IHaveValidatedThisSQL("",""), customer),
+            OrderBy(TreatmentDetail.createdAt, Ascending) // pra o antigo vir primeiro
+            )
+    }
     
 }
