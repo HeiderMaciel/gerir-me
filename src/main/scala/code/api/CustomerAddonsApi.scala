@@ -41,7 +41,7 @@ object CustomerAddonsApi extends RestHelper {
 					(dd) => { JsObj(("id",dd.id.is), ("product", dd.product.is), ("price", dd.price.is.toDouble) ) }));
 
 				val budgets =  JsArray(TreatmentDetail.findBudgetByCustomer(customerId.toLong).map(
-					(bud) => { JsObj(("id",bud.id.is), ("product", bud.activity.is), ("price", bud.price.is.toDouble) ) }));
+					(bud) => { JsObj(("id",bud.id.is), ("product", bud.activity.is), ("price", bud.price.is.toDouble), ("amount", bud.amount.is.toDouble) ) }));
 
 				val bpmonthlys =  JsArray(BpMonthly.findByCustomer(customer,today).map(
 					(bpm) => { JsObj(("id",bpm.id.is), ("product", bpm.product.is), ("valueSession", bpm.valueSession.is.toDouble) ) }));

@@ -100,6 +100,11 @@ with CreatedUpdatedBy with NameSearchble[PaymentType] with ActiveInactivable[Pay
       override def dbColumnName = "offsale"
   }    
 
+  object budget_? extends MappedBoolean(this){
+      override def defaultValue = false
+      override def dbColumnName = "budget"
+  }    
+
   object showAsOptions_? extends MappedBoolean(this){
     override def defaultValue = true
     override def dbColumnName = "showAsOptions"

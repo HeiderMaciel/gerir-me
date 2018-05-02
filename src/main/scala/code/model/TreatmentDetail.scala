@@ -685,7 +685,12 @@ object TreatmentDetail extends TreatmentDetail with LongKeyedMapperPerCompany[Tr
     def findBudgetByCustomer(customer:Long) = {
         TreatmentDetail.findAllInCompany(
             //By(BpMonthly.business_pattern, customer), 
-            BySql(" treatment in (select id from treatment where customer = ? and status = 9)", IHaveValidatedThisSQL("",""), customer),
+            BySql(""" treatment in (
+select tr.id from treatment tr 
+inner join projecttreatment pt on pt.treatment = tr.id and pt.treatmentdetailok is null
+inner join project pj on pj.id = pt.project and pj.status = 1 
+where tr.status = 9 and tr.customer = ?)""", 
+                IHaveValidatedThisSQL("",""), customer),
             OrderBy(TreatmentDetail.createdAt, Ascending) // pra o antigo vir primeiro
             )
     }
