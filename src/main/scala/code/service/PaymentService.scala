@@ -237,7 +237,11 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 			customer.registerDebit(p.value*(-1), payment, paymentDetail, "Usando credito cliente")
 		}		
 		if(paymentType.deliveryContol_?.is){
-			validateDeliveryRules(paymentDetail)
+			validateDeliveryRules(paymentDetail, true)
+		}
+
+		if(paymentType.budget_?.is){
+			validateDeliveryRules(paymentDetail, false)
 		}
 
 		if(paymentType.fidelity_?.is){
@@ -264,7 +268,10 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 			"Removendo atendimento de conta cliente")//incremente customer account
 		}
 		if(paymentType.deliveryContol_?.is){
-			validateDeliveryRulesToRemove(detail)
+			validateDeliveryRulesToRemove(detail, true)
+		}
+		if(paymentType.budget_?.is){
+			validateDeliveryRulesToRemove(detail, false)
 		}
 		if(paymentType.fidelity_?.is){
 			val customer = detail.payment.obj.get.customer.obj.get
@@ -273,32 +280,45 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 			"Devolvendo valor a pontos fdelidade")//incremente customer accountRegisterPoints(p.value*(-1), payment, paymentDetail, "Adicionando valor a pontos fidelidade")
 		}
 	}
-	private def validateDeliveryRulesToRemove(paymentDetail:PaymentDetail) = {
-		
+	private def validateDeliveryRulesToRemove(paymentDetail:PaymentDetail, delivery:Boolean) = {
 		val payment = paymentDetail.payment.obj.get
 		val treatments = payment.treatments
 		if(!treatments.isEmpty){
 			val customer = treatments(0).customer.obj.get
 			treatments.foreach((t) => {
 				t.details.foreach((td)=>{
-					td.activity.obj match {
-						case Full(a) => customer.unRegisterDelivery(a.id.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt)
-						case _ => customer.unRegisterDelivery(td.product.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt)
+					if (delivery) {
+						td.activity.obj match {
+							case Full(a) => customer.unRegisterDelivery(a.id.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt)
+							case _ => customer.unRegisterDelivery(td.product.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt)
+						}
+					} else {
+						td.activity.obj match {
+							case Full(a) => customer.unRegisterBudget(a.id.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt)
+							case _ => customer.unRegisterBudget(td.product.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt)
+						}
 					}
 				})
 			});
 		}
 	}
-	private def validateDeliveryRules(paymentDetail:PaymentDetail) = {
+	private def validateDeliveryRules(paymentDetail:PaymentDetail, delivery : Boolean) = {
 		
 		val payment = paymentDetail.payment.obj.get
 		val treatments = payment.treatments
 		val customer = treatments(0).customer.obj.get
 		treatments.foreach((t) => {
 			t.details.foreach((td)=>{
-				td.activity.obj match {
-					case Full(a) => customer.registerDelivery(a.id.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt, td.unit_price.toFloat, payment.datePayment)
-					case _ => customer.registerDelivery(td.product.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt, td.unit_price.toFloat, payment.datePayment)
+				if (delivery) {
+					td.activity.obj match {
+						case Full(a) => customer.registerDelivery(a.id.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt, td.unit_price.toFloat, payment.datePayment)
+						case _ => customer.registerDelivery(td.product.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt, td.unit_price.toFloat, payment.datePayment)
+					}
+				} else {
+					td.activity.obj match {
+						case Full(a) => customer.registerBudget(a.id.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt, td.unit_price.toFloat, payment.datePayment)
+						case _ => customer.registerBudget(td.product.is,td.id.is,paymentDetail.id.is, td.amount.is.toInt, td.unit_price.toFloat, payment.datePayment)
+					}
 				}
 			})
 		});

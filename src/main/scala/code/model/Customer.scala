@@ -194,6 +194,38 @@ class Customer extends BusinessPattern[Customer]{
         }
     }
 
+    def unRegisterBudget(productId:Long, treatmentDetailId:Long, paymentDetailId:Long, amount:Int){
+        for(i <- 0 to amount-1) {
+           ProjectTreatment.makeAsOpen (this, treatmentDetailId);
+        }
+    }
+
+    def registerBudget(productId:Long,treatmentDetailId:Long,paymentDetailId:Long, amount:Int, price:Float, efetivedate:Date){
+        val budgetNotUseds = budgetDetailNotUsed(productId)
+        if(budgetNotUseds.size >= amount){
+            for(i <- 0 to amount-1) {
+                val budgetToUse = budgetNotUseds(i)
+                if(!BusinessRulesUtil.almostEquals(budgetToUse.price.is.toFloat, price)){
+                    throw new SessionValueWrong("Valor do atendimento %s errado (orc %s cx %s), verifique o valor no cadastro do cliente!".format(Product.findByKey(productId).get.name.is,
+                        budgetToUse.price, price))
+                }
+                ProjectTreatment.makeAsReady (this, treatmentDetailId);
+                // atualizar o projecttreatment cm esse id de detail
+                //budgetToUse.treatmentDetailOk(treatmentDetailId).paymentDetail(paymentDetailId).save
+            }
+        }else{
+            throw new PaymentDeliveryNotEnough(
+                """
+                %s não possui orçamento(s) suficiente(s) para %s!
+
+                Formas de pagamento marcadas como baixa de orçamento só podem ser usadas para itens constantes de orçamentos ativos, e não devem ser combinadas com outros tipos de forma de pagamento.
+
+                É possível usar a opção de ignorar itens do caixa, usar a baixa de orçamento e posteriormente pagar os demais itens.
+
+                """.
+                format(this.name, Product.findByKey(productId).get.name.is))
+        }
+    }
     
     def allDebits = PaymentDetail.findAll(  
                                             By(PaymentDetail.customer,this),
@@ -206,6 +238,18 @@ class Customer extends BusinessPattern[Customer]{
                                 ByList(PaymentDetail.typePayment,PaymentType.PaymentDebitsIds(this.company.is)),
                                 BySql("(commisionnotprocessed<>0) and (payment in ( select id from payment p where p.id= paymentdetail.payment and p.datePayment<= ?) )", IHaveValidatedThisSQL("",""), payment.datePayment)
                             )
+
+    def budgetDetailNotUsed(productId:Long) = TreatmentDetail.findAll(
+            BySql(" (product = ? or activity = ?) ", 
+            IHaveValidatedThisSQL("",""), productId, productId),
+            BySql(""" treatment in (
+select tr.id from treatment tr 
+inner join projecttreatment pt on pt.treatment = tr.id and pt.treatmentdetailok is null
+inner join project pj on pj.id = pt.project and pj.status = 1 
+where tr.status = 9 and tr.customer = ?)""", 
+            IHaveValidatedThisSQL("",""), this.id.is),
+        OrderBy(TreatmentDetail.createdAt, Ascending) // pra o antigo vir primeiro
+        )
 
     def deliveryDetailNotUsed(productId:Long) = DeliveryDetail.findAll(
         By(DeliveryDetail.customer,this), 

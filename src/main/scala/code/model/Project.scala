@@ -331,6 +331,39 @@ class ProjectTreatment extends Audited[ProjectTreatment]
 
 object ProjectTreatment extends ProjectTreatment with LongKeyedMapperPerCompany[ProjectTreatment] 
     with OnlyCurrentCompany[ProjectTreatment]  with OnlyActive[ProjectTreatment] {
+
+   def makeAsReady (customer:Customer, tdId : Long) : String = {
+    val td = TreatmentDetail.findByKey (tdId).get
+    val aclist = ProjectTreatment.findAll (
+        BySql(""" project in (select id from project where bp_sponsor = ? and status = 1)""", 
+            IHaveValidatedThisSQL("",""), customer.id.is),
+        BySql(""" (treatmentDetailOk is null or treatmentDetailOk = 0) and treatmentDetail in (select id from treatmentdetail where (product = ? or activity = ?))""", 
+            IHaveValidatedThisSQL("",""), td.activity.is, td.activity.is)
+        );
+    if (aclist.length > 0) {
+        val ac = aclist (0)
+        ac.treatmentDetailOk(tdId).save
+        ""
+    } else {
+        "Não foi possível marcar o item de orçamento como atendido"
+    }
+   }    
+   def makeAsOpen (customer:Customer, tdId : Long) : String = {
+    val td = TreatmentDetail.findByKey (tdId).get
+    val aclist = ProjectTreatment.findAll (
+        BySql(""" project in (select id from project where bp_sponsor = ? and status = 1)""", 
+            IHaveValidatedThisSQL("",""), customer.id.is),
+        BySql(""" ( treatmentDetailOk is not null and treatmentDetailOk = ? ) """, 
+            IHaveValidatedThisSQL("",""), tdId)
+        );
+    if (aclist.length > 0) {
+        val ac = aclist (0)
+        ac.treatmentDetailOk(0).save
+        ""
+    } else {
+        "Não foi possível marcar o item de orçamento como atendido"
+    }
+   }    
 }
 
 class ProjectSection extends Audited[ProjectSection] with KeyedMapper[Long, ProjectSection] with BaseLongKeyedMapper
