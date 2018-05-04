@@ -327,6 +327,14 @@ class ProjectTreatment extends Audited[ProjectTreatment]
         }
     }
 
+  override def delete_! = {
+    if ((!treatmentDetailOk.isEmpty)) {
+      throw new RuntimeException("Não é permitido excluir item de orçamento quitado")
+    }
+    val result = super.delete_!
+    result
+  }
+
 }
 
 object ProjectTreatment extends ProjectTreatment with LongKeyedMapperPerCompany[ProjectTreatment] 
