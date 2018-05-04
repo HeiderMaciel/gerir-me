@@ -341,8 +341,24 @@ object ProjectTreatment extends ProjectTreatment with LongKeyedMapperPerCompany[
             IHaveValidatedThisSQL("",""), td.activity.is, td.activity.is)
         );
     if (aclist.length > 0) {
-        val ac = aclist (0)
-        ac.treatmentDetailOk(tdId).save
+        if (AuthUtil.company.appType.isEsmile) {
+            aclist.foreach((pt)=>{
+                val td1 = pt.treatmentDetail.obj.get
+                // qdo tem dente ou região da boca no orçamento
+                // tem que ter tb no serviço feito
+                // qdo não tem no orçamento, não importa se tem ou não no serviço
+                if (td1.tooth != "") {
+                    if (td1.tooth == td.tooth) {
+                        pt.treatmentDetailOk(tdId).save
+                    }
+                } else {
+                    pt.treatmentDetailOk(tdId).save
+                }
+            });
+        } else {
+            val ac = aclist (0)
+            ac.treatmentDetailOk(tdId).save
+        }
         ""
     } else {
         "Não foi possível marcar o item de orçamento como atendido"
