@@ -9,6 +9,8 @@
   <link class="lift:SecuritySnippet.isEgrexSystem" rel="shortcut icon" href="/images/logo_ftr_egrex.ico" type="image/x-icon" />
   <link class="lift:SecuritySnippet.isEphysioSystem" rel="shortcut icon" href="/images/logo_ftr_ephysio.ico" type="image/x-icon" />
   <link class="lift:SecuritySnippet.isEbellepetSystem" rel="shortcut icon" href="/images/logo_ftr_ebellepet.ico" type="image/x-icon" />
+      <!-- Não deixa pinças no android -->
+      <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,width=device-width">
   <title>Profissionais</title>
   <!-- Le fav and touch icons -->
   <link rel="shortcut icon" href="/images/icon.ico">
@@ -22,6 +24,17 @@
   <link href="/css/ui-lightness/jquery-ui-1.8.17.custom.css" rel="stylesheet"/>
   <script id="jquery" src="/js/jquery.js" type="text/javascript"></script>
   <script src="/js/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+  <script>
+    $(function(){
+        var ret = "";
+        if (isMobile.any) {
+          for (var i = 0; i < 7; i++) {
+            ret += '<br/>'
+          };
+          $("#mobilespace").html(ret);
+        }
+    })
+  </script>  
 
   <link rel="stylesheet" type="text/css" href="/css/jquery.weekcalendar.css" />
   <link rel="stylesheet" type="text/css" href="/skins/default.css" />
@@ -145,6 +158,8 @@
   <div class="container-fluid">
     <div class="sidebar">
       <div>
+        <div class="input" id="mobilespace">
+        </div>
         <h5>Agenda</h5>
         <ul>
           <li>
