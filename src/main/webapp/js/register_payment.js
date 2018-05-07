@@ -715,6 +715,9 @@
     if (Customer.hasDelivery(objAcitivity.activityId)) {
       objAcitivity.price = Customer.useDeliveryReturnPrice(objAcitivity.activityId);
       objAcitivity.useDelivery = true;
+    } else if (Customer.hasBudget(objAcitivity.activityId)) {
+      objAcitivity.price = Customer.useBudgetReturnPrice(objAcitivity.activityId);
+      objAcitivity.useBudget = true;
     } else {
       objAcitivity.price = OffSaleCurrent.calculatePrice(objAcitivity.activityId, objAcitivity.price);
     }
@@ -1565,6 +1568,8 @@
         var activity = treatment.activitys[i];
         if (Customer.hasDelivery(activity.activityId)) {
           activity.price = Customer.useDeliveryReturnPrice(activity.activityId);
+        } else if (Customer.hasBudget(activity.activityId)) {
+          activity.price = Customer.useBudgetReturnPrice(activity.activityId);
         }
       }
     });

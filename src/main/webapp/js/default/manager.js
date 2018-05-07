@@ -151,6 +151,19 @@ var Customer = {
 		deliverys[0].used = true;
 		return deliverys[0].price;
 	},
+	useBudgetReturnPrice: function (productId) {
+		var budgets = this.current.budgets.filter(function (item) {
+			return item.product == productId;
+		});
+		// mateus sugeriu passar este set true para depois do filter pq
+		// ele acabava pegando o preço do próximo item
+		// deliverys[0].used = true;
+		//this.current.budgets = this.current.budgets.filter(function (item) {
+		//	return !(item.used);
+		//});
+		//deliverys[0].used = true;
+		return budgets[0].price;
+	},
 	customerSelectAutoCompleteName: function (customer) {
 		$.get("/customer_api/addons/" + customer.id, function (addons) {
 			eval("var addons=" + addons)
