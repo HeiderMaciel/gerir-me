@@ -256,6 +256,7 @@ object ReceiveAtSight extends FatChain{
 								case Full(movement) => {
 									movement.dueDate(cashier.openerDate.is)
 									.user (pd.payment.obj.get.customer.obj.get.id.is)
+									.invoice (pd.payment.obj.get.command.is)
 									.paid_?(true)
 									.save						
 								}
@@ -306,9 +307,10 @@ object ReceiveFixDays extends FatChain{
 							am match {
 								case Full(movement) => {
 									movement.dueDate(calendar.getTime)
-											.user (pd.payment.obj.get.customer.obj.get.id.is)
-											.paid_?(false)
-											.save
+									.user (pd.payment.obj.get.customer.obj.get.id.is)
+									.invoice (pd.payment.obj.get.command.is)
+									.paid_?(false)
+									.save
 								}
 								case _ => 
 							}
@@ -340,6 +342,7 @@ object ReceiveAddValueToUser extends FatChain{
 									movement.dueDate(pd.dueDate.is)
 											.user(bp)
 											.typeMovement(AccountPayable.OUT)
+        									.invoice (pd.payment.obj.get.command.is)
 											.paid_?(true) // senão nao abate da comissão
 											.save
 								}
@@ -367,10 +370,11 @@ object ReceiveCheque extends FatChain{
 							am match {
 								case Full(movement) => {
 									movement.dueDate(cheque.dueDate)
-											.cheque(cheque)
-											.paid_?(false)
-											.user (cheque.customer.obj.get.id.is)
-											.save
+										.cheque(cheque)
+										.paid_?(false)
+										.user (cheque.customer.obj.get.id.is)
+										.invoice (pd.payment.obj.get.command.is)
+										.save
 								}
 								case _ => 
 							}
@@ -402,10 +406,11 @@ object ReceiveParceled extends FatChain{
 							am match {
 								case Full(movement) => {
 									movement.dueDate(pd.dueDate.is)
-											.paid_?(false)
-											.user (pd.payment.obj.get.customer.obj.get.id.is)
-											//.aggregateId (aggregId)
-											.save
+										.paid_?(false)
+										.user (pd.payment.obj.get.customer.obj.get.id.is)
+        								.invoice (pd.payment.obj.get.command.is)
+										//.aggregateId (aggregId)
+										.save
 									//if (aggregId == 0) {
 									//	aggregId = movement.id
 									//	movement.aggregateId (movement.id)
@@ -464,8 +469,9 @@ object ReceiveNextMonth extends FatChain{
 							case Full(movement) => {
 								movement.dueDate(calendar.getTime)
 								.user (pd.payment.obj.get.customer.obj.get.id.is)
+								.invoice (pd.payment.obj.get.command.is)
 								.paid_?(false)
-										.save
+								.save
 							}
 							case _ => 
 						}	
