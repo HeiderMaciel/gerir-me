@@ -24,6 +24,10 @@ with IdPK
 with CreatedUpdated with CreatedUpdatedBy 
 with PerCompany with PerUnit {
     def getSingleton = BusyEvent
+    object deleted_? extends MappedBoolean(this){
+      	override def defaultValue = false
+      	override def dbColumnName = "deleted"
+    }
     object description extends MappedPoliteString(this,255)
     object is_employee_lanche_? extends MappedBoolean(this){
         override def defaultValue = false
