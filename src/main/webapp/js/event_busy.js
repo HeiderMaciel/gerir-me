@@ -114,6 +114,11 @@
     Manager.getUsers();
     Manager.getListFromServer();
     $("#send").click(function() {
+      var user = $('#user_filter').val();
+      if (!user || user == "") {
+        alert("Profissional inválido!");
+        return
+      }
       return Manager.getListFromServer();
     });
     return $("#start_date,#end_date").change(function() {

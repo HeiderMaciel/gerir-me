@@ -69,10 +69,14 @@ object SecuritySnippet {
       }  
       //User permissions
       def isSuperAdmin(in:NodeSeq):NodeSeq ={
-        if (AuthUtil.user.isSuperAdmin)
-        in
-        else
-        NodeSeq.Empty
+        if (AuthUtil.?) {
+          if (AuthUtil.user.isSuperAdmin)
+          in
+          else
+          NodeSeq.Empty
+        } else {
+          NodeSeq.Empty
+        }
       }
 
       def isSupportAdmin(in:NodeSeq):NodeSeq ={
