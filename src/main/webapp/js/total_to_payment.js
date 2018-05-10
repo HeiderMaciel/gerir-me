@@ -3,7 +3,9 @@
           var url = "/cash/getUsers/commission";
           $.get(url, function(t){
             eval("userObj = "+t);
-            $('#user').append("<option value=''>Selecione um Profissional</option>");
+            if (userObj.length > 1) {
+              $('#user').append("<option value=''>Selecione um Profissional</option>");
+            }
             for(i in userObj){
               $('#user').append("<option value='"+userObj[i].id+"'>"+userObj[i].name+"</option>");
             }

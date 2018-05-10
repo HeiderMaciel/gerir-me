@@ -20,7 +20,9 @@
       return $.get(url, function(t) {
         var obj, _i, _len, _results;
         eval("userObj = " + t);
-        $('#user, #user').append("<option value='0'>Selecione um profissional</option>");
+        if (userObj.length > 1) {
+          $('#user, #user').append("<option value='0'>Selecione um profissional</option>");
+        }
         _results = [];
         for (_i = 0, _len = userObj.length; _i < _len; _i++) {
           obj = userObj[_i];
