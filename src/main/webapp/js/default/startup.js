@@ -216,6 +216,10 @@ $(function() {
 	} else {
 		toEbelle();
 	}
+	// rigel 09/05/2017 para figura de capa ficar lega no mobile
+	if (isMobile.any) {
+		$('.body').css('background-size', 'auto');
+	}
 });
 //Analitcs
 $(function() {
