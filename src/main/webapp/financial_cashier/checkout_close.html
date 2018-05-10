@@ -6,7 +6,7 @@
 <form id='checkoutClose_form' onsubmit='callApiGetValue();return false;' action="/cash/">
   <div>
     <div class="well">
-      <label for="btn"></label>
+      <label class="hide_mobile" for="btn"></label>
       <!--
       <input class="btn success" onclick='callApiGetValue()' type="button" value="Conferir">
       -->
@@ -21,7 +21,7 @@
           <div class="input">
             <div class="inline-inputs">
               <div style="float:left; padding-right:10px" class="input-prepend">
-                <span class="add-on"><img width="16" src="/images/close_cash.png"></span> 
+                <span class="add-on hide_mobile"><img width="16" src="/images/close_cash.png"></span> 
                 <select class = "xlarge" id='cashiers_select'  name="cashiers"></select>
               </div>
             </div>
