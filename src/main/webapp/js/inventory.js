@@ -50,7 +50,12 @@
         throw "Data obrigatória";
       }
       if (!this.cause) {
-        throw "Motivo obrigatório";
+        if (this.type_movement === "Out") {
+          $("#cause").val('7').change(); // uso
+          throw "Motivo obrigatório, padrão >> Uso << será atribuído";
+        } else {
+          throw "Motivo obrigatório";
+        }
       }
       if (!this.product) {
         throw "Produto obrigatório";
