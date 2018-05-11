@@ -96,10 +96,15 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 			
 			}
 
-			QuizSection.findAllInCompany(OrderBy(QuizSection.name,Ascending)).flatMap(ac => 
+			QuizSection.findAllInCompany(
+				OrderBy(QuizSection.quiz,Ascending),
+				OrderBy(QuizSection.orderInQuiz,Ascending),
+				OrderBy(QuizSection.name,Ascending)
+				).flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"quizname" -> Text(ac.quizName),
 							"obs" -> Text(ac.obs.is),
+							"orderinquiz" -> Text(ac.orderInQuiz.toString),
 							"actions" -> <a class="btn" href={"/quiz_admin/edit_section?id="+ac.id.is}>Editar</a>,
 							"delete" -> SHtml.submit("Excluir",delete,"class" -> "btn danger","data-confirm-message"->{" excluir a seção de " + Quiz.quizLabel + " " + ac.name}),
 							"_id" -> SHtml.text(ac.id.is.toString, id = _),
@@ -123,10 +128,15 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 			
 			}
 
-			QuizQuestion.findAllInCompany(OrderBy(QuizQuestion.name,Ascending)).flatMap(ac => 
+			QuizQuestion.findAllInCompany(
+				OrderBy(QuizQuestion.quizSection,Ascending),
+				OrderBy(QuizQuestion.orderInSection,Ascending),
+				OrderBy(QuizQuestion.name,Ascending)
+				).flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"quizsectionname" -> Text(ac.quizSectionName),
 							"obs" -> Text(ac.obs.is),
+							"orderinsection" -> Text(ac.orderInSection.toString),
 							"actions" -> <a class="btn" href={"/quiz_admin/edit_question?id="+ac.id.is}>Editar</a>,
 							"delete" -> SHtml.submit("Excluir",delete,"class" -> "btn danger","data-confirm-message"->{" excluir a questão "+ac.name}),
 							"_id" -> SHtml.text(ac.id.is.toString, id = _),
@@ -188,10 +198,13 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		
 		    //BySql (quizDomainList,IHaveValidatedThisSQL("",""))
 			QuizDomainItem.findAllInCompany(
+				OrderBy(QuizDomainItem.quizDomain,Ascending),
+				OrderBy(QuizDomainItem.orderInDomain,Ascending),
 				OrderBy(QuizDomainItem.name,Ascending),
 				BySql (quizDomainList,IHaveValidatedThisSQL("",""))).flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"quizdomainname" -> Text(ac.quizDomainName),
+							"orderindomain" -> Text(ac.orderInDomain.is.toString),
 							"obs" -> Text(ac.obs.is),
 							"actions" -> <a class="btn" href={"/quiz_admin/edit_domainitem?id="+ac.id.is}>Editar</a>,
 							"delete" -> SHtml.submit("Excluir",delete,"class" -> "btn danger","data-confirm-message"->{" excluir o item de domínio "+ac.name}),

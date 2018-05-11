@@ -43,6 +43,28 @@ class QuizSection extends Audited[QuizSection] with PerCompany with IdPK with Cr
 
         super.delete_!
     }
+    /*
+    Select para testar o update
+    select name, orderinquiz, 
+    ((select count (*) from quizsection t1 where t1.company = quizsection.company 
+        and t1.quiz = quizsection.quiz 
+        and (t1.orderinquiz < quizsection.orderinquiz or (t1.orderinquiz = quizsection.orderinquiz and t1.id < quizsection.id)))+1) * 10
+    from quizsection where company = 398 and quiz = 7;
+    */
+    val SQL_UPDATE_ORDER_10_10 = """
+    update quizsection set orderinquiz = 
+    ((select count (*) from quizsection t1 where t1.company = quizsection.company 
+        and t1.quiz = quizsection.quiz 
+        and (t1.orderinquiz < quizsection.orderinquiz or (t1.orderinquiz = quizsection.orderinquiz and t1.id < quizsection.id)))+1) * 10
+    where company = ? and quiz = ?;
+    """
+    override def save() = {
+        val r = super.save
+
+        DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.quiz.is :: Nil)
+
+        r
+    }
 
 }
 

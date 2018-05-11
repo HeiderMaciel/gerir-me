@@ -50,6 +50,29 @@ class QuizDomainItem extends Audited[QuizDomainItem] with PerCompany with IdPK w
         super.delete_!
     }
 
+/*
+Select para testar o update
+select name, orderindomain, 
+((select count (*) from quizdomainitem t1 where t1.company = quizdomainitem.company 
+    and t1.quizdomain = quizdomainitem.quizdomain 
+    and (t1.orderindomain < quizdomainitem.orderindomain or (t1.orderindomain = quizdomainitem.orderindomain and t1.id < quizdomainitem.id)))+1) * 10
+from quizdomainitem where company = 398 and quizdomain = 7;
+*/
+  val SQL_UPDATE_ORDER_10_10 = """
+    update quizdomainitem set orderindomain = 
+    ((select count (*) from quizdomainitem t1 where t1.company = quizdomainitem.company 
+        and t1.quizdomain = quizdomainitem.quizdomain 
+        and (t1.orderindomain < quizdomainitem.orderindomain or (t1.orderindomain = quizdomainitem.orderindomain and t1.id < quizdomainitem.id)))+1) * 10
+    where company = ? and quizdomain = ?;
+  """
+  override def save() = {
+    val r = super.save
+
+    DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.quizDomain.is :: Nil)
+
+    r
+  }
+
 }
 
 object QuizDomainItem extends QuizDomainItem with LongKeyedMapperPerCompany[QuizDomainItem]  

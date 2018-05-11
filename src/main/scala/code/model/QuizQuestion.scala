@@ -75,6 +75,29 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
         super.delete_!
     }
 
+/*
+Select para testar o update
+select name, orderinsection, 
+((select count (*) from quizquestion t1 where t1.company = quizquestion.company 
+    and t1.quizsection = quizquestion.quizsection 
+    and (t1.orderinsection < quizquestion.orderinsection or (t1.orderinsection = quizquestion.orderinsection and t1.id < quizquestion.id)))+1) * 10
+from quizquestion where company = 398 and quizsection = 7;
+*/
+  val SQL_UPDATE_ORDER_10_10 = """
+    update quizquestion set orderinsection = 
+    ((select count (*) from quizquestion t1 where t1.company = quizquestion.company 
+        and t1.quizsection = quizquestion.quizsection 
+        and (t1.orderinsection < quizquestion.orderinsection or (t1.orderinsection = quizquestion.orderinsection and t1.id < quizquestion.id)))+1) * 10
+    where company = ? and quizsection = ?;
+  """
+  override def save() = {
+    val r = super.save
+
+    DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.quizSection.is :: Nil)
+
+    r
+  }
+
 }
 
 object QuizQuestion extends QuizQuestion with LongKeyedMapperPerCompany[QuizQuestion]  
