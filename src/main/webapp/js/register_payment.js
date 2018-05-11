@@ -620,7 +620,9 @@
     url += "/getUsersCurrentUnitCashier";
     $.get(url, function(t) {
       eval("userObj = " + t);
-      $('#user').append("<option value=''>Selecione um profissional</option>");
+      if (userObj.length > 1) {
+        $('#user').append("<option value=''>Selecione um profissional</option>");
+      } 
       for (var i in userObj) {
         $('#user').append("<option value='" + userObj[i].id + "'>" + userObj[i].name + "</option>");
       }

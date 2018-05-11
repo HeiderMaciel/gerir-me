@@ -6,10 +6,15 @@ $(function() {
   url += "/openCheckouts";
   $.get(url, function(t) {
     eval("cashiersObj = " + t)
-    $('#cashiers_select').append("<option value=''>Selecione um Caixa</option>")
+    if (cashiersObj.length > 1) {
+      $('#cashiers_select').append("<option value=''>Selecione um Caixa</option>")
+    }
     for (i in cashiersObj) {
       var dateAsDate = new Date(cashiersObj[i].openerDate);
       $('#cashiers_select').append("<option value='" + cashiersObj[i].idForCompany + "'>" + cashiersObj[i].idForCompany + " - " + getDateBr(dateAsDate) + " - " + cashiersObj[i].userName + " - " + cashiersObj[i].unit + " - id " + cashiersObj[i].id + "</option>")
+    }
+    if (cashiersObj.length == 1) {
+      $('#cashiers_select').change();
     }
   })
   $('#cashiers_select').change(function() {

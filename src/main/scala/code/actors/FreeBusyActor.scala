@@ -68,7 +68,6 @@ object FreeBusyActor extends LiftActor with net.liftweb.common.Logger  {
                   try{
                         def saveLanch = {
                           if(u._3 != u._4){
-                            println ("vaiiiii =================================== Lunch")
                             BusyEvent
                             .create
                             .is_employee_lanche_?(true)
@@ -87,7 +86,6 @@ object FreeBusyActor extends LiftActor with net.liftweb.common.Logger  {
                         }
                         def saveStartDelay = {
                           if(startHour != u._6){
-                            println ("vaiiiii =================================== startDelay")
                               BusyEvent
                               .create
                               .is_employee_lanche_?(true)
@@ -105,7 +103,6 @@ object FreeBusyActor extends LiftActor with net.liftweb.common.Logger  {
                         }
                         def saveEndDelay = {
                           if(endHour != u._7){
-                            println ("vaiiiii =================================== endDelay")
                             BusyEvent
                             .create
                             .is_employee_lanche_?(true)
