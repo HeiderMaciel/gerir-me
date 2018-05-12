@@ -39,7 +39,7 @@
         } else if ($(this).datepicker('getDate') && $(this).datepicker('getDate').getYearGap() < -50) {
             alert('Verifique data passada!');
         }
-    }); //Validar datas 10 anos para frente 50 anos para traz....
+    }); //Validar datas 10 anos para frente 50 anos para tras....
 
             });
 
@@ -305,8 +305,12 @@
                 <label for="obs"></label>
 
                 <div class="input">
-                    <select class="xlarge" ></select>
-                    <span class="help-block"></span>
+                    <div class='inline-inputs'>
+                        <div class="input-prepend" style='float:left; padding-right:10px'>
+                            <select class="xlarge" ></select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </script>
