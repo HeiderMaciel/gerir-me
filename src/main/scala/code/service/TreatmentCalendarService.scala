@@ -123,12 +123,26 @@ object TreatmentCalendarService {
       } else {
       " AND (tr.unit = ? or 1 = 1) "
     }
+
+    // trocar por parm na empresa
+    def str_resp:String = if (AuthUtil.company.appType.isEdoctus) {
+      """
+        || coalesce (
+        (select ' - ' || r.short_name from business_pattern r where r.id  = (select min (bp_related) from bprelationship 
+        where business_pattern = c.id and 
+        relationship = 31 /* de responsabilidade de */ and status = 1))
+        , '')
+      """
+      } else {
+      "" 
+    }
+
     // trim (substr (c.short_name,1,15)) diminuir o nome na agenda pode ser uma opção
     // no short tratar qd quebrar nome no meio e cortar na pos branca anterior
     def SQL_TREATMENT_TO_CALENDAR_DATA = 
       """ SELECT """ + str_detail + """, tr.obs, start_c, end_c, user_c, 
           command, customer, trim (""" + str_cod + 
-          """ || ' ' || c.short_name || ' ' || """ + str_phone + """), tr.id, tr.treatmentConflit, tr.status, 
+          """ || ' ' || c.short_name """ + str_resp + """ || ' ' || """ + str_phone + """), tr.id, tr.treatmentConflit, tr.status, 
           --(SELECT count(1) FROM treatment tt
           --WHERE tr.id = tt.treatmentConflit) 
           0 AS conflits,
