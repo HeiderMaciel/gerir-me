@@ -124,13 +124,12 @@ object TreatmentCalendarService {
       " AND (tr.unit = ? or 1 = 1) "
     }
 
-    // trocar por parm na empresa
-    def str_resp:String = if (AuthUtil.company.appType.isEdoctus) {
+    def str_resp:String = if (AuthUtil.company.calendarShowSponsor_?) {
       """
         || coalesce (
         (select ' - ' || r.short_name from business_pattern r where r.id  = (select min (bp_related) from bprelationship 
         where business_pattern = c.id and 
-        relationship = 31 /* de responsabilidade de */ and status = 1))
+        relationship in (2,31) /* filho ou de responsabilidade de */ and status = 1))
         , '')
       """
       } else {

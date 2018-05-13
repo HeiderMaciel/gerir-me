@@ -203,6 +203,11 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
     override def defaultValue = true
     override def dbColumnName = "calendarAllAsArrived"
   }
+  // mostra o pai ou mae ou resp financeiro na agenda
+  object calendarShowSponsor_? extends MappedBoolean(this) {
+    override def defaultValue = false
+    override def dbColumnName = "calendarShowSponsor"
+  }
 
 /*
   object senNotifications_? extends MappedBoolean(this) {
