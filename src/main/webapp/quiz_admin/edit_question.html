@@ -35,8 +35,19 @@
           <div class="clearfix">
             <label for="quizQuestionFormat">Formato Questão</label>
             <div class="input">
-              <select class="xlarge" id="quizQuestionFormat" name="quizQuestionFormat" >
-              </select>
+              <div class='inline-inputs'>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                  <select class="large" id="quizQuestionFormat" name="quizQuestionFormat" >
+                  </select>
+                </div>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                  <span class='label-inline'>
+                      Tamanho
+                  </span>
+                  <select class="medium" id="quizQuestionSize" name="quizQuestionSize" >
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
           <div class="clearfix">
@@ -49,9 +60,20 @@
           <div class="clearfix">
             <label for="quizQuestionType">Tipo Resposta</label>
             <div class="input">
-              <select class="xlarge" id="quizQuestionType" name="quizQuestionType" >
-              </select>
-              <span class="help-block">0-Texto 1-Parágrafo 2-lista 3-múltipla escolha 4-pode vários</span>
+              <div class='inline-inputs'>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                  <select class="xlarge" id="quizQuestionType" name="quizQuestionType" >
+                  </select>
+                  <span class="help-block"></span>
+                </div>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                  <span class='label-inline'>
+                      Posição
+                  </span>
+                  <select class="medium" id="quizQuestionPosition" name="quizQuestionPosition" >
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
           <div class="clearfix">

@@ -20,7 +20,7 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
     object quizSection extends  MappedLongForeignKey(this, QuizSection)
     object obs extends MappedPoliteString(this,255)
     object orderInSection extends MappedInt(this){
-	    override def defaultValue = 10
+	    override def defaultValue = 1000
 	}
     object history_? extends MappedBoolean(this){
         override def defaultValue = false
@@ -29,24 +29,33 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
     object rank extends MappedDecimal(this,MathContext.DECIMAL64,4)
     object quizDomain extends MappedLongForeignKey(this, QuizDomain) // opcional
     object quizDomainItemRight extends MappedLongForeignKey(this, QuizDomainItem) // opcional
-//    object quizQuestionTypeStr extends MappedPoliteString(this,5)
     object quizQuestionFormat extends MappedInt(this)with LifecycleCallbacks { // em função do número de dias
         override def defaultValue = 0 // questões curtas - label
         // 1 questoes longas - paragrafo
     }
-    object quizQuestionType extends MappedInt(this)with LifecycleCallbacks { // em função do número de dias
-  /*    override def beforeSave() {
-          super.beforeSave;
-          println ("vaiii ========== " + quizQuestionTypeStr)
-          if (quizQuestionTypeStr == "") {
-            // nada 
-          } else {
-            var straux : String = quizQuestionTypeStr;
-          println ("vaiii ========== to int " + straux.toInt)
-            this.set(straux.toInt)
-          }
-      } 
-*/
+    object quizQuestionType extends MappedInt(this)with LifecycleCallbacks { 
+        /*
+        0 Texto
+        1 Texto longo
+        2 Escolha de uma lista (domínio)
+        3 Múltipla escolha (domínio)
+        4 Escolha de uma lista (+ de uma opção)
+        */
+    }
+    object quizQuestionSize extends MappedInt(this)with LifecycleCallbacks { 
+        override def defaultValue = 3 
+        // mini 0
+        // short 1
+        // medium 2
+        // large 3
+        // xlarge 4
+    }
+    object quizQuestionPosition extends MappedInt(this)with LifecycleCallbacks { 
+        override def defaultValue = 0 
+        // só 0
+        // inicio 1
+        // meio 2
+        // fim 3
     }
     //object quizQuestionType extends MappedEnum(this,QuizQuestion.QuizQuestionType){
         /*
@@ -91,6 +100,10 @@ from quizquestion where company = 398 and quizsection = 7;
     where company = ? and quizsection = ?;
   """
   override def save() = {
+    if (!this.quizDomain.isEmpty && 
+        (this.quizQuestionType == 0)) {
+        throw new RuntimeException ("Se tem domínio o tipo não deve ser texto")
+    }
     val r = super.save
 
     DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.quizSection.is :: Nil)
@@ -116,3 +129,4 @@ object QuizQuestion extends QuizQuestion with LongKeyedMapperPerCompany[QuizQues
     )
 */
 }
+

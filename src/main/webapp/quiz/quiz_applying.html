@@ -156,11 +156,21 @@
             }
 
             function createList(question) {
-                var template = $($("#list-template").html());
+                if (question.position == "0") {
+                    var template = $($("#list-template").html());
+                } else if (question.position == "1") {
+                    var template = $($("#listi-template").html());
+                } else if (question.position == "2") {
+                    var template = $($("#listm-template").html());
+                } else {
+                    var template = $($("#listf-template").html());
+                }
+
                 formatQuestion (question, template)
 
                 var select = template.find('select');
                 setName(select, question.id);
+                setClass(select, question.size);
 
                 question.domain.forEach(function(domain) {
                     var option = $('<option />')
@@ -306,6 +316,39 @@
 
                 <div class="input">
                     <div class='inline-inputs'>
+                        <div class="input-prepend" style='float:left; padding-right:10px'>
+                            <select class="xlarge" ></select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="listi-template">
+            <div class="clearfix">
+                <p><b></b></p>
+                <label for="obs"></label>
+
+                <div class="input">
+                    <div class='inline-inputs'>
+                        <div class="input-prepend" style='float:left; padding-right:10px'>
+                            <select class="xlarge" ></select>
+                            <span class="help-block"></span>
+                        </div>
+        </script>
+
+        <script type="text/template" id="listm-template">
+                <p><b>meio</b></p>
+                <label for="obs">meio tambem</label>
+                        <div class="input-prepend" style='float:left; padding-right:10px'>
+                            <select class="xlarge" ></select>
+                            <span class="help-block"></span>
+                        </div>
+        </script>
+
+        <script type="text/template" id="listf-template">
+                <p><b>fim</b></p>
                         <div class="input-prepend" style='float:left; padding-right:10px'>
                             <select class="xlarge" ></select>
                             <span class="help-block"></span>

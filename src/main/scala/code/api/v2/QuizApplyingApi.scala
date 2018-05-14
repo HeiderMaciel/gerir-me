@@ -96,18 +96,26 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
   }
 
   def questionJson(question: QuizQuestion, quizApplyingId: Long) = {
+    var size = "";
     val value = QuizAnswer.findAll(
       By(QuizAnswer.quizApplying, quizApplyingId),
       By(QuizAnswer.quizQuestion, question.id.is)) match {
       case (l: List[QuizAnswer]) if (!l.isEmpty) => l(0).valueStr.get
       case _ => ""
     }
-
+    if (question.quizQuestionSize.is == 0) {
+      size = "mini"
+    } else {
+      size = "xlarge"
+    }
+    
     JsObj(
     ("id", question.id.is),
     ("name", question.name.is),
     ("type", question.quizQuestionType.is),
     ("format", question.quizQuestionFormat.is),
+    ("size", size),
+    ("position", question.quizQuestionPosition.is),
     ("obs", question.obs.is),
     ("domain", JsArray(question.domain.map(domainJson(_)))),
     ("value", value))
@@ -121,3 +129,4 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
       ("color", domain.color.is))
   }
 }
+

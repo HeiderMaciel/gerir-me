@@ -38,6 +38,12 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		("6", "Data")::
 		Nil).map(t => (t._1,t._2))
 
+	def questionSizes = (("0", "Mini")::("1", "Curto")::("2", "Médio")::
+		("3", "Grande")::("4", "X Grande")::Nil).map(t => (t._1,t._2))
+
+	def questionPositions = (("0", "Só")::("1", "Início")::("2", "Meio")::
+		("3", "Fim")::Nil).map(t => (t._1,t._2))
+
 	def questionFormats = (("0", "Label - Reduzido")::("1", "Parágrafo - Longo")::
 		Nil).map(t => (t._1,t._2))
 
@@ -290,9 +296,19 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		try{
 			var ac:QuizQuestion = getQuizQuestion
 			def process(): JsCmd= {
-				ac.company(AuthUtil.company)
-			   	ac.save	
-			   	S.notice("Questão salva com sucesso!")
+				try{
+					ac.company(AuthUtil.company)
+				   	ac.save	
+				   	S.notice("Questão salva com sucesso!")
+    		   		S.redirectTo("/quiz_admin/edit_question?id="+ac.id.is)
+		   		}catch{
+					case (e:net.liftweb.http.ResponseShortcutException) =>{
+						throw e
+					}
+					case (e:Exception) => {
+						S.error(e.getMessage)
+					}
+				}
 			}
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
@@ -302,6 +318,8 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		    //"name=quizQuestionTypeStr" #> (SHtml.select(questionTypes,Full(ac.quizQuestionTypeStr.is.toString),(v:String) => ac.quizQuestionTypeStr(v)))&
 		    "name=quizQuestionType" #> (SHtml.select(questionTypes,Full(ac.quizQuestionType.is.toString),(v:String) => ac.quizQuestionType(v.toInt)))&
 		    "name=quizQuestionFormat" #> (SHtml.select(questionFormats,Full(ac.quizQuestionFormat.is.toString),(v:String) => ac.quizQuestionFormat(v.toInt)))&
+		    "name=quizQuestionSize" #> (SHtml.select(questionSizes,Full(ac.quizQuestionSize.is.toString),(v:String) => ac.quizQuestionSize(v.toInt)))&
+		    "name=quizQuestionPosition" #> (SHtml.select(questionPositions,Full(ac.quizQuestionPosition.is.toString),(v:String) => ac.quizQuestionPosition(v.toInt)))&
 			"name=history" #> (SHtml.checkbox(ac.history_?, ac.history_?(_)))&
 			"name=rank" #> (SHtml.text(ac.rank.is.toString, (v:String) =>{ if(v !=""){ac.rank(v.toDouble)};}))&
 			"name=orderinsection" #> (SHtml.text(ac.orderInSection.is.toString, (v:String) => ac.orderInSection(v.toInt)))&
