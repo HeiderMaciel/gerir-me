@@ -17,6 +17,9 @@ class QuizSection extends Audited[QuizSection] with PerCompany with IdPK with Cr
     with NameSearchble[QuizSection] with ActiveInactivable[QuizSection]{ 
     def getSingleton = QuizSection
     override def updateShortName = false
+    // diferente de serviço categoria etc, 
+    // seção, questão e item de dominio podem ser duplicados
+    override def allowDuplicated_? = true;
     object quiz extends  MappedLongForeignKey(this, Quiz)
     object obs extends MappedPoliteString(this,255)
     object orderInQuiz extends MappedInt(this){

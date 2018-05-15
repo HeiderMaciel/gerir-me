@@ -303,9 +303,19 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		try{
 			var ac:QuizSection = getQuizSection
 			def process(): JsCmd= {
-				ac.company(AuthUtil.company)
-			   	ac.save	
-			   	S.notice("Seção de " + Quiz.quizLabel + " salva com sucesso!")
+				try {
+					ac.company(AuthUtil.company)
+				   	ac.save	
+				   	S.notice("Seção de " + Quiz.quizLabel + " salva com sucesso!")
+    		   		S.redirectTo("/quiz_admin/edit_section?id="+ac.id.is)
+		   		}catch{
+					case (e:net.liftweb.http.ResponseShortcutException) =>{
+						throw e
+					}
+					case (e:Exception) => {
+						S.error(e.getMessage)
+					}
+				}
 			}
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
@@ -368,9 +378,19 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		try{
 			var ac:QuizDomain = getQuizDomain
 			def process(): JsCmd= {
-				ac.company(AuthUtil.company)
-			   	ac.save	
-			   	S.notice("Domínio salvo com sucesso!")
+				try {
+					ac.company(AuthUtil.company)
+				   	ac.save	
+				   	S.notice("Domínio salvo com sucesso!")
+    		   		S.redirectTo("/quiz_admin/edit_domain?id="+ac.id.is)
+		   		}catch{
+					case (e:net.liftweb.http.ResponseShortcutException) =>{
+						throw e
+					}
+					case (e:Exception) => {
+						S.error(e.getMessage)
+					}
+				}
 			}
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
@@ -389,9 +409,19 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		try{
 			var ac:QuizDomainItem = getQuizDomainItem
 			def process(): JsCmd= {
-				ac.company(AuthUtil.company)
-			   	ac.save	
-			   	S.notice("Item de Domínio salvo com sucesso!")
+				try {
+					ac.company(AuthUtil.company)
+				   	ac.save	
+				   	S.notice("Item de Domínio salvo com sucesso!")
+    		   		S.redirectTo("/quiz_admin/edit_domainitem?id="+ac.id.is)
+		   		}catch{
+					case (e:net.liftweb.http.ResponseShortcutException) =>{
+						throw e
+					}
+					case (e:Exception) => {
+						S.error(e.getMessage)
+					}
+				}
 			}
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
