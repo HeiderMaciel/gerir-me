@@ -438,6 +438,12 @@ object SecuritySnippet {
         else
           NodeSeq.Empty
       }      
+      def hasTaxModule(in:NodeSeq):NodeSeq ={
+        if (PermissionModule.tax_?)
+          in
+        else
+          NodeSeq.Empty
+      }      
       // ainda não fiz mesmo o has solo não sei se precisa
       def hasNotSoloModule(in:NodeSeq):NodeSeq ={
         if (!PermissionModule.solo_?)

@@ -47,6 +47,7 @@ object PermissionModule extends PermissionModule with LongKeyedMapperPerCompany[
 	lazy val CONTACT_MODULE_NAME = "CONTACT"; // importacao e contatos/mailing
 	lazy val COSTCENTER_MODULE_NAME = "COSTCENTER"; // centros de custos
 	lazy val INVOICE_MODULE_NAME = "INVOICE"; // para faturamento
+	lazy val TAX_MODULE_NAME = "TAX"; // para imposto NF
 	lazy val SOLO_MODULE_NAME = "SOLO"; // para uso SOLO
 	
 	def financial_? = PermissionModule.countInCompany(
@@ -114,6 +115,7 @@ object PermissionModule extends PermissionModule with LongKeyedMapperPerCompany[
 	def contact_? = PermissionModule.countInCompany(By(PermissionModule.name,PermissionModule.CONTACT_MODULE_NAME)) > 0
 	def costcenter_? = PermissionModule.countInCompany(By(PermissionModule.name,PermissionModule.COSTCENTER_MODULE_NAME)) > 0
 	def invoice_? = PermissionModule.countInCompany(By(PermissionModule.name,PermissionModule.INVOICE_MODULE_NAME)) > 0
+	def tax_? = PermissionModule.countInCompany(By(PermissionModule.name,PermissionModule.TAX_MODULE_NAME)) > 0
 	def solo_? = PermissionModule.countInCompany(By(PermissionModule.name,PermissionModule.SOLO_MODULE_NAME)) > 0
 
 	def setModule (company:Company, module:String) = {
