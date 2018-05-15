@@ -63,6 +63,16 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		("1", "Parágrafo - Longo - Topo")::
 		Nil).map(t => (t._1,t._2))
 
+	def quizSection = S.param("quizSection") match {
+		case Full(s) => s
+		case _ => ""
+	}	
+    val quizSectionList = if(quizSection != ""){
+        "quizSection = %s ".format (quizSection)
+    }else{
+        " 1 = 1 "
+    }
+
 	def findForListParamsWithoutOrder: List[QueryParam[Quiz]] = List(Like(Quiz.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"))
 	override def page = {
 		if(!showAll){
@@ -119,6 +129,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 			}
 
 			QuizSection.findAllInCompany(
+				Like(QuizSection.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
 				OrderBy(QuizSection.quiz,Ascending),
 				OrderBy(QuizSection.orderInQuiz,Ascending),
 				OrderBy(QuizSection.name,Ascending)
@@ -151,12 +162,16 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 			}
 
 			QuizQuestion.findAllInCompany(
+				Like(QuizQuestion.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+				BySql (quizSectionList,IHaveValidatedThisSQL("","")),
 				OrderBy(QuizQuestion.quizSection,Ascending),
 				OrderBy(QuizQuestion.orderInSection,Ascending),
 				OrderBy(QuizQuestion.name,Ascending)
 				).flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
+							"short_name" -> Text(ac.short_name.is),
 							"quizsectionname" -> Text(ac.quizSectionName),
+							"quizdomainname" -> Text(ac.quizDomainName),
 							"obs" -> Text(ac.obs.is),
 							"orderinsection" -> Text(ac.orderInSection.toString),
 							"actions" -> <a class="btn" href={"/quiz_admin/edit_question?id="+ac.id.is}>Editar</a>,
