@@ -105,15 +105,25 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
     }
     if (question.quizQuestionSize.is == 0) {
       size = "mini"
-    } else {
+    } else if (question.quizQuestionSize.is == 1) {
+      size = "small"
+    } else if (question.quizQuestionSize.is == 2) {
+      size = "medium"
+    } else if (question.quizQuestionSize.is == 3) {
+      size = "large"
+    } else if (question.quizQuestionSize.is == 4) {
       size = "xlarge"
+    } else if (question.quizQuestionSize.is == 5) {
+      size = "xxlarge"
     }
     
     JsObj(
     ("id", question.id.is),
     ("name", question.name.is),
+    ("short_name", question.short_name.is),
     ("type", question.quizQuestionType.is),
     ("format", question.quizQuestionFormat.is),
+    ("addon", question.addon.is),
     ("size", size),
     ("position", question.quizQuestionPosition.is),
     ("obs", question.obs.is),

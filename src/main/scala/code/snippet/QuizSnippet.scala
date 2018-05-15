@@ -33,18 +33,34 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 	def groups = ("0", "Selecione um Grupo") :: UserGroup.
 		findAllInCompany(OrderBy(UserGroup.name, Ascending)).map(t => (t.id.is.toString, t.name.is))
 
-	def questionTypes = (("0", "Texto")::("1", "Parágrafo")::("2", "Lista")::
-		("3", "Multipla escolha")::("4", "Pode vários")::("5", "Valor")::
+	def questionTypes = (
+		("0", "Texto")::
+		("1", "Parágrafo")::
+		("2", "Lista")::
+		("3", "Multipla escolha")::
+		("4", "Pode vários")::
+		("5", "Valor")::
 		("6", "Data")::
 		Nil).map(t => (t._1,t._2))
 
-	def questionSizes = (("0", "Mini")::("1", "Curto")::("2", "Médio")::
-		("3", "Grande")::("4", "X Grande")::Nil).map(t => (t._1,t._2))
+	def questionSizes = (
+		("0", "Mini")::
+		("1", "Curto")::
+		("2", "Médio")::
+		("3", "Grande")::
+		("4", "X Grande")::
+		("5", "XX Grande")::Nil).map(t => (t._1,t._2))
 
-	def questionPositions = (("0", "Só")::("1", "Início")::("2", "Meio")::
+	def questionPositions = (
+		("0", "Só")::
+		("1", "Início")::
+		("2", "Meio")::
 		("3", "Fim")::Nil).map(t => (t._1,t._2))
 
-	def questionFormats = (("0", "Label - Reduzido")::("1", "Parágrafo - Longo")::
+	def questionFormats = (
+		("0", "Label - Reduzido - Esquerda")::
+		("2", "Label - Reduzido - Topo")::
+		("1", "Parágrafo - Longo - Topo")::
 		Nil).map(t => (t._1,t._2))
 
 	def findForListParamsWithoutOrder: List[QueryParam[Quiz]] = List(Like(Quiz.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"))
@@ -321,6 +337,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		    "name=quizQuestionSize" #> (SHtml.select(questionSizes,Full(ac.quizQuestionSize.is.toString),(v:String) => ac.quizQuestionSize(v.toInt)))&
 		    "name=quizQuestionPosition" #> (SHtml.select(questionPositions,Full(ac.quizQuestionPosition.is.toString),(v:String) => ac.quizQuestionPosition(v.toInt)))&
 			"name=history" #> (SHtml.checkbox(ac.history_?, ac.history_?(_)))&
+		    "name=addon" #> (SHtml.text(ac.addon.is, ac.addon(_)))&
 			"name=rank" #> (SHtml.text(ac.rank.is.toString, (v:String) =>{ if(v !=""){ac.rank(v.toDouble)};}))&
 			"name=orderinsection" #> (SHtml.text(ac.orderInSection.is.toString, (v:String) => ac.orderInSection(v.toInt)))&
 			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&			

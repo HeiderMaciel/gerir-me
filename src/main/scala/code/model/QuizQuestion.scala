@@ -65,6 +65,7 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
         3 Múltipla escolha (domínio)
         4 Escolha de uma lista (+ de uma opção)
         */
+    object addon extends MappedPoliteString(this,255)
 
 
     def quizSectionName = quizSection.obj match {

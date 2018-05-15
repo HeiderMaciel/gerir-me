@@ -79,6 +79,12 @@
                 //$("#quiz-questions").val(questions.join(","));
             }
 
+            function setId(element, name) {
+                element.attr('id', name);
+                //questions.push(name);
+                //$("#quiz-questions").val(questions.join(","));
+            }
+
             function createSection(section) {
                 var template = $($("#section-template").html());
                 template.find('legend').text(section.name);
@@ -117,17 +123,44 @@
                 }
 
                 section.append(template);
+                if (question.format == "0") {
+                    // reduzido left
+                    $("#labeltop"+question.id).remove();
+                } else if (question.format == "1") {
+                    // paragrafo
+                    $("#labeltop"+question.id).remove();
+                    $("#labelleft"+question.id).remove();
+                } else {
+                    // reduzido top
+                    $("#labelleft"+question.id).remove();
+                }
+
             }
 
             function formatQuestion (question, template) {
-                if (question.format != 0) {
+                setId(template.find('label:first'), "labelleft"+question.id);
+                setId(template.find('.label-top'), "labeltop"+question.id);
+
+                if (question.format == "1") {
+                    // enunciado paragrafo
                     template.find('b:first').text(question.name);
-                } else {
-                    template.find('label:first').text(question.name);
+//                    $("#"+question.id).remove();
+                } else if (question.format == "0"){
+                    // enunciado short name esquerda
+                    template.find('label:first').text(question.short_name);
+//                    $("#labeltop"+question.id).remove();
+                } else if (question.format == "2") {
+                    // enunciado short name topo
+                    template.find('.label-top').text(question.short_name);
+//                    $("#labelleft"+question.id).remove();
                 }
                 if (question.obs) {
                     template.find('.help-block').text(question.obs);
                 }
+                if (question.addon) {
+                    template.find('.add-on').text(question.addon);
+                }
+//                $("#labelleft"+question.id).remove();
             }
 
             function createText(question) {
@@ -141,6 +174,7 @@
                     setClass(input, "input-small date");
                 }
                 setName(input, question.id);
+                setClass(input, question.size);
 
                 return template;
             }
@@ -151,6 +185,7 @@
                 var textarea = template.find('textarea');
                 textarea.val(question.value);
                 setName(textarea, question.id);
+                setClass(textarea, question.size);
 
                 return template;
             }
@@ -260,9 +295,12 @@
               //sendReceiptEmailCustomer(idcustomer1);
               sendReceiptEmailCustomer($("#quiz-bpid").val());
             });
+            $('#edit_patient').click(function (){
+               window.open("/records/edit_patient?id=" + $("#quiz-bpid").val(),"_patient_maste")
+            });
         })
     </script>
-    <div class='span12' id="quiz-div">
+    <div class='span18' id="quiz-div">
         <h1><span class="lift:CompanySnippet.thumb"> </span><span id="quiz-title">Questionário</span> - </span><span id="quiz-date">date</span> - <span id="quiz-bpname">parceiro</span></h1>
         <span id="quiz-obs"></span>
         <br/><br/>
@@ -273,6 +311,7 @@
             <input type="hidden" id="quiz-questions" name="questions">
             <div class="questions-container"></div>
             <input class="btn success" type="submit" value="Salvar">
+            <input class="btn primary" id="edit_patient" type="button" value="Prontuário">
             <a type="button" class="btn primary send_email_customer">
             Notificar <span data-i18n='Cliente'></span>
             </a>
@@ -288,9 +327,10 @@
         <script type="text/template" id="text-template">
             <div class="clearfix">
                 <p><b></b></p>
-                <label for="obs"></label>
+                <label id='labelleft' for="obs"></label>
 
                 <div class="input">
+                    <span id='labeltop' class="label-top">text</span>
                     <input class="xlarge" id="obs" name="obs" type="text"/>
                     <span class="help-block"></span>
                 </div>
@@ -303,7 +343,8 @@
                 <label for="obs"></label>
 
                 <div class="input">
-                    <textarea class="xlarge" name="" id="" cols="60" rows="10"></textarea>
+                    <span id='labeltop' class="label-top">paragraph</span>
+                    <textarea class="xlarge" name="" id="" rows="5"></textarea>
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -312,11 +353,13 @@
         <script type="text/template" id="list-template">
             <div class="clearfix">
                 <p><b></b></p>
-                <label for="obs"></label>
+                <label for="obs">esq só</label>
 
                 <div class="input">
                     <div class='inline-inputs'>
                         <div class="input-prepend" style='float:left; padding-right:10px'>
+                            <span id='labeltop' class="label-top">uai só</span>
+                            <span style='color:black;' class="add-on hide_mobile"></span> 
                             <select class="xlarge" ></select>
                             <span class="help-block"></span>
                         </div>
@@ -326,42 +369,51 @@
         </script>
 
         <script type="text/template" id="listi-template">
-            <div class="clearfix">
+            <div>
                 <p><b></b></p>
-                <label for="obs"></label>
+                <label for="obs" style='float:left; padding-right:20px' >esq ini</label>
+                <span style='float:left; padding-right:145px' >_</span>
 
-                <div class="input">
-                    <div class='inline-inputs'>
-                        <div class="input-prepend" style='float:left; padding-right:10px'>
-                            <select class="xlarge" ></select>
-                            <span class="help-block"></span>
-                        </div>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                    <span id='labeltop' class="label-top">uai meio</span>
+                    <span style='color:black;' class="add-on hide_mobile"></span>
+                    <select class="xlarge" ></select>
+                    <span class="help-block"></span>
+                </div>
+            </div>
         </script>
 
         <script type="text/template" id="listm-template">
-                <p><b>meio</b></p>
-                <label for="obs">meio tambem</label>
-                        <div class="input-prepend" style='float:left; padding-right:10px'>
-                            <select class="xlarge" ></select>
-                            <span class="help-block"></span>
-                        </div>
+            <div>
+                <p><b></b></p>
+                <label id='labelleft' style='float:left; padding-right:20px' for="obs">esq meio</label>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                    <span id='labeltop' class="label-top">uai meio</span>
+                    <span style='color:black;' class="add-on hide_mobile"></span>
+                    <select class="xlarge" ></select>
+                    <span class="help-block"></span>
+                </div>
+            </div>
         </script>
 
         <script type="text/template" id="listf-template">
-                <p><b>fim</b></p>
-                        <div class="input-prepend" style='float:left; padding-right:10px'>
-                            <select class="xlarge" ></select>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
+            <div>
+                <p><b></b></p>
+                <label id='labelleft' style='float:left; padding-right:20px' for="obs">esq fim</label>
+                <div class="input-append">
+                    <span id='labeltop' class="label-top">uai fim</span>
+                    <span style='color:black;' class="add-on hide_mobile"></span>
+                    <select class="xlarge" ></select>
+                    <span class="help-block"></span>
                 </div>
+                <br/><br/>
             </div>
         </script>
 
         <script type="text/template" id="multiple-template">
             <div class="clearfix">
                 <p><b></b></p>
-                <label for="obs"></label>
+                <label id='labelleft' for="obs"></label>
 
                 <div class="input">
                     <ul class="inputs-list">

@@ -146,6 +146,17 @@ table form{
   /* margin-left: auto; */
   /* margin-right: auto; */
 }
+
+/* criado para questionário */
+.label-top {
+  display: block;
+  font-size: 13px;
+  line-height: 18px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  color: #404040;
+}
+
 .label-inline {
   padding-top: 0PX;
   font-size: 13px;

@@ -80,6 +80,12 @@ chmod 600 /tmp/jks
 ls > /tmp/mlzq
 chmod 600 /tmp/mlzq
 
+<img id="myImage" src="smiley.gif">
+
+<script>
+document.getElementById("myImage").src = "landscape.jpg";
+</script>
+
 
 ver badblocks
 sudo badblocks -sv /dev/sda
