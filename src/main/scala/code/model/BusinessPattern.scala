@@ -352,11 +352,9 @@ with PerCity{
     object bp_origin extends MappedLong(this)
 
     def calendarIntervalDefault:Int = if (AuthUtil.?) {
-        println ("vaiiii ============= parm empresa " + AuthUtil.company.calendarInterval.is)
         AuthUtil.company.calendarInterval.is
     } else {
-        println ("vaiiii ============= 30 ");
-        30;
+        60;
     }
     object calendarInterval extends MappedInt(this) {
         override def defaultValue = calendarIntervalDefault;
