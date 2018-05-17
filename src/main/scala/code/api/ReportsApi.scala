@@ -608,6 +608,10 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					case Full(p) if(p != "") => " and tr.unit =%S".format(p) 
 					case _ => " and " + Treatment.unitsToShowSql
 				}			
+				def unitAp:String = S.param("unit") match {
+					case Full(p) if(p != "") => " and ap.unit =%S".format(p) 
+					case _ => " and " + AccountPayable.unitsToShowSql
+				}			
 				def productclass:String = S.param("productclass") match {
 					case Full(p) => p
 					case _ => "0,1";
@@ -630,10 +634,11 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					cod1 from (
 					select id as cod, prof, telefone, email, unidade, sum (preco) as tpreco, sum (comissao) as tcomissao, 
 					(select sum (case when typemovement = 1 then value * -1 when typemovement = 0 then value end)
-					from accountpayable where paid = true """ + sqldt + """
+					from accountpayable ap where paid = true """ + sqldt + """
 					and toconciliation = false
 					and company = ?
 					and user_c = data1.id
+					%s
 					) as vales,
 					id as cod1 from (
 					select bp.id as id, bp.name as prof, trim (mobile_phone || ' ' || phone || ' ' || email_alternative) as telefone, bp.email as email,
@@ -644,9 +649,10 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					 and pr.productclass in (%s)
 					 )
 					 where tr.dateevent between date(?) and date(?) and tr.status = 4
-					 and tr.user_c = bp.id) as preco, 
+					 and tr.user_c = bp.id %s) as preco, 
 					(select sum (co.value) from commision co 
 					 inner join treatmentdetail td on td.id = co.treatment_detail
+					 inner join treatment tr on tr.id = td.treatment %s
 					 inner join product pr on ((td.activity = pr.id or td.product = pr.id)
 					 and pr.productclass in (%s))					        
 					where co.company = bp.company 
@@ -658,13 +664,17 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					where 
 					bp.company = ? and bp.is_employee = true
 					%s
-					%s
 					order by bp.name, cu.name) as data1
 					group by prof, id, telefone, email, unidade
 					order by prof, id, telefone, email, unidade) as data2 where tpreco <> 0 or tcomissao <> 0
 					"""
 					//LogActor ! SQL
-				toResponse(SQL.format(productclass,productclass,unit,user),List(start, end, AuthUtil.company.id.is, start, end, start, end, AuthUtil.company.id.is))
+				toResponse(SQL.format(
+					unitAp, productclass, 
+					unit, unit, productclass,
+					user),List(start, end, 
+					AuthUtil.company.id.is, 
+					start, end, start, end, AuthUtil.company.id.is))
 			}
 
 			case "report" :: "sales_purchase_margin" :: Nil Post _=> {

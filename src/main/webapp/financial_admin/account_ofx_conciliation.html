@@ -48,7 +48,12 @@
           // o ofx nem validá-lo
           return ""
         } else {
-          return "<a href='#' data-idofx='" + row [4] + "' data-obs='" + row [1] + "' data-categ='" + row [12] + "' class='action_change'><img width='16px' title='validar ofx' src='/images/tick.png'></a>" +
+          return "<a href='#' data-idofx='" + 
+            row [4] + 
+            "' data-obs='" + row [1] + 
+            "' data-categ='" + row [12] + 
+            "' data-value='" + row [3] + 
+            "' class='action_change'><img width='16px' title='validar ofx' src='/images/tick.png'></a>" +
               "<img width='16px' src='/images/transparent1.png'>" +
                 "<a href='#' data-idofx='" + row [4] + "' class='action_remove'><img width='16px' title='excluir ofx' src='/images/delete.png'></a>"
         }
@@ -115,10 +120,28 @@
       type : "format",
       decode: function(name, row) {
         var ret = "";
+        var retparcial = "";
         if (row[10] != "0") { //ap1.agregateid
           if (row[11] != "0") { // ap1.conciliate
             ret = ""
           } else {
+            if (row[3] == row[9]) {
+              // var ofx == valor agregado
+              retparcial = "";
+            } else {
+              retparcial =
+                            "<a href='#' " +
+                "data-id='" + row [10] + "' " + 
+                "data-idofx='" + row [4] + "' " +
+                "data-vaggreg='" + row [9] + "' " +
+                "class='action_consolidate_aggreg_partial'><img width='16px' title='consolidar parcialmente lançamentos agregados' src='/images/partial_consol.png'></a>" +
+                "<img width='16px' src='/images/transparent1.png'>" +
+                "<a href='#' " + 
+                "data-id='" + row [10] + "' " +
+                "data-idofx='" + row [4] + "' " +
+                "data-vaggreg='" + row [9] + "' " +
+                "class='action_conciliate_aggreg_partial'><img width='16px' title='conciliar parcialmente lançamentos agregados' src='/images/partial_concil.png'></a>"
+            }
             ret = "<a href='#' " +
               "data-id='" + row [10] + "' " + 
               "data-idofx='" + row [4] + "' " +
@@ -129,18 +152,8 @@
               "data-id='" + row [10] + "' " +
               "data-idofx='" + row [4] + "' " +
               "data-vaggreg='" + row [9] + "' " +
-              "class='action_conciliate_aggreg'><img width='16px' title='conciliar lançamentos agregados' src='/images/tick.png'></a>" +
-              "<a href='#' " +
-              "data-id='" + row [10] + "' " + 
-              "data-idofx='" + row [4] + "' " +
-              "data-vaggreg='" + row [9] + "' " +
-              "class='action_consolidate_aggreg_partial'><img width='16px' title='consolidar parcialmente lançamentos agregados' src='/images/partial_consol.png'></a>" +
-              "<img width='16px' src='/images/transparent1.png'>" +
-              "<a href='#' " + 
-              "data-id='" + row [10] + "' " +
-              "data-idofx='" + row [4] + "' " +
-              "data-vaggreg='" + row [9] + "' " +
-              "class='action_conciliate_aggreg_partial'><img width='16px' title='conciliar parcialmente lançamentos agregados' src='/images/partial_concil.png'></a>"          }
+              "class='action_conciliate_aggreg'><img width='16px' title='conciliar lançamentos agregados' src='/images/tick.png'></a>" + retparcial
+          }
         } else {
           ret = ""
         }
@@ -233,7 +246,8 @@
         $(".action_change").click(function() {
           return changeOne($(this).attr("data-idofx"),
             $(this).attr("data-obs"),
-            $(this).attr("data-categ"));
+            $(this).attr("data-categ"),
+            $(this).attr("data-value"));
         });
       });
     }
@@ -258,8 +272,9 @@
         });
     };
 
-    var changeOne = function(idofx, obs, categ) {
+    var changeOne = function(idofx, obs, categ, value) {
       $("#idofx").val(idofx);
+      $("#valofx").val(value);
       $("#obs").val(obs);
       $("#customer").val("");
       $("#customer").change();
@@ -440,9 +455,15 @@
               </div>
           </div>
           <div class="clearfix">
-            <label for="status_select_filter">Observação</label>
+            <label for="obs_search_ofx">Observação ofx</label>
             <div class="input">
-              <input class='local_storage' type="text" id='obs_search' name="obs_search" placeholder="Contendo"/>
+              <input class='local_storage' type="text" id='obs_search_ofx' name="obs_search_ofx" placeholder="Contendo"/>
+            </div>
+          </div>            
+          <div class="clearfix">
+            <label for="obs_search_fin">Observação fin</label>
+            <div class="input">
+              <input class='local_storage' type="text" id='obs_search_fin' name="obs_search_fin" placeholder="Contendo"/>
             </div>
           </div>            
         </div>
@@ -541,7 +562,17 @@
                 <div class="clearfix">
                   <label for="idofx">Idofx </label>
                    <div class="input">
-                      <input class="mini" id="idofx" name="idofx" size="30" type="text" disabled='true'/>
+                      <div class="inline-inputs">
+                        <span>
+                          <input class="mini" id="idofx" name="idofx" size="30" type="text" disabled='true'/>
+                        </span>
+                        <span class='label-inline'>
+                            Valor
+                        </span>
+                        <span>
+                          <input class="mini" id="valofx" name="valofx" size="30" type="text" disabled='true'/>
+                        </span>
+                      </div>
                    </div>
                 </div>
                 <div class="clearfix">

@@ -404,7 +404,7 @@ class Boot {
         Menu(Loc("Monitorar", Link(List("static/monitor"), true, "/static/monitor"),"Monitor",unLoggedIn,Hidden)),
         Menu(Loc("bug", Link(List("system"), true, "/system/bug_report"),"Reportar erro",loggedIn,Hidden)),
         //Defalt
-        Menu(Loc("Cadastro", Link(List("new_company"), true, "/new_company/add"), "Começar",unLoggedIn)),
+        Menu(Loc("Cadastro", Link(List("new_company"), true, "/new_company/add"), "Começar",unLoggedIn,Hidden)),
         
         Menu(Loc("Alterar", Link(List("company_log"), true, "/company_log/edit"),"Empresa",adminAccess,Hidden)),
         // assim só o reabrir caixa aparece como financeiro - antes tudo de financial_admin aparecia como caixa

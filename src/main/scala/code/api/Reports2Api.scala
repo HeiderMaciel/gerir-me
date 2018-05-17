@@ -2030,7 +2030,9 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case Full(p) if(p != "") => p.toInt
 					case _ => 0;
 				}
-				def obsFilter = (" and lower (ap.obs) like '%"+(S.param("obs_search") openOr "")+"%' ").toLowerCase;
+				def obsFilterofx = (" and lower (ap.obs) like '%"+(S.param("obs_search_ofx") openOr "")+"%' ").toLowerCase;
+
+				def obsFilterfin = (" and lower (ap1.obs) like '%"+(S.param("obs_search_fin") openOr "")+"%' ").toLowerCase;
 
 				val payment_type_param_name = S.param("payment_type[]") match {
 							case Full(p) => "payment_type[]"
@@ -2078,11 +2080,13 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					%s
 					%s
 					%s
+					%s
 					order by 
 					ap.duedate, ap.id, ap1.duedate, (ap1.value = ap.value)
 					"""
 				toResponse(SQL_REPORT.format(account_fin, show_conciliated, 
-					account_ofx,payment_type, obsFilter),
+					account_ofx,payment_type, 
+					obsFilterofx, obsFilterfin),
 					List(days, days, margin, margin, 
 						margin, margin, 
 						AuthUtil.company.id.is, start, end,
