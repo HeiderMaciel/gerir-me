@@ -336,6 +336,32 @@ with PerCity{
         override def dbIndexed_? = true
         override def dbColumnName = "is_user"
     }
+
+    // indica que cliente pede nota fiscal
+    object taxPayer_? extends MappedBoolean(this){
+        override def defaultValue = false;
+        override def dbColumnName = "taxpayer"
+    }
+
+    object is_origin_? extends MappedBoolean(this){
+        override def defaultValue = false
+        override def dbIndexed_? = true
+        override def dbColumnName = "is_origin"
+    }
+
+    object bp_origin extends MappedLong(this)
+
+    def calendarIntervalDefault:Int = if (AuthUtil.?) {
+        println ("vaiiii ============= parm empresa " + AuthUtil.company.calendarInterval.is)
+        AuthUtil.company.calendarInterval.is
+    } else {
+        println ("vaiiii ============= 30 ");
+        30;
+    }
+    object calendarInterval extends MappedInt(this) {
+        override def defaultValue = calendarIntervalDefault;
+    }
+
     def insecureSave = {
       super.save
     }

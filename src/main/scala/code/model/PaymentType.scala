@@ -105,6 +105,12 @@ with CreatedUpdatedBy with NameSearchble[PaymentType] with ActiveInactivable[Pay
       override def dbColumnName = "budget"
   }    
 
+  // indica que forma de pagamento pede nota fiscal
+  object taxPayer_? extends MappedBoolean(this){
+      override def defaultValue = false;
+      override def dbColumnName = "taxpayer"
+  }
+
   object showAsOptions_? extends MappedBoolean(this){
     override def defaultValue = true
     override def dbColumnName = "showAsOptions"
