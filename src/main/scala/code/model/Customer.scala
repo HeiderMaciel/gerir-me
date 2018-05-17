@@ -698,6 +698,7 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
                     "update treatment set customer=? where customer=?;"::
                     "update treatment set user_c=? where user_c=?;"::
                     "update workhouer set user_c=? where user_c=?;"::
+                    "update treatmentDetail set auxiliar=? where auxiliar=?;"::
                     "update useractivity set user_c=? where user_c=?;"::
                     "update usercompanyunit set user_c=? where user_c=?;"::
                     "update userusergroup set user_c=? where user_c=?;"::
