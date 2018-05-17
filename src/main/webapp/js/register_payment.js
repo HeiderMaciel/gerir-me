@@ -12,6 +12,11 @@
 
   var paymentOfAccount = false;
 
+  // criei para controlar exclusão de itens no grid 
+  // e evitar pagamento de treatment vazio
+  // rigel 16/05/2018
+  var itensInGrid = 0;
+
   var prodCustomerAccount = 0;
   var hasCustomerAccount = false;
   var prodCustomerCredit = 0;
@@ -177,6 +182,7 @@
   var ignoreTreatment = function(treatmentIndex, activityIndex) {
     var treatment = treatments[treatmentIndex];
     var details = treatment.activitys;
+    itensInGrid --;      
     if (details.length > 1) {
       $("#user").val(treatment.userId);
       var treatmentAtual = buildTreatmentFromUi();
@@ -197,9 +203,10 @@
   var removeActivity = function(treatmentIndex, activityIndex) {
     treatments[treatmentIndex].activitys[activityIndex].removed = true;
     var hasActivityToShow = treatments[treatmentIndex].activitys.length > 1;
+    itensInGrid --;
     saveTreatments(function() {
       prepareTreatmentsInUi();
-    }, !hasActivityToShow);
+    }, true); //!hasActivityToShow);
   };
   var setAuxiliarActivity = function(treatmentIndex, activityIndex) {
     var customerId = treatments[treatmentIndex].customerId;
@@ -424,9 +431,11 @@
         }
       }
       var canUsePoints = true;
+      itensInGrid = 0;
       for (var j = activitys.length - 1; j >= 0; j--) {
         activity = activitys[j];
         if (!activity.removed) {
+          itensInGrid ++;
           var price = activity.price;
           var hasUnitModule = $('.has-unit-module').length > 0;
           var hasAuxiliarModule = $('.has-auxiliar-module').length > 0;
@@ -1039,7 +1048,7 @@
         messages.push("Selecione um caixa");
       }
 
-      if (treatments.length === 0) {
+      if (treatments.length === 0 || itensInGrid < 1) {
         messages.push("Não existem itens a serem pagos!");
       }
 
@@ -1122,6 +1131,9 @@
 
     }
     $(".revert_price").click(function() {
+      if (itensInGrid < 1) {
+        return alert ("Não existem itens para restauração de preços!")
+      }
       if (confirm("Tem certeza que deseja restaurar o preço original dos itens abaixo?")) {
         resetPricesTreatments();
       }
