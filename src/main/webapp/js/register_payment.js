@@ -19,6 +19,7 @@
 
   var prodCustomerAccount = 0;
   var hasCustomerAccount = false;
+  var valCustomerAccount = 0.0;
   var prodCustomerCredit = 0;
   var hasCustomerCredit = false;
   var canBePaidWithPoints = 0.0;
@@ -399,6 +400,7 @@
       }
     }
     hasCustomerAccount = false;
+    valCustomerAccount = 0.0;
     hasCustomerCredit = false;
     for (var i = treatments.length - 1; i >= 0; i--) {
       treatment = treatments[i];
@@ -447,6 +449,7 @@
 
           if (activity.activityId == prodCustomerAccount) {
             hasCustomerAccount = true;
+            valCustomerAccount += (activity.price * amount)
             //alert ("tem conta cliente")
           }
           if (activity.activityId == prodCustomerCredit) {
@@ -1050,6 +1053,19 @@
 
       if (treatments.length === 0 || itensInGrid < 1) {
         messages.push("Não existem itens a serem pagos!");
+      }
+
+      // não deixa pagar valor maior que a 
+      // conta cliente devida
+      // 16/05/2018 - rigel
+      var valdevido = 0.0;
+      valdevido = (-1 * window.parseFloat ($('#valueinaccount').val()));
+      if (hasCustomerAccount && 
+        valCustomerAccount > valdevido) {
+        messages.push("Valor de conta cliente na tabela de ítens " + 
+          valCustomerAccount.formatMoney() +
+          "\n\n maior que o devido pelo cliente " +
+          valdevido.formatMoney() + " !"); 
       }
 
       if (hasCustomerAccount && hasCustomerCredit) {
