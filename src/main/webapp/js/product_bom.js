@@ -4,11 +4,21 @@
 
   ProductBOM = (function() {
     function ProductBOM() {
+      this.praceled = $("#praceled").is(':checked');
       this.product = gup("id");
-      this.product_bom = $("#product").val();
+      if ($("#activity").val()) {
+        this.product_bom = $("#activity").val();
+      } else if ($("#product").val()) {
+        if (!this.praceled) {
+          this.product_bom = $("#product").val();
+        } else {
+          if (confirm ("Tem certeza que deseja criar sessões de pacote para um item composto por um produto?")) {
+            this.product_bom = $("#product").val();
+          }
+        }
+      }
       this.obs = $("#obs_bom").val();
       this.qtd = $("#qtd").val();
-      this.praceled = $("#praceled").is(':checked');
       this.priceZero = $("#priceZero").is(':checked');
       this.price = $("#bom_salePrice").val() || "0";
       this.orderinreport = $("#orderinreport").val();
@@ -115,7 +125,7 @@
   ProductBOM.save = function() {
     var pb1 = new ProductBOM()
     if (!pb1.product_bom) {
-      return alert ("Um serviço precisa ser selecionado")
+      return alert ("Um serviço ou produto precisa ser selecionado")
     }
     if (pb1.priceZero && pb1.price != "0") {
       return alert ("Preço diferente de zero e opção de preço zero marcada, verifique")
@@ -139,8 +149,14 @@
         obj = activitys[_i];
         ret += "<option value='" + obj.id + "'>" + obj.name + "</option>";
       }
-      $("#product").html(ret);
-      return $("#product").change();
+      $("#activity").html(ret);
+      return $("#activity").change();
+    });
+    $("#product").productSearch({
+      createName: false,
+      iconElement: ".add-on",
+      userThuch: true,
+      userFieldSelector: '#user'
     });
     return $("#b_save").click(function() {
       return ProductBOM.save();

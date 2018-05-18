@@ -337,63 +337,92 @@
     <div class="pill-content">
         <div class="tab_content" id="bom">
           <form>
-            <div class="clearfix">
-              <label for="product"><span data-i18n='Serviço'></span></label>
-              <div class="input">
-                  <select class="xlarge" id="product" name="product">
-                  </select>
-                  <span class="help-block">Serviço</span>
-              </div>
-            </div>
-            <div class="clearfix">
-              <label for="qtd">Quantidade</label>
-              <div class="input">
-                  <div class='inline-inputs'>
-                    <input class="mini" id="qtd" name="qtd" size="5 " value = "1" type="number"/>
-                    Ordem
-                    <input class="mini" id="orderinreport" name="orderinreport" size="5 " value = "1" type="number"/>
+            <div class="row">
+              <div class="span8">
+                <div class="clearfix">
+                  <label for="activity"><span data-i18n='Serviço'></span></label>
+                  <div class="input">
+                      <select class="xlarge" id="activity" name="activity">
+                      </select>
+                      <span class="help-block">Serviço</span>
                   </div>
-                  <span class="help-block">Quantidade / Ordem nos relatórios</span>
-              </div>
-            </div>
-            <div class="clearfix">
-              <label for="praceled">Parcelado?</label>
-               <div class="input">
-                  <div class="input-prepend">
-                    <input checked="true" type="checkbox" name="praceled" id="praceled" value = "true">
-                    <span class="help-block">Quando sim, provoca a geração de sessões deste serviço</span>
+                </div>
+                <div class="clearfix">
+                  <label for="qtd">Quantidade</label>
+                  <div class="input">
+                      <div class='inline-inputs'>
+                        <input class="mini" id="qtd" name="qtd" size="5 " value = "1" type="number"/>
+                        Ordem
+                        <input class="mini" id="orderinreport" name="orderinreport" size="5 " value = "1" type="number"/>
+                      </div>
+                      <span class="help-block">Quantidade / Ordem nos relatórios</span>
                   </div>
-               </div>
-            </div>
-            <div class="clearfix">
-              <label for="price">Preço do Item no Pacote</label>
-              <div class="input">
-                <div class="input-prepend">
-                  <span class="add-on"><img src="/images/dre.png" width="16"></span>
-                  <input class="mini currency" id="bom_salePrice" name="bom_salePrice" size="30" type="text"/>
-                  <span class='label-inline'>
-                    Preço Zero
-                  </span>
-                  <input type="checkbox" id="priceZero"  name="priceZero" />
+                </div>
+                <div class="clearfix">
+                  <label for="praceled">Parcelado?</label>
+                   <div class="input">
+                      <div class="input-prepend">
+                        <input class="local_storage" type="checkbox" name="praceled" id="praceled" value = "true">
+                        <span class="help-block">Quando sim, provoca a geração de sessões deste serviço</span>
+                      </div>
+                   </div>
+                </div>
+                <div class="clearfix">
+                  <label for="price">Preço do Item no Pacote</label>
+                  <div class="input">
+                    <div class="input-prepend">
+                      <span class="add-on"><img src="/images/dre.png" width="16"></span>
+                      <input class="mini currency" id="bom_salePrice" name="bom_salePrice" size="30" type="text"/>
+                      <span class='label-inline'>
+                        Preço Zero
+                      </span>
+                      <input type="checkbox" id="priceZero"  name="priceZero" />
 
-                  <span class="help-block">Valor unitário do item no pacote / Indica que o preço é zero mesmo e não será usado preço de lista</span>
+                      <span class="help-block">Valor unitário do item no pacote / Indica que o preço é zero mesmo e não será usado preço de lista</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix">
+                  <label for="obs_bom">Obs</label>
+                   <div class="input">
+                      <div class='inline-inputs'>
+                        <textarea class="xlarge" id="obs_bom" name="obs_bom"></textarea>
+                      </div>
+                      <span class="help-block">Obs</span>
+                   </div>
+                </div>
+                <div class="clearfix">
+                   <div class="input">
+                      <input class="btn success" id="b_save" type="button" value="Salvar"/>
+                   </div>
                 </div>
               </div>
-            </div>
-            <div class="clearfix">
-              <label for="obs_bom">Obs</label>
-               <div class="input">
-                  <div class='inline-inputs'>
-                    <textarea class="xlarge" id="obs_bom" name="obs_bom"></textarea>
+              <div class="span8">
+                <div class="clearfix">
+                  <label for="name">Produto</label>
+                  <div class="input">
+                    <div class="inline-inputs">
+                      <div style="float:left; padding-right:10px" class="input-prepend">
+                            <span class="add-on  hide_mobile"></span> 
+                            <input class="xlarge process_product_field" name="product" id='product'/>
+                      </div>                                                    
+                    </div>
                   </div>
-                  <span class="help-block">Obs</span>
-               </div>
-            </div>
-            <div class="clearfix">
-               <div class="input">
-                  <input class="btn success" id="b_save" type="button" value="Salvar"/>
-               </div>
-            </div>
+                </div>
+                <div class="clearfix">
+                  <label for="opener_date">Estoque Atual</label>
+                  <div class="input">
+                    <div class="inline-inputs">
+                      <div style="float:left; padding-right:10px" class="input-prepend">
+                        <span class="add-on hide_mobile"><img width="16" src="/images/categorie.png"></span> 
+                        <input type="text" size="19" name="current_stock" id="current_stock" disabled='true' class="mini disabled inventory_product_search">
+                         <span class="hide_mobile help-block">Quantidade atual do produto em estoque</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>      
+              </div>
+            </div>              
             <table id="grid" class="bordered-table zebra-striped">
               <thead>
                 <th>Produto</th>
