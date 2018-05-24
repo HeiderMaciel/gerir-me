@@ -325,9 +325,18 @@ object ReceiveAddValueToUser extends FatChain{
 	def process(cashier:Cashier, paymentType:PaymentType,value:Double, paymentDetail:List[PaymentDetail]=Nil):Unit = {
 		paymentDetail.foreach((pd)=>{
 			try{
+				// nesta forma de pagamento se o customer não for profissional
+				// gera o cliente na descricao pq o vale vai ser pro prof
+				// 
+				val bpname : String = if (pd.customer.obj.get.is_user_?.is) {
+					""
+				} else {
+					" Cliente " + Customer.findByKey (pd.customer).get.short_name + " ";
+				}
+
 
 				buildDefaltAccount(cashier, pd, paymentType, pd.value.is,
-					"Cx %s fp (%s)" + " serviço "+"(%s)".format(pd.treatmentDetailsAsText)).foreach(
+					"Cx %s fp (%s)" + bpname + " serviço "+"(%s)".format(pd.treatmentDetailsAsText)).foreach(
 					(am)=>{
 							am match {
 								case Full(movement) => {
