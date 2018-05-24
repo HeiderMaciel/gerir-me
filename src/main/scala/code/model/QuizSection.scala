@@ -23,7 +23,7 @@ class QuizSection extends Audited[QuizSection] with PerCompany with IdPK with Cr
     object quiz extends  MappedLongForeignKey(this, Quiz)
     object obs extends MappedPoliteString(this,255)
     object orderInQuiz extends MappedInt(this){
-	    override def defaultValue = 10
+	    override def defaultValue = 1000
 	}
     object weight extends MappedDecimal(this,MathContext.DECIMAL64,4)
     object rank extends MappedDecimal(this,MathContext.DECIMAL64,4)

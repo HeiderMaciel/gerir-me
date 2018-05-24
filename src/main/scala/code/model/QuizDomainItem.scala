@@ -23,7 +23,7 @@ class QuizDomainItem extends Audited[QuizDomainItem] with PerCompany with IdPK w
     object quizDomain extends  MappedLongForeignKey(this, QuizDomain)
     object obs extends MappedPoliteString(this,255)
     object orderInDomain extends MappedInt(this){
-	    override def defaultValue = 10
+	    override def defaultValue = 1000
 	}
     object rank extends MappedDecimal(this,MathContext.DECIMAL64,4)
     object valueStr extends MappedPoliteString (this,255)
