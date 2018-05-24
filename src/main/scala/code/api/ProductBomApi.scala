@@ -54,7 +54,8 @@ object ProductBomApi extends RestHelper {
 		}
 		case "product" :: productId:: "product_bom" :: "list" :: Nil JsonGet _ =>{
 			JsArray(
-				ProductBOM.findAllInCompany(By(ProductBOM.product,productId.toLong)).map((pb) =>{
+				ProductBOM.findAllInCompany(By(ProductBOM.product,productId.toLong),
+					OrderBy (ProductBOM.orderInReport, Ascending)).map((pb) =>{
 					JsObj(("id",pb.id.is),("product_name",pb.product_bom.obj.get.name.is),
 						("obs",pb.obs.is), 
 						("qtd",pb.qtd.toDouble), 

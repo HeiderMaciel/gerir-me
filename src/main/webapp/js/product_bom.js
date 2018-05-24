@@ -36,6 +36,7 @@
         function(results) {
         var obj, ret, _i, _len;
         var product_saleprice = 0.0;
+        var product_listprice = 0.0;
         var product_count_pb = 0;
         var item_price = 0.0;
         eval("results = " + results);
@@ -55,7 +56,9 @@
           "<td><a data-id='" + obj.id + "' class='action_delete'><img src='/images/delete.png'/></a></td>" +
           "</tr>";
           item_price = (obj.price * obj.qtd)
+          list_price = (obj.listprice * obj.qtd)
           product_saleprice += item_price
+          product_listprice += list_price
           product_count_pb += 1;
         }
 
@@ -88,6 +91,7 @@
 
         $("#grid tbody").html(ret);
         $("#product_salePrice").val((product_saleprice).formatMoney())
+        $("#product_listPrice").val((product_listprice).formatMoney())
         return $(".action_delete").click(function() {
           return ProductBOM.remove($(this).data("id"));
         });
@@ -124,6 +128,10 @@
 
   ProductBOM.save = function() {
     var pb1 = new ProductBOM()
+    if (!pb1.product) {
+      return alert ("Para cadastrar ítens de pacote é necessário que um produto/pacote tenha sido salvo e selecionado anteriormente!")
+    }
+      
     if (!pb1.product_bom) {
       return alert ("Um serviço ou produto precisa ser selecionado")
     }

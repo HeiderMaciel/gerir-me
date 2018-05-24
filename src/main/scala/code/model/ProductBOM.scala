@@ -45,7 +45,7 @@ class ProductBOM extends Audited[ProductBOM] with PerCompany with IdPK with Crea
     }    
 
     object orderInReport extends MappedInt(this) {
-        override def defaultValue = 1
+        override def defaultValue = 1000
     }
 
     def listPrice = {
@@ -60,6 +60,37 @@ class ProductBOM extends Audited[ProductBOM] with PerCompany with IdPK with Crea
         // retorna o preço do produto ou do serviço
         product_bom.obj.get.salePrice.is
     }
+
+/*
+Select para testar o update
+select name, orderinreport, 
+((select count (*) from productbom t1 where t1.company = productbom.company 
+    and t1.product = productbom.product 
+    and (t1.orderinreport < productbom.orderinreport or (t1.orderinreport = productbom.orderinreport and t1.id < productbom.id)))+1) * 10
+from productbom where company = 398 and product = 7;
+*/
+  val SQL_UPDATE_ORDER_10_10 = """
+    update productbom set orderinreport = 
+    ((select count (*) from productbom t1 where t1.company = productbom.company 
+        and t1.product = productbom.product 
+        and (t1.orderinreport < productbom.orderinreport or (t1.orderinreport = productbom.orderinreport and t1.id < productbom.id)))+1) * 10
+    where company = ? and product = ?;
+  """
+  override def save() = {
+    val r = super.save
+
+    DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.product.is :: Nil)
+
+    r
+  }
+
+  override def delete_! = {
+    val r = super.delete_!
+
+    DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.product.is :: Nil)
+
+    r
+  } 
 }
 
 object ProductBOM extends ProductBOM with LongKeyedMapperPerCompany[ProductBOM]  with  OnlyCurrentCompany[ProductBOM]{

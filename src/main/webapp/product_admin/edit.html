@@ -353,7 +353,7 @@
                       <div class='inline-inputs'>
                         <input class="mini" id="qtd" name="qtd" size="5 " value = "1" type="number"/>
                         Ordem
-                        <input class="mini" id="orderinreport" name="orderinreport" size="5 " value = "1" type="number"/>
+                        <input class="mini" id="orderinreport" name="orderinreport" size="5 " value = "1000" type="number"/>
                       </div>
                       <span class="help-block">Quantidade / Ordem nos relatórios</span>
                   </div>
@@ -426,12 +426,12 @@
             <table id="grid" class="bordered-table zebra-striped">
               <thead>
                 <th>Produto</th>
-                <th>Quantidade</th>
+                <th>Qtde</th>
                 <th>Obs</th>
                 <th title='Preço unitário do item no pacote'>Preço</th>
                 <th title='Se ok, indica que o preço é zero mesmo, do contrário o preço de lista será usado'>Preço Zero</th>
                 <th title='Preço de lista no cadastro do produto/serviço'>Preço Lista</th>
-                <th>Parcelado</th>
+                <th title='Quando sim provoca sessões de pacote'>Parcelado</th>
                 <th>Ordem</th>
                 <th>Ações</th>
               </thead>
@@ -448,12 +448,17 @@
               </tbody>
           </table>
             <div class="clearfix">
-              <label for="price">Preço Total Pacote</label>
+              <label for="product_salePrice">Preço Total Pacote</label>
               <div class="input">
-                <div class="input-prepend">
+                <div class="input-prepend" style="float:left; padding-right:10px">
                   <span class="add-on"><img src="/images/dre.png" width="16"></span>
-                  <input class="small currency disabled" id="product_salePrice" name="product_salePrice" size="30" type="text" disabled='true'/>
-                  <span class="help-block">Valor total de venda do pacote</span>
+                  <input style="color:black;" class="small currency disabled" id="product_salePrice" name="product_salePrice" size="30" type="text" disabled='true'/>
+                  <span class="help-block">Valor de venda do pacote</span>
+                </div>
+                <div class="input-prepend" style="float:left; padding-right:10px">
+                  <span class="add-on"><img src="/images/dre.png" width="16"></span>
+                  <input style="color:black;" class="small currency disabled" id="product_listPrice" name="product_listPrice" size="30" type="text" disabled='true'/>
+                  <span class="help-block">Valor de lista do pacote</span>
                 </div>
               </div>
             </div>
