@@ -35,6 +35,10 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 
 	def mapicons = ("0" -> "Selecione um ícone")::MapIcon.findAllInCompanyOrDefaultCompanyMapicon.map(t => (t.id.is.toString,t.name.is))
 
+	def origins = ("0" -> "Selecione uma origem")::Customer.findAllInCompany(
+		By (Customer.is_origin_?, true),
+		OrderBy (Customer.name, Ascending)).map(t => (t.id.is.toString,t.name.is))
+
 	def degrees = ("0" -> "Selecione um grau de instrução")::InstructionDegree.findAll(OrderBy(InstructionDegree.name, Ascending)).map(t => (t.id.is.toString,t.name.is))
 
 	def occupations = ("0" -> "Selecione uma profissão")::Occupation.findAll(OrderBy(Occupation.name, Ascending)).map(t => (t.id.is.toString,t.name.is))
@@ -235,6 +239,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 			"#img_mapicon" #> ac.mapIcon.obj.get.thumb ("36")&
 			"name=is_suplier" #> (SHtml.checkbox(ac.is_suplier_?, ac.is_suplier_?(_)))&
 			"name=is_brand" #> (SHtml.checkbox(ac.is_brand_?, ac.is_brand_?(_)))&
+			"name=is_origin" #> (SHtml.checkbox(ac.is_origin_?, ac.is_origin_?(_)))&
 			"name=is_employee" #> (SHtml.checkbox(ac.is_employee_?, ac.is_employee_?(_)))&
 		    "name=userstatus" #> (SHtml.select(status,Full(ac.userStatus.is.toString),(v:String) => ac.userStatus(v.toInt)))&
 			"name=is_user" #> (SHtml.checkbox(ac.is_user_?, ac.is_user_?(_)))&
@@ -296,6 +301,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 		    "name=unit" #> (SHtml.select(units,Full(ac.unit.is.toString),(v:String) => ac.unit(v.toLong)))&
 		    "name=offsale" #> (SHtml.select(offsales,Full(ac.offsale.is.toString),(s:String) => ac.offsale( s.toLong)))&
 		    "name=mapicon" #> (SHtml.select(mapicons,Full(ac.mapIcon.is.toString),(s:String) => ac.mapIcon( s.toLong)))&
+		    "name=bp_origin" #> (SHtml.select(origins,Full(ac.bp_origin.is.toString),(s:String) => ac.bp_origin( s.toLong)))&
 		    "name=mobilePhoneOp" #> (SHtml.select(operators,Full(ac.mobilePhoneOp.is.toString),(s:String) => ac.mobilePhoneOp( s.toLong)))&
 		    "name=instructiondegree" #> (SHtml.select(degrees,Full(ac.instructiondegree.is.toString),(s:String) => ac.instructiondegree( s.toLong)))&
 		    "name=occupation" #> (SHtml.select(occupations,Full(ac.occupation.is.toString),(s:String) => ac.occupation( s.toLong)))&
