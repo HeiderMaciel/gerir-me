@@ -3,6 +3,24 @@
         <label for="btn"></label>
 		<a class="btn primary" href="/financial_admin/account">Inserir novo</a>
 	</div>
+	<div class='filter block-message success"'>
+		<img style='float:left' src="/images/filter.png"/>
+		<span class="filter_form">
+		<script type="text/javascript">
+			$(function(){
+				$(".name_account").val(gup("name"))
+				if(gup("all")){
+					$("#all").attr("checked", "checked");
+				}				
+			});
+		</script>
+			<form action=''>
+				<input class="local_storage xlarge name_account" id="name_account" name="name" size="30" type="text" placeholder="Nome"/>
+				<input class="all" id="all" name="all" type="checkbox"/> Mostrar todos?
+				<input class="btn success" type="submit" value="Buscar">
+			</form>
+		</span>
+	</div>
 <table class="bordered-table zebra-striped">
 		<thead>
 			<th>Id</th>

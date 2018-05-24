@@ -33,8 +33,22 @@ class  AccountSnippet  extends BootstrapPaginatorSnippet[Account] {
 	}
 
 	def findForListParamsWithoutOrder: List[QueryParam[Account]] = List(Like(Account.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"))
+	override def page = {
+		if(!showAll){
+			super.page
+		}else{
+			Account.findAllInCompanyWithInactive(findForListParams :_*)
+		}
+	}
+	def statusFilter: List[Int] = if(showAll){
+		List(Account.STATUS_OK, Account.STATUS_INACTIVE)
+	}else{
+		List(Account.STATUS_OK)
+	}
 
-	def findForListParams: List[QueryParam[Account]] = List(Like(Account.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),OrderBy(Account.name, Ascending), StartAt(curPage*itemsPerPage), MaxRows(itemsPerPage))
+	def findForListParams: List[QueryParam[Account]] = List(
+		Like(Account.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+		OrderBy(Account.name, Ascending), StartAt(curPage*itemsPerPage), MaxRows(itemsPerPage), ByList(Account.status,statusFilter))
 
 
 	def list(xhtml: NodeSeq): NodeSeq = {
@@ -52,7 +66,8 @@ class  AccountSnippet  extends BootstrapPaginatorSnippet[Account] {
 			
 			}
 
-			Account.findAllInCompany.flatMap(ac => 
+			//Account.findAllInCompany
+			page.flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"allowcashierout" -> Text(if(ac.allowCashierOut_?.is){ "Sim" }else{ "Não" }),
 							// "value" -> Text(ac.value.is.toString),

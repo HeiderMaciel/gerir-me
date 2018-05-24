@@ -82,7 +82,7 @@ class  AccountCompanyUnitSnippet  extends BootstrapPaginatorSnippet[AccountCompa
 			  }
 			}
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
-		    "name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&
+		    //"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&
 		    "name=bank" #> (SHtml.select(banksSelect,Full(ac.bank.is.toString),(s:String) => ac.bank(s.toLong)))&
 		    "name=accountstr" #> (SHtml.text(ac.accountStr.is, ac.accountStr(_)))&
 		    "name=agency" #> (SHtml.text(ac.agency.is, ac.agency(_)))&
