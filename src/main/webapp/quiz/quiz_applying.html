@@ -14,7 +14,7 @@
             $.get(URL_GET, function(data) {
                 eval("var result = " + data);
                 $("#quiz-applying-id").val(APPLYING_ID);
-                $("#quiz-title").text(result.name);
+                $("#quiz-title").text(" " + result.name);
                 $("#quiz-date").text(result.date);
                 $("#quiz-obs").text(result.obs);
                 $("#quiz-bpname").text(result.bpName);
@@ -126,6 +126,9 @@
                 if (question.format == "0") {
                     // reduzido left
                     $("#labeltop"+question.id).remove();
+                } else if (question.format == "3") {
+                    // longo left
+                    $("#labeltop"+question.id).remove();
                 } else if (question.format == "1") {
                     // paragrafo
                     $("#labeltop"+question.id).remove();
@@ -148,6 +151,10 @@
                 } else if (question.format == "0"){
                     // enunciado short name esquerda
                     template.find('label:first').text(question.short_name);
+//                    $("#labeltop"+question.id).remove();
+                } else if (question.format == "3"){
+                    // enunciado short name esquerda
+                    template.find('label:first').text(question.name);
 //                    $("#labeltop"+question.id).remove();
                 } else if (question.format == "2") {
                     // enunciado short name topo
@@ -327,7 +334,7 @@
         <script type="text/template" id="text-template">
             <div class="clearfix">
                 <p><b></b></p>
-                <label id='labelleft' for="obs"></label>
+                <label style='color:black; font-weight: bold' id='labelleft' for="obs"></label>
 
                 <div class="input">
                     <span id='labeltop' class="label-top">text</span>
@@ -340,7 +347,7 @@
         <script type="text/template" id="paragraph-template">
             <div class="clearfix">
                 <p><b></b></p>
-                <label for="obs"></label>
+                <label style='color:black; font-weight: bold' for="obs"></label>
 
                 <div class="input">
                     <span id='labeltop' class="label-top">paragraph</span>
@@ -353,7 +360,7 @@
         <script type="text/template" id="list-template">
             <div class="clearfix">
                 <p><b></b></p>
-                <label for="obs">esq só</label>
+                <label style='color:black; font-weight: bold' for="obs">esq só</label>
 
                 <div class="input">
                     <div class='inline-inputs'>
@@ -371,7 +378,7 @@
         <script type="text/template" id="listi-template">
             <div>
                 <p><b></b></p>
-                <label for="obs" style='float:left; padding-right:20px' >esq ini</label>
+                <label for="obs" style='color:black; font-weight: bold; float:left; padding-right:20px' >esq ini</label>
                 <span style='float:left; padding-right:145px' >_</span>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
@@ -386,7 +393,7 @@
         <script type="text/template" id="listm-template">
             <div>
                 <p><b></b></p>
-                <label id='labelleft' style='float:left; padding-right:20px' for="obs">esq meio</label>
+                <label id='labelleft' style='color:black; font-weight: bold; float:left; padding-right:20px' for="obs">esq meio</label>
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">uai meio</span>
                     <span style='color:black;' class="add-on hide_mobile"></span>
@@ -399,7 +406,7 @@
         <script type="text/template" id="listf-template">
             <div>
                 <p><b></b></p>
-                <label id='labelleft' style='float:left; padding-right:20px' for="obs">esq fim</label>
+                <label  style='color:black; font-weight: bold' id='labelleft' style='float:left; padding-right:20px' for="obs">esq fim</label>
                 <div class="input-append">
                     <span id='labeltop' class="label-top">uai fim</span>
                     <span style='color:black;' class="add-on hide_mobile"></span>
@@ -413,7 +420,7 @@
         <script type="text/template" id="multiple-template">
             <div class="clearfix">
                 <p><b></b></p>
-                <label id='labelleft' for="obs"></label>
+                <label  style='color:black; font-weight: bold' id='labelleft' for="obs"></label>
 
                 <div class="input">
                     <ul class="inputs-list">
@@ -433,7 +440,7 @@
         <script type="text/template" id="morethanone-template">
             <div class="clearfix">
                 <p><b></b></p>
-                <label for="obs"></label>
+                <label style='color:black; font-weight: bold' for="obs"></label>
 
                 <div class="input">
                     <ul class="inputs-list">

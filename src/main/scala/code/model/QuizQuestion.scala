@@ -33,8 +33,11 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
     object quizDomain extends MappedLongForeignKey(this, QuizDomain) // opcional
     object quizDomainItemRight extends MappedLongForeignKey(this, QuizDomainItem) // opcional
     object quizQuestionFormat extends MappedInt(this)with LifecycleCallbacks { // em função do número de dias
-        override def defaultValue = 0 // questões curtas - label
-        // 1 questoes longas - paragrafo
+        override def defaultValue = 0 
+        // 0 questões curtas - label
+        // 1 questoes longas - paragrafo topo
+        // 2 questoes curtas - paragrafo topo
+        // 3 questoes longas - paragrafo - label
     }
     object quizQuestionType extends MappedInt(this)with LifecycleCallbacks { 
         /*

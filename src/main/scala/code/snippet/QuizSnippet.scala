@@ -58,9 +58,10 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		("3", "Fim")::Nil).map(t => (t._1,t._2))
 
 	def questionFormats = (
-		("0", "Label - Reduzido - Esquerda")::
-		("2", "Label - Reduzido - Topo")::
-		("1", "Parágrafo - Longo - Topo")::
+		("0", "Reduzido - Esquerda")::
+		("2", "Reduzido - Topo")::
+		("3", "Longo - Esquerda")::
+		("1", "Longo - Topo")::
 		Nil).map(t => (t._1,t._2))
 
 	def quizSection = S.param("quizSection") match {
