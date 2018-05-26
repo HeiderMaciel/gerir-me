@@ -879,6 +879,63 @@ no account payable - 22/02/2018 - rigel
 					}
 				}
 			}
+			case "report" :: "cashier_report" :: Nil Post _ =>{
+				def start:Date = S.param("startDate") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+
+				def end:Date = S.param("endDate") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+				
+				def unit:String = S.param("unit") match {
+					case Full(p) if(p!="") => " ca.unit = %s ".format (p)
+					case _ => " 1=1 "
+				}
+
+				val parmcashier = S.param("cashier") openOr "0";
+				def cashier:String = S.param("isIdForCompany") match {
+					case Full(p) if(p !="" && parmcashier != "") => {
+						" pa.cashier = %s ".format (
+							Cashier.
+							findOpenCashierByIdAndCompany(parmcashier.toInt).id.is.toString);
+					}
+					case _ => {
+						S.param("cashier") match {
+						case Full(p) if(p!="") => " pa.cashier = %s ".format (p)
+						case _ => " 1=1 "
+						}
+					}
+				}
+				val SQL = """
+select date(ca.openerdate), ca.idforcompany, bo.short_name as abriu, cu.short_name as unidade, 
+startvalue,
+endvalue, 
+(select sum (ap.value) from accountpayable ap where ap.company = ca.company and ap.cashier = ca.id and ap.typemovement = 0 and ap.autocreated = true) as faturamento,
+(select sum (ap.value) from accountpayable ap where ap.company = ca.company and ap.cashier = ca.id and ap.typemovement = 1 and ap.autocreated = false) as saidas,
+(select sum (ap.value) from accountpayable ap where ap.company = ca.company and ap.cashier = ca.id and ap.typemovement = 0 and ap.autocreated = false) as entradas,
+ca.firstclosedate, 
+ca.closerdate, bc.short_name as fechou,
+ca.status, -- decodificar
+bo.id,
+bc.id
+--* 
+from cashier ca 
+inner join business_pattern bo on bo.id = ca.createdby
+inner join companyunit cu on cu.id = ca.unit
+left join business_pattern bc on bc.id = ca.updatedby
+where ca.company = ?
+and ca.openerdate between (?) and (?)
+and ca.status in (1)
+and %s
+and %s
+order by ca.openerdate, ca.id
+				"""
+				toResponse(SQL.format(unit, cashier),List(AuthUtil.company.id.is, start, end)) 
+			}
+
 			case "report" :: "paymenttype_details" :: fat :: Nil Post _ =>{
 				def start:Date = S.param("startDate") match {
 					case Full(p) => Project.strToDateOrToday(p)

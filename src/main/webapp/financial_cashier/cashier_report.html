@@ -6,54 +6,58 @@
         $('#cashier').cashierField(false,'all',function(){
           $('#cashier').val(gup("cashier"));
         });
-        $("#payment_type").paymentTypeField(true, true);
         $("#unit").unitField(true);
         var hasUnitModule = $('.has-unit-module').length > 0;
-        var startDate = function(){
-          return  encodeURIComponent($("#startDate").val() != "" ? $("#startDate").val() : getDateBr(new Date()));
-        }
-        var endDate = function(){
-          return encodeURIComponent($("#endDate").val() != "" ? $("#endDate").val() : getDateBr(new Date()));
-        }     
+
+        var start = gup("startDate") || getDateBr(new Date().getStartOfMonth());
+        var end = gup("endDate") || getDateBr(new Date());
+        try{
+          $("#startDate").val(start)
+        }catch(e){}
+
+        try{        
+          $("#endDate").val(end)
+        }catch(e){}
+
         var fields = [];
-        fields[1] = {
+        fields[0] = "date";
+        fields[2] = {
           type: "format",
           decode: function(name, row) {
-            return "<a href='/customer/edit?id=" + row[0] + "' target='_customer_maste'>" + name + "</a>";
-          }
-        }
-        fields[4] = "real";
-        //fields[5] = "real";
-        fields[5] = {
-          type : "format",
-          decode: function(name, row) {
-            var color = "red"
-            if (row[5] != row[4]) {
-            return "<p style='color:" + color + "'>" + 
-                realDecode(row[5]) + "<p/>"
-            } else {
-              return realDecode(row[5])
-            }
-          }
-        }
-        fields[7] = "date";
-        fields[8] = "date";
-        fields[8] = {
-          type : "format",
-          decode: function(name, row) {
-            var color = "red"
-            if (row[8] != row[7]) {
-            return "<p style='color:" + color + "'>" + 
-                dateDecode(row[8]) + "<p/>"
-            } else {
-              return dateDecode(row[8])
-            }
+            return "<a href='/user/edit?id=" + row[13] + "' target='_user_maste'>" + name + "</a>";
           }
         }
         if (!hasUnitModule) {
-          fields[9] = "none";
+          fields[3] = "none";
         }
-        var url = "/report/paymenttype_details/false";
+        fields[4] = "real";
+        fields[5] = "real";
+        fields[6] = "real";
+        fields[7] = "real";
+        fields[8] = "real";
+        fields[9] = "dateTime";
+        fields[10] = {
+          type : "format",
+          decode: function(name, row) {
+            var color = "red"
+            if (row[9] != row[10]) {
+            return "<p style='color:" + color + "'>" + 
+                dateDecode(row[10]) + " " + timeDecode(row[10]); "<p/>"
+            } else {
+              return dateDecode(row[10]) + " " + timeDecode(row[10])
+            }
+          }
+        }
+        fields[11] = {
+          type: "format",
+          decode: function(name, row) {
+            return "<a href='/user/edit?id=" + row[14] + "' target='_user_maste'>" + name + "</a>";
+          }
+        }
+        fields[12] = "none"; // status
+        fields[13] = "none"; // id abriu
+        fields[14] = "none"; // i fechou
+        var url = "/report/cashier_report";
         var total_to_pay = 0.00;
         var request = function(){
           var total = 0.00;
@@ -71,13 +75,6 @@
             $("#total_paid").val(total_paid.formatMoney());
             $("#countpt").val(countpt);
           });
-          $.post("/report/paymenttype_details/true", $("#form_report").serializeObject(), function(r){
-            var total = parseFloat(eval(r)[0][0]);
-            $("#total_sale").val((total).formatMoney());
-            var count = parseFloat(eval(r)[0][1]);
-            $("#count").val(count);
-          });
-
         }
         $("#send").click(request);
         if (gup("cashier") != "") {
@@ -90,7 +87,7 @@
         <form id="form_report" class="well form-search" method='get'>
             <h1>
               <span class="lift:CompanySnippet.thumb"> </span>
-              <input class="report_title local_storage" id="title_paymenttype_details" name="title_paymenttype_details" size="30" type="text" value="Relatório de Formas de Pagamento"/>
+              <input class="report_title local_storage" id="title_cashier_report" name="title_cashier_report" size="30" type="text" value="Relatório Sintético de Caixas"/>
             </h1>
             <div class="row">
                   <div class="span8">
@@ -129,25 +126,6 @@
                     </div>
                   </div>
                   <div class="span7">
-                    <div class="clearfix">
-                      <label for="commands">Comandas Pagas </label>
-                      <div class="input">
-                        <div class="inline-inputs">
-                          <input id="commands" class="url_parameter" name="commands">
-                          <span class="help-block">Comandas <b>pagas</b> separado por <b>,</b></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="clearfix">
-                      <label for="payment_type">Formas de Pagamento</label>
-                        <div class="input">
-                          <div class="inline-inputs">
-                            <select class="url_parameter alow_all" multiple="multiple" name="payment_type" id='payment_type'>
-                            </select>
-                            <span class="help-block">Formas de pagamento</span>
-                          </div>
-                        </div>
-                    </div> 
                  </div>
             </div>
             <div class="clearfix">
@@ -187,17 +165,18 @@
       </div>
     <table id="grid" class="bordered-table zebra-striped">
       <thead>
-        <th>Id</th>
-        <th>Nome <span data-i18n='Cliente'></span></th>
-        <th>Caixa</th>
-        <th>Comanda</th>
-        <th>Total Venda</th>
-        <th>Valor Pagto</th>
-        <th>Forma Pagto</th>
-        <th>Data</th>
-        <th>Vencimento</th>
+        <th>Dt Abertura</th>
+        <th>Nro</th>
+        <th>Aberto por</th>
         <th class="clearfix lift:SecuritySnippet.hasUnitModule">Unidade</th>
-        <th>Usuário</th>
+        <th>Abertura</th>
+        <th>Fechamento</th>
+        <th>Faturamento</th>
+        <th>Saídas</th>
+        <th>Entradas</th>
+        <th>1a Dt Fecha</th>
+        <th>Utl Dt Fecha</th>
+        <th>Fechado por</th>
         </tr>
       </thead>
       <tbody>

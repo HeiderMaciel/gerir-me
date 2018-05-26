@@ -152,7 +152,7 @@ class Cashier extends LongKeyedMapper[Cashier]
         this        
     }
     def close = {
-        def newValue : Date = if (firstCloseDate == Empty || firstCloseDate == null) {
+        def newValue : Date = if (Project.dateTimeToStr (firstCloseDate) == "") {
                 new Date()
             } else {
                 firstCloseDate
