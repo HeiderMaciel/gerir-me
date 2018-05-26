@@ -373,6 +373,11 @@ with PerCity{
 	        }
 */
     	}
+      
+      if (this.bp_origin.is != 0 && 
+          (this.bp_indicatedby.is == 0)) {
+        this.bp_indicatedby.set (this.bp_origin)
+      }
 
       if (this.city.length > 7) {
         // rigel 26/08/2017
