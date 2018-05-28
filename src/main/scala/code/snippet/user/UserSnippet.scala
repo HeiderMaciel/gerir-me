@@ -225,6 +225,7 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 			"name=showInCalendar" #> (SHtml.checkbox(ac.showInCalendar_?, ac.showInCalendar_?(_)))&
 			"name=calendarFixed" #> (SHtml.checkbox(ac.calendarFixed_?, ac.calendarFixed_?(_)))&
 			"name=showInCalendarPub" #> (SHtml.checkbox(ac.showInCalendarPub_?, ac.showInCalendarPub_?(_)))&
+		    "name=calendarInterval" #>(SHtml.text(ac.calendarInterval.is.toString,(s:String) => ac.calendarInterval(s.toInt)))&
 			"name=showInCommand" #> (SHtml.checkbox(ac.showInCommand_?, ac.showInCommand_?(_)))&
 			"name=showInCashier" #> (SHtml.checkbox(ac.showInCashier_?, ac.showInCashier_?(_)))&
 			"name=discountToCommission" #> (SHtml.checkbox(ac.discountToCommission_?, ac.discountToCommission_?(_)))&
@@ -300,7 +301,8 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 												u 	=> JsObj(
 													("name",u.thumbAndName),
 													("id",u.id.is),
-													("group",u.group.is)
+													("group",u.group.is),
+													("calendarInterval",u.calendarInterval.is)
 													//,("hours", JsArray(u.workHouers.map(h => JsObj(("day", h.day.is),("start", h.start.is),("end", h.end.is),("startLanch", h.startLanch.is),("endLanch", h.endLanch.is))) ))
 												)
 											)
