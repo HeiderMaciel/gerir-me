@@ -58,22 +58,19 @@
         fields[13] = "none"; // id abriu
         fields[14] = "none"; // i fechou
         var url = "/report/cashier_report";
-        var total_to_pay = 0.00;
         var request = function(){
           var total = 0.00;
           //var total_sale = 0.00;
-          var total_paid = 0.00;
-          var countpt = 0.0;
+          var count = 0.0;
           var params = $("#form_report").serializeObject();
           renderReport(url,fields,Cachier.prepareCashierParams(params),"#grid", function(data){
             data.forEach(function(row){
-              //total_sale += parseFloat(row[4]);
-              total_paid += parseFloat(row[5]);
-              countpt += 1;
+              total += parseFloat(row[6]);
+              count += 1;
             });
             //$("#total_sale").val(total_sale.formatMoney());
-            $("#total_paid").val(total_paid.formatMoney());
-            $("#countpt").val(countpt);
+            $("#total").val(total.formatMoney());
+            $("#count").val(count);
           });
         }
         $("#send").click(request);
@@ -140,23 +137,13 @@
                 <div class="inline-inputs">
                   <div class="input-prepend" style="float:left; padding-right:10px">
                     <span class="add-on"><img src="/images/count.png" width="16"></span>
-                    <input class="small" id="count" name="count" size="19" placeholder="0.00" type="text">
-                    <span class="help-block">Nro de comandas</span>
+                    <input style="color:black;" disabled='true' class="small" id="count" name="count" size="19" placeholder="0.00" type="text">
+                    <span class="help-block">Nro de caixas</span>
                   </div>
                   <div class="input-prepend" style="float:left; padding-right:10px">
                     <span class="add-on"><img src="/images/money.png" width="16"></span>
-                    <input class="small" id="total_sale" name="total_sale" size="19" placeholder="0.00" type="text">
-                    <span class="help-block">Total de Venda</span>
-                  </div>
-                  <div class="input-prepend" style="float:left; padding-right:10px">
-                    <span class="add-on"><img src="/images/count.png" width="16"></span>
-                    <input class="small" id="countpt" name="countpt" size="19" placeholder="0.00" type="text">
-                    <span class="help-block">Nro de Pagtos</span>
-                  </div>
-                  <div class="input-prepend" style="float:left; padding-right:10px">
-                    <span class="add-on"><img src="/images/remove.png" width="16"></span>
-                    <input class="small" id="total_paid" name="total_paid" size="19" placeholder="0.00" type="text">
-                    <span class="help-block">Total de Pagto</span>
+                    <input style="color:black;" disabled='true' class="small" id="total" name="total" size="19" placeholder="0.00" type="text" title="Total faturado conforme lançamentos gerados no financeiro no fechamento dos caixas">
+                    <span class="help-block">Total Faturado</span>
                   </div>
                 </div>
               </div>
@@ -171,7 +158,7 @@
         <th class="clearfix lift:SecuritySnippet.hasUnitModule">Unidade</th>
         <th>Abertura</th>
         <th>Fechamento</th>
-        <th>Faturamento</th>
+        <th title="Valor faturado conforme lançamentos gerados no financeiro no fechamento do caixa">Faturamento</th>
         <th>Saídas</th>
         <th>Entradas</th>
         <th>1a Dt Fecha</th>
