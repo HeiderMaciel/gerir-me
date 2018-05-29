@@ -670,9 +670,12 @@
         return $('.account_payable').removeAttr("checked");
       }
     });
-    // este campo está no cadastro rápido de cliente
+    // estes campos estão no cadastro rápido de cliente
     // definido no template
     $("#rapid_customer_offsale").offSaleField(true);
+    $("#rapid_customer_origin").originField(true);
+    $("#rapid_customer_mobile_phone_op").operatorField(true);
+
     $("#user").userField();
     $(".user_select_span").hide();
     $(".cashier_select_span").hide();

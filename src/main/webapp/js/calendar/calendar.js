@@ -451,9 +451,11 @@ $(function(){
 	$('#tooth').toothField(true);
 	$('#auxiliar').auxiliarField(false);
     $("#offsale").offSaleField(true);
-    // este campo está no cadastro rápido de cliente
+    // estes campos estão no cadastro rápido de cliente
     // definido no template
     $("#rapid_customer_offsale").offSaleField(true);
+    $("#rapid_customer_origin").originField(true);
+    $("#rapid_customer_mobile_phone_op").operatorField(true);
     Customer.addonsListeners.push(processOffSale);
 	$("#customer_for_seach").change(function(){
 		refreshCalendarByAjax();

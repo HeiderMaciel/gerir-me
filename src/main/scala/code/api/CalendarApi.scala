@@ -53,6 +53,7 @@ object CalendarApi extends RestHelper with net.liftweb.common.Logger  {
 				def obs = S.param("obs") openOr ""
 				def bp_indicatedby_str = S.param("bp_indicatedby") openOr "0"
 				def offsale = S.param("offsale") openOr "0"
+				def origin = S.param("origin") openOr "0"
 				def birthday = S.param("birthday") openOr "0"
 
 				def bp_indicatedby = if(bp_indicatedby_str == ""){
@@ -66,6 +67,7 @@ object CalendarApi extends RestHelper with net.liftweb.common.Logger  {
 					email(email).
 					bp_indicatedby(bp_indicatedby.toLong).
 					offsale(offsale.toLong).
+					bp_origin(origin.toLong).
 					birthday(Project.strToDateOrNull(birthday)).
 					company(AuthUtil.company)
 				customer.save

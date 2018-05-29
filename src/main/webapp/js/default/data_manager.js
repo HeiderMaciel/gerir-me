@@ -21,6 +21,7 @@ var DataManagerClass = function() {
 	var domains = [];
 	var accounts = [];
 	var operators = [];
+	var origins = [];
 	var categorys = [];
 	var notifications = [];
 	var brands = [];
@@ -468,6 +469,17 @@ var DataManagerClass = function() {
 			$.get("/cash/operators", function(results) {
 				eval("operators = " + results);
 				callback(operators);
+			});
+		}
+	};	
+
+	this.getOrigin = function(callback) {
+		if (origins.length > 0) {
+			callback(origins);
+		} else {
+			$.get("/cash/origins", function(results) {
+				eval("origins = " + results);
+				callback(origins);
 			});
 		}
 	};	

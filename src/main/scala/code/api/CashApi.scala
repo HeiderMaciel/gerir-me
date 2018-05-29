@@ -108,7 +108,7 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 		}
 
 		// acho que não usa pra nada - em lugar nenhum
-		// rigel - 30/06/2017
+		// rigel - 30/06/2017 - usa sim no cadastro rápido
 		case "cash" :: "operators" :: Nil JsonGet _ => {
 			JsArray(
 					DomainTable.findAll(
@@ -125,6 +125,19 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 		case "cash" :: "brands" :: Nil JsonGet _ => {
 			JsArray(
 					Brand.findAllInCompany(OrderBy (Brand.name, Ascending)).map(
+						(u) => JsObj(("status","success"),
+									 ("name",u.short_name.is),
+									 ("id",u.id.is)
+									 )
+							)
+					)
+		}
+
+		case "cash" :: "origins" :: Nil JsonGet _ => {
+			JsArray(
+					Customer.findAllInCompany(
+						By(Customer.is_origin_?, true),
+						OrderBy (Customer.name, Ascending)).map(
 						(u) => JsObj(("status","success"),
 									 ("name",u.short_name.is),
 									 ("id",u.id.is)

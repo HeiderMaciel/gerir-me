@@ -63,6 +63,10 @@ jQuery.fn.operatorField = function(allow_null, callback) {
 	makeSelect(this, 'getOperator', allow_null, 'Selecione uma operadora', callback);
 };
 
+jQuery.fn.originField = function(allow_null, callback) {
+	makeSelect(this, 'getOrigin', allow_null, 'Selecione uma origem', callback);
+};
+
 jQuery.fn.monthField = function(allow_null, select_current_month) {
 	makeSelect(this, 'i18nMonths', allow_null, 'Selecione um mês');
 	if (select_current_month) {
