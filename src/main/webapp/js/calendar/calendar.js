@@ -37,8 +37,12 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 							$('#calendar').weekCalendar('option', 'timeslotsPerHour', 60/intervalAlt);
 							global_interval = intervalAlt; //15;	
 						} else {					
-							$('#calendar').weekCalendar('option', 'timeslotsPerHour', 60/interval);
-							global_interval = interval;	
+							if (global_users.length ==1){
+								global_interval = users[0].calendarInterval
+							} else {
+								global_interval = interval;	
+							}
+							$('#calendar').weekCalendar('option', 'timeslotsPerHour', 60/global_interval);
 						}
 
 						toggle = !toggle;
@@ -80,6 +84,9 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 			global_load = users.length==1 || global_load || autoOpenCalendar;
 			if(global_load ){
 				var daysAux = 1;
+				if (global_users.length ==1){
+					global_interval = users[0].calendarInterval
+				}
 				if (global_users.length <=3){
 					daysAux = 3;
 				}

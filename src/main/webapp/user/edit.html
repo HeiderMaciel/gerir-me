@@ -79,7 +79,7 @@
                               </div>
                               <div class="form-group">
                                   <label for="short_name">Apelido</label>
-                                  <input id="short_name" name="short_name" class="form-control" size="30"/>
+                                  <input id="short_name" name="short_name" class="form-control" size="20"/>
                               </div>
                               <div class="form-group">
                                   <a data-original-title="Informação" 
@@ -93,14 +93,14 @@
                           <!-- Migration -->
                           <div class="form-inline lift:SecuritySnippet.isSuperAdmin">
                               <label for="external_id">Migração *</label>
-                              <input class="form-control" id="external_id" name="external_id" size="30"/>
+                              <input class="form-control" id="external_id" name="external_id" size="10"/>
                           </div>
 
                           <!-- Observations -->
                           <div class="form-inline">
                               <div class="form-group">
                                   <label for="obs">Observação</label>
-                                  <textarea id="obs" name="obs" class="form-control" cols="30" rows="4"></textarea>
+                                  <textarea id="obs" name="obs" class="form-control" cols="30" rows="3"></textarea>
                               </div>
                           </div>
 
@@ -110,20 +110,20 @@
                                   <label for="phone">Telefones</label>
                                   <div class="input-group">
                                     <span class="input-group-addon"><img src='/images/phone.png'/></span>
-                                    <input class="form-control phone" id="phone" name="phone"/>
+                                    <input class="form-control phone" id="phone" name="phone" size="15"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon"><img src='/images/mobile_phone.png'/></span>
-                                    <input class="form-control phone" id="mobilePhone" name="mobilePhone"/>
+                                    <input class="form-control phone" id="mobilePhone" name="mobilePhone" size="15"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="email_alternative">&nbsp;</label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><img src='/images/mobile_phone.png'/></span>
-                                    <input class="form-control phone" id="email_alternative" name="email_alternative"/>
+                                    <input class="form-control phone" id="email_alternative" name="email_alternative" size="15"/>
                                 </div>
                               </div>
                           </div>
@@ -134,7 +134,7 @@
                                   <label>Aniversário</label>
                                   <div class="input-group">
                                     <span class="input-group-addon"><img src='/images/birthday.png'/></span>
-                                    <input class="form-control date" id="birthday" name="birthday"/>
+                                    <input class="form-control date" id="birthday" name="birthday" size="10"/>
                                 </div>
                               </div>
 
@@ -153,12 +153,12 @@
                           <div class="form-inline">
                               <div class="form-group">
                                   <label for="document">CPF</label>
-                                  <input id="document" name="document" size="30" class="form-control cpf"/>
+                                  <input id="document" name="document" size="20" class="form-control cpf"/>
                               </div>
 
                               <div class="form-group">
                                   <label for="document_identity">RG</label>
-                                  <input id="document_identity" name="document_identity" size="30" class="form-control"/>
+                                  <input id="document_identity" name="document_identity" size="20" class="form-control"/>
                               </div>
                           </div>
 
@@ -197,9 +197,14 @@
                                 <label for="orderInCalendar">Agenda</label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><input type="checkbox" name="showInCalendar"/></span>
-                                    <input class="form-control" name="orderInCalendar"/>
+                                    <input class="form-control" name="orderInCalendar" size="10"/>
                                 </div>
                                 <span class="hint right">Mostrar <span data-i18n="Profissional"></span> na agenda? / Ordem na agenda</span>
+                            </div>
+                            <div class="form-group with-right-margin">
+                              <label for="calendarInterval">Intervalo Agenda</label>
+                              <input class="form-control" id="calendarInterval" name="calendarInterval" size="10"/>
+                              <span class="hint right">Intervalo, só é aplicado na agenda individual</span>
                             </div>
                         </div>
 
@@ -256,7 +261,7 @@
                                 <label for="email">E-mail</label>
                                 <div class="input-group">
                                     <span class="input-group-addon">@</span>
-                                    <input size="30" class="form-control" id="email" name="email" autocomplete="off"/>
+                                    <input size="25" class="form-control" id="email" name="email" autocomplete="off"/>
                                 </div>
                             </div>
                         </div>
@@ -355,14 +360,14 @@
                                 <label for="hireDate">Admissão</label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><img width="16" src='/images/calendar_addon.png'/></span>
-                                    <input class="form-control date" id="hireDate" name="hireDate"/>
+                                    <input class="form-control date" id="hireDate" name="hireDate" size="10"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="resignationDate">Rescisão</label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><img width="16" src='/images/calendar_addon.png'/></span>
-                                    <input class="form-control date" id="resignationDate" name="resignationDate"/>
+                                    <input class="form-control date" id="resignationDate" name="resignationDate" size="10"/>
                                 </div>
                             </div>
                         </div>

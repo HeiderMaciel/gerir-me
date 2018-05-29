@@ -218,7 +218,8 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
         userObj.company.obj.get.calendarStart.is,
         userObj.company.obj.get.calendarEnd.is-1,
         date1,
-        userObj.company.obj.get.calendarInterval.is,
+//        userObj.company.obj.get.calendarInterval.is,
+        userObj.calendarInterval.is,
         user.toLong,
         customer.company,
         date1,
@@ -258,7 +259,9 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
         })
         */
         JsObj(
-          ("interval", userObj.company.obj.get.calendarInterval.is),
+          (
+//            "interval", userObj.company.obj.get.calendarInterval.is),
+            "interval", userObj.calendarInterval.is),
           ("start", userObj.company.obj.get.calendarStart.is),
           ("end", userObj.company.obj.get.calendarEnd.is),
 //          ("activities", JsArray(activities)),

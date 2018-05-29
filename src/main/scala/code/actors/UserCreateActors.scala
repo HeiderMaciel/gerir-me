@@ -53,6 +53,7 @@ object UserCreateActors extends LiftActor {
       //"gerirme"
     } else if (company.appType == Company.SYSTEM_ESMILE) {
       activityName = "Procedimento";
+      PermissionModule.setModule (company, "RELATION");
       PermissionModule.setModule (company, "QUIZ");
       PermissionModule.setModule (company, "BUDGET");
       PermissionModule.setModule (company, "ANVISA");
@@ -62,6 +63,7 @@ object UserCreateActors extends LiftActor {
       //"esmile"
     } else if (company.appType == Company.SYSTEM_EDOCTUS) {
       activityName = "Procedimento";
+      PermissionModule.setModule (company, "RELATION");
       PermissionModule.setModule (company, "QUIZ");
       PermissionModule.setModule (company, "OFFSALE");
       PermissionModule.setModule (company, "ANVISA");
