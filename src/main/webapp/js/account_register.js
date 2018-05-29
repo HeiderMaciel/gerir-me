@@ -670,6 +670,9 @@
         return $('.account_payable').removeAttr("checked");
       }
     });
+    // este campo está no cadastro rápido de cliente
+    // definido no template
+    $("#rapid_customer_offsale").offSaleField(true);
     $("#user").userField();
     $(".user_select_span").hide();
     $(".cashier_select_span").hide();

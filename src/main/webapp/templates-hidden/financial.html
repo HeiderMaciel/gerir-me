@@ -347,7 +347,7 @@
     </div>
   </div>
   </div>
-<div id="customer_rapid_add" class="modal hide fade">
+<div id="customer_rapid_add" class="modal hide fade" class="modal hide fade" style="width: 90%; left: 5%; margin: auto auto auto auto; top:5%; height:100%; max-height:100%;">
     <div class="modal-header">
             <a href="#" class="close">&times;</a>
           <h3>Cadastro Rápido de <span data-i18n='Cliente'></span></h3>
@@ -359,29 +359,29 @@
           </div>    
             <span>
               <div class="clearfix">
-                <label for="name">Nome</label>
+                <label for="rapid_customer_name">Nome</label>
                  <div class="input">
                     <input class="xlarge" id="rapid_customer_name" name="rapid_customer_name" size="30" type="text"/>
                     <span class="help-block">Nome completo</span>
                  </div>
               </div>        
             <div class="clearfix">
-              <label for="phone">Telefones</label>        
+              <label for="rapid_customer_phone">Telefones</label>        
                <div class="input">
                   <div class='inline-inputs'>
                     <div class="input-prepend" style='float:left; padding-right:10px'>
-                      <span class="add-on"><img src='/images/phone.png'/></span> 
+                      <span class="add-on hide_mobile"><img src='/images/phone.png'/></span> 
                       <input class="medium phone" id="rapid_customer_phone" name="rapid_customer_phone" size="30" type="text"/>
                     </div>
                 </div>
                </div>
             </div>
             <div class="clearfix">
-              <label for="mobile_phone">Celular</label>        
+              <label for="rapid_customer_mobile_phone">Celular</label>        
                <div class="input">
                   <div class='inline-inputs'>
                     <div class="input-prepend" style='float:left; padding-right:10px'>
-                      <span class="add-on"><img src='/images/mobile_phone.png'/></span> 
+                      <span class="add-on hide_mobile"><img src='/images/mobile_phone.png'/></span> 
                       <input class="medium phone" id="rapid_customer_mobile_phone" name="rapid_customer_mobile_phone" size="30" type="text"/>
                     </div>
                     <div class="input-prepend" style='float:left; padding-right:10px'>
@@ -400,12 +400,34 @@
                </div>
             </div>
             <div class="clearfix">
-              <label for="email">Email</label>        
+              <label for="rapid_customer_birthday">Data Nascimento</label>
+              <div class="input">
+                <div class="inline-inputs">
+                  <div class="input-prepend" style="float:left; padding-right:10px">
+                    <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
+                    <input type="text" class="input-small date" id='rapid_customer_birthday' name="rapid_customer_birthday" placeholder="Nascimento"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix">
+              <label for="rapid_customer_email">Email</label>        
                <div class="input">
                   <div class='inline-inputs'>
                     <div class="input-prepend" style='float:left; padding-right:10px'>
-                      <span class="add-on">@</span> 
+                      <span class="add-on hide_mobile">@</span> 
                       <input class="xlarge email" id="rapid_customer_email" name="rapid_customer_email" size="30" type="text"/>
+                    </div>
+                </div>
+               </div>
+            </div>
+            <div class="clearfix lift:SecuritySnippet.hasOffSaleModule">
+              <label for="rapid_customer_offsale">Convênio</label>        
+               <div class="input">
+                  <div class='inline-inputs'>
+                    <div class="input-prepend" style='float:left; padding-right:10px'>
+                      <select class="medium" id="rapid_customer_offsale" name="rapid_customer_offsale" size="30" type="text">
+                      </select>
                     </div>
                 </div>
                </div>
@@ -418,11 +440,10 @@
                     <input class='mini id_customer_search' id='rapid_customer_bp_indicatedby' name="rapid_customer_bp_indicatedby" /> 
                     <input class="name_customer_search" name="rapid_customer_indicatedby" id="rapid_customer_indicatedby"  size="30" type="text" placeholder="Nome"/>    
                   </span>
-                  <span class="help-block">Indicado por</span>
                </div>
             </div>
             <div class="clearfix">
-              <label for="obs">Obs</label>        
+              <label for="rapid_customer_obs">Obs</label>
                <div class="input">
                   <div class='inline-inputs'>
                       <input class="" id="rapid_customer_obs" name="rapid_customer_obs" size="30" type="textarea"/>

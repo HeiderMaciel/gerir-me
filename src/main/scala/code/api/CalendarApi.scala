@@ -52,12 +52,22 @@ object CalendarApi extends RestHelper with net.liftweb.common.Logger  {
 				def email = S.param("email") openOr ""
 				def obs = S.param("obs") openOr ""
 				def bp_indicatedby_str = S.param("bp_indicatedby") openOr "0"
+				def offsale = S.param("offsale") openOr "0"
+				def birthday = S.param("birthday") openOr "0"
+
 				def bp_indicatedby = if(bp_indicatedby_str == ""){
 					"0"
 				}else{
 					bp_indicatedby_str
 				}
-				val customer = Customer.create.name(name).obs(obs).phone(phone).mobilePhone(mobile_phone).mobilePhoneOp(mobile_phone_op.toLong).email(email).bp_indicatedby(bp_indicatedby.toLong).company(AuthUtil.company)
+				val customer = Customer.create.name(name).obs(obs).
+					phone(phone).mobilePhone(mobile_phone).
+					mobilePhoneOp(mobile_phone_op.toLong).
+					email(email).
+					bp_indicatedby(bp_indicatedby.toLong).
+					offsale(offsale.toLong).
+					birthday(Project.strToDateOrNull(birthday)).
+					company(AuthUtil.company)
 				customer.save
 				JInt(customer.id.is)
 			}catch{

@@ -854,6 +854,9 @@
     $("#offsale").change(function() {
       OffSaleCurrent.getProcuts($(this).val());
     });
+    // este campo está no cadastro rápido de cliente
+    // definido no template
+    $("#rapid_customer_offsale").offSaleField(true);
     getUsers();
     //getProcuts();
     getPaymentTypes();

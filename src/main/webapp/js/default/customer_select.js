@@ -144,6 +144,7 @@ $(function() {
 	});
 	$("#b_customer_rapid_add").click(function() {
         var opparm = $("#rapid_customer_mobile_phone_op").val() || '0';
+        var offsaleparm = $("#rapid_customer_offsale").val() || '0';
 
 		Customer.rapidCreate($("#rapid_customer_name").val(), 
 			$("#rapid_customer_phone").val(), 
@@ -152,7 +153,10 @@ $(function() {
 			opparm,
 			$("#rapid_customer_email").val(), 
 			$("#rapid_customer_obs").val(), 
-			$("#rapid_customer_bp_indicatedby").val());
+			$("#rapid_customer_bp_indicatedby").val(),
+			offsaleparm,
+			$("#rapid_customer_birthday").val()
+			);
 	})
 	$("#rapid_customer_phone,#rapid_customer_name").keypress(function(e) {
 		if (e.keyCode == 13) {

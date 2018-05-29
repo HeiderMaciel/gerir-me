@@ -451,6 +451,9 @@ $(function(){
 	$('#tooth').toothField(true);
 	$('#auxiliar').auxiliarField(false);
     $("#offsale").offSaleField(true);
+    // este campo está no cadastro rápido de cliente
+    // definido no template
+    $("#rapid_customer_offsale").offSaleField(true);
     Customer.addonsListeners.push(processOffSale);
 	$("#customer_for_seach").change(function(){
 		refreshCalendarByAjax();

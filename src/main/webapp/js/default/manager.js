@@ -51,7 +51,7 @@ var Cachier = {
 var Customer = {
 	addonsListeners: [],
 	rapidCreate: function (name, phone, mobile_phone, mobile_phone_op,
-		email,obs, bp_indicatedby) {
+		email,obs, bp_indicatedby, offsale, birthday) {
 		$.post("/calendar/customer/add", {
 			"name": name,
 			"phone": phone,
@@ -59,7 +59,9 @@ var Customer = {
 			"mobile_phone_op": mobile_phone_op,
 			"email": email,
 			"obs": obs,
-			"bp_indicatedby": bp_indicatedby
+			"bp_indicatedby": bp_indicatedby,
+			"offsale": offsale,
+			"birthday": birthday
 		}, function (result) {
 			if (isNaN(result)) {
 				alert(eval(result));
