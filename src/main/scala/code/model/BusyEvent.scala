@@ -66,6 +66,7 @@ with PerCompany with PerUnit {
 				("color", ""), //"#E8AE9C"), // trazer aqui cor do bloqueio/serviço
                 ("icon", ""), // colocar aqu o relogio se for workhour
 				("is_employee_hour", this.is_employee_lanche_?.is),
+                ("unitId", this.unit.is),
 				("status", "not_work" )
 		)
     }
