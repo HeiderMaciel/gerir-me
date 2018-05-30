@@ -110,18 +110,22 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 						},
 						eventDelete: function(calEvent, element, dayFreeBusyManager,calendar, clickEvent) {
 
-							if(CalendarManager.calendarPermitions.deleteEvent){
-								var message = "";
-								if(calEvent.status == "event" || calEvent.status  == "not_work"){
-									message = "Tem certeza que deseja excluir o bloqueio do profissional " +calEvent.userName+ "?";
-								}else{
-									message = "Tem certeza que deseja excluir o atendimento do cliente "+calEvent.customerName+ "?";
+							if(calEvent.unitId == unit){
+								if(CalendarManager.calendarPermitions.deleteEvent){
+									var message = "";
+									if(calEvent.status == "event" || calEvent.status  == "not_work"){
+										message = "Tem certeza que deseja excluir o bloqueio do profissional " +calEvent.userName+ "?";
+									}else{
+										message = "Tem certeza que deseja excluir o atendimento do cliente "+calEvent.customerName+ "?";
+									}
+									if(confirm(message)){
+										TreatmentManger.removeTreatmentById(calEvent.id,calendar,calEvent);
+									}								
+								} else {
+									alert ("Suas permissões não permitem excluir agendamento");
 								}
-								if(confirm(message)){
-									TreatmentManger.removeTreatmentById(calEvent.id,calendar,calEvent);
-								}								
 							} else {
-								alert ("Suas permissões não permitem excluir agendamento");
+								alert ("Este atendimento é de outra unidade");
 							}
 						},
 						businessHours: {start: startCalendar, end: endCalendar, limitDisplay: true},
@@ -147,6 +151,12 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 								// o trecho comentado
 								colorAux = calEvent.color;
 								var color = getColor(calEvent.status, calEvent.status2, calEvent.color);
+								if (calEvent.unitId != unit) {
+									// força cor verde escura se o atendimento é de unidade
+									// diferente da selecionada a agenda
+									color.headColor = "#067356";
+									color.color = "#067356";
+								}
 								// antes o controno do header era preto - deixei da cor da agenda
 								//$event.find(".wc-time").css({backgroundColor: color.headColor, color:color.text, border:"1px solid #000000"});
 								if (!calendarShowLight) {
@@ -226,27 +236,31 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 							}
 						},
 						eventClick: function(calEvent, element, dayFreeBusyManager, calendar, clickEvent){
-							if(CalendarManager.calendarPermitions.editEvent){
-								if(click1 === null && !isMobile.any){
-									click1 = Date.toDay();
-								}else if(isMobile.any || (Date.toDay().getTime() - click1.getTime() < 300)  ){
-									if(calEvent.customerId){
-										if(calEvent.treatmentsIn && calEvent.treatmentsIn.length > 0 ){
-											CalendarScreen.showCustomers(calEvent);
+							if(calEvent.unitId == unit){
+								if(CalendarManager.calendarPermitions.editEvent){
+									if(click1 === null && !isMobile.any){
+										click1 = Date.toDay();
+									}else if(isMobile.any || (Date.toDay().getTime() - click1.getTime() < 300)  ){
+										if(calEvent.customerId){
+											if(calEvent.treatmentsIn && calEvent.treatmentsIn.length > 0 ){
+												CalendarScreen.showCustomers(calEvent);
+											}else{
+												CalendarScreen.showTreatment(calEvent);
+											}
 										}else{
-											CalendarScreen.showTreatment(calEvent);
+											// se nao tem cliente é bloqueio de profissional
+											if (calEvent.title == "") {
+												obs = "Bloqueio sem descrição"	
+											} else {
+												obs = calEvent.title
+											}
+											alert(calEvent.userName + " - " + obs);
 										}
-									}else{
-										// se nao tem cliente é bloqueio de profissional
-										if (calEvent.title == "") {
-											obs = "Bloqueio sem descrição"	
-										} else {
-											obs = calEvent.title
-										}
-										alert(calEvent.userName + " - " + obs);
 									}
+									click1 = Date.toDay();								
 								}
-								click1 = Date.toDay();								
+							} else {
+								alert ("Este atendimento é de outra unidade");
 							}
 						},
 						draggable : function(){

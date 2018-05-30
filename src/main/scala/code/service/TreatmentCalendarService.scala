@@ -82,6 +82,7 @@ object TreatmentCalendarService {
                 ("status2", p(14).asInstanceOf[Long]),
                 ("color", p(15).toString), //"#C7172D"), // trazer aqui cor do bloqueio/serviço
                 ("icon", icon), 
+                ("unitId", p(17).asInstanceOf[Long]),
                 ("noConflits", p(11).asInstanceOf[Long])
 
                 )
@@ -145,7 +146,7 @@ object TreatmentCalendarService {
           --(SELECT count(1) FROM treatment tt
           --WHERE tr.id = tt.treatmentConflit) 
           0 AS conflits,
-          u.name, c.imagethumb, tr.status2, coalesce (pr.color, ''), c.valueinaccount 
+          u.name, c.imagethumb, tr.status2, coalesce (pr.color, ''), c.valueinaccount, tr.unit 
           FROM treatment tr
           INNER JOIN business_pattern c on(tr.customer=c.id)
           INNER JOIN business_pattern u on(tr.user_c=u.id)

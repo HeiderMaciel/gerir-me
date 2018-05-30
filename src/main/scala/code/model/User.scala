@@ -524,9 +524,14 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         if (isAdmin && groupPermissionList.length > 2) {
             throw new RuntimeException ("Se a permissão Administrador foi especificada, não é necessário especificar nenhuma outra")
         }
-        if ((isSimpleUserCalendar || isSimpleUserCommand) 
+
+        if (isCashierGeneral && isCashier) {
+            throw new RuntimeException ("Se a permissão Caixa Geral foi especificada, não é necessário especificar a permissão de caixa")
+        }
+
+        if ((isSimpleUserCalendar || isSimpleUserCommand || isSimpleUserCalendarView) 
             && (isCalendarUser || isCommandUser)) {
-            throw new RuntimeException ("Se as permissões de Agenda Geral ou Comanda Geral forem especificadas, não faz sentido especificar permissões restritivas como Prof Agenda e Prof Comanda")
+            throw new RuntimeException ("Se as permissões de Agenda Geral ou Comanda Geral forem especificadas, não faz sentido especificar permissões restritivas como Prof Agenda, Prof Agenda Geral e Prof Comanda")
         }
         if (isRecords && !isCustomer) {
             throw new RuntimeException ("Ao atribuir a permissão Prontuário você deve também atribuir Clientes/Pacientes")
