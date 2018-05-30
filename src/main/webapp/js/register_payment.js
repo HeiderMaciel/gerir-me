@@ -12,6 +12,8 @@
 
   var paymentOfAccount = false;
 
+  var glb_valueinaccount = 0.0;
+
   // criei para controlar exclusão de itens no grid 
   // e evitar pagamento de treatment vazio
   // rigel 16/05/2018
@@ -1064,7 +1066,7 @@
       // conta cliente devida
       // 16/05/2018 - rigel
       var valdevido = 0.0;
-      valdevido = (-1 * window.parseFloat ($('#valueinaccount').val()));
+      valdevido = (-1 * glb_valueinaccount);
       if (hasCustomerAccount && 
         valCustomerAccount > valdevido) {
         messages.push("Valor de conta cliente na tabela de ítens " + 
@@ -1529,10 +1531,12 @@
         return t.status != 4; // paid 
       });
       // rigel 16/03/2018
+      glb_valueinaccount = 0.0;
       if (treatmentsOpen.length > 0) {
         $('#valueinpoints').val(treatmentsOpen[0].customerValueInPoints);
         if (treatmentsOpen[0].customerValueInAccount < 0) {
           $('#valueinaccount').val(treatmentsOpen[0].customerValueInAccount.formatMoney());
+          glb_valueinaccount = treatmentsOpen[0].customerValueInAccount;
         } else if (treatmentsOpen[0].customerValueInAccount > 0) {
           $('#valueinaccountcredit').val(treatmentsOpen[0].customerValueInAccount.formatMoney());
         }
