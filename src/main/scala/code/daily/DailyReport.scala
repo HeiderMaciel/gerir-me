@@ -209,7 +209,8 @@ object DailyReport{
 					Olá {user.name.is}, <br/><br/>{description} você tem {num} atendimento(s) marcado(s), abaixo detalhes:
 					{
 						treatments.map(
-							a =>
+							a => {
+							val colornow = "background-color:" + a.colorByDetails + ";"
 							(
 								<div>
 									<br/>
@@ -221,7 +222,8 @@ object DailyReport{
 									<br/>
 										<b>Horário</b> : de {Project.dateToHours(a.start.is)} até {Project.dateToHours(a.end.is)}
 									<br/>
-										<b>Atendimentos</b> : {a.descritionDetails}
+									<span style={colornow}>
+										<b>Atendimentos</b></span> : {a.descritionDetails}
 									<br/>
 										<b>Obs</b> : {a.obs}
 									<br/>
@@ -230,7 +232,7 @@ object DailyReport{
 										<b>Local</b> : {company.name.is} - Unidade {a.unit.obj.get.name}
 									<hr/>
 								</div>
-							)
+							)}
 						)
 					}
 				  </div>

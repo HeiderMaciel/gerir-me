@@ -85,6 +85,7 @@ class  ActivitySnippet extends BootstrapPaginatorSnippet[Activity] with SnippetU
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"shortname" -> Text(ac.short_name.is),
 							"duration" -> Text(ac.duration.is),
+							"colorid" -> ac.colorId,
 							"obs" -> Text(ac.obs.is),
 							"type" -> Text(ac.typeActivityName),
 							"price" -> Text(ac.salePrice.is.toString),

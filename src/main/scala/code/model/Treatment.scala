@@ -215,6 +215,26 @@ with WithCustomer with net.liftweb.common.Logger{
         }
     }    
 
+    def colorByDetails = {
+        details match { 
+            case (dl) if(dl.size >0 ) => { 
+               // diferente da atividade/produto ue se tiver + de 1 detalhe 
+               // deve dobrar o convênio não precisa
+               //(details map(_.nameOffSale) reduceLeft(_+", "+_))
+               var str = "";
+               details.map ( t => {
+                    if (str == "") {
+                       str += t.color;
+                    }
+               })
+               str
+            }
+            case _ => {
+                ""
+            }
+        }
+    }    
+
     def descritionByDetails = {
         details match { 
                 case (dl) if(dl.size >0 ) => { 

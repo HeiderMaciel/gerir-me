@@ -341,6 +341,13 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
        }  
     }
 
+    def color:String = {
+       activity.obj match {
+        case Full(a) => a.color.is
+        case _ => ""
+       }  
+    }
+
     def nameActivityTooth:String = {
          activity.obj match {
             case Full(a) => (a.name.is + " " + tooth).trim

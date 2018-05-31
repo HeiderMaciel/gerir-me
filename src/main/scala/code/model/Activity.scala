@@ -137,6 +137,9 @@ class Activity extends ProductMapper[Activity] with Ordered[Activity] {
     def discounts_text:String = products_bom.map((p)=>p.product_bom.is.toString).foldLeft("")(_+","+_)
 
     def clearBons = products_bom.foreach(_.delete_!)
+
+    def colorId = <a style={"background-color:"+color.is+";"} 
+    href={"/activity/edit?id="+id.is.toString} target='_activity_maste'>{id.is.toString}</a>
 } 
 
 object Activity extends Activity with ProductMapperMeta[Activity] {
