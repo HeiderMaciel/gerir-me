@@ -523,19 +523,21 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         // rigel março 2018 - nao sei pq o length vem com um a mais
         if (isAdmin && groupPermissionList.length > 2) {
             throw new RuntimeException ("Se a permissão Administrador foi especificada, não é necessário especificar nenhuma outra")
+        } else if (!isAdmin) {
+
+            if (isCashierGeneral && isCashier) {
+                throw new RuntimeException ("Se a permissão Caixa Geral foi especificada, não é necessário especificar a permissão de caixa")
+            }
+
+            if ((isSimpleUserCalendar || isSimpleUserCommand || isSimpleUserCalendarView) 
+                && (isCalendarUser || isCommandUser)) {
+                throw new RuntimeException ("Se as permissões de Agenda Geral ou Comanda Geral forem especificadas, não faz sentido especificar permissões restritivas como Prof Agenda, Prof Agenda Geral e Prof Comanda")
+            }
+            if (isRecords && !isCustomer) {
+                throw new RuntimeException ("Ao atribuir a permissão Prontuário você deve também atribuir Clientes/Pacientes")
+            }
         }
 
-        if (isCashierGeneral && isCashier) {
-            throw new RuntimeException ("Se a permissão Caixa Geral foi especificada, não é necessário especificar a permissão de caixa")
-        }
-
-        if ((isSimpleUserCalendar || isSimpleUserCommand || isSimpleUserCalendarView) 
-            && (isCalendarUser || isCommandUser)) {
-            throw new RuntimeException ("Se as permissões de Agenda Geral ou Comanda Geral forem especificadas, não faz sentido especificar permissões restritivas como Prof Agenda, Prof Agenda Geral e Prof Comanda")
-        }
-        if (isRecords && !isCustomer) {
-            throw new RuntimeException ("Ao atribuir a permissão Prontuário você deve também atribuir Clientes/Pacientes")
-        }
         if (this.is_person_?) {
             if (this.image.is == "" || this.image.is == "empresa.png") {
                 this.image.set ("cliente.png")
