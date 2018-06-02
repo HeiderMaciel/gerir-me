@@ -332,7 +332,6 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					where pa.company = ? and pa.command = ? and pa.datepayment = ?
 					and bc.id = ?
 				""";
-				println ("vaiii ==================== " + customer.toLong)
 				toResponse(sql,scala.List(
 					AuthUtil.company.id.is, command, 
 					Project.strOnlyDateToDate(date_str), 
@@ -360,7 +359,6 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					and bc.id = ?
 					order by pd.id
 				""";
-				println ("vaiii ==================== " + customer.toLong)
 				toResponse(sql,scala.List(
 					AuthUtil.company.id.is, command, 
 					Project.strOnlyDateToDate(date_str), 

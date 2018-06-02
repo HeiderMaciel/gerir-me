@@ -28,6 +28,13 @@
     fields[17] = "none";
     fields[18] = "none";
     // 19 product name
+    fields[19] = { // nameproduct
+      type : "format",
+      decode: function(name, row) {
+        return "<p style='line-height: 105%'>" + 
+            row[19] + "<p/>"
+      }
+    }
     if (hasPetSystem) {
     // 20 animal pet - se tiver
     } else {
@@ -152,18 +159,18 @@
         </tr>
         <tr>
           <td colspan="6">
-            <span style="font-size:14px;">Recebemos de </span>
+            <span style="line-height: 105%; font-size:14px;">Recebemos de </span>
             <input type="hidden" id="idcustomer" >
-            <span style="font-size:14px;" id="customer"></span> - <span style="font-size:14px;" id="phone"></span>
+            <span style="line-height: 105%; font-size:14px;" id="customer"></span> - <span style="line-height: 105%; font-size:14px;" id="phone"></span>
             <br/><br/>
-            Cpf : <span style="font-size:14px;" id="document"></span>
-            <span style="font-size:14px;" id="cstreet"></span>, <span style="font-size:14px;" id="cnumber_c"></span> <span style="font-size:14px;" id="ccomplement"></span>
+            Cpf : <span style="line-height: 105%; font-size:14px;" id="document"></span>
+            <span style="line-height: 105%; font-size:14px;" id="cstreet"></span>, <span style="line-height: 105%; font-size:14px;" id="cnumber_c"></span> <span style="line-height: 105%; font-size:14px;" id="ccomplement"></span>
             <br/><br/>
-            <span style="font-size:14px;" id="cdistrict"></span> - <span style="font-size:14px;" id="cpostal_code"></span>
+            <span style="line-height: 105%; font-size:14px;" id="cdistrict"></span> - <span style="line-height: 105%; font-size:14px;" id="cpostal_code"></span>
             <br/><br/>
-            <span style="font-size:14px;" id="ccity"></span> - <span style="font-size:14px;" id="cstate"></span><br/>
+            <span style="line-height: 105%; font-size:14px;" id="ccity"></span> - <span style="line-height: 105%; font-size:14px;" id="cstate"></span><br/>
             <br/><br/>
-            <span style="font-size:18px;">
+            <span style="line-height: 105%; font-size:18px;">
             O Valor de R$ <span id="ctotal"></span>
             (<span id="cextenso"></span>)<br/><br/>
             </span>
