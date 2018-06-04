@@ -507,7 +507,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					pr.name as servico, td.amount, td.price, trim (""" + 
 					strAux + """ bc.name) as cliente, bc.email,
 					trim (bc.mobile_phone || ' ' || bc.phone || ' ' || bc.email_alternative) as telefone,
-					bc.id, bp.id from treatment tr 
+					bc.id, bp.id, td.activity, td.product from treatment tr 
 					inner join business_pattern bc on bc.id = tr.customer
 					inner join treatmentdetail td on td.treatment = tr.id
 					left join business_pattern bp on bp.id = tr.user_c
@@ -527,6 +527,103 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					//LogActor ! SQL
 				toResponse(SQL.format(unit, offsale, user, prod, producttype, classes),
 					List(AuthUtil.company.id.is, start, end, start2, end2))
+			}
+
+			case "report" :: "customer_missed_frequency" :: Nil Post _=> {
+				val user_param_name = S.param("user[]") match {
+					case Full(p) => "user[]"
+					case _ => 
+				}
+
+				def user = S.param("user") match {
+					case Full(p) if(p != "")=> " and bp.id in(%s)".format(p)
+					case _ => S.param("user[]") match {
+						case Full(p) => " and bp.id in(%s)".format(S.params("user[]").filter(_ != "").foldLeft("0")(_+","+_))
+						case _ => " and 1=1 " 
+					}
+				}
+
+				def producttype = S.param("category_select") match {
+					case Full(p) if(p != "")=> " and pr.typeproduct in(%s)".format(p)
+					case _ => S.param("category_select[]") match {
+						case Full(p) if(p != "") => " and pr.typeproduct in(%s)".format(S.params("category_select[]").foldLeft("0")(_+","+_))
+						case _ => " and 1=1 " 
+					}
+				}	
+				def prod = 	 S.param("product") match {
+					case Full(p) if(p != "")=> " and pr.id in(%s)".format(p)
+					case _ => S.param("product[]") match {
+						case Full(p) if(p != "") => " and pr.id in(%s)".format(S.params("product[]").foldLeft("0")(_+","+_))
+						case _ => " and 1=1 " 
+					}
+				}
+				def classes:String = S.param("productclass") match {
+					case Full(p) => p
+					case _ => "0,1";
+				} 
+
+				def start:Date = S.param("start") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+				def end:Date = S.param("end") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+
+				def start2:Date = S.param("start2") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+				def end2:Date = S.param("end2") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+
+				def unit:String = S.param("unit") match {
+					case Full(p) if(p != "") => " and tr.unit =%S".format(p) 
+					case _ => " and " + Treatment.unitsToShowSql
+				}			
+
+				def offsale:String = S.param("offsale") match {
+					case Full(s) if(s != "") => " and bc.offsale = %s".format(s)
+					case _ => " and 1 = 1 "
+				}
+
+				val strAux = if (PermissionModule.anvisa_?) {
+						" bc.barcode  || ' ' || "
+					} else {
+						""
+					}
+				val SQL = """
+				select cu.short_name, trim (""" + strAux + """ bc.name), 
+				trim (bc.phone || ' ' || bc.mobile_phone  || ' ' || email_alternative) as phone, bc.obs, 
+				(select count (1) from treatment tr where tr.company = bc.company and tr.customer = bc.id and tr.status in (3,4)
+				    and tr.dateevent between (date(now()) - (30*(6+1))) and (date(now()) - ((30*6)+1))) as menos_6, 
+				(select count (1) from treatment tr where tr.company = bc.company and tr.customer = bc.id and tr.status in (3,4)
+				    and tr.dateevent between (date(now()) - (30*(5+1))) and (date(now()) - ((30*5)+1))) as menos_5, 
+				(select count (1) from treatment tr where tr.company = bc.company and tr.customer = bc.id and tr.status in (3,4)
+				    and tr.dateevent between (date(now()) - (30*(4+1))) and (date(now()) - ((30*4)+1))) as menos_4, 
+				(select count (1) from treatment tr where tr.company = bc.company and tr.customer = bc.id and tr.status in (3,4)
+				    and tr.dateevent between (date(now()) - (30*(3+1))) and (date(now()) - ((30*3)+1))) as menos_3, 
+				(select count (1) from treatment tr where tr.company = bc.company and tr.customer = bc.id and tr.status in (3,4)
+				    and tr.dateevent between (date(now()) - (30*(2+1))) and (date(now()) - ((30*2)+1))) as menos_2, 
+				(select count (1) from treatment tr where tr.company = bc.company and tr.customer = bc.id and tr.status in (3,4)
+				    and tr.dateevent between (date(now()) - (30*(1+1))) and (date(now()) - ((30*1)+1))) as menos_1, 
+				bc.id from business_pattern bc 
+				left join companyunit cu on cu.id = bc.unit
+				where bc.company = ?
+				and bc.id not in (select customer tr from treatment tr where tr.company = bc.company and tr.customer = bc.id and tr.status in (3,4)
+				    and tr.dateevent between (date(now()) - 30) and date (now()))
+				and bc.id in (select customer tr from treatment tr where tr.company = bc.company and tr.customer = bc.id  and tr.status in (3,4)
+				    and tr.dateevent between (date(now()) - (30*6)) and (date(now()) - (30+1)))
+				    order by bc.name
+				"""
+					//LogActor ! SQL
+//				toResponse(SQL.format(unit, offsale, user, prod, producttype, classes),
+//					List(AuthUtil.company.id.is, start, end, start2, end2))
+				toResponse(SQL,
+					List(AuthUtil.company.id.is))
 			}
 
 			case "report" :: "todo_list" :: Nil Post _=> {

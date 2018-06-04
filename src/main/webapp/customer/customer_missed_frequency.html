@@ -22,44 +22,14 @@
     fields[1] = {
       type: "format",
       decode: function(name, row) {
-        return "<a href='/user/edit?id=" + row[10] + "' target='_user_maste'>" + name + "</a>";
-      }
-    }
-    fields[2] = "date";
-    fields[3] = {
-      type: "format",
-      decode: function(name, row) {
-        if (row[11] != "" && row[11] != "0") {
-          return "<a style='line-height: 105%' href='/activity/edit?id=" + row[11] + "' target='_activity_maste'>" + name + "</a>";
-        } else {
-          return "<a style='line-height: 105%' href='/product_admin/edit?id=" + row[12] + "' target='_product_maste'>" + name + "</a>";
-        }
-      }
-    }
-    fields[5] = {
-      type : "format",
-      decode : function(value){
-        var floatValue = parseFloat(value);
-        if(!isNaN(floatValue)) {
-          total += floatValue;
-          totalcount += 1;
-        }
-        return floatValue.formatMoney();
-      }
-    };
-    fields[6] = {
-      type: "format",
-      decode: function(name, row) {
+        totalcount += 1;
         // para envio de email deve aparecer em um decode
         // tem exemplos de receber um id como parm ai usa push(id) como no birhtdays
-        customers.push(row[9]); 
-        return "<a href='/customer/edit?id=" + row[9] + "' target='_customer_maste'>" + name + "</a>";
+        customers.push(row[10]); 
+        return "<a href='/customer/edit?id=" + row[10] + "' target='_customer_maste'>" + name + "</a>";
       }
     }
-    fields[9] = 'none';
-    fields[10] = 'none';
-    fields[11] = 'none'; // activity
-    fields[12] = 'none'; // product
+    fields[10] = "none";
     $("#unit").unitField(true,false);
     DataManager.getActivities(function(userObj){
       user_str = "";
@@ -68,7 +38,7 @@
         }
         $("#product").html(user_str);     
     });    
-    var url = "/report/customer_missed";
+    var url = "/report/customer_missed_frequency";
     var request = function(){
       customers = [];
       total = 0.00;
@@ -104,7 +74,7 @@
       <form id="form_report" class="well form-search" method='get'>
         <h1>
         <span class="lift:CompanySnippet.thumb"> </span>
-        <input class="report_title local_storage" id="title_customer_missed" name="title_customer_missed" size="30" type="text" value="Relatório de Clientes que não voltaram"/>
+        <input class="report_title local_storage" id="title_customer_missed_frequency" name="title_customer_missed_frequency" size="30" type="text" value="Relatório de Clientes que não voltaram/frequência"/>
         </h1>
         <div class="row">
           <div class="span8">
@@ -247,14 +217,15 @@
   <table id="grid" class="bordered-table zebra-striped">
       <thead>
         <th class="lift:SecuritySnippet.hasUnitModule">Unidade</th>
-        <th>Profissional</th>
-        <th>Data</th>
-        <th>Prod/Serv</th>
-        <th>Qtde</th>
-        <th>Valor</th>
         <th>Nome_<span data-i18n='Cliente'></span></th>
-        <th>Email</th>
         <th>Fone</th>
+        <th>obs</th>
+        <th>-6</th>
+        <th>-5</th>
+        <th>-4</th>
+        <th>-3</th>
+        <th>-2</th>
+        <th>-1</th>
       </thead>
       <tbody>
       </tbody>
