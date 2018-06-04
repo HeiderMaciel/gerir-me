@@ -100,12 +100,10 @@ var toEbelle = function() {
 	$("img[src='/images/favicon.ico']").attr('src', '/images/logo_ftr_ebelle.ico');
 	//$('body').css('background-image','url("/images/capa_ebelle.jpg")');
 };
-$(function(){
-	if (document.location.href.indexOf("gerir") != -1) {
-		toGerirme();
-	} else if (document.location.href.indexOf("egrex") != -1) {
+var changeSystem = function() {
+	if (document.location.href.indexOf("egrex") != -1) {
 		toEgrex();
-	} else if ((document.location.href.indexOf("esmile") != -1) || (document.location.href.indexOf("e-smile") != -1)) {
+	} else if ((document.location.href.indexOf("esmile") != -1) || (document.location.href.indexOf("e-smile") != -1)){
 		toEsmile();
 	} else if (document.location.href.indexOf("edoctus") != -1) {
 		toEdoctus();
@@ -113,8 +111,16 @@ $(function(){
 		toEphysio();
 	} else if (document.location.href.indexOf("ebellepet") != -1) {
 		toEbellepet();
+	} else if (document.location.href.indexOf("ebelle") != -1) {
+		toEbelle();
+	} else if (document.location.href.indexOf("gerir") != -1) {
+		toGerirme();
 	} else {
 		toEbelle();
-	}	
+	}
+}
+
+$(function(){
+	changeSystem ();
 });
 

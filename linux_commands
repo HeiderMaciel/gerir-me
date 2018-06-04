@@ -599,3 +599,78 @@ p() {
 
 p "pool.minexmr.com" "4444" && p "91.121.87.10" "4444" && p "pool.minexmr.com" "7777" && p "pool.minexmr.com" "80" && p "91.121.87.10" "7777" &&  p "91.121.87.10" "80"
 
+
+
+
+
+gerirme
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    ssl on;
+    ssl_certificate /etc/nginx/ssl/gerirme.app.chained.crt;
+    ssl_certificate_key /etc/nginx/ssl/gerirme.key;
+
+    server_name gerirme.app www.gerirme.app ;
+
+    access_log /var/log/nginx/nginx.gerirme.app.access.log;
+    error_log /var/log/nginx/nginx.gerirme.app.error.log;
+
+    location / {
+        proxy_pass http://45.33.99.152:7171;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 300;
+    }
+}
+
+ebelle
+
+server {
+        listen 80;
+        listen [::]:80;
+
+        server_name ebelle.com.br www.ebelle.com.br;
+
+        root /var/www/html/portal_salao;
+        index index.php index.html;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ /index.html;
+                # Uncomment to enable naxsi on this location
+                # include /etc/nginx/naxsi.rules
+        }
+}
+
+vilarika
+
+server {
+       listen 80 default_server;
+       listen [::]:80 default_server ipv6only=on;
+
+       server_name vilarika.com.br www.vilarika.com.br;
+
+       root /var/www/html/vilarika;
+       index index.php wp-login.php index.html index.htm;
+
+       location / {
+               #try_files $uri $uri/ =404;
+               # try_files $uri $uri/ /index.php?q=$uri&$args;
+               try_files $uri $uri/ /index.php?$args;
+       }
+
+        error_page 404 /404.html;
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+                root /usr/share/nginx/html;
+        }
+
+
+

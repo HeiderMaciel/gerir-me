@@ -201,9 +201,11 @@ $(function() {
 		$(this).next().focus()
 	}); //setfous in datepiker ao clicar no calendariozinho	
 	validateEmail();
-	if (document.location.href.indexOf("gerir") != -1) {
-		toGerirme();
-	} else if (document.location.href.indexOf("egrex") != -1) {
+	// para chamar aqui as funcoes tobelle.... tem que sair do
+	// util.js e o change system.js teria que ser chamado nos
+	// templates hj só é chamado no login
+	//changeSystem ();
+	if (document.location.href.indexOf("egrex") != -1) {
 		toEgrex();
 	} else if ((document.location.href.indexOf("esmile") != -1) || (document.location.href.indexOf("e-smile") != -1)){
 		toEsmile();
@@ -213,9 +215,14 @@ $(function() {
 		toEphysio();
 	} else if (document.location.href.indexOf("ebellepet") != -1) {
 		toEbellepet();
+	} else if (document.location.href.indexOf("ebelle") != -1) {
+		toEbelle();
+	} else if (document.location.href.indexOf("gerir") != -1) {
+		toGerirme();
 	} else {
 		toEbelle();
 	}
+
 	// rigel 09/05/2017 para figura de capa ficar lega no mobile
 	if (isMobile.any) {
 		$('.body').css('background-size', 'auto');
