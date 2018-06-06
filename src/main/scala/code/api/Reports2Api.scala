@@ -562,22 +562,14 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case _ => "0,1";
 				} 
 
-				def start:Date = S.param("start") match {
-					case Full(p) => Project.strToDateOrToday(p)
-					case _ => new Date()
-				}
-				def end:Date = S.param("end") match {
-					case Full(p) => Project.strToDateOrToday(p)
-					case _ => new Date()
-				}
+				def period:String = S.param("period") match {
+					case Full(p) => p
+					case _ => "7";
+				} 
 
-				def start2:Date = S.param("start2") match {
-					case Full(p) => Project.strToDateOrToday(p)
-					case _ => new Date()
-				}
-				def end2:Date = S.param("end2") match {
-					case Full(p) => Project.strToDateOrToday(p)
-					case _ => new Date()
+				def base:String = S.param("start") match {
+					case Full(p) => Project.dateToDb (Project.strToDateOrToday(p))
+					case _ => Project.dateToDb (new Date())
 				}
 
 				def unit:String = S.param("unit") match {
@@ -595,9 +587,9 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					} else {
 						""
 					}
-				val SQL = """
+				var SQL = """
 				select cu.short_name, trim (""" + strAux + """ bc.name), 
-				trim (bc.phone || ' ' || bc.mobile_phone  || ' ' || email_alternative) as phone, bc.obs, 
+				trim (bc.phone || ' ' || bc.mobile_phone  || ' ' || email_alternative || ' ' || email) as phone, bc.obs, 
 				(select count (1) from treatment tr where tr.company = bc.company and tr.customer = bc.id and tr.status in (3,4)
 				    and tr.dateevent between (date(now()) - (30*(6+1))) and (date(now()) - ((30*6)+1))) as menos_6, 
 				(select count (1) from treatment tr where tr.company = bc.company and tr.customer = bc.id and tr.status in (3,4)
@@ -614,7 +606,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 				left join companyunit cu on cu.id = bc.unit
 				where bc.company = ?
 				and bc.id not in (select customer tr from treatment tr where tr.company = bc.company and tr.customer = bc.id and tr.status in (3,4)
-				    and tr.dateevent between (date(now()) - 30) and date (now()))
+				    and tr.dateevent between (date(now()) - 30) and date (now())+30)
 				and bc.id in (select customer tr from treatment tr where tr.company = bc.company and tr.customer = bc.id  and tr.status in (3,4)
 				    and tr.dateevent between (date(now()) - (30*6)) and (date(now()) - (30+1)))
 				    order by bc.name
@@ -622,6 +614,9 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					//LogActor ! SQL
 //				toResponse(SQL.format(unit, offsale, user, prod, producttype, classes),
 //					List(AuthUtil.company.id.is, start, end, start2, end2))
+				SQL = SQL.replaceAll ("30", period)	
+				SQL = SQL.replaceAll ("now\\(\\)", "'" + base + "'")	
+//				println ("vaiiiii ================ " + SQL)
 				toResponse(SQL,
 					List(AuthUtil.company.id.is))
 			}
