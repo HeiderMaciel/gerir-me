@@ -101,32 +101,33 @@ var updateReportItems = function() {
     fields[2] = {
       type: "format",
       decode: function(name, row) {
-        if (row[12] != "" && row[12] != "0") {
-          return "<a href='/activity/edit?id=" + row[12] + "' target='_activity_maste'>" + name + "</a>";
+        if (row[13] != "" && row[13] != "0") {
+          return "<a href='/activity/edit?id=" + row[13] + "' target='_activity_maste'>" + name + "</a>";
         } else {
-          return "<a href='/product_admin/edit?id=" + row[13] + "' target='_product_maste'>" + name + "</a>";
+          return "<a href='/product_admin/edit?id=" + row[14] + "' target='_product_maste'>" + name + "</a>";
         }
       }
     }
     fields[3] = "textNull";
-    fields[4] = "real";
+    // 4 obs
     fields[5] = "real";
     fields[6] = "real";
     fields[7] = "real";
     fields[8] = "real";
-    fields[10] = {
+    fields[9] = "real";
+    fields[11] = {
 		type: "format",
 		decode: function(id, row) {
-			return "<span style='margin-right:4px'><a class='btn' href='/treatment/treatmentdetail?id=" + row[10] + "' target='_treatdetail_maste'>Editar</a></span>" +
-				"<span><a class='btn danger' target='_blank' onclick='deleteItems(" + row[11] + ")'>Excluir</a></span>";
+			return "<span style='margin-right:4px'><a class='btn' href='/treatment/treatmentdetail?id=" + row[11] + "' target='_treatdetail_maste'>Editar</a></span>" +
+				"<span><a class='btn danger' target='_blank' onclick='deleteItems(" + row[12] + ")'>Excluir</a></span>";
 		}
 	}
-    fields[11] = "none";
-    fields[12] = "none"; // activity
-    fields[13] = "none"; // product
+    fields[12] = "none";
+    fields[13] = "none"; // activity
+    fields[14] = "none"; // product
     
   	var group = function(row,value){
-    	return parseFloat(value) + (parseFloat(row[8]));
+    	return parseFloat(value) + (parseFloat(row[9]));
   	};
   	var formater = function(value){
     	return value.formatMoney();

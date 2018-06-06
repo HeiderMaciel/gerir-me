@@ -124,6 +124,7 @@ object ProjectApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					ps.title, 
 					pr.name, 
 					tdd.tooth, 
+					trim (tr.obs || td.obs),
 					pr.saleprice, 
 					pr.saleprice * td.amount, 
 					td.amount, 
