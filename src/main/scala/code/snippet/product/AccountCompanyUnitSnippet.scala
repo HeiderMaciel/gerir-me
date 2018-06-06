@@ -81,6 +81,7 @@ class  AccountCompanyUnitSnippet  extends BootstrapPaginatorSnippet[AccountCompa
 				}
 			  }
 			}
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    //"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&
 		    "name=bank" #> (SHtml.select(banksSelect,Full(ac.bank.is.toString),(s:String) => ac.bank(s.toLong)))&
