@@ -2127,9 +2127,17 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case Full(p) if(p != "") => p.toInt
 					case _ => 0;
 				}
-				def obsFilterofx = (" and lower (ap.obs) like '%"+(S.param("obs_search_ofx") openOr "")+"%' ").toLowerCase;
+				def obsFilterofx = if (S.param("obs_search_ofx") != "") {
+					(" and lower (ap.obs) like '%"+(S.param("obs_search_ofx") openOr "")+"%' ").toLowerCase;
+				} else {
+					" and 1 = 1 "
+				}
 
-				def obsFilterfin = (" and lower (ap1.obs) like '%"+(S.param("obs_search_fin") openOr "")+"%' ").toLowerCase;
+				def obsFilterfin = if (S.param("obs_search_fin") != "") {
+					(" and lower (ap1.obs) like '%"+(S.param("obs_search_fin") openOr "")+"%' ").toLowerCase;
+				} else {
+					" and 1 = 1 "
+				}
 
 				val payment_type_param_name = S.param("payment_type[]") match {
 							case Full(p) => "payment_type[]"

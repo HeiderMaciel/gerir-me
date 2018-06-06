@@ -87,7 +87,9 @@ class  AccountCompanyUnitSnippet  extends BootstrapPaginatorSnippet[AccountCompa
 		    "name=accountstr" #> (SHtml.text(ac.accountStr.is, ac.accountStr(_)))&
 		    "name=agency" #> (SHtml.text(ac.agency.is, ac.agency(_)))&
 		    "name=unit" #> (SHtml.select(units,Full(ac.unit.is.toString),(v:String) => ac.unit(v.toLong)))&
-			"name=value" #> (SHtml.text(ac.value.is.toString, (v:String) => { if(v !="")ac.value(v.toDouble)} ))&
+//			"name=value" #> (SHtml.text(ac.value.is.toString, (v:String) => { if(v !="")ac.value(v.toDouble)} ))&
+			"name=value" #> (SHtml.text(ac.value.is.toString, 
+				(f:String) => ac.value(BusinessRulesUtil.snippetToDouble(f))))&
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_))++SHtml.hidden(process))
 		}catch {
 		    case e: NoSuchElementException => S.error("Conta não existe!")
