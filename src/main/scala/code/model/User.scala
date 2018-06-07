@@ -525,8 +525,10 @@ class User extends  BusinessPattern[User] with UserIdAsString{
             throw new RuntimeException ("Se a permissão Administrador foi especificada, não é necessário especificar nenhuma outra")
         } else if (!isAdmin) {
 
-            if (isCashierGeneral && isCashier) {
-                throw new RuntimeException ("Se a permissão Caixa Geral foi especificada, não é necessário especificar a permissão de caixa")
+            if (!isFinancialManager) {
+                if (isCashierGeneral && isCashier) {
+                    throw new RuntimeException ("Se a permissão Caixa Geral foi especificada, não é necessário especificar a permissão de caixa")
+                }
             }
 
             if ((isSimpleUserCalendar || isSimpleUserCommand || isSimpleUserCalendarView) 
