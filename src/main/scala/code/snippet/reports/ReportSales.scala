@@ -237,6 +237,8 @@ object  ReportSales extends net.liftweb.common.Logger{
           <tr>
          	 <th><span data-i18n='Profissional'></span></th>
             <th>Serviço/Produto</th>
+            <th class="lift:SecuritySnippet.isEsmileSystem">Dente</th>
+            <th class="lift:SecuritySnippet.isEbellepetSystem">Pet</th>
             <th>Quantidade</th>
             <th>Preço Total</th>
           </tr>
@@ -248,6 +250,8 @@ object  ReportSales extends net.liftweb.common.Logger{
 	          <tr>
 	          	<td>{a.userName}</td>
 	            <td>{a.nameActivity}</td>
+	            <td class="lift:SecuritySnippet.isEsmileSystem">{a.tooth}</td>
+	            <td class="lift:SecuritySnippet.isEbellepetSystem">{a.animalShortName}</td>
 	            <td>{a.amount}</td>
 	            <td>{a.price.is}</td>
 	          </tr>
