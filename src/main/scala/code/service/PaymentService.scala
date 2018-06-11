@@ -256,7 +256,7 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 		if(paymentType.cheque_?.is || paymentType.needCardInfo_?.is){
 			// rigel 02/05/2018
 			// fiz o count pq dava erro se pagava no cartão sem pedir dados
-			// e depois alteravao parm para os proximos pagamentos
+			// e depois alterava o parm para os proximos pagamentos
 			if (detail.countCheque > 0) {
 				detail.cheque.delete_!
 			}

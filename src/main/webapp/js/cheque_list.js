@@ -22,7 +22,20 @@
         cheque = results[_i];
         total += cheque.value;
         cheque.date = getDateBr(new Date(cheque.date));
-        $("#grid tbody").append("<tr><td>" + cheque.id + "</td><td>" + cheque.bank + "</td><td>" + cheque.agency + "</td><td>" + cheque.account + "</td><td>" + cheque.number + "</td><td>" + (cheque.value.formatMoney()) + "</td><td>" + cheque.date + "</td><td>" + cheque.customer + "</td><td><a href='#' class='_popover danger marker' rel='popover' data-content='Marcar como recebido!'  data-original-title='Recebido?' data-id='" + cheque.id + "' data-confirm-message='que deseja marcar o cheque como descontado'><img src='/images/good.png'></a></td></tr>");
+        cheque.gooddate = getDateBr(new Date(cheque.gooddate));
+        $("#grid tbody").append("<tr>" +
+          "<td>" + cheque.id + "</td>" +
+          "<td>" + cheque.bank + "</td>" + 
+          "<td>" + cheque.agency + "</td>" +
+          "<td>" + cheque.account + "</td>" + 
+          "<td>" + cheque.number + "</td>" + 
+          "<td>" + (cheque.value.formatMoney()) + "</td>" +
+          "<td>" + cheque.date + "</td>" + 
+          "<td>" + cheque.gooddate + "</td>" + 
+          "<td>" + cheque.customer + "</td>" +
+          "<td><a href='#' class='_popover danger marker' rel='popover' data-content='Marcar como recebido!'  data-original-title='Recebido?' data-id='" + cheque.id + "' data-confirm-message='que deseja marcar o cheque como descontado'><img src='/images/good.png'></a></td>" +
+          "</td><td><a title='" + cheque.auditstr + "' href='#' ><img width='24px' src='/images/audit.png'/></a></td>" +
+          "</tr>");
         $(".marker").click(function() {
           return $.get("/payment/cheque/makeAsReceived/" + $(this).attr("data-id"), function() {
             alert("Marcado com sucesso!");

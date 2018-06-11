@@ -183,7 +183,7 @@ object InventoryApi extends RestHelper {
 							("product_name",im.product_name),
 							("bp_name",im.bp_name),
 							("bp_id",im.business_pattern.is),
-							("auditStr", im.auditStr),
+							("auditstr", im.auditStr),
 							("im_id",im.id.is)
 						)
 				})

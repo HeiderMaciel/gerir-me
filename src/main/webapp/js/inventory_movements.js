@@ -52,7 +52,7 @@
                   (!purchaseOrder ? "<td>"+obj.cause+"</td>" : "" ) + 
                   "<td>"+new Date(obj.efetive_date).getDateBr()+"</td>" +
                   (purchaseOrder ? "<td>"+"<a class='btn danger' onclick='del_detail(" + obj.im_id +")'  target=''>Excluir</a>"+"</td>" : "" ) + 
-                  "<td>" + "<a href= '#' title='" + obj.auditStr + "'><img src='/images/audit.png' width='24'/></a>" + "</td>" +
+                  "<td>" + "<a href= '#' title='" + obj.auditstr + "'><img src='/images/audit.png' width='24'/></a>" + "</td>" +
                   "</tr>"
             };
             $("#grid tbody").html(ret);

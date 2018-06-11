@@ -76,6 +76,7 @@ object PaymentApi extends RestHelper {
 				JsObj(
 					("number",c.number.is),
 					("date",c.paymentDate.is.getTime),
+					("gooddate",c.dueDate.is.getTime),
 					("agency",c.agency.is),
 					("customer",c.customer.obj match {
 						case Full(c) => c.name.is
@@ -85,6 +86,7 @@ object PaymentApi extends RestHelper {
 					("bank",c.bank.is),
 					("account",c.account.is),
 					("value",c.value.is.toFloat),
+					("auditstr", c.auditStr),
 					("id",c.id.is)
 				)
 			})
