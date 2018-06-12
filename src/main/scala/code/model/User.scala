@@ -441,11 +441,11 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 
     def isSimpleUserCommand = groupPermissionList.filter(_==UserGroupPermission.SIMPLE_USER_COMMAND).size > 0
 
-    def isInventoryManager = isAdmin || groupPermissionList.filter(_==UserGroupPermission.INVENTORY_MANAGER).size > 0
+    def isInventoryManager = isAdmin || isAdminRead || groupPermissionList.filter(_==UserGroupPermission.INVENTORY_MANAGER).size > 0
 
     def isInventoryUser = isAdmin || isAdminRead || isInventoryManager || groupPermissionList.filter(_==UserGroupPermission.INVENTORY_USER).size > 0
     
-    def isFinancialManager = isAdmin || groupPermissionList.filter(_==UserGroupPermission.FINANCIAL_MANAGER).size > 0
+    def isFinancialManager = isAdmin || isAdminRead || groupPermissionList.filter(_==UserGroupPermission.FINANCIAL_MANAGER).size > 0
 
     def isPeopleManager = isAdmin || isAdminRead || groupPermissionList.filter(_==UserGroupPermission.PEOPLE_MANAGER).size > 0
 
@@ -455,7 +455,7 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 
     def isBudget = isAdmin || isAdminRead || isFinancialManager || groupPermissionList.filter(_==UserGroupPermission.BUDGET).size > 0
 
-    def isFinancialUser = isAdmin  || isFinancialManager || groupPermissionList.filter(_==UserGroupPermission.FINANCIAL_USER).size > 0
+    def isFinancialUser = isAdmin  || isFinancialManager || isAdminRead || groupPermissionList.filter(_==UserGroupPermission.FINANCIAL_USER).size > 0
 
     //def isSaleManagerUser = isAdmin || groupPermissionList.filter(_==UserGroupPermission.SALE_MANAGER).size > 0
 
@@ -471,7 +471,7 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 
     def isCommandTerm = groupPermissionList.filter(_==UserGroupPermission.COMMAND_USER).size > 0 || groupPermissionList.filter(_==UserGroupPermission.COMMAND_PWD).size > 0
 
-    def isServiceManager = isAdmin || groupPermissionList.filter(_==UserGroupPermission.SERVICE_MANAGER).size > 0
+    def isServiceManager = isAdmin || isAdminRead || groupPermissionList.filter(_==UserGroupPermission.SERVICE_MANAGER).size > 0
 
     def isServiceUser = isAdmin || isAdminRead || isServiceManager || groupPermissionList.filter(_==UserGroupPermission.SERVICE_USER).size > 0
 

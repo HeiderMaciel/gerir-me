@@ -8,7 +8,7 @@
   <div class="hide_on_print">
     <div class="well">
       <label class="hide_mobile" for="btn"></label>
-      <a class="btn primary new_account" id="new_account" title="Novo lançamento de conta a pagar/receber">
+      <a class="lift:SecuritySnippet.isNotAdminRead btn primary new_account" id="new_account" title="Novo lançamento de conta a pagar/receber">
         Inserir novo
       </a>
       <a  id="b_search" class="btn success b_search">
@@ -186,7 +186,7 @@
         <div class="clearfix">
           <label class="hide_mobile" for="send"></label>
           <div class="input">
-            <a class="btn primary new_account" id="new_account" alt="Novo lançamento de conta a pagar/receber">
+            <a class="lift:SecuritySnippet.isNotAdminRead btn primary new_account" id="new_account" alt="Novo lançamento de conta a pagar/receber">
               Inserir novo
             </a>
             <a  id="b_search" class="btn success b_search">
@@ -195,14 +195,14 @@
             <a id="b_dre_send" class="btn success b_dre_send">
               Ver DRE
             </a>
-            <a id="b_remove_checked" class="btn danger b_remove_checked" alt="Excluir as contas marcadas">
+            <a id="b_remove_checked" class="lift:SecuritySnippet.isNotAdminRead btn danger b_remove_checked" alt="Excluir as contas marcadas">
               Excluir
             </a>
-            <a id="b_mark_as_paid" class="btn b_mark_as_paid" alt="Marcar todos os itens selecionados como pagos">
+            <a id="b_mark_as_paid" class="lift:SecuritySnippet.isNotAdminRead btn b_mark_as_paid" alt="Marcar todos os itens selecionados como pagos">
               Pagar
             </a>              
             <input type="hidden" class="has-financialad-module lift:SecuritySnippet.hasFinancialadModule" value="1">
-            <a  id="b_aggregate" class="btn b_aggregate lift:SecuritySnippet.hasFinancialadModule">
+            <a  id="b_aggregate" class="lift:SecuritySnippet.isNotAdminRead btn b_aggregate lift:SecuritySnippet.hasFinancialadModule">
               Agregar
             </a>            
           </div>
@@ -277,7 +277,7 @@
   <div class="hide_on_print">
     <div class="well">
       <label class="hide_mobile" for="btn"></label>
-      <a class="btn primary new_account" id="new_account" alt="Novo lançamento de conta a pagar/receber">
+      <a class="lift:SecuritySnippet.isNotAdminRead btn primary new_account" id="new_account" alt="Novo lançamento de conta a pagar/receber">
         Inserir novo
       </a>
       <a  id="b_search" class="btn success b_search">
@@ -286,13 +286,13 @@
       <a id="b_dre_send" class="btn success b_dre_send">
         Ver DRE
       </a>
-      <a id="b_remove_checked" class="btn danger b_remove_checked" alt="Excluir as contas marcadas">
+      <a id="b_remove_checked" class="lift:SecuritySnippet.isNotAdminRead btn danger b_remove_checked" alt="Excluir as contas marcadas">
         Excluir
       </a>
-      <a id="b_mark_as_paid" class="btn b_mark_as_paid" alt="Marcar todos os itens selecionados como pagos">
+      <a id="b_mark_as_paid" class="lift:SecuritySnippet.isNotAdminRead btn b_mark_as_paid" alt="Marcar todos os itens selecionados como pagos">
         Pagar
       </a>              
-      <a  id="b_aggregate" class="btn b_aggregate lift:SecuritySnippet.hasFinancialadModule">
+      <a  id="b_aggregate" class="lift:SecuritySnippet.isNotAdminRead btn b_aggregate lift:SecuritySnippet.hasFinancialadModule">
         Agregar
       </a>            
     </div>
@@ -325,7 +325,7 @@
         <div>
             <div>
               <div class="well">
-                <input class="btn success b_add_account" id="b_add_account" type="button" value="Salvar">
+                <input class="lift:SecuritySnippet.isNotAdminRead btn success b_add_account" id="b_add_account" type="button" value="Salvar">
               </div>
               <div class="span18 row">
                 <div class="span8">             
@@ -649,7 +649,7 @@
                 <input type="hidden" name="recurrence_id" id='recurrence_id'>
               </span>
               <div class="well">
-                <input class="btn success b_add_account" id="b_add_account" type="button" value="Salvar">
+                <input class="lift:SecuritySnippet.isNotAdminRead btn success b_add_account" id="b_add_account" type="button" value="Salvar">
               </div>
              </div>
             </div>
