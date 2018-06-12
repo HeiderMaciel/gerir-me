@@ -26,16 +26,13 @@
 		<thead>
 			<th>Id</th>
 			<th>Name</th>
-			<th>Soma no Caixa</th>
 			<th>Soma p/ Confere</th>
-			<th>Gera Comissão</th>
-			<th>Cartão</th>
-			<th>Cheque</th>
+			<th>Comissão / Vista</th>
+			<th>Dinheiro / Cartão / Cheque</th>
 			<th>Baixa Pacote</th>
 			<th>Conta Cliente</th>
-			<th>Comissão a Vista</th>
-			<th>Faturada a Vista</th>
-			<th>Faturada</th>
+			<th>Parcela</th>
+			<th>Faturada / Vista</th>
 			<th>Conta Fatura</th>
 			<th>Categ Fatura</th>
 			<th>Categ Desconto</th>
@@ -50,18 +47,15 @@
 					<f:name></f:name>
 				</td>				
 				<td>
-					<f:sumincachier></f:sumincachier>
-				</td>
-				<td>
 					<f:sumtoconference></f:sumtoconference>
 				</td>
 				<td>
-					<f:generatecommision></f:generatecommision>
+					<f:generatecommision></f:generatecommision> / 
+					<f:comissionatsight></f:comissionatsight>
 				</td>
 				<td>
-					<f:creditcard></f:creditcard>
-				</td>
-				<td>
+					<f:sumincachier></f:sumincachier> / 
+					<f:creditcard></f:creditcard> / 
 					<f:cheque></f:cheque>
 				</td>
 				<td>
@@ -73,11 +67,8 @@
 				<td>
 					<f:acceptinstallment></f:acceptinstallment>
 				</td>
-				<td>
+				<td><f:receive></f:receive> / 
 					<f:receiveatsight></f:receiveatsight>
-				</td>
-				<td>
-					<f:receive></f:receive>
 				</td>
 				<td>
 					<f:defaltaccount></f:defaltaccount>
