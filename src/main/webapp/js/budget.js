@@ -40,6 +40,55 @@ alert (" na var function click aqui não chega NUNCA !!!!!! ")
       $("#price").val("");
     });
 
+    $("#print_message").click(function(){
+        var message_print = $('#toprint').html();
+        var header = "";
+        if ($('.has-pet-system').length > 0) {
+          header = "ebellepet"
+        } else if ($('.has-edoctus-system').length > 0) {
+          header = "edoctus"
+        } else if ($('.has-ephysio-system').length > 0) {
+          header = "ephysio"
+        } else if ($('.has-gerirme-system').length > 0) {
+          header = "gerirme"
+        } else {
+          header = "ebelle"
+        }
+
+        var logo = "";
+        if ($('.has-pet-system').length > 0) {
+          logo = "ebellepet"
+        } else if ($('.has-edoctus-system').length > 0) {
+          logo = "edoctus"
+        } else if ($('.has-ephysio-system').length > 0) {
+          logo = "ephysio"
+        } else if ($('.has-gerirme-system').length > 0) {
+          logo = "gerirme"
+        } else {
+          logo = "ebelle"
+        }
+
+        // um trailer gerar 
+        //header = '<img width="70px" style="padding-right: 10px" src="/images/logo_'+logo+'.png"/>' + header + " Gestão Integrada <br></p>"
+        header = "<head> " + 
+    '<link href="/css/bootstrap.css" rel="stylesheet"/>' +
+    '<link href="/css/ebelle-responsive.css" rel="stylesheet"/>' +
+    '<link rel="stylesheet" type="text/css" href="/skins/default.css" />' +
+          " <meta charset='utf-8'> " +
+          " <title>" + header + "</title> " +
+          " </head> " +
+        '<img width="35px" style="padding-right: 10px" src="/images/logo_ftr_'+logo+'.png"/>' + 
+        header + " Gestão Integrada " + 
+        '<img width="70px" style="padding-right: 10px" src="http://images.vilarika.com.br/company/'+AuthUtil.company.image+'"/>' + 
+        " <br></p>"
+        var printWindow = window.open("", "MsgPrintWindow");
+        printWindow.document.write(header + message_print);
+        //setTimeout(function(){
+          printWindow.print();
+        //}, 500);
+    });
+
+
     var today = new Date();
     //var tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
     var start = gup("start") || getDateBr(today);

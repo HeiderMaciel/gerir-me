@@ -193,27 +193,28 @@
                     <div class="inline-inputs">
                       <div class="lift:SecuritySnippet.isShowSalesToUser input-prepend" style="float:left; padding-right:10px">
                         <span class="add-on"><img src="/images/money.png" width="16"></span>
-                        <input class="small disabled" id="totallista" name="totallista" size="19" placeholder="0.00" type="text" disabled='true'>
+                        <input style="color:black;" class="small disabled" id="totallista" name="totallista" size="19" placeholder="0.00" type="text" disabled='true'>
                         <span class="help-block">Total lista</span>
                       </div>
                       <div class="input-prepend" style="float:left; padding-right:10px">
                         <span class="add-on"><img src="/images/cheque.png" width="16"></span>
-                        <input class="small disabled" id="totaldesc" name="totaldesc" size="19" placeholder="0.00" type="text" disabled='true'>
+                        <input style="color:black;" class="small disabled" id="totaldesc" name="totaldesc" size="19" placeholder="0.00" type="text" disabled='true'>
                         <span class="help-block">Total desconto</span>
                       </div>
                       <div class="input-prepend" style="float:left; padding-right:10px">
                         <span class="add-on">%</span>
-                        <input class="small disabled" id="totalperc" name="totalperc" size="19" placeholder="0.00" type="text" disabled='true'>
+                        <input style="color:black;" class="small disabled" id="totalperc" name="totalperc" size="19" placeholder="0.00" type="text" disabled='true'>
                         <span class="help-block">Desconto percentual</span>
                       </div>
                       <div class="input-prepend" style="float:left; padding-right:10px">
                         <span class="add-on"><img src="/images/user.png" width="16"></span>
-                        <input class="small disabled" id="totalbudget" name="totalbudget" size="19" placeholder="0.00" type="text" disabled='true'>
+                        <input style="color:black;" class="small disabled" id="totalbudget" name="totalbudget" size="19" placeholder="0.00" type="text" disabled='true'>
                         <span class="help-block">Total orçamento</span>
                       </div>
                     </div>
                   </div>
                 </div>
+            <div id="toprint">
             <table id="table_items" class='bordered-table zebra-striped'>
               <thead>
                 <tr>
@@ -228,12 +229,15 @@
                   <th>Pr Unit</th>
                   <th>Pr Total</th>
                   <th>Realiz</th>
-                  <th>Ações</th>
+                  <th class="hide_on_print">Ações</th>
                 </tr>
               </thead>
               <tbody>
               </tbody>
             </table>
+            </div>
+                    <input class="btn primary" type="button" id='print_message' value='Imprimir' />
+                    <span class="help-block">_</span>
             </div>
             </form>
           </div>

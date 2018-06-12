@@ -102,7 +102,7 @@ var updateReportItems = function() {
       type: "format",
       decode: function(name, row) {
         if (row[13] != "" && row[13] != "0") {
-          return "<a href='/activity/edit?id=" + row[13] + "' target='_activity_maste'>" + name + "</a>";
+          return "<p style='line-height: 105%'>" + "<a href='/activity/edit?id=" + row[13] + "' target='_activity_maste'>" + name + "</a>" + "</p>";
         } else {
           return "<a href='/product_admin/edit?id=" + row[14] + "' target='_product_maste'>" + name + "</a>";
         }
@@ -114,6 +114,21 @@ var updateReportItems = function() {
     fields[6] = "real";
     fields[7] = "real";
     fields[8] = "real";
+    fields[8] = {
+      type : "format",
+      decode: function(name, row) {
+        var color = ""
+        if (parseFloat(row[8]) < parseFloat(row[5])) {
+          color = "green" 
+        } else if (parseFloat(row[8]) > parseFloat(row[5])) {
+          color = "red" 
+        } else {
+          // vai assumir cor default	
+        }
+	    return "<p style='color:" + color + "'>" + 
+	        realDecode(row[8]) + "<p/>"
+      }
+    }
     fields[9] = "real";
     fields[11] = {
 		type: "format",
