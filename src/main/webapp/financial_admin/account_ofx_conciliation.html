@@ -235,10 +235,14 @@
           return conciliateOne($(this).attr("data-id"), $(this).attr("data-idofx"), true, $(this).attr("data-vaggreg", false));
         });
         $(".action_consolidate_aggreg_partial").click(function() {
-          return consolidateOne($(this).attr("data-id"), $(this).attr("data-idofx"), true, $(this).attr("data-vaggreg"), true);
+          return consolidateOne($(this).attr("data-id"), 
+            $(this).attr("data-idofx"), true, 
+            $(this).attr("data-vaggreg"), true);
         });
         $(".action_conciliate_aggreg_partial").click(function() {
-          return conciliateOne($(this).attr("data-id"), $(this).attr("data-idofx"), true, $(this).attr("data-vaggreg", true));
+          return conciliateOne($(this).attr("data-id"), 
+            $(this).attr("data-idofx"), true, 
+            $(this).attr("data-vaggreg"), true);
         });
         $(".action_remove").click(function() {
           return deleteOne($(this).attr("data-idofx"));
@@ -307,7 +311,8 @@
       vaggreg, partial) {
       var msg = "";
       var msgAux = "";
-      if (partial) {
+      alert ("partial " + partial + "  " + vaggreg) 
+      if (partial == true || partial == "true") {
         msgAux = " parcialmente "
       } else {
         msgAux = " "

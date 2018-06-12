@@ -3,6 +3,53 @@ src/main/scala/code/api/TreatmentApi.scala
 src/main/scala/code/model/BusyEvent.scala
 src/main/scala/code/model/WorkHouer.scala
 
+/* limpar cache angular
+$rootScope.$on('$viewContentLoaded', function() { $templateCache.removeAll(); });
+*/
+outra construção
+/*
+myApp.run(function($rootScope, $templateCache) {
+   $rootScope.$on('$viewContentLoaded', function() {
+      $templateCache.removeAll();
+   });
+});
+*/
+A bit of a warning: Emptying the $templateCache might actually have unintended consequences. For instance, UI Bootstrap adds default partials directly to the $templateCache during initialization and later expects them to be there. – Strille Aug 21 '14 at 7:24
+@Strille I was trying to use angular-ui-bootstrap Modal. The pop up was not visible. because $templateCache.removeAll(); any fix for it ? – Mukun Oct 9 '14 at 9:43
+4
+@Mukun: There's no easy fix the way I see it, other than not using removeAll() but instead just use remove() to delete the keys you need to clear. You would require some kind of bookkeeping to know which keys to delete. – Strille Oct 9 '14 at 11:53 
+/*
+If you are talking about cache that is been used for caching of templates without reloading whole page, then you can empty it by something like:
+
+.controller('mainCtrl', function($scope, $templateCache) {
+  $scope.clearCache = function() { 
+    $templateCache.removeAll();
+  }
+});
+And in markup:
+
+<button ng-click='clearCache()'>Clear cache</button>
+
+And press this button to clear cache.
+*/
+/*
+If using Nginx, you can add this to your config:
+
+location ^~ /scripts/app/views/ {
+    expires -1;   
+}
+*/
+
+/*
+solução usando github
+https://medium.com/angularjs-tricks/prevent-annoying-template-caching-in-angularjs-1-x-b706bf9c4056
+
+Awesome fix buddy! :-)
+
+BTW, I already have the current version stored in $rootScope.version, so using the same instead of ENV.build.
+
+*/
+
 
 INSERT INTO ESPECIALIDADESCLINICAS
 VALUES (1, 'Prevenção');

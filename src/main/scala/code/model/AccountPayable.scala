@@ -526,7 +526,6 @@ with CanCloneThis[AccountPayable] {
     }
     if (partial) {
       if (aggreg && dif != 0.0) {
-        println ("vaiiii ================ atualizar ofx pq partial != 0 " + (apofx.value - partialValue));
         apofx.value(apofx.value - partialValue).save
       } else {
         apofx.delete_!

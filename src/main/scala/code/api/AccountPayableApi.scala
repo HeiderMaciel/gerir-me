@@ -164,7 +164,6 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 			case "accountpayable" :: "consolidateofx" :: 
 				id :: idofx :: aggreg :: partial :: Nil JsonGet _ => {
 				try{
-					println ("vaiiiiiii =============== consol " + partial)
 					AccountPayable.conCilSol (id,idofx,(aggreg == "true"), 2, (partial == "true"));
 					JInt(1)
 				} catch {
@@ -178,7 +177,6 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 						accountId.toLong, value.replaceAll (",",".").toDouble, 
 						Project.strOnlyDateToDate(paymentStart),
 						Project.strOnlyDateToDate(paymentEnd));
-					println ("vaiii  ===================== foi api  " + value)
 					JInt(1)
 				//} catch {
 				//	case e:Exception => JString(e.getMessage)
