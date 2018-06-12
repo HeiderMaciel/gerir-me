@@ -63,7 +63,7 @@ with CreatedUpdatedBy with NameSearchble[PaymentType] with ActiveInactivable[Pay
 
   object needChequeInfo_? extends MappedBoolean(this){
     override def dbColumnName = "needChequeInfo"
-    override def defaultValue = true;
+    override def defaultValue = false;
   }
 
   object deliveryContol_? extends MappedBoolean(this){
