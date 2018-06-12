@@ -36,6 +36,10 @@ alert (" na var function click aqui não chega NUNCA !!!!!! ")
       }
     });
 
+    $("#activity").change(function(){
+      $("#price").val("");
+    });
+
     var today = new Date();
     //var tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
     var start = gup("start") || getDateBr(today);
@@ -120,7 +124,7 @@ var newItem = function() {
   var ac = $("#activity").val()
   getActivities ();    
   if (ac) {
-    $("#activity").val(ac).change();
+    $("#activity").val(ac);//.change(); change só qdo alterar mesmo - pq zera o valor
   }
   return $("#budget_modal").modal({
     "show": true,
