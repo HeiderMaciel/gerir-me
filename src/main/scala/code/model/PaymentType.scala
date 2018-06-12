@@ -186,6 +186,12 @@ with CreatedUpdatedBy with NameSearchble[PaymentType] with ActiveInactivable[Pay
       // para permitir parcelamento e alteracao da data de desconto
       throw new RuntimeException("Comportamento especial <vale profissional> não pode ser faturado a vista")
     }
+    if (!cheque_? && needChequeInfo_?) {
+      throw new RuntimeException("Só faz sentido solicitar informação de cheque para cheque")
+    }
+    if (!creditCard_? && needCardInfo_?) {
+      throw new RuntimeException("Só faz sentido solicitar informação de cartão para cartão")
+    }
     super.save
   }
 }

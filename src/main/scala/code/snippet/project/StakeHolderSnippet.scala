@@ -137,12 +137,7 @@ class  StakeHolderSnippet extends BootstrapPaginatorSnippet[StakeHolder] {
 			   	S.notice("Participante salvo com sucesso!")
 			   	S.redirectTo("/project/edit_stakeholder?id="+ac.id.is)
 			}
-			"name=createdAt" #> (SHtml.text(getDateAsString(ac.createdAt.is),
-						(date:String) => {ac.createdAt(Project.strOnlyDateToDate(date))}))&
-			"name=updatedAt" #> (SHtml.text(getDateAsString(ac.updatedAt.is),
-						(date:String) => {ac.updatedAt(Project.strOnlyDateToDate(date))}))&
-			"name=createdby" #> (SHtml.text(ac.createdByName, (p)=> {} ))&
-			"name=updatedby" #> (SHtml.text(ac.updatedByName, (p)=> {} ))&
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 			"name=startat" #> (SHtml.text(getDateAsString(ac.startAt.is),
 						(date:String) => {
 							ac.startAt(Project.strOnlyDateToDate(date))

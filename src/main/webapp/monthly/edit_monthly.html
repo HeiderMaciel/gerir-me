@@ -16,7 +16,7 @@
     </script>    
     <form  class="lift:form.ajax">
       <div class="well">
-        <label for="btn"></label>
+        <label class="hide_mobile" for="btn"></label>
         <a class="btn primary" href="/monthly/list_monthly">Lista</a>
         <input class="btn success" type="submit" value="Salvar">
         <a class="btn primary" href="/monthly/edit_monthly">Inserir novo</a>
@@ -46,11 +46,11 @@
                   <div class="input">
                     <div class='inline-inputs'>
                       <div class="input-prepend" style='float:left; padding-right:10px'>
-                        <span class="add-on"><img src='/images/sex.png'/></span> 
+                        <span class="add-on hide_mobile"><img src='/images/sex.png'/></span> 
                         <input class="input-large disabled" disabled="true" id="bpname" name="bpname" size="19" type="text"/>
                       </div>
                       <div class="input-prepend" style='float:left; padding-right:10px'>
-                        <span class="add-on"><img src='/images/sex.png'/></span> 
+                        <span class="add-on hide_mobile"><img src='/images/sex.png'/></span> 
                         <input class="input-large disabled" disabled="true" id="company_customer" name="company_customer" size="19" type="text"/>
                       </div>
                     </div>
@@ -134,32 +134,11 @@
                     <input class="xlarge" id="editableLine" name="editableLine" size="30" type="text"/>
                  </div>
               </div>          
-              <div class="clearfix lift:SecuritySnippet.hasAuditModule">
-                  <label for="createdAt">Criado/Alterado</label>
+              <div class="clearfix">
+                  <label for="auditstr">Auditoria</label>
                   <div class="input">
-                    <div class='inline-inputs'>
-                      <div class="input-prepend" style='float:left; padding-right:10px'>
-                        <span class="add-on"><img width="16" src='/images/calendar_addon.png'/></span> 
-                        <input class="input-medium datetime disabled" disabled="true" id="createdAt" name="createdAt" size="19" type="text"/>
-                      </div>
-                      <div class="input-prepend" style='float:left; padding-right:10px'>
-                        <span class="add-on"><img width="16" src='/images/calendar_addon.png'/></span> 
-                        <input class="input-medium datetime disabled" disabled="true" id="updatedAt" name="updatedAt" size="19" type="text"/>
-                      </div>
-                    </div>
+                    <input class="xlarge disabled" disabled="true" id="auditstr" name="auditstr"  type="text"/>
                   </div>
-                  <div class="input">
-                    <div class='inline-inputs'>
-                      <div class="input-prepend" style='float:left; padding-right:10px'>
-                        <span class="add-on"><img src='/images/sex.png'/></span> 
-                        <input class="input-medium disabled" disabled="true" id="createdby" name="createdby" size="19" type="text"/>
-                      </div>
-                      <div class="input-prepend" style='float:left; padding-right:10px'>
-                        <span class="add-on"><img src='/images/sex.png'/></span> 
-                        <input class="input-medium disabled" disabled="true" id="updatedby" name="updatedby" size="19" type="text"/>
-                      </div>
-                    </div>
-                  </div>                            
               </div>                     
             </span>
             </span>

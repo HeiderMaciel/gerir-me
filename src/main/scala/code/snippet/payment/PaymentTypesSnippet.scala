@@ -118,12 +118,7 @@ class PaymentTypesSnippet extends BootstrapPaginatorSnippet[PaymentType]{
 					}
 				}				  
 			}	
-			"name=createdAt" #> (SHtml.text(getDateAsString(ac.createdAt.is),
-						(date:String) => {ac.createdAt(Project.strOnlyDateToDate(date))}))&
-			"name=updatedAt" #> (SHtml.text(getDateAsString(ac.updatedAt.is),
-						(date:String) => {ac.updatedAt(Project.strOnlyDateToDate(date))}))&
-			"name=createdby" #> (SHtml.text(ac.createdByName, (p)=> {} ))&
-			"name=updatedby" #> (SHtml.text(ac.updatedByName, (p)=> {} ))&
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 //		    "name=key" #> (SHtml.text(ac.key.is, ac.key(_)))&

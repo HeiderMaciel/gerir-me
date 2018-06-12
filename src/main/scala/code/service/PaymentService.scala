@@ -223,7 +223,12 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 					 .save
 		payment.details += paymentDetail
 		if(p.cheque_?){
-			createCheque(p,paymentDetail, paymentDetail.dueDate, payment.datePayment)
+			// tive que testar pt aqui pq pagamentos sem passar
+			// pelo caixa tipo baixa de mensalidade, convenio
+			// estavam gerando cheque com movementtype = 3
+			if (paymentType.cheque_? || paymentType.creditCard_?) {
+				createCheque(p,paymentDetail, paymentDetail.dueDate, payment.datePayment)
+			}
 		}
 		if(paymentType.customerRegisterDebit_?.is){
 			val customer = payment.customer.obj.get
@@ -253,7 +258,8 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 
 	def removePaymentDetails(detail:PaymentDetail) = {
 		val paymentType = detail.typePaymentObj.get
-		if(paymentType.cheque_?.is || paymentType.needCardInfo_?.is){
+		if(paymentType.cheque_?.is || paymentType.needChequeInfo_?.is
+			|| paymentType.needCardInfo_?.is){
 			// rigel 02/05/2018
 			// fiz o count pq dava erro se pagava no cartão sem pedir dados
 			// e depois alterava o parm para os proximos pagamentos

@@ -143,12 +143,7 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 			   	S.notice("Mensalidade salva com sucesso!")
 				S.redirectTo("/monthly/edit_monthly?id="+ac.id.is)
 			}
-			"name=createdAt" #> (SHtml.text(getDateAsString(ac.createdAt.is),
-						(date:String) => {ac.createdAt(Project.strOnlyDateToDate(date))}))&
-			"name=updatedAt" #> (SHtml.text(getDateAsString(ac.updatedAt.is),
-						(date:String) => {ac.updatedAt(Project.strOnlyDateToDate(date))}))&
-			"name=createdby" #> (SHtml.text(ac.createdByName, (p)=> {} ))&
-			"name=updatedby" #> (SHtml.text(ac.updatedByName, (p)=> {} ))&
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 			"name=id" #> (SHtml.text(ac.id.is.toString, (f:String) => { 
 					if(f != "")
 						ac.id(f.toInt)

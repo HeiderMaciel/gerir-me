@@ -1,8 +1,8 @@
-<div id="main" class="lift:surround?with=calendar&at=content">
+<div id="main" class="lift:surround?with=financial&at=content">
   <div class="lift:PaymentTypesSnippet.maintain">
     <form class="lift:form.ajax">
       <div class="well">
-        <h1><span class="lift:CompanySnippet.thumb"> </span>Formas de Pagamento</h1>
+        <h1>Formas de Pagamento</h1>
         <label class="hide_mobile" for="btn"></label>
         <a class="btn primary" href="/financial/payment_forms_list">Lista</a>
         <input class="btn success" type="submit" value="Salvar">
@@ -85,32 +85,11 @@
                 </div>
               </div>
             </div>    
-            <div class="span12 clearfix lift:SecuritySnippet.hasAuditModule">
-                <label for="createdAt">Criado/Alterado</label>
+            <div class="clearfix">
+                <label for="auditstr">Auditoria</label>
                 <div class="input">
-                  <div class='inline-inputs'>
-                    <div class="input-prepend" style='float:left; padding-right:10px'>
-                      <span class="add-on"><img width="16" src='/images/calendar_addon.png'/></span> 
-                      <input class="input-medium datetime disabled" disabled="true" id="createdAt" name="createdAt" size="19" type="text"/>
-                    </div>
-                    <div class="input-prepend" style='float:left; padding-right:10px'>
-                      <span class="add-on"><img width="16" src='/images/calendar_addon.png'/></span> 
-                      <input class="input-medium datetime disabled" disabled="true" id="updatedAt" name="updatedAt" size="19" type="text"/>
-                    </div>
-                  </div>
+                  <input class="xlarge disabled" disabled="true" id="auditstr" name="auditstr"  type="text"/>
                 </div>
-                <div class="input">
-                  <div class='inline-inputs'>
-                    <div class="input-prepend" style='float:left; padding-right:10px'>
-                      <span class="add-on"><img src='/images/sex.png'/></span> 
-                      <input class="input-medium disabled" disabled="true" id="createdby" name="createdby" size="19" type="text"/>
-                    </div>
-                    <div class="input-prepend" style='float:left; padding-right:10px'>
-                      <span class="add-on"><img src='/images/sex.png'/></span> 
-                      <input class="input-medium disabled" disabled="true" id="updatedby" name="updatedby" size="19" type="text"/>
-                    </div>
-                  </div>
-                </div>                            
             </div>                     
           </div>
           <div id="cash" class='tab_content'>

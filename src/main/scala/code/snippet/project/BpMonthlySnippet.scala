@@ -93,12 +93,7 @@ class  BpMonthlySnippet extends BootstrapPaginatorSnippet[BpMonthly] {
 					}
 				}
 			}
-			"name=createdAt" #> (SHtml.text(getDateAsString(ac.createdAt.is),
-						(date:String) => {ac.createdAt(Project.strOnlyDateToDate(date))}))&
-			"name=updatedAt" #> (SHtml.text(getDateAsString(ac.updatedAt.is),
-						(date:String) => {ac.updatedAt(Project.strOnlyDateToDate(date))}))&
-			"name=createdby" #> (SHtml.text(ac.createdByName, (p)=> {} ))&
-			"name=updatedby" #> (SHtml.text(ac.updatedByName, (p)=> {} ))&
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 			"name=business_pattern" #> (SHtml.text(ac.business_pattern.is.toString, (p:String) => ac.business_pattern(p.toLong)))&
 			"name=startat" #> (SHtml.text(getDateAsString(ac.startAt.is),
 						(date:String) => {

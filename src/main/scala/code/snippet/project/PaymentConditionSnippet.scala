@@ -76,14 +76,9 @@ class  PaymentConditionSnippet extends BootstrapPaginatorSnippet[PaymentConditio
 				ac.company(AuthUtil.company)
 				ac.save
 			   	S.notice("Participante salvo com sucesso!")
-			   	S.redirectTo("/project/edit_PaymentCondition?id="+ac.id.is)
+			   	S.redirectTo("/project/edit_Paymentcondition?id="+ac.id.is)
 			}
-			"name=createdAt" #> (SHtml.text(getDateAsString(ac.createdAt.is),
-						(date:String) => {ac.createdAt(Project.strOnlyDateToDate(date))}))&
-			"name=updatedAt" #> (SHtml.text(getDateAsString(ac.updatedAt.is),
-						(date:String) => {ac.updatedAt(Project.strOnlyDateToDate(date))}))&
-			"name=createdby" #> (SHtml.text(ac.createdByName, (p)=> {} ))&
-			"name=updatedby" #> (SHtml.text(ac.updatedByName, (p)=> {} ))&
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 			"name=paymentDate" #> (SHtml.text(getDateAsString(ac.paymentDate.is),
 						(date:String) => {
 							ac.paymentDate(Project.strOnlyDateToDate(date))
