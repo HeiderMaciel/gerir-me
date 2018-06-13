@@ -6,6 +6,13 @@
     $("#start").val("1");
     $("#end").val(new Date().getDate());    
     var fields = [];
+    fields[2] = { // nameproduct
+      type : "format",
+      decode: function(name, row) {
+        return "<p style='line-height: 105%'>" + 
+            row[2] + "<p/>"
+      }
+    }
     fields[6] = "none";
     fields[7] = "none";
     var url = "/treatments/print_command";
