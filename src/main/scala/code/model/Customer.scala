@@ -679,6 +679,7 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
                     "update bpmonthly set business_pattern=? where business_pattern=?;"::
                     "update quizapplying set business_pattern=? where business_pattern=?;"::
                     "update business_pattern set bp_indicatedby=? where bp_indicatedby=?;"::
+                    "update business_pattern set bp_origin=? where bp_origin=?;"::
                     "update business_pattern set bp_manager=? where bp_manager=?;"::
                     "update businesspatternpayroll set business_pattern=? where business_pattern=?;"::
                     "update busyevent set user_c=? where user_c=?;"::
@@ -730,7 +731,8 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
                     "update business_pattern set obs = trim (obs || ' ' || (select bps.obs from business_pattern bps where bps.id = ? )) where id = ?;"::
                     "update business_pattern set obscomplement = trim (obscomplement || ' ' || (select bps.obscomplement from business_pattern bps where bps.id = ? )) where id = ?;"::
                     "update business_pattern set birthday = (select bps.birthday from business_pattern bps where bps.id = ? ) where id = ? and birthday is null;"::
-                    "update business_pattern set bp_indicatedby = (select bps.bp_indicatedby from business_pattern bps where bps.id = ? ) where id = ? and bp_indicatedby is null;"::
+                    "update business_pattern set bp_indicatedby = (select bps.bp_indicatedby from business_pattern bps where bps.id = ? ) where id = ? and (bp_indicatedby is null or bp_indicatedby = 0);"::
+                    "update business_pattern set bp_origin = (select bps.bp_origin from business_pattern bps where bps.id = ? ) where id = ? and (bp_origin is null or bp_origin = 0);"::
                     "update business_pattern set instructiondegree = (select bps.instructiondegree from business_pattern bps where bps.id = ? ) where id = ? and instructiondegree is null;"::
                     "update business_pattern set occupation = (select bps.occupation from business_pattern bps where bps.id = ? ) where id = ? and occupation is null;"::
                     "update business_pattern set civilstatus = (select bps.civilstatus from business_pattern bps where bps.id = ? ) where id = ? and civilstatus is null;"::

@@ -14,13 +14,15 @@
 
   Cheque.getListFromServer = function() {
     return $.get("/payment/getCheques", function(results) {
-      var cheque, total, _i, _len;
+      var cheque, total, _i, _len, count;
       $("#grid tbody").html("");
       eval("results = " + results);
-      total = 0;
+      total = 0.0;
+      count = 0;
       for (_i = 0, _len = results.length; _i < _len; _i++) {
         cheque = results[_i];
         total += cheque.value;
+        count += 1;
         cheque.date = getDateBr(new Date(cheque.date));
         cheque.gooddate = getDateBr(new Date(cheque.gooddate));
         $("#grid tbody").append("<tr>" +
@@ -43,6 +45,7 @@
           });
         });
       }
+      $("#count").val(count);
       return $("#total").val(total.formatMoney());
     });
   };
