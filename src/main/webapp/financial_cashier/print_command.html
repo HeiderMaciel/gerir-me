@@ -6,6 +6,7 @@
     $("#start").val("1");
     $("#end").val(new Date().getDate());    
     var fields = [];
+/* comentei pq aumentou o tamanho da comanda em slz corpo limpo
     fields[2] = { // nameproduct
       type : "format",
       decode: function(name, row) {
@@ -13,6 +14,7 @@
             row[2] + "<p/>"
       }
     }
+*/
     fields[6] = "none";
     fields[7] = "none";
     var url = "/treatments/print_command";
