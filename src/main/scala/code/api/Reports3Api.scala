@@ -180,7 +180,8 @@ object Reports3 extends RestHelper with ReportRest with net.liftweb.common.Logge
 
 				// MOSTRA OS RELACIONAMENTOS SÓ PARA EGREX
 				val SQL = """select bp.id, """ + 
-				strAux + """ bp.name, trim (mobile_phone || ' ' || phone || ' ' || email_alternative), email, 
+				strAux + """ bp.name, trim (mobile_phone || ' ' || phone || ' ' || email_alternative), 
+				email, trim (document || ' ' || document_company),
 				cs.name,
 				trunc ((((DATE_PART('year', now()) - DATE_PART('year', birthday)) * 12) 
 					+ (DATE_PART('month', date (now())) - DATE_PART('month', birthday)))/12) as anos,

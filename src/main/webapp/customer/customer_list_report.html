@@ -23,7 +23,7 @@
         return "<a href='/customer/edit?id=" + row[0] + "' target='_customer_maste'>" + name + "</a>";
       }
     }
-    fields[5] = {
+    fields[6] = {
       type : "format",
       decode : function(value){
         var intValue = parseInt(value);
@@ -33,18 +33,15 @@
         return intValue;
       }
     };
-    fields[6] = "date";
+    fields[7] = "date";
     if (!hasUnitModule) {
-      fields[12] = "none";
+      fields[13] = "none";
     }
     if (!hasEgrexSystem) {
-      fields[13] = "none"; // conjuge
+      fields[14] = "none"; // conjuge
     }
     if (!hasEgrexSystem) {
-      fields[14] = "none"; // filho
-    }
-    if (!hasEgrexSystem) {
-      fields[15] = "none";
+      fields[15] = "none"; // filho
     }
     if (!hasEgrexSystem) {
       fields[16] = "none";
@@ -64,7 +61,10 @@
     if (!hasEgrexSystem) {
       fields[21] = "none";
     }
-    fields[22] = "none";
+    if (!hasEgrexSystem) {
+      fields[22] = "none";
+    }
+    fields[23] = "none";
     /*
     fields[8] = {
       type : "format",
@@ -290,6 +290,7 @@
         <th>Nome</th>
         <th>Telefone</th>
         <th>E-mail</th>
+        <th>Doc</th>
         <th>Estado Civil</th>
         <th>Idade</th>
         <th>Dt Nasc</th>
