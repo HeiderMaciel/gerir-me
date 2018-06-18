@@ -25,6 +25,12 @@
         count += 1;
         cheque.date = getDateBr(new Date(cheque.date));
         cheque.gooddate = getDateBr(new Date(cheque.gooddate));
+        var color = "";
+        if (cheque.date != cheque.gooddate) {
+          color = "red"
+        } else {
+          color = ""
+        }
         $("#grid tbody").append("<tr>" +
           "<td>" + cheque.id + "</td>" +
           "<td>" + cheque.bank + "</td>" + 
@@ -33,8 +39,8 @@
           "<td>" + cheque.number + "</td>" + 
           "<td>" + (cheque.value.formatMoney()) + "</td>" +
           "<td>" + cheque.date + "</td>" + 
-          "<td>" + cheque.gooddate + "</td>" + 
-          "<td>" + cheque.customer + "</td>" +
+          "<td style='color:" + color + "'>" + cheque.gooddate + "</td>" + 
+          "<td>" + "<a href='/customer/edit?id="+cheque.customerId+"' target='_customer_maste'>"+cheque.customer+"</a>"+ "</td>" +
           "<td><a href='#' class='_popover danger marker' rel='popover' data-content='Marcar como recebido!'  data-original-title='Recebido?' data-id='" + cheque.id + "' data-confirm-message='que deseja marcar o cheque como descontado'><img src='/images/good.png'></a></td>" +
           "</td><td><a title='" + cheque.auditstr + "' href='#' ><img width='24px' src='/images/audit.png'/></a></td>" +
           "</tr>");

@@ -608,9 +608,11 @@ object AccountPayable extends AccountPayable with LongKeyedMapperPerCompany[Acco
       By(AccountPayable.paid_?, true),
       BySql(" user_c in (%s) ".format (userId), IHaveValidatedThisSQL("", "")),
       BySql(unitsql, IHaveValidatedThisSQL("", "")),
-      BySql(sqldt, IHaveValidatedThisSQL("", ""), start, end)
-      //,
-      //OrderBy(AccountPayable.dueDate, Ascending),OrderBy(AccountPayable.id, Ascending)
+      BySql(sqldt, IHaveValidatedThisSQL("", ""), start, end),
+      OrderBy(AccountPayable.dueDate, Ascending),
+      OrderBy(AccountPayable.aggregateId, Descending),
+      OrderBy(AccountPayable.aggregateValue, Descending),
+      OrderBy(AccountPayable.id, Descending)
       )
   }
   def findAllByStartEnd(dttypes: String, start: Box[Date], end: Box[Date], 

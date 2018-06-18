@@ -1,9 +1,11 @@
-<div id="main" class="lift:surround?with=financial;at=content">
+<div id="main" class="lift:surround?with=calendar;at=content">
 <script type="text/javascript" src="/js/cheque_list.js"></script>
-<h3>
-	<center>Cheques a Descontar</center>
-</h3>
 <form>
+      <h1>
+        <span class="lift:CompanySnippet.thumb"> </span>
+        <input class="report_title local_storage" id="title_financial_control_panel" name="title_financial_control_panel" size="30" type="text" value="Cheques a Descontar"/>
+      </h1>
+      <br/>
   <div class="clearfix">
     <label for="count">Total </label>
     <div class="input">
@@ -22,13 +24,28 @@
     </div>
   </div>
 </form>  
+      <a onclick="return ExcellentExport.excel(this, 'grid', 'data');"
+        href="#" download="data.xls" class="btn excel_buttton"
+        title="Exportar para excel">
+        <img style="width: 16px;" src="/images/excel.png" />
+      </a>  
+      <a onclick="return ExcellentExport.csv(this, 'grid', ';');"
+        href="#" download="data.csv" class="btn excel_buttton"
+        title="Exportar para csv">
+        <img style="width: 16px;" src="/images/generate.png" />
+      </a>  
+      <a id="hide_grid_payments" onclick="$('#grid').toggle();return false;" 
+        href="#" class="btn excel_buttton" 
+        title="Ocultar tabela">
+        <img style="width: 16px;" src="/images/collapse.png" />
+      </a>  
 <table id="grid" class="bordered-table zebra-striped">
 		<thead>
 			<th>Id</th>
 			<th>Banco</th>
 			<th>Agência</th>
 			<th>Conta</th>
-			<th>Número do Cheque</th>
+			<th title="Número do Cheque">Nro Ch</th>
 			<th>Valor</th>
 			<th>Data</th>
 			<th>Bom Para</th>
