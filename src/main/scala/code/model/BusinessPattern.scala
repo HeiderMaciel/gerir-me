@@ -424,6 +424,11 @@ with PerCity{
         //println ("vaiii ======= " + bp_indicatedby.is)
         BpRelationship.addBpRelationship(id.is, bp_indicatedby.is, 24)
       }
+      // relacionamento de origem
+      if (bp_origin.is != 0) {
+        //println ("vaiii ======= " + bp_indicatedby.is)
+        BpRelationship.addBpRelationship(id.is, bp_origin.is, 32)
+      }
 
       if ((bp_manager.is != 0) && (AuthUtil.company.appType.isEbellepet)) {
         // 27 é pet de - reverso 26 é dono de
