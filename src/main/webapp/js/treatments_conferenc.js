@@ -108,7 +108,8 @@
             "<a href='#' onclick='removeTreatmentById("
               +obj.id+", this)'><img class='hide_on_print' alt='excluir este atendimento'  src='/images/delete.png'></a>"+
               "</td>"+
-            (hasAuditModule ? "</td><td><a title='" + obj.auditstr + "' href='#' ><img width='24px' src='/images/audit.png'/></a></td>" : "");
+            "</td><td><a title='" + obj.auditstr + "' href='#' ><img width='24px' src='/images/audit.png'/></a></td>" +
+            "</tr>";
           };
           $("#grid tbody").html(ret);
           $("#count").val(treatments.length);

@@ -245,10 +245,7 @@
         $("#unitvalue").val(obj.unitvalue);
 //        $("#unitvalue").val(obj.unitvalue);
         $("#conciliate").val(obj.conciliate);
-        $("#createdAt").val(obj.createdAt).datetimeDecode();
-        $("#updatedAt").val(obj.updatedAt).datetimeDecode();
-        $("#createdby").val(obj.createdBy);
-        $("#updatedby").val(obj.updatedBy);
+        $("#auditstr").val(obj.auditstr);
         if (obj.recurrence_id) {
           $('.recurrence_exists').show();
         } else {
@@ -285,7 +282,7 @@
     $("#amount").val(1);
     $("#parcelnum").val(1);
     $("#parceltot").val(1);
-    return $("#createdAt, #updatedAt, #createdby, #updatedby").val("");
+    return $("#auditstr").val("");
   };
 
   Account.actualId = false;
@@ -528,7 +525,9 @@
             "<td><a href='#' data-id='" + 
             obj.id + "' class='action_edit'><img src='/images/edit.png' /></a></td>" +
             "<td><a href='#' data-id='" + obj.id + "' data-recid='" + 
-            obj.recurrence_id + "' class='action_delete'><img src='/images/delete.png'/></a></td></tr>";
+            obj.recurrence_id + "' class='action_delete'><img src='/images/delete.png'/></a></td>" +
+            "</td><td><a title='" + obj.auditstr + "' href='#' ><img width='24px' src='/images/audit.png'/></a></td>" +
+            "</tr>";
         }
 
         $("#print_message").click(function(){

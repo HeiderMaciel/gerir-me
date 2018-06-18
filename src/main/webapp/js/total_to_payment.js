@@ -72,6 +72,7 @@
                             "<td>"+payment.category+"</td>" +
                             "<td>"+payment.obs+"</td>" + 
                             "<td>"+(payment.value).formatMoney()+"</td>" +
+                            (payment.aggregateValue != 0 ? "<td>" + (payment.aggregateValue).formatMoney() + "</td>" : "<td>" + "</td>") + 
                             "</tr>";
                         };
                         $("#grid tbody").html(ret);

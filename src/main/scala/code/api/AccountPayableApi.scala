@@ -647,11 +647,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 												case Full(u) => u.short_name.is
 												case _ => ""
 											}),
-											("createdAt", c.createdAt.is.getTime),
-											("updatedAt", c.updatedAt.is.getTime),
-											("updatedBy", c.updatedByName),
-											("createdBy", c.createdByName)
-
+											("auditstr", c.auditStr)
 										)
 								)
 						)
@@ -679,10 +675,19 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 				Recurrence.execureRecorenc(endDate)
 				JsArray(AccountPayable.findAllByStartEndOnlyPaidByUser(startDate,endDate,
 					AuthUtil.company, units, userId, dttypes).map((c) => JsObj( ("account",c.account.obj.get.name.is),
-					("category",c.category.obj.get.name.is),("obs",c.obs.is), ("value",c.value.is.toFloat),
-					("unitvalue",c.unitvalue.is.toFloat), ("id",c.id.is),("dueDate",c.dueDate.is.getTime),
-					("paid",c.paid_?.is),("color",c.category.obj.get.color.is), ("category_id",c.category.is),
-					("type",c.typeMovement.is), ("unit_name",c.unit.obj.get.short_name.is),
+					("category",c.category.obj.get.name.is),
+					("obs",c.obs.is), 
+					("value",c.value.is.toFloat),
+					("aggregateValue",c.aggregateValue.is.toFloat),
+					("unitvalue",c.unitvalue.is.toFloat), 
+					("id",c.id.is),
+					("dueDate",c.dueDate.is.getTime),
+					("paid",c.paid_?.is),
+					("color",c.category.obj.get.color.is), 
+					("category_id",c.category.is),
+					("type",c.typeMovement.is), 
+					("unit_name",c.unit.obj.get.short_name.is),
+					("auditstr", c.auditStr),
 					("cashier",c.cashier.obj match {
 												case Full(u) => u.idForCompany.is.toString
 												case _ => ""
