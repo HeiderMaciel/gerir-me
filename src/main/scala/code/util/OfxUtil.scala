@@ -86,7 +86,14 @@ object OfxUtil {
                }
                //println ("vaiii ================ " + invoice.trim);
                val ctMov = AccountPayable.count (
-                By (AccountPayable.dueDate, transaction.getDatePosted()),
+                // antes testava só a duedate, mas qdo o fx é conciliado,
+                // pode ser que o lancto no financeiro esteja com vencimento diferente
+                // no entanto a data de pagamento do financeiro conciliado 
+                // vai ser o duedate do ofx - por isso troquei pro BySql
+                // com or
+//              By (AccountPayable.dueDate, transaction.getDatePosted()),
+                BySql(""" ( duedate = ? or paymentdate = ? ) """, IHaveValidatedThisSQL("dueDate", "01-01-2012 00:00:00"),
+                  transaction.getDatePosted(),transaction.getDatePosted()),
                 By (AccountPayable.ofxId, ofxid.trim),
                 By (AccountPayable.account, account));
                if (ctMov <= 0 || !validate) {

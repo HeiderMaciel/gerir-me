@@ -513,6 +513,7 @@ with CanCloneThis[AccountPayable] {
       .typeMovement(auxTm) 
       .category (ap.category)
       .dueDate (ap.dueDate)
+      .paymentType (ap.paymentType)
       .value (dif)
       .paid_? (true)
       .complement ((ap.complement + " " + apofx.obs).trim)
