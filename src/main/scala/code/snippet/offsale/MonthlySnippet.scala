@@ -25,7 +25,7 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 	//var itens = 200;
 	def itens = S.param("itenspp_monthly") match {
 		case Full(s) => s.toInt
-		case _ => 50
+		case _ => 150
 	}
 
 	def showDebtors:Boolean = checkBooleanParamenter("debtors", true);		

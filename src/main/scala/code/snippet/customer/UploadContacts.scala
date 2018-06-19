@@ -71,7 +71,7 @@ class UploadContacts extends Logger {
         info("File uploaded!")
         ContactsUtil.execute(oFile, origin, nameasis, generatesql);
         if (generatesql > 0) {
-          S.notice("Arquivo gerado com sucesso!")
+          S.notice(fp.fileName + " >>>> Arquivo gerado com sucesso! >>> " + origin)
         } else {
           S.notice("Arquivo importado com sucesso!")
         }
