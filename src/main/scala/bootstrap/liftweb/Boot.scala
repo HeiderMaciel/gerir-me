@@ -246,6 +246,7 @@ class Boot {
     LiftRules.dispatch.append(SystemApi)
     LiftRules.dispatch.append(AccountApi)
     LiftRules.dispatch.append(AccountPayableApi)
+    LiftRules.dispatch.append(ConciliationApi) // quebrei pq ap estava grande
     LiftRules.dispatch.append(LocationApi)
     LiftRules.dispatch.append(Reports)
     LiftRules.dispatch.append(Reports2)

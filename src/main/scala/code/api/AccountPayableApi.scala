@@ -82,107 +82,23 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 				JInt(1)
 			}
 
-			case "accountpayable" :: "consolidate" :: Nil Post _ => {
+			case "accountpayable" :: "mark_as_unpaid" :: Nil Post _ => {
 				val ids = S.param("ids").get
 				ids.split(",").map(_.toLong).map((l:Long) => {
-					val ap = AccountPayable.findByKey(l).get
-					if (!ap.paid_?) {
-						ap.paid_? (true);
-					}
-					ap.makeAsConsolidated
+					AccountPayable.findByKey(l).get.makeAsUnPaid
 				})
 				JInt(1)
 			}
-
+/*
+			case "accountpayable" :: "consolidate" :: Nil Post _ => {
 			case "accountpayable" :: "mark_as_conciliated" :: Nil Post _ => {
-				try {
-					val ids = S.param("ids").get
-					ids.split(",").map(_.toLong).map((l:Long) => {
-						val ap = AccountPayable.findByKey(l).get
-						if (!ap.paid_?) {
-							ap.paid_? (true);
-						}
-						ap.makeAsConciliated
-					})
-					JInt(1)
-				} catch {
-					case e:Exception => JString(e.getMessage)
-				}
-			}
-
 			case "accountpayable" :: "changeofx" :: idofx :: customer :: obs :: categ :: Nil JsonGet _ => {
-				try{
-					val ap = AccountPayable.findByKey(idofx.toLong).get
-					if (!ap.paid_?) {
-						ap.paid_? (true);
-					}
-					ap.obs(obs)
-					ap.user (customer.toLong)
-					ap.category (categ.toLong)
-					ap.toConciliation_? (false);
-					ap.makeAsConciliated
-					JInt(1)
-				} catch {
-					case e:Exception => JString(e.getMessage)
-				}
-			}
-
 			case "accountpayable" :: "conciliate" :: id :: Nil JsonGet _ => {
-				try{
-					val ap = AccountPayable.findByKey(id.toLong).get
-					if (!ap.paid_?) {
-						ap.paid_? (true);
-					}
-					ap.makeAsConciliated
-					JInt(1)
-				} catch {
-					case e:Exception => JString(e.getMessage)
-				}
-			}
 			case "accountpayable" :: "conciliateofx" :: 
-				id :: idofx :: aggreg :: partial :: Nil JsonGet _ => {
-				try{
-					AccountPayable.conCilSol (id,idofx,(aggreg == "true"), 1, (partial == "true"))
-					JInt(1)
-				} catch {
-					case e:Exception => JString(e.getMessage)
-				}
-			}
-
 			case "accountpayable" :: "consolidate" :: id :: Nil JsonGet _ => {
-				try{
-					val ap = AccountPayable.findByKey(id.toLong).get
-					if (!ap.paid_?) {
-						ap.paid_? (true);
-					}
-					ap.makeAsConsolidated
-					JInt(1)
-				} catch {
-					case e:Exception => JString(e.getMessage)
-				}
-			}
 			case "accountpayable" :: "consolidateofx" :: 
-				id :: idofx :: aggreg :: partial :: Nil JsonGet _ => {
-				try{
-					AccountPayable.conCilSol (id,idofx,(aggreg == "true"), 2, (partial == "true"));
-					JInt(1)
-				} catch {
-					case e:Exception => JString(e.getMessage)
-				}
-			}
-
 			case "accountpayable" :: "consolidateTotal" :: paymentStart :: paymentEnd :: accountId :: value :: Nil JsonGet _ => {
-				//try{
-					val ap = AccountPayable.consolidate(
-						accountId.toLong, value.replaceAll (",",".").toDouble, 
-						Project.strOnlyDateToDate(paymentStart),
-						Project.strOnlyDateToDate(paymentEnd));
-					JInt(1)
-				//} catch {
-				//	case e:Exception => JString(e.getMessage)
-				//}
-			}
-
+*/
 			case "accountpayable"::"remove_checked" :: Nil Post _ => {
 				try {
 					val ids = S.param("ids").get

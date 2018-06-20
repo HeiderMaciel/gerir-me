@@ -193,6 +193,8 @@ with CanCloneThis[AccountPayable] {
 
   def makeAsPaid = this.paid_?(true).partialySecureSave
 
+  def makeAsUnPaid = this.paid_?(false).partialySecureSave
+
   def makeAsConciliated = {
     if (this.conciliate.is == 0) {
       this.conciliate(1).partialySecureSave

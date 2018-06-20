@@ -79,6 +79,13 @@ object SecuritySnippet {
         }
       }
 
+      def isAdmin(in:NodeSeq):NodeSeq ={
+        if (AuthUtil.user.isAdmin)
+        in
+        else
+        NodeSeq.Empty
+      }
+
       def isSupportAdmin(in:NodeSeq):NodeSeq ={
         if (AuthUtil.user.isSupportAdmin)
         in

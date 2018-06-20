@@ -41,7 +41,10 @@
           "<td>" + cheque.date + "</td>" + 
           "<td style='color:" + color + "'>" + cheque.gooddate + "</td>" + 
           "<td>" + "<a href='/customer/edit?id="+cheque.customerId+"' target='_customer_maste'>"+cheque.customer+"</a>"+ "</td>" +
-          "<td><a href='#' class='_popover danger marker' rel='popover' data-content='Marcar como recebido!'  data-original-title='Recebido?' data-id='" + cheque.id + "' data-confirm-message='que deseja marcar o cheque como descontado'><img src='/images/good.png'></a></td>" +
+// rigel 19/06/2018
+// comentei pq marcava o chque sem marcar o lancto financeiro
+// e nem alterava saldo e conta
+//          "<td><a href='#' class='_popover danger marker' rel='popover' data-content='Marcar como recebido!'  data-original-title='Recebido?' data-id='" + cheque.id + "' data-confirm-message='que deseja marcar o cheque como descontado'><img src='/images/good.png'></a></td>" +
           "</td><td><a title='" + cheque.auditstr + "' href='#' ><img width='24px' src='/images/audit.png'/></a></td>" +
           "</tr>");
         $(".marker").click(function() {
