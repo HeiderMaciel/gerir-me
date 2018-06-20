@@ -256,6 +256,12 @@
         } else {
           $("#cashier_number").val("");
         }
+        if (obj.paid && obj.cashier_id && obj.cheque_desc) {
+          $('#b_mark_as_unpaid').show();
+        } else {
+          $('#b_mark_as_unpaid').hide();
+        }
+
       }
     }
     return $("#account_modal").modal({
@@ -640,6 +646,7 @@
         });
       }
     });
+
     $(".b_remove_checked").click(function() {
       var checkeds, idsToMark;
       checkeds = $('.account_payable:checked').toArray();
@@ -751,6 +758,8 @@
     });
     $(".new_account").click(function() {
       Account.newAccount();
+      // não faz sentido reverter lançameno novo
+      $('#b_mark_as_unpaid').hide();
       $("#account_modal").modal({
         "show": true,
         "keyboard": true,
@@ -850,6 +859,44 @@
         return;
       }
     });
+
+    $(".b_mark_as_unpaid").click(function() {
+      if (!callApiLock) {
+        callApiLock = true;
+        if (Account.actualId) {
+          if (confirm("Tem certeza que deseja reverter o pagamento deste lançamento?")) {
+            return $.post("/accountpayable/mark_as_unpaid", {
+              "ids": Account.actualId
+            }, function(t) {
+              if (t) {
+                alert("Lançamento revertido com sucesso!");
+                Account.getListFromServer();
+                Account.actualId = false;
+                $("#account_modal").modal({
+                  "hide": true
+                });
+                callApiLock = false;
+                return;
+              } else {
+                alert("Erro ao reverter lançamento pago!");
+                callApiLock = false;
+                return;
+              }
+            });
+          } else {
+            callApiLock = false;
+          }
+        } else {
+          alert ("Lançamento não existe portanto não pode ser revertido")
+          callApiLock = false;
+          return;
+        }
+      } else {
+        alert("Já existe um processo em andamento. Aguarde o fim do processamento para clicar novamente!");
+        return;
+      }
+    });
+
     $("#cashier").cashierField(false, "all");
     $('.currency').calculator({
       showOn: 'button'

@@ -534,6 +534,8 @@ cd /root/.pm2/logs
 cd /var/lib/jenkins/app/gerir-me
 git reset --hard HEAD
 git pull
+pm2 stop all        
+pm2 restart all     
 
 pm2 start gerirme.json
 
