@@ -47,12 +47,14 @@
 //          "<td><a href='#' class='_popover danger marker' rel='popover' data-content='Marcar como recebido!'  data-original-title='Recebido?' data-id='" + cheque.id + "' data-confirm-message='que deseja marcar o cheque como descontado'><img src='/images/good.png'></a></td>" +
           "</td><td><a title='" + cheque.auditstr + "' href='#' ><img width='24px' src='/images/audit.png'/></a></td>" +
           "</tr>");
+/*        
         $(".marker").click(function() {
           return $.get("/payment/cheque/makeAsReceived/" + $(this).attr("data-id"), function() {
             alert("Marcado com sucesso!");
             return Cheque.getListFromServer();
           });
         });
+*/      
       }
       $("#count").val(count);
       return $("#total").val(total.formatMoney());

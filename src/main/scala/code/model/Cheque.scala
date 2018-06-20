@@ -56,7 +56,8 @@ class Cheque extends Audited[Cheque] with PerCompany with IdPK with CreatedUpdat
         Project.dateToStrOrEmpty(dueDate)
     }
 
-	def makeAsReceived  = this.received(true).save
+//  rigfel 19/06/2018 - não atualizava nem o lançamento nem o saldo
+//	def makeAsReceived  = this.received(true).save
 } 
 
 object Cheque extends Cheque with LongKeyedMapperPerCompany[Cheque]  with  OnlyCurrentCompany[Cheque]{

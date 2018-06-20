@@ -53,6 +53,7 @@ object PaymentApi extends RestHelper {
 				)
 		}
 
+/*
 		case "payment" :: "cheque" :: "makeAsReceived" :: id :: Nil JsonGet _ => {
 			try{
 				AuthUtil.company.findChequeByKey(id.toLong) match {
@@ -69,6 +70,7 @@ object PaymentApi extends RestHelper {
 			}
 
 		}
+*/
 
 		case "payment" :: "getCheques" :: Nil JsonGet _ => {
 			JsArray(
