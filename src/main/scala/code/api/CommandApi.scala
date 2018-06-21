@@ -93,7 +93,8 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					bc.id, td.id,
 					(select defaultquiz from usergroup where id = bp.group_c),
 					ba.id, ban.id, tr.status2,
-					os.id
+					os.id, td.activity, td.product,
+					to_char (tr.end_c, 'hh24:mi'), td.obs
 					from treatment tr 
 					inner join business_pattern bc on bc.id = tr.customer
 					inner join business_pattern bp on bp.id = tr.user_c
@@ -293,6 +294,53 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 			  case e: Exception => JString(e.getMessage)
 			}			
 		}
+		case "command" :: "upd_command" :: Nil Post _ => {
+			try { 
+			  
+				def tdId = S.param("tdId") openOr ""
+				//def start = Project.strToDate( S.param("start") openOr "" )
+				// start e end estão chegando mas não estão sendo atualizados pq
+				// são na verdade do treatment
+				def start:String = S.param("start") openOr ""
+				def end:String = S.param("end") openOr ""
+				def obs = S.param("obs") openOr ""
+				def activity = S.param("activity") openOr ""
+				def product = S.param("product") openOr ""
+				def password = S.param("password") openOr ""
+				def price = S.param("price") openOr ""
+				def amount = S.param("amount") openOr ""
+				def animal = S.param("animal") openOr ""
+				def tooth = S.param("tooth") openOr ""
+				def offsale = S.param("offsale") openOr ""
+
+				def userId:String = S.param("user") openOr "0"
+				// nuca troca customer
+				//def customerId:String = S.param("customer") openOr "0"
+				def auxiliarId:String = S.param("auxiliar") openOr "0"
+
+    			var tempd1 = TreatmentDetail.findByKey (tdId.toLong).get
+
+   				tempd1.activity(activity.toLong).
+   				 product(product.toLong).
+   				 auxiliar(auxiliarId.toLong).
+   				 offsale(offsale.toLong).
+   				 amount(amount.toDouble).
+   				 price(price.toDouble).
+   				 obs(obs).
+   				 save
+				if (AuthUtil.company.appType.isEbellepet) {
+					tempd1.getTdEpet.animal(animal.toLong).save;
+				}
+				if (AuthUtil.company.appType.isEsmile) {
+					tempd1.getTdEdoctus.tooth(tooth).save;
+				}
+
+				JInt(1)
+			} catch {
+			  case e: Exception => JString(e.getMessage)
+			}			
+		}
+
 		case "command" :: "del_detail" :: Nil Post _ => {
 			try { 
 				def tdId:String = S.param("tdid") openOr "0"

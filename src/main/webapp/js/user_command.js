@@ -39,11 +39,11 @@
       return $.get(url, function(t) {
         var obj, _i, _len, _results;
         eval("userObj = " + t);
-        $('#auxiliar, #auxiliar').append("<option value='0'>Selecione um auxiliar</option>");
+        $('#auxiliar, #auxiliar_edit').append("<option value='0'>Selecione um auxiliar</option>");
         _results = [];
         for (_i = 0, _len = userObj.length; _i < _len; _i++) {
           obj = userObj[_i];
-          _results.push($('#auxiliar, #auxiliar').append("<option value='" + obj.id + "'>" + 
+          _results.push($('#auxiliar, #auxiliar_edit').append("<option value='" + obj.id + "'>" + 
             obj.name + " " + obj.idForCompany + "</option>"));
         }
         return _results;
@@ -75,7 +75,7 @@
         for (var i in activitysObj) {
           ret += "<option value='" + activitysObj[i].id + "'>" + activitysObj[i].name + "</option>";
         }
-        $('#activity').append(ret);
+        $('#activity, #activity_edit').append(ret);
         if (($("#customer").val()) && (parseFloat($("#customer").val()) != 0)) {
           // só abre select de atividades se já tem serviço
           $('#activity').change().select2('open');
@@ -86,11 +86,12 @@
     Manager.user = function() {
       var user;
       user = $("#user").val();
-      if (!user) {
-        user = "0"
+      if (!user || user == "0") {
+        user = AuthUtil.user.id
       }
+      $("#user").val(user).change();
       return user
-      };
+    };
 
     Manager.getListFromServer = function() {
       var password;
@@ -231,11 +232,28 @@
         fields[14] = {
           type : "format",
           decode: function(name, row) {
-            return "<a class='btn primary' onclick='Manager.new_detail(" + 
+            return "" +
+            "<a class='btn primary' onclick='Manager.new_detail(" + 
             row[13] +',"' +row[0]+ '"' + ")'" + 
             " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir novo</a> " +
-                  "<a class='btn danger' onclick='Manager.del_detail(" + 
-                  row[14] +")'  target=''>Excluir</a>"
+            "<a class='btn primary' onclick='Manager.edit_detail(" + 
+            row[14] + ',' + //td.id
+            '"' +row[2]+ '",' + // customer name 
+            '"' +row[0] + '",' + // start 
+            '"' +row[22] + '",' + // end
+            '"' +row[23] +'",' + // obs
+            row[16] + ',' + // aux.id
+            row[20] + ',' + // activity
+            row[21] + ',' + // product
+            row[17] + ',' + // animal
+            '"' +row[6] +'",' + // tooth
+            row[9] + ',' + // price
+            row[8] + ',' + // amount
+            row[19] + '' + // offsale
+            ")'" + 
+            " title='Editar o serviço deste cliente/paciente' target=''>Editar</a> " +
+            "<a class='btn danger' onclick='Manager.del_detail(" + 
+            row[14] +")'  target=''>Excluir</a>"
             //      "<a class='btn primary' onclick='Manager.new_fit(" +row[0].replace (':','.') +")' title='Inserir novo serviço neste mesmo horário' target=''>Encaixar</a> " +
           }
         };
@@ -244,7 +262,10 @@
       fields[16] = "none" // id assistente
       fields[17] = "none" // id animal
       fields[18] = "none" // tr.status2
-      fields[19] = "none" // tr.status2
+      fields[19] = "none" // offsale id
+      fields[20] = "none" // td.activity
+      fields[21] = "none" // td.product
+      fields[22] = "none" // tr.end_c
       dataaux = $("#day").val();
       renderReport("/command/usersales" + 
         "?user=" + (Manager.user())+
@@ -485,6 +506,94 @@
       }
     };
 
+    Manager.update = function() {
+      var tdItd, end, obs, start, user, password, auxiliar, 
+      animal, tooth, price, amount, offsale;
+      tdId = $("#tdid_edit").val();
+      start = $("#start").val() + " " + $("#hour_start_edit").val();
+      // aqui é start mesmo pq dt fim não é informada
+      end = $("#start").val() + " " + $("#hour_end_edit").val();
+      user = $("#user").val();
+      password = $("#password").val();
+      auxiliar = $("#auxiliar_edit").val();
+      animal = $("#animal_edit").val() || 0 ;
+      offsale = $("#offsale_edit").val() || 0;
+      // nunca troca o cliente
+      //customer = $("#customer_edit").val();
+      price = $("#price_edit").val();
+      amount = $("#amount_edit").val();
+      obs = $("#obs_edit").val();
+      activity = $("#activity_edit").val();
+      product = $("#product_edit").val();
+      tooth = $("#tooth_edit").val();
+      var valid = false;
+      if (($("#activity_edit").val()) && (parseFloat($("#activity_edit").val()) != 0)) {
+        if (!$("#start").val() || !$("#hour_start_edit").val() || !user) {
+          return alert('Verifique os dados obrigatórios: hora início!');
+        } else {
+          valid = true;
+        } 
+      } else {
+        if (($("#product_edit").val()) && (parseFloat($("#product_edit").val()) != 0)) {
+          if (!$("#hour_start_edit").val()) {
+            start = $("#start").val() + " 05:00"
+            end = $("#start").val() + " 05:15"
+          }
+          valid = true;
+        } else {
+          return alert('Um serviço ou produto precisa ser selecionado');
+        }
+      }
+
+      // acho que não precisa
+      if ($("#password").val() != undefined) {
+        if (!$("#password").val()) {
+           return alert('Informe senha do profissional');
+        } else {
+          valid = true;
+        }
+      } else {
+        valid = true;
+      }
+  
+      if (!callApiLock) {
+        callApiLock = true
+        if (valid) {
+          return $.post("/command/upd_command", {
+            "tdId": tdId,
+            "start": start,
+            "end": end,
+            "user": user,
+            "auxiliar": auxiliar,
+            "animal": animal,
+            "tooth": tooth,
+            "offsale": offsale,
+            "password": password,
+            // nunca troca o cliente
+            //"customer": customer,
+            "obs": obs,
+            "price": price,
+            "amount": amount,
+            "activity": activity,
+            "product": product
+          }, function(results) {
+            if(results === 1 || results == "1"){
+              alert("Atualizado com sucesso");
+              $("#edit_command_modal").modal({
+                "hide": true
+              });
+            }else{
+              alert(eval(results));
+            }
+            callApiLock = false
+            return Manager.getListFromServer();
+          });
+        }
+      } else {
+        alert("Já existe um processo em andamento. Aguarde o fim do processamento para clicar novamente!");
+      }
+    };
+
     Manager.new = function() {
       if ((!$("#user").val()) || (parseFloat($("#user").val()) == 0)) {
         return alert('Um profissional precisa ser selecionado!');
@@ -506,6 +615,36 @@
       });
     };
 
+    Manager.edit_detail = function(tdid, customer, start_hour, 
+      end_hour, obs, auxiliar, activity, product,
+      animal, tooth, price, amount, offsale) {
+      $("#tdid_edit").val(tdid);
+      $("#hour_start_edit").val(start_hour);
+      $("#hour_end_edit").val(end_hour);
+      $("#auxiliar_edit").val(auxiliar || 0);
+      $("#animal_edit").val(animal || 0);
+      $("#offsale_edit").val(offsale || 0) 
+      $("#customer_edit").val(customer);
+      $("#price_edit").val(price || 0);
+      $("#amount_edit").val(amount);
+      $("#obs_edit").val(obs);
+      $("#activity_edit").val(activity);
+      $("#product_edit").val(product);
+      $("#tooth_edit").val(tooth);
+
+//      Manager.getActivities();
+
+      $("#activity_edit").change();
+      $("#offsale_edit").change();
+      $("#auxiliar_edit").change();
+
+      return $("#edit_command_modal").modal({
+        "show": true,
+        "keyboard": true,
+        "backdrop": true
+      });
+    };
+
     return Manager;
 
   })();
@@ -513,6 +652,8 @@
   $(function() {
     $('#tooth').toothField(true);
     $("#offsale").offSaleField(true);
+    $('#tooth_edit').toothField(true);
+    $("#offsale_edit").offSaleField(true);
     $("#forget").click(function() {
       $("#password").val("1234").change(); 
       $("#user").val("0");
@@ -567,7 +708,11 @@
 
     $(".b_add_command").click(function() {
       return Manager.save();
-    });Manager
+    });
+    $(".b_update_command").click(function() {
+      return Manager.update();
+    });
+    Manager
     //$("#start_date").val(new Date().getDateBr());
     //$("#end_date").val(new Date().getDateBr());
     //var startDate = function(){
@@ -577,6 +722,12 @@
     // return encodeURIComponent($("#end").val() != "" ? $("#end").val() : getDateBr(new Date()));
     //}     
     $("#product").productSearch({
+      createName: false,
+      iconElement: ".add-on",
+      userThuch: true,
+      userFieldSelector: '#user'
+    });
+    $("#product_edit").productSearch({
       createName: false,
       iconElement: ".add-on",
       userThuch: true,

@@ -200,12 +200,12 @@
               </div>
               <div class="span8">
                 <div class="clearfix">
-                  <label for="name">Produto</label>
+                  <label for="product">Produto</label>
                   <div class="input">
                     <div class="inline-inputs">
                       <div style="float:left; padding-right:10px" class="input-prepend">
-                            <span class="add-on  hide_mobile"></span> 
-                            <input class="xlarge process_product_field" name="product" id='product'/>
+                        <span class="add-on  hide_mobile"></span> 
+                        <input class="xlarge process_product_field" name="product" id='product'/>
                       </div>                                                    
                     </div>
                   </div>
@@ -270,7 +270,7 @@
                 <div class="clearfix">
                   <label for="name">Observação </label>
                    <div class="input">
-                      <input class="xlarge" id="obs" name="obs" size="30" type="textarea"/>
+                      <textarea class="xlarge" id="obs" name="obs" size="30" type="textarea"></textarea>
                    </div>
                 </div>
                 <div class="well">
@@ -282,4 +282,160 @@
       </form>
     </span>
   </div>
+  <div id="edit_command_modal" style="width: 90%; left: 5%; margin: auto auto auto auto; top:5%; height:100%; max-height:100%;" class="modal hide">
+    <div class="modal-header">
+      <a href="#" class="close">&times;</a>
+      <h3>Atualiza Atendimento</h3>
+    </div>
+    <span id="cash_form">
+      <form id='eventForm' action="/calendar/">
+        <div>
+            <div class="row">
+              <div class="span16">
+                <div class="well">
+                  <input class="btn success b_update_command" id="b_update_command" type="button" value="Salvar">
+                </div>
+                <div class="clearfix">
+                  <label for="tdid_edit"><span data-i18n='Cliente'></span></label>
+                   <div class="input">
+                      <input id='tdid_edit' name='tdid_edit' type=text disabled='true' class="mini"/>
+                   </div>
+                </div>
+                <div class="clearfix lift:SecuritySnippet.isCmdAskCommand">
+                  <label for="command_edit">
+                    N.° <span data-i18n='Comanda'></span>
+                  </label>
+                    <div class="input">
+                      <div class="inline-inputs">
+                        <input name="command_edit" id='command_edit' class="mini">
+                        <input type='button' class="btn primary" value='Ok' id='command_get_from_server'/>
+                      </div>
+                    </div>
+                </div>                           
+                <div class="clearfix">
+                  <label for="customer_edit"><span data-i18n='Cliente'></span></label>
+                   <div class="input">
+                      <input id='customer_edit' name='customer_edit' type=text disabled='true'/>
+                   </div>
+                </div>
+                <input type="hidden" class="has-pet-system lift:SecuritySnippet.isEbellepetSystem" value="1">
+                <div class="clearfix lift:SecuritySnippet.isEbellepetSystem">
+                  <label for="animal_edit">Pet</label>
+                    <div class="input">
+                        <select name="animal_edit" id="animal_edit"></select>
+                    <a href="#" title="Ir para animal"> <img src="/images/pets.png" width="32" onclick="openAnimalSelected()"></a>
+                    <a href="#" title="Prontuário"> <img src="/images/records.png" width="32" onclick='openAnimalRecordSelected()'></a>
+                  </div>
+                </div>                  
+              </div>
+              <div class="span8">
+                <div class="clearfix">
+                  <label for="activity_edit"><span data-i18n='Serviço'></span> </label>
+                  <div class="input">
+                    <div class="inline-inputs">
+                        <div style="float:left; padding-right:10px" class="input-prepend">
+                          <span class="add-on hide_mobile"><img width="16" src="/images/cut.png"></span> 
+                          <select name="activity_edit" id='activity_edit'></select>
+                        </div>
+                    </div>
+                  </div>
+                </div>              
+                <div class="clearfix lift:SecuritySnippet.hasAuxiliarModule">
+                  <label for="auxiliar_edit"><span data-i18n='Assistente'></label>
+                    <div class="input">
+                      <div class="inline-inputs">
+                        <select id='auxiliar_edit' name='auxiliar_edit'></select>
+                      </div>
+                    </div>
+                </div>
+                <div class="clearfix lift:SecuritySnippet.hasOffSaleModule">
+                  <label for="offsale_edit">Convênio</label>
+                  <div class="input">
+                    <div class="inline-inputs">
+                      <div style="float:left; padding-right:10px" class="input-prepend">
+                        <span class="add-on hide_mobile"><img width="16" src="/images/agreement.png"></span> 
+                        <select class= 'xlarge' id='offsale_edit'  name="offsale_edit"></select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="lift:SecuritySnippet.IsEsmileSystem clearfix">
+                  <label for="tooth_edit">Dente</label>
+                  <div class="input">
+                    <select class="xlarge" id="tooth_edit" name="tooth_edit" size="30"></select>
+                  </div>
+                </div>
+              </div>
+              <div class="span8">
+                <div class="clearfix">
+                  <label for="product_edit">Produto</label>
+                  <div class="input">
+                    <div class="inline-inputs">
+                      <div style="float:left; padding-right:10px" class="input-prepend">
+                        <span class="add-on  hide_mobile"></span> 
+                        <input class="xlarge process_product_field" name="product_edit" id='product_edit'/>
+                      </div>                  
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix">
+                  <label for="opener_date">Estoque Atual</label>
+                  <div class="input">
+                    <div class="inline-inputs">
+                      <div style="float:left; padding-right:10px" class="input-prepend">
+                        <span class="add-on hide_mobile"><img width="16" src="/images/categorie.png"></span> 
+                        <input type="text" size="19" name="current_stock" id="current_stock" disabled='true' class="mini disabled inventory_product_search">
+                         <span class="hide_mobile help-block">Quantidade atual do produto em estoque</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>      
+              </div>
+              <div class="span16">          
+                <div class="clearfix">
+                  <label for="hour_start_edit">Hora Início/Fim</label>
+                    <div class="input">
+                      <div class="inline-inputs">
+                          <div style="float:left; padding-right:10px" class="input-prepend">
+                            <span class="add-on  hide_mobile"><img width="16" src="/images/clock.png"></span>
+                            <input type="text" size="19" name="hour_start_edit" id="hour_start_edit" disabled='true' class="mini time"/>
+                          </div>
+                          <div style="float:left; padding-right:10px" class="input-prepend">
+                            <span class="add-on  hide_mobile"><img width="16" src="/images/clock.png"></span>
+                            <input type="text" size="19" name="hour_end_edit" id="hour_end_edit" disabled='true' class="mini time"/>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="clearfix lift:SecuritySnippet.isNotMedicalSystem">
+                  <label for="price_edit">Valor Total/Qtde</label>
+                    <div class="input">
+                      <div class="inline-inputs">
+                          <div style="float:left; padding-right:10px" class="input-prepend">
+                            <span class="add-on  hide_mobile"><img width="16" src="/images/money.png"></span>
+                            <input type="text" size="19" name="price_edit" id="price_edit" class="mini currency"/>
+                          </div>
+                          <div style="float:left; padding-right:10px" class="input-prepend">
+                            <span class="add-on  hide_mobile"><img width="16" src="/images/add.png"></span>
+                            <input type="number" step='1' min='0' size="19" name="amount_edit" id="amount_edit" class="mini" value="1"/>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="clearfix">
+                  <label for="name">Observação </label>
+                   <div class="input">
+                      <textarea class="xlarge" id="obs_edit" name="obs_edit" size="30" type="textarea"> </textarea>
+                   </div>
+                </div>
+                <div class="well">
+                  <input class="btn success b_update_command" id="b_update_command" type="button" value="Salvar">
+                </div>                
+             </div>
+            </div>
+        </div>
+      </form>
+    </span>
+  </div>
+
 </div>
