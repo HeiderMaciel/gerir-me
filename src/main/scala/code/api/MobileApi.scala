@@ -188,7 +188,7 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
 
         val hoptions = AgHM.findAll(
         BySql(""" 
-          agh between ? and ?
+          agh between ? and (?-?)
           and (agh > to_number (to_char (now(),'hh24'),'99') or date(?) > now())
           and agm % ? = 0
           and 1 > (select count (1) from treatment tr where tr.user_c = ? and tr.company = ?
@@ -217,6 +217,7 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
         IHaveValidatedThisSQL("1=1","01-01-2012 00:00:00"),
         userObj.company.obj.get.calendarStart.is,
         userObj.company.obj.get.calendarEnd.is-1,
+        (activityObj.durationMin/60),
         date1,
 //        userObj.company.obj.get.calendarInterval.is,
         userObj.calendarInterval.is,
