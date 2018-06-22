@@ -559,7 +559,10 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
   override def logo_web = Props.get("photo.urlbase").get + imagePath + "/" + image.is
   override def thumb_web = Props.get("photo.urlbase").get + imagePath + "/" + imagethumb
   def mainUnit = {
-    CompanyUnit.findAll(OrderBy(CompanyUnit.id, Ascending),By(CompanyUnit.company, this), By(CompanyUnit.showInCalendar_?, true))(0)
+    CompanyUnit.findAll(OrderBy(CompanyUnit.id, Ascending),
+      By(CompanyUnit.company, this), 
+      By(CompanyUnit.status, 1), 
+      By(CompanyUnit.showInCalendar_?, true))(0)
   }
 
   def calPubCompany (company:String) = {
