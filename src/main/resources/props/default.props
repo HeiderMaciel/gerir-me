@@ -40,6 +40,8 @@ mail.port=465
 mail.password=rika775072
 #---------------------------
 photo.path=/var/www/html/images/
+#tentei nao deu certo
+#photo.urlbase=https://images.gerirme.app/
 photo.urlbase=http://images.vilarika.com.br/
 
 #---------------------------
