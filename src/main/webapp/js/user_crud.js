@@ -221,5 +221,5 @@ $(function() {
   $("#companyunit_unit").unitField();
   $("#usergroup_group").userGroupField();
   $("#bankaccount_bank").bankField();
-  $("#quiz_quiz").quizField();
+//  $("#quiz_quiz").quizField();
 })

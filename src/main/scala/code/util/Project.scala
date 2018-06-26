@@ -271,7 +271,7 @@ object Project{
       val year = date1.get(java.util.Calendar.YEAR)
 			day + " de " + monthToExt (date) + " de " + year
 		} else {
-			"retornar idade"
+			""
     }
 	}
 
@@ -280,7 +280,7 @@ object Project{
 		if(date != null) {
       diffYYMM (today, date, "YEARS")
     } else {
-			"retornar idade"
+			"00"
     }
 	}
 

@@ -6,9 +6,13 @@ var makeSelect = function(field, methodName, allow_null, allow_null_message, cal
 		}
 		if (selectAll) {
 			html += "<option value='SELECT_ALL'>Todos</option>";
-		}		
+		}
+		var id1 = 0;		
 		for (var i in items) {
 			var id = items[i].id || i;
+			if (i == 0) {
+				id1 = id // salva o primeiro id para ser exibido se for o unico
+			}
 			var desciption = (items[i].name || items[i].title || items[i]);
 			html += "<option value='" + id + "'>" + desciption + "</option>";
 		}
@@ -16,6 +20,10 @@ var makeSelect = function(field, methodName, allow_null, allow_null_message, cal
 			callback(items);
 		}
 		$(field).html(html);
+		// se tiver um item só e não aceita nulo seta ele
+		if (items.length == 1 && !allow_null) {
+			$(field).val (id1)			
+		}
 		$(field).change();
 	});	
 };

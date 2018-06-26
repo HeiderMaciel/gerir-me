@@ -63,8 +63,13 @@
             <label for="name">Texto</label>
              <div class="input editor-medium">
                 <textarea class="medium" id="message" name="message" size="30"></textarea>
-                <span class="help-block">Texto padrão que será inserido</span>
              </div>
+          </div>
+          <div class="clearfix">
+            <label for="name"></label>
+            <div class="input">
+              <input class="btn primary" type="button" id='print_message' value='Imprimir' />
+            </div>
           </div>
           <div class="clearfix">
             <label for="status">Status</label>
@@ -90,6 +95,13 @@
     <script>
     $(function(){
       $('#message').jqte();
+    });
+    $("#print_message").click(function(){
+        var message = $('#message').val();
+        var header = "" //<p>" + + " Gestão Integrada <br></p>"
+        var printWindow = window.open("", "MsgPrintWindow");
+        printWindow.document.write(header + message);
+        printWindow.print();
     });
     </script>
 </div>
