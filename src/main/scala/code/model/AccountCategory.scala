@@ -200,6 +200,8 @@ class AccountCategory extends Audited[AccountCategory] with PerCompany with IdPK
         ac(0)
       }
   }
+  def colorId = <a style={"background-color:"+color.is+";"} 
+  href={"/financial_admin/account_category?id="+id.is.toString} target='_category_maste'>{id.is.toString}</a>
 }
 
 object AccountCategory extends AccountCategory with LongKeyedMapperPerCompany[AccountCategory] with OnlyActive[AccountCategory] {

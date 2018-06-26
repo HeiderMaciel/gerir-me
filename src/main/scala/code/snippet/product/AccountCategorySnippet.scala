@@ -61,6 +61,7 @@ class  AccountCategorySnippet  extends BootstrapPaginatorSnippet[AccountCategory
 			page.flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"order" -> Text(ac.orderInReport.is.toString),
+							"colorid" -> ac.colorId,
 							"typemovement" -> Text(
 								    if(ac.typeMovement.is == 0){ 
 										"Entrada" 
