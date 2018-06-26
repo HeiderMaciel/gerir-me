@@ -266,6 +266,14 @@
            }
         }
       }
+      
+      if (!$("#purchasePrice").val()) {
+        $("#purchasePrice").val(0);
+      }
+      if (!$("#salePrice").val()) {
+        $("#salePrice").val(0);
+      }
+
       Inventory.addCurrentMovement();
       return Inventory.renderTable();
     });
