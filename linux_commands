@@ -78,30 +78,7 @@ VALUES (9, 'Radiologia');
 INSERT INTO ESPECIALIDADESCLINICAS
 VALUES (0, 'Diagnóstico');
 
-Cannot send, channel has already failed: localhost/127.0.0.1:61616
-
-duplicate key value violates unique constraint "busyevent_unique"
-  Detail: Key (user_c, start_c, end_c, unit, deleted, company)=(352957, 2018-03-31 12:00:00, 2018-03-31 12:30:00, 265, f, 229) already exists.
-
- Key (user_c, start_c, end_c, unit, deleted, company)=(353734, 2018-03-27 07:00:00, 2018-03-27 18:00:00, 362, f, 314) already exists.
   
-at code.model.BusyEvent.runSafe(BusyEvent.scala:20)
-  at net.liftweb.mapper.Mapper$class.save(Mapper.scala:89)
-  at code.model.BusyEvent.code$model$Audited$$super$save(BusyEvent.scala:20)
-  at code.model.Audited$class.save(Audited.scala:39)
-  at code.model.BusyEvent.save(BusyEvent.scala:69)
-  at code.actors.FreeBusyActor$$anonfun$treat$1$$anonfun$apply$3.saveStartDelay$1(FreeBusyActor.scala:98)
-  at code.actors.FreeBusyActor$$anonfun$treat$1$$anonfun$apply$3.apply(FreeBusyActor.scala:126)
-  at code.actors.FreeBusyActor$$anonfun$treat$1$$anonfun$apply$3.apply(FreeBusyActor.scala:67)
-  
-Exception in thread "pool-33-thread-2" java.lang.OutOfMemoryError: GC overhead limit exceeded
-Exception in thread "pool-33-thread-13" java.lang.OutOfMemoryError: GC overhead limit exceeded
-Exception in thread "InactivityMonitor WriteCheck" java.util.concurrent.RejectedExecutionException: Task org.apache.activemq.transport.InactivityMonitor$3@5272ca6a rejected from java.util.concurrent.ThreadPoolExecutor@6e471f6f[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 8247]
-
-Exception in thread "ActiveMQ Transport: tcp://localhost/127.0.0.1:61616" java.lang.OutOfMemoryError: Java heap space
-
-
-
 ls > /tmp/Jsiw
 chmod 600 /tmp/Jsiw
 ls > /tmp/rebots

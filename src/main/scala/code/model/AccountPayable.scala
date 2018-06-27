@@ -182,28 +182,28 @@ with CanCloneThis[AccountPayable] {
     } else {
        var vaux = AccountPayable.findByKey(aggregId).get.aggregateValue.is
        AccountPayable.findByKey(aggregId).get.
-         aggregateValue(vaux + this.value).partialySecureSave;
+         aggregateValue(vaux + this.value).partiallySecureSave;
     }
-    this.partialySecureSave
+    this.partiallySecureSave
   }
     
   def thisUnit : CompanyUnit = {
     CompanyUnit.findByKey (this.unit.obj.get.id.toLong).get;
   }
 
-  def makeAsPaid = this.paid_?(true).partialySecureSave
+  def makeAsPaid = this.paid_?(true).partiallySecureSave
 
-  def makeAsUnPaid = this.paid_?(false).partialySecureSave
+  def makeAsUnPaid = this.paid_?(false).partiallySecureSave
 
   def makeAsConciliated = {
     if (this.conciliate.is == 0) {
-      this.conciliate(1).partialySecureSave
+      this.conciliate(1).partiallySecureSave
     } else {
       throw new RuntimeException("Só lançamentos em aberto podem ser conciliados!")
     }
   }
 
-  def makeAsConsolidated = this.conciliate(2).partialySecureSave
+  def makeAsConsolidated = this.conciliate(2).partiallySecureSave
 
   lazy val accountBox = this.account.obj
   lazy val accountShortName:String = {
@@ -316,7 +316,7 @@ with CanCloneThis[AccountPayable] {
     debted_?(false)    
   }
 
-  def partialySecureSave = {
+  def partiallySecureSave = {
     if (!isNew) {
       changeAccountProcess
       if (paid_?.is) {
@@ -552,7 +552,7 @@ with CanCloneThis[AccountPayable] {
       )
     apList.foreach((ap) => {  
       ap.makeAsConsolidated
-      ap.partialySecureSave
+      ap.partiallySecureSave
     });
 
     val val1 = if (value < 0.0) {

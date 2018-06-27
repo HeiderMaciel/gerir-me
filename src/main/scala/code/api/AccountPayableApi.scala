@@ -303,7 +303,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 				}
 			}
 
-			case "accountpayable" :: "edit" :: id :: Nil Post _ => {
+			case "accountpayable" :: "edit" :: id :: partiallySecure :: Nil Post _ => {
 				val c = AccountPayable.findByKey(id.toLong).get
 				for {
 					category <- S.param("category") ?~ "category parameter missing" ~> 400
@@ -394,7 +394,12 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 						c.reprocessRecurencByThis
 					}
 					try {
-						c.save;
+						if (partiallySecure == "true") {
+							c.complement((complement + " Alteração de lançamento de caixa fechado " + AuthUtil.user.short_name.is + " " + Project.dateTimeToStr(new Date())).trim)
+							c.partiallySecureSave
+						} else {
+							c.save;
+						}
 						JBool (true);
 					} catch {
 						case e:Exception => JString(e.getMessage)
