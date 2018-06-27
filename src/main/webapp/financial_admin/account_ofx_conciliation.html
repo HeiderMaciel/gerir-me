@@ -54,7 +54,7 @@
             "' data-categ='" + row [12] + 
             "' data-value='" + row [3] + 
             "' class='action_change'><img width='16px' title='validar ofx' src='/images/tick.png'></a>" +
-              "<img width='16px' src='/images/transparent1.png'>" +
+              "<img class='lift:SecuritySnippet.isAdmin' width='16px' src='/images/transparent1.png'>" +
                 "<a href='#' data-idofx='" + row [4] + "' class='action_remove'><img width='16px' title='excluir ofx' src='/images/delete.png'></a>"
         }
       }
@@ -245,7 +245,13 @@
             $(this).attr("data-vaggreg"), true);
         });
         $(".action_remove").click(function() {
-          return deleteOne($(this).attr("data-idofx"));
+          if (AuthUtil.user.groupPermission.indexOf ('1000') != -1 || 
+            AuthUtil.user.groupPermission == ',1' ||
+            AuthUtil.user.groupPermission == '1') {
+            return deleteOne($(this).attr("data-idofx"));
+          } else {
+            return alert ("Apenas adminsitrador pode excluir ofx ")
+          }
         });
         $(".action_change").click(function() {
           return changeOne($(this).attr("data-idofx"),
