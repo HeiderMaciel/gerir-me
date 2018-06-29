@@ -19,7 +19,22 @@
     fields[3] = "real";
     fields[4] = "real";
     fields[5] = "real";
-    fields[6] = "real";
+    //fields[6] = "real";
+    fields[6] = {
+      type : "format",
+      decode: function(name, row) {
+        var color = ""
+        if (parseFloat(row[6]) > parseFloat(row[5])) {
+          color = "green"
+        } else if (parseFloat(row[6]) < parseFloat(row[5])) {
+          color = "red"
+        } else {
+          color = "";
+        }
+        return "<p style='color:" + color + "'><b>" + 
+            realDecode(row[6]) + "</b><p/>"
+      }
+    }
     fields[7] = "real";
     fields[8] = "real";
     fields[9] = {

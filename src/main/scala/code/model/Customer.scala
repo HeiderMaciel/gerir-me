@@ -743,11 +743,11 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
                     Nil
                     if (customerSource.document != "" &&
                         customerSource.document == customerDesc.document) {
-                        customerSource.name (customerSource.name + " deleted").
+                        customerSource.name (BusinessRulesUtil.clearString(customerSource.name) + " deleted").
                         document (customerSource.document + " a").
                         save;
                     } else {
-                        customerSource.name (customerSource.name + " deleted").save;
+                        customerSource.name (BusinessRulesUtil.clearString(customerSource.name) + " deleted").save;
                     }
                     customerDesc.valueInAccount(customerSource.valueInAccount.is+customerDesc.valueInAccount.is).save
                     sqls.foreach((sql)=>{
