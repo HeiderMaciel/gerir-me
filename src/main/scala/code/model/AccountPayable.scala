@@ -362,6 +362,8 @@ with CanCloneThis[AccountPayable] {
       throw new RuntimeException("Não é permitido lançamento sem categoria")
     }
 
+    // quando o laçamento tem um cheque vinculado, se o valor tá zero
+    // seta o valor do cheque automaticamente
     if (value == 0.0) {
       cheque.obj match {
         case Full(c:Cheque) => {

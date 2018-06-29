@@ -145,7 +145,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					List(AuthUtil.company.id.is, start, end)) 
 			} 
 
-			case "report" :: "indications_ranking" :: Nil Post _ => {
+			case "report" :: "referral_ranking" :: Nil Post _ => {
 				def start:Date = S.param("start") match {
 					case Full(p) => Project.strToDateOrToday(p)
 					case _ => new Date()
@@ -162,6 +162,10 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case Full(p) => p.toInt
 					case _ => 20
 				}
+				def rankingtype:String = S.param("rankingtype") match {
+					case Full(p) => p
+					case _ => "25,33";
+				}
 				// precisa criar outro data no js só com duas colunas e passar
 				// para as lib do google
 				// ai pode ter o grid com mais informações
@@ -169,14 +173,14 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 			            select bp.name, count (bp.id)--, bp.id 
 			            from bprelationship br
 			            inner join business_pattern bp on bp.id = br.business_pattern
-			            where br.relationship = 25 and br.company = ?
+			            where br.relationship in (%s) and br.company = ?
 			            and br.startat between ? and ? %s
 			            group by bp.name--, bp.id
 			            having count(bp.id)>0
 			            order by count(bp.id) desc
 			            limit ?
 			        """
-				toResponse(ranking_indications_query.format(unit),
+				toResponse(ranking_indications_query.format(rankingtype, unit),
 					List(AuthUtil.company.id.is, start, end, maxcli))
 			}
 

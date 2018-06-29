@@ -126,8 +126,8 @@ $(function() {
         customer: gup("id")
       };
       var fields = [];
-      fields[2] = 'date'
-      fields[3] = {
+      fields[3] = 'date'
+      fields[4] = {
         type: "format",
         decode: function(value) {
           return '<a href="/customer/edit?id=' + value + '" class="btn sucess">Ir</a>';

@@ -18,7 +18,7 @@
     var fields = [];
     fields[1] = "int";
     fields[2] = "none";
-    var url = "/report/indications_ranking";
+    var url = "/report/referral_ranking";
     var request = function(){
       renderReport(url,fields,$("#form_report").serializeObject(),"#grid",function(data){
         drawChart(data);
@@ -36,10 +36,22 @@
           item[1]= window.parseInt(item[1]);
           return item;
         })
-        data = jQuery.merge([["Nome","Indicações"]],data);
+        var titleAux = "";
+        var legendAux = "";
+        if ($("#rankingtype").val() == "25") {
+          titleAux = 'Ranking de Indicações'
+          legendAux = 'Indicações';
+        } else if ($("#rankingtype").val() == "33") {
+          titleAux = 'Ranking de Origem'
+          legendAux = 'Origens';
+        } else {
+          titleAux = 'Ranking de Indicações/Origem'
+          legendAux = 'Indicações/Origens';
+        }
+        data = jQuery.merge([["Nome",legendAux]],data);
         data = google.visualization.arrayToDataTable(data);
         var options = {
-          title: 'Ranking de Indicações',
+          title: titleAux,
           hAxis: {title: 'Nome', titleTextStyle: {color: 'red'}, minValue : 1}
         };
 
@@ -49,9 +61,11 @@
   </script>  
     <form id="form_report" class="well  form-search" method='get'>
     <h1>
-      <span class="lift:CompanySnippet.thumb"> </span>Relatório Ranking de Indicações
+      <span class="lift:CompanySnippet.thumb"> </span>
+      <input class="report_title local_storage" id="title_referral_ranking_report" name="title_referral_ranking_report" size="30" type="text" value="Relatório Ranking de Indicações"/>
     </h1>
-    <div class="span9">
+    <div class="row">
+      <div class="span9">
         <div class="clearfix">
           <label for="opener_date">Intervalo</label>
             <div class="input">
@@ -81,11 +95,26 @@
             <span class="help-block">Quantidade limite de clientes no ranking</span>
           </div>
         </div>            
-      <div class="clearfix">
-        <label for="send"></label>
+        <div class="clearfix">
+          <label for="send"></label>
+            <div class="input">
+                <button type="button" id="send" class="btn success">Buscar</button>
+            </div>
+        </div>
+      </div>
+      <div class="span8">
+        <div class="clearfix">
+          <label for="rankingtype">Tipo</label>
           <div class="input">
-              <button type="button" id="send" class="btn success">Buscar</button>
+            <div class="inline-inputs">
+              <select class="local_storage" name="rankingtype" id="rankingtype">
+                <option value='25'>Indicação</option>
+                <option value='33'>Origem</option>
+                <option value='25,33'>Todos</option>
+              </select>
+            </div>
           </div>
+        </div>
       </div>
     </div>
     </form>
@@ -93,7 +122,7 @@
     <table id="grid" class="bordered-table zebra-striped">
       <thead>
         <th>Nome</th>
-        <th>Indicações</th>
+        <th>Indicou/Originou</th>
       </thead>
       <tbody>
       </tbody>

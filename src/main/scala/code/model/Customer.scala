@@ -472,10 +472,14 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
             limit ?
         """
 */
-    lazy val indicatedby_query = """select bc.id, bc.name, br.startat, bc.id from bprelationship br
+    // 25 - indicou 
+    // 33 - origionou
+    lazy val indicatedby_query = """select rl.short_name, bc.id, bc.name, br.startat, bc.id 
+        from bprelationship br
         inner join business_pattern bc on bc.id = br.bp_related
-        where br.relationship = 25 and br.company =? and br.business_pattern = ? 
-        order by br.startat
+        inner join relationship rl on rl.id = br.relationship
+        where br.relationship in (25,33) and br.company =? and br.business_pattern = ? 
+        order by br.startat, br.relationship desc
     """
     lazy val considerations_query = """
         select message,notify_type, date_c, id from bpconsideration where  company=? and business_pattern =?
