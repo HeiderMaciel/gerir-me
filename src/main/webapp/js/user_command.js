@@ -523,8 +523,8 @@
       price = $("#price_edit").val();
       amount = $("#amount_edit").val();
       obs = $("#obs_edit").val();
-      activity = $("#activity_edit").val();
-      product = $("#product_edit").val();
+      activity = $("#activity_edit").val() || "0";
+      product = $("#product_edit").val() || "0";
       tooth = $("#tooth_edit").val();
       var valid = false;
       if (($("#activity_edit").val()) && (parseFloat($("#activity_edit").val()) != 0)) {
@@ -559,6 +559,9 @@
       if (!callApiLock) {
         callApiLock = true
         if (valid) {
+          if (!activity) {
+            activity = "0"
+          }
           return $.post("/command/upd_command", {
             "tdId": tdId,
             "start": start,
@@ -634,6 +637,7 @@
 
 //      Manager.getActivities();
 
+      $("#product_edit").change();
       $("#activity_edit").change();
       $("#offsale_edit").change();
       $("#auxiliar_edit").change();
@@ -727,7 +731,11 @@
       userThuch: true,
       userFieldSelector: '#user'
     });
-    $("#product_edit").productSearch({
+    // rigel 03/07/2018 - tive que duplicar o product_search2
+    // para ter 2 campos de produto na mesma window, embora em modais diferentes
+    // o set só valia para o ultimo atribuido, a descrição
+    // do primeiro vinha no lugar do id e dava erro no sql
+    $("#product_edit").productSearch2({
       createName: false,
       iconElement: ".add-on",
       userThuch: true,

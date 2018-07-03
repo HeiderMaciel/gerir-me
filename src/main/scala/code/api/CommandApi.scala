@@ -304,8 +304,8 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				def start:String = S.param("start") openOr ""
 				def end:String = S.param("end") openOr ""
 				def obs = S.param("obs") openOr ""
-				def activity = S.param("activity") openOr ""
-				def product = S.param("product") openOr ""
+				def activity = S.param("activity") openOr "0"
+				def product = S.param("product") openOr "0"
 				def password = S.param("password") openOr ""
 				def price = S.param("price") openOr ""
 				def amount = S.param("amount") openOr ""
@@ -314,12 +314,11 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				def offsale = S.param("offsale") openOr ""
 
 				def userId:String = S.param("user") openOr "0"
-				// nuca troca customer
+				// nunca troca customer
 				//def customerId:String = S.param("customer") openOr "0"
 				def auxiliarId:String = S.param("auxiliar") openOr "0"
 
     			var tempd1 = TreatmentDetail.findByKey (tdId.toLong).get
-
    				tempd1.activity(activity.toLong).
    				 product(product.toLong).
    				 auxiliar(auxiliarId.toLong).
