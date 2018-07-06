@@ -428,18 +428,20 @@ object  TreatmentService extends net.liftweb.common.Logger {
 		TratmentServer ! TreatmentMessage("SaveUpdateTratment",end)		
 	}	
 
-	def addDetailTreatment(id:Long,activityCode:Long, auxiliar:Long, animal:Long, tooth: String, offsale:Long):Box[TreatmentDetail] = {
+	def addDetailTreatment(id:Long,activityCode:Long, auxiliar:Long, 
+		animal:Long, tooth: String, offsale:Long, giftId:String):Box[TreatmentDetail] = {
 		val activity = Activity.findByKey(activityCode).get
-		var tempd = addDetailTreatment(id, activity, auxiliar, animal, tooth, offsale, true)
+		var tempd = addDetailTreatment(id, activity, auxiliar, animal, tooth, offsale, giftId, true)
 		tempd
 	}
-	def addDetailTreatmentWithoutValidate(id:Long,activityCode:Long, auxiliar:Long, animal:Long, tooth: String, offsale:Long):Box[TreatmentDetail] = {
+	def addDetailTreatmentWithoutValidate(id:Long,activityCode:Long, auxiliar:Long, 
+		animal:Long, tooth: String, offsale:Long, giftId:String):Box[TreatmentDetail] = {
 		val activity = Activity.findByKey(activityCode).get
-		var tempd = addDetailTreatment(id,activity, auxiliar, animal, tooth, offsale, false)
+		var tempd = addDetailTreatment(id,activity, auxiliar, animal, tooth, offsale, giftId, false)
 		tempd
 	}	
 
-	def addDetailTreatment(id:Long,activity:Activity, auxiliar:Long, animal:Long, tooth: String, offsale:Long, validate:Boolean =true):Box[TreatmentDetail] = {
+	def addDetailTreatment(id:Long,activity:Activity, auxiliar:Long, animal:Long, tooth: String, offsale:Long, giftId:String, validate:Boolean =true):Box[TreatmentDetail] = {
 		DB.use(DefaultConnectionIdentifier) {
 	 		conn =>
 	 			try{
@@ -462,6 +464,7 @@ object  TreatmentService extends net.liftweb.common.Logger {
 						  .auxiliar(auxiliar)
 						  .offsale(offsale)
 						  .price(detail.priceActivity)
+						  .giftId(giftId)
 						  .save
 
 			        if (AuthUtil.company.appType.isEbellepet) {
@@ -493,13 +496,14 @@ object  TreatmentService extends net.liftweb.common.Logger {
 	 	}			
 	}
 
-	def addDetailTreatment(id:Long,prod:Product, animal:Long, offsale:Long):Box[TreatmentDetail] = {
+	def addDetailTreatment(id:Long,prod:Product, animal:Long, offsale:Long, giftId:String):Box[TreatmentDetail] = {
 		var treatment = Treatment.findByKey(id).get
 		var detail = TreatmentDetail.createInCompany
 
 		detail.treatment(treatment)
 			  .product(prod)
 			  .price(prod.salePrice)
+			  .giftId(giftId)
 			  .save
 
         if (AuthUtil.company.appType.isEbellepet) {
@@ -789,14 +793,15 @@ object  TreatmentService extends net.liftweb.common.Logger {
 													"activity", 
 													td.id.is.toInt, 
 													priceAux, 
-													false,
-													1l,
-													false, 
-													0, 
+													false, // removed
+													1l, // amount
+													false, // for delivery
+													0, // parent bom
 													td.auxiliar.is.toInt,
 													td.animal.toInt,
 													td.tooth,
-													td.offsale.is.toInt
+													td.offsale.is.toInt,
+													"" // td.giftId
 												);
 									}),
 									false,

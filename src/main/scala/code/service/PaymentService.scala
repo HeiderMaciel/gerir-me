@@ -51,6 +51,7 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 				.parentBom(a.parentBom)
 				.offsale(a.offsale)
 				.auxiliar(a.auxiliar)
+				.giftId(a.giftId)
 				.save
 
 		        if (AuthUtil.company.appType.isEbellepet) {
@@ -494,9 +495,10 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 		
     }    
 }
-case class ActivityDTO(activityId:Int, activityType:String, id:Int, price:Double, 
-	removed:Boolean, amount:Float, for_delivery:Boolean, parentBom:Int, 
-	auxiliar:Int=0, animal:Int=0, tooth:String="", offsale:Int=0);
+case class ActivityDTO(activityId:Int, activityType:String, id:Int, 
+	price:Double, removed:Boolean, amount:Float, for_delivery:Boolean, 
+	parentBom:Int, auxiliar:Int=0, animal:Int=0, tooth:String="", 
+	offsale:Int=0, giftId:String="");
 
 case class PaymentDTO(typePayment:Int,value:Double,removed:Boolean,chequeInfo:ChequeRequest, dateDetailStr:String, valueToPoints:Double){
 	def this(typePayment:Int,value:Double,removed:Boolean, dateDetailStr:String, valueToPoints:Double) = this( typePayment, value, removed, null, dateDetailStr, valueToPoints);

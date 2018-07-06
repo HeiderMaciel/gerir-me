@@ -250,7 +250,7 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 				if (activity.isEmpty || activity == "") {
 					var prod = Product.findByKey(product.toLong).get
 					var tempd1 = TreatmentService.addDetailTreatment(tempt.get.id, 
-						prod, animal.toLong, offsale.toLong)
+						prod, animal.toLong, offsale.toLong, "" /* giftid */)
 					if (amount != "" && amount != "1") {
 						//println ("vai amount ========= " + amount );
 						tempd1.get.amount(amount.toDouble).price(tempd1.get.price*amount.toDouble).save
@@ -267,7 +267,7 @@ object CommandApi extends RestHelper with ReportRest with net.liftweb.common.Log
 					}
 				} else {
 					var tempd = TreatmentService.addDetailTreatmentWithoutValidate(tempt.get.id, activity.toLong, 
-						auxiliarId.toLong, animal.toLong, tooth, offsale.toLong)
+						auxiliarId.toLong, animal.toLong, tooth, offsale.toLong, "" /* giftid */)
 					if (amount != "" && amount != "1") {
 						tempd.get.amount(amount.toDouble).price(tempd.get.price*amount.toDouble).save
 					}

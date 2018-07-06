@@ -164,7 +164,7 @@ object TreatmentApi extends RestHelper with net.liftweb.common.Logger {
 					try{
 						val tempt = TreatmentService.factoryTreatment("", t.customer, t.user,t.start.split(" ")(0), t.start.split(" ")(1), t.start.split(" ")(1),"0")
 						var tempd = TreatmentService.addDetailTreatmentWithoutValidate(tempt.get.id, t.service.toLong, 0l /* auxiliar */,
-						0l /* animal */, "" /* tooth */, 0l /*offsale*/)
+						0l /* animal */, "" /* tooth */, 0l /*offsale*/, "" /* giftId */)
 						tempt.get.end(Project.strToDate(t.end)).obs(t.obs).insecureSave
 						if (t.amount != "" && t.amount != "1") {
 							tempd.get.amount(t.amount.toDouble).price(tempd.get.price*t.amount.toDouble).save
@@ -209,12 +209,15 @@ object TreatmentDetailsApi extends RestHelper {
 				val offsale = S.param("offsale") openOr "0"
 				val id = S.param("id") openOr "0"
 				val validate = S.param("validate") openOr "false"
+				val giftId = S.param("giftId") openOr ""
 				if(validate.toBoolean) {
 					TreatmentService.addDetailTreatment(id.toLong,activityCode.toLong, 
-						auxiliar.toLong, animal.toLong, tooth, offsale.toLong)
+						auxiliar.toLong, animal.toLong, 
+						tooth, offsale.toLong, giftId)
 				} else {
 					TreatmentService.addDetailTreatmentWithoutValidate(id.toLong,
-						activityCode.toLong, auxiliar.toLong, animal.toLong, tooth, offsale.toLong)
+						activityCode.toLong, auxiliar.toLong, animal.toLong, 
+						tooth, offsale.toLong, giftId)
 				}
 				JInt(1)
 			}catch{

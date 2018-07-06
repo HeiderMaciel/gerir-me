@@ -407,7 +407,7 @@ object FinancialSqlMigrate{
                                 search_name, short_name, adduseraccounttodiscount, status,
                                 showasfinoptions, bpmonthly, offsale, individualReceive, creditcard,
                                 cheque, fidelity, allowcustomeraddusertodiscount, autochangetopaid,
-                                usernotification, budget, taxpayer
+                                usernotification, budget, taxpayer, gift, needgiftinfo
                                 FROM paymenttype where paymenttype.company=26;"""
 
   val UPDATE_FACT_INFORMATIONS = """update paymenttype 

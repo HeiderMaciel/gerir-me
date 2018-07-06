@@ -120,6 +120,7 @@ class PaymentTypesSnippet extends BootstrapPaginatorSnippet[PaymentType]{
 			}	
 			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
+		    "name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 //		    "name=key" #> (SHtml.text(ac.key.is, ac.key(_)))&
 		    "name=sumInCachier" #> (SHtml.checkbox(ac.sumInCachier_?, ac.sumInCachier_?(_)))&
@@ -136,6 +137,8 @@ class PaymentTypesSnippet extends BootstrapPaginatorSnippet[PaymentType]{
 			"name=bpmonthly" #> (SHtml.checkbox(ac.bpmonthly_?, ac.bpmonthly_?(_)))&
 			"name=offSale" #> (SHtml.checkbox(ac.offSale_?, ac.offSale_?(_)))&
 			"name=fidelity" #> (SHtml.checkbox(ac.fidelity_?, ac.fidelity_?(_)))&
+			"name=gift" #> (SHtml.checkbox(ac.gift_?, ac.gift_?(_)))&
+			"name=needGiftInfo" #> (SHtml.checkbox(ac.needGiftInfo_?, ac.needGiftInfo_?(_)))&
 			"name=budget" #> (SHtml.checkbox(ac.budget_?, ac.budget_?(_)))&
 			"name=customerUseCredit" #> (SHtml.checkbox(ac.customerUseCredit_?, ac.customerUseCredit_?(_)))&
 			"name=comissionAtSight" #> (SHtml.checkbox(ac.comissionAtSight_?, ac.comissionAtSight_?(_)))&

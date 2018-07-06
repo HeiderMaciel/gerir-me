@@ -533,6 +533,7 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 											("offsale", d.offsale.is), 
 											("offsaleShortName", d.offsaleShortName), 
 											("tooth", d.tooth), // .is
+											("giftId", d.giftId.is), 
 											("animalShortName", d.animalShortName), 
 											("animal", d.animal), // .is
 											("parentBom", d.parentBom.is),

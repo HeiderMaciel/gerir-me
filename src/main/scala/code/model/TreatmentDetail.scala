@@ -87,6 +87,7 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
     }
     object auxPrice extends MappedCurrency(this)
     object external_id extends MappedPoliteString(this,200)
+    object giftId extends MappedPoliteString(this,200)
 
     def hasAuxiliar = auxiliar.obj  match {
         case Full(a) => true

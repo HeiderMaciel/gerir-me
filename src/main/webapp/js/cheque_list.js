@@ -14,15 +14,39 @@
 
   Cheque.getListFromServer = function() {
     return $.get("/payment/getCheques", function(results) {
-      var cheque, total, _i, _len, count;
+      var cheque, total, _i, _len, count, count_unique;
+      var ch_bank = "-1";
+      var ch_agency = "-1";
+      var ch_account = "-1";
+      var ch_number = "-1";
+      var color_back = "";
+      var color = "";
+      var title = "";
+
       $("#grid tbody").html("");
       eval("results = " + results);
       total = 0.0;
       count = 0;
+      count_unique = 0;
       for (_i = 0, _len = results.length; _i < _len; _i++) {
         cheque = results[_i];
         total += cheque.value;
         count += 1;
+        if (ch_bank != cheque.bank || 
+          ch_agency != cheque.agency || 
+          ch_account != cheque.account || 
+          ch_number != cheque.number) {
+          count_unique += 1;
+          ch_bank = cheque.bank
+          ch_agency = cheque.agency
+          ch_account = cheque.account
+          ch_number = cheque.number
+          color_back = "";
+          title = ""
+        } else {
+          color_back = "red"
+          title = "Cheque duplicado: banco, agencia, conta e número"
+        }
         cheque.date = getDateBr(new Date(cheque.date));
         cheque.gooddate = getDateBr(new Date(cheque.gooddate));
         var color = "";
@@ -33,10 +57,10 @@
         }
         $("#grid tbody").append("<tr>" +
           "<td>" + cheque.id + "</td>" +
-          "<td>" + cheque.bank + "</td>" + 
-          "<td>" + cheque.agency + "</td>" +
-          "<td>" + cheque.account + "</td>" + 
-          "<td>" + cheque.number + "</td>" + 
+          "<td title='" + title + "' style='background-color:" + color_back + "'>" + cheque.bank + "</td>" + 
+          "<td title='" + title + "' style='background-color:" + color_back + "'>" + cheque.agency + "</td>" +
+          "<td title='" + title + "' style='background-color:" + color_back + "'>" + cheque.account + "</td>" + 
+          "<td title='" + title + "' style='background-color:" + color_back + "'>" + cheque.number + "</td>" + 
           "<td>" + (cheque.value.formatMoney()) + "</td>" +
           "<td>" + cheque.date + "</td>" + 
           "<td style='color:" + color + "'>" + cheque.gooddate + "</td>" + 
@@ -57,6 +81,7 @@
 */      
       }
       $("#count").val(count);
+      $("#count_unique").val(count_unique);
       return $("#total").val(total.formatMoney());
     });
   };

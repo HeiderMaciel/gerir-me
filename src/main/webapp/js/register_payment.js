@@ -759,6 +759,10 @@
       objAcitivity.auxiliar = parseInt($("#auxiliar").val()) || 0;
     }
 
+    if (!objAcitivity.giftId) {
+      objAcitivity.giftId = parseInt($("#giftId").val()) || 0;
+    }
+
     calculatePrice(objAcitivity);
     var user = getUser($("#user").val());
     var isNew = true;

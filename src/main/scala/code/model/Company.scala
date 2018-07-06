@@ -550,7 +550,12 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
   def paymentTypes = PaymentType.findAllInCompany(OrderBy(PaymentType.name, Ascending))
 
   def chequesNotReceived = Cheque.findAllInCompany(By(Cheque.received, false), 
-    By(Cheque.movementType, AccountPayable.IN), OrderBy(Cheque.dueDate, Descending))
+    By(Cheque.movementType, AccountPayable.IN), 
+    OrderBy(Cheque.dueDate, Descending),
+    OrderBy(Cheque.bank, Ascending),
+    OrderBy(Cheque.agency, Ascending),
+    OrderBy(Cheque.account, Ascending),
+    OrderBy(Cheque.number, Ascending))
 
   def accountCategorys = AccountCategory.findAllInCompany(By(AccountCategory.company, this.id))
   // acho que não usa

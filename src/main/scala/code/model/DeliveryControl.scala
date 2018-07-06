@@ -25,6 +25,9 @@ class DeliveryControl extends LongKeyedMapper[DeliveryControl]
         override def dbColumnName = "completed"
         override def dbIndexed_? = true
     }
+    object giftId extends MappedPoliteString(this,200)
+    object bp_used extends MappedLongForeignKey(this, Customer) // quem usou no caso de presente
+
     def usedDetails = DeliveryDetail.findAll(By(DeliveryDetail.delivery,this), By(DeliveryDetail.used_?, true))
     def notDetails = DeliveryDetail.findAll(By(DeliveryDetail.delivery,this), By(DeliveryDetail.used_?, false))
     def details = DeliveryDetail.findAll(By(DeliveryDetail.delivery,this))

@@ -105,7 +105,8 @@ var TreatmentManger = {
 			"tooth": tooth,
 			"offsale": offsale,
 			"id": treatmentId,
-			"validate": valida
+			"validate": valida,
+			"giftId": ""
 		}, function(t) {
 			eval("t=" + t)
 			if (t == 1) {

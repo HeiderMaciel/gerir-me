@@ -66,12 +66,21 @@ with CreatedUpdatedBy with NameSearchble[PaymentType] with ActiveInactivable[Pay
     override def defaultValue = false;
   }
 
+  object needGiftInfo_? extends MappedBoolean(this){
+    override def dbColumnName = "needGiftInfo"
+    override def defaultValue = false;
+  }
+
   object deliveryContol_? extends MappedBoolean(this){
     override def dbColumnName = "deliveryContol"
   }
 
   object fidelity_? extends MappedBoolean(this){
     override def dbColumnName = "fidelity"
+  }
+
+  object gift_? extends MappedBoolean(this){
+    override def dbColumnName = "gift"
   }
 
   object customerRegisterDebit_? extends MappedBoolean(this){
@@ -170,6 +179,8 @@ with CreatedUpdatedBy with NameSearchble[PaymentType] with ActiveInactivable[Pay
   object defaltAccount extends MappedLongForeignKey(this,Account)//Conta padrao...
   object defaltCategory extends MappedLongForeignKey(this, AccountCategory)//Categoria padrao...
   object defaltDicountCategory extends MappedLongForeignKey(this, AccountCategory)//Categoria padrao para desconto...
+  object user extends MappedLongForeignKey(this.asInstanceOf[MapperType], User) // qdo a máquina é do profissional específico
+  object obs extends MappedString(this, 550)
   
   override def delete_! = {
       if(PaymentDetail.count(By(PaymentDetail.typePayment,this.id)) > 0){
