@@ -62,7 +62,8 @@ class Cashier extends LongKeyedMapper[Cashier]
 
     def from(c:CompanyUnit) = {
         if(c.useSingleCashier_?.is && !Cashier.unSecurefindOpenCashiers.isEmpty){
-            throw new AlreadyOpenedCashier
+            // antes usava AlreadyOpenedCashier - troquei para RuntimeException para retornar mensagem
+            throw new RuntimeException (" Já existe caixa aberto, unidade configurada para usar caixa único")
         }
         unSecureFrom(c)        
     }
@@ -362,5 +363,6 @@ object Cashier extends Cashier with LongKeyedMapperPerCompany[Cashier]  with  On
     	}
     }
 }
-class AlreadyOpenedCashier extends Exception
+// troquei para retornar mensagem 
+// class AlreadyOpenedCashier extends Exception
 class AlreadyClosedCashier(m:String) extends RuntimeException(m)

@@ -401,7 +401,7 @@ object BusinessRulesUtil{
     "e" :: "em" :: "com" :: "no" :: "ou" :: "por" :: "para" :: Nil
 	def toShortString(value:String) = {
     var len = toCamelCase(value.trim()).length
-		toCamelCase(value.trim()).substring(0,scala.math.min(len, 20))
+		toCamelCase(value.trim()).substring(0,scala.math.min(len, 20)).trim
 	}
 
 	def md5(value:String) = Project.md5(value)

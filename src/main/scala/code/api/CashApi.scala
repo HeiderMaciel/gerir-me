@@ -101,7 +101,7 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 			}catch{
 				case e:NumberFormatException  => JsObj(("status","error"),("message","Valor de abertura inválido!"+e.getMessage))
 				case e:ParseException => JsObj(("status","error"),("message","Data inválida!"))
-				case e:AlreadyOpenedCashier => JsObj(("status","error"),("message","Já existe um caixa aberto!"))
+				case e:RuntimeException => JsObj(("status","error"),("message", e.getMessage))
 				//case e:Exception => JsObj(("status","error"),("message",e.getMessage))
 				case _ => JsObj(("status","error"),("message",false))
 			}

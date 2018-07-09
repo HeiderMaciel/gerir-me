@@ -116,12 +116,16 @@ trait NameSearchble [self <: net.liftweb.mapper.Mapper[self]]{
           super.beforeCreate;
           if((this.get).trim == BusinessRulesUtil.EMPTY) {
             this.set(BusinessRulesUtil.toShortString(fieldOwner.asInstanceOf[NameSearchble[self]].name.is.trim()))
+          } else if ((this.get).substring(0,1) == (this.get).substring(0,1).toLowerCase){
+            this.set(BusinessRulesUtil.toShortString(this.get))
           }
         }
         override def beforeSave() {
           super.beforeSave;
           if(updateShortName || this.is.trim == BusinessRulesUtil.EMPTY){
             this.set(BusinessRulesUtil.toShortString(fieldOwner.asInstanceOf[NameSearchble[self]].name.is.trim()))
+          } else if ((this.get).substring(0,1) == (this.get).substring(0,1).toLowerCase){
+            this.set(BusinessRulesUtil.toShortString(this.get))
           }
         }         
       }
