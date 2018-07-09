@@ -114,6 +114,13 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case Full(p) if(p != "")=> "bp.short_name || ' - ' ||"
 					case _ => ""
 				}			
+				val turnbreak:String = S.param("turnbreak") match {
+					case Full(p) if(p != "")=> """|| 
+					case when to_char (tr.start_c,'HH') < '12' then ' M'
+					when to_char (tr.start_c,'HH') < '18' then ' T'
+					else ' N' end"""
+					case _ => ""
+				}			
 				def classes:String = S.param("type") match {
 					case Full(p) => p
 					case _ => "0,1";
@@ -132,15 +139,16 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 				"""
 */
 				val SQL = """
-					select day  || ' ' || short_name_dow, ed.name, count(tr.status2) from dates
+					select day  || ' ' || short_name_dow %s, 
+					ed.name, count(tr.status2) from dates
 					left join treatment tr on tr.dateevent = date_c 
 					left join enumdesc ed on ed.table_c = 'treatment' and to_number (ed.value,'9') = tr.status2
 					where tr.company = ? and date_c between ? and ?
 					and tr.status <> 5
-					group by date_c, short_name_dow, day, ed.name
-					order by date_c, short_name_dow, day, ed.name
+					group by date_c, short_name_dow, day, start_c, ed.name
+					order by date_c, short_name_dow, day, start_c, ed.name
 				"""
-				toResponse(SQL,
+				toResponse(SQL.format (turnbreak),
 					//.format(userbreak, valueOrQuantity,user,prod,unit,producttype,classes, userbreak, userbreak),
 					List(AuthUtil.company.id.is, start, end)) 
 			} 
