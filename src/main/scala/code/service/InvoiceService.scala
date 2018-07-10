@@ -46,7 +46,7 @@ object InvoiceService extends net.liftweb.common.Logger {
 	def desFat(cashier:Cashier)={
 		AccountPayable.findAllInCompany(
 				By(AccountPayable.cashier, cashier.id.is),
-				By(AccountPayable.auto_?,true)
+				By(AccountPayable.autoCreated_?,true)
 			).foreach(_.delete_!)
 	}
 

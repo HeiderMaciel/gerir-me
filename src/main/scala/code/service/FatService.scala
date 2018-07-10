@@ -58,7 +58,7 @@ object FatService extends net.liftweb.common.Logger {
 		// desde que seja cartão de crédito
 		val aclist = AccountPayable.findAllInCompany(
 			By(AccountPayable.cashier, cashier.id.is),
-			By(AccountPayable.auto_?,true),
+			By(AccountPayable.autoCreated_?,true),
             BySql ("paymentType in (select id from paymenttype where company = ? and creditcard = true)",
             	IHaveValidatedThisSQL("",""), AuthUtil.company.id),
 			OrderBy (AccountPayable.paymentType, Ascending),
@@ -155,14 +155,14 @@ object FatService extends net.liftweb.common.Logger {
 		// reabrir caixa
 		(AccountPayable.count(
 				By(AccountPayable.cashier, cashier.id.is),
-				By(AccountPayable.auto_?,true),
+				By(AccountPayable.autoCreated_?,true),
 				NotBy(AccountPayable.conciliate,0)
 			) == 0)
 	}
 	def desFat(cashier:Cashier)={
 		AccountPayable.findAllInCompany(
 				By(AccountPayable.cashier, cashier.id.is),
-				By(AccountPayable.auto_?,true)
+				By(AccountPayable.autoCreated_?,true)
 			).foreach(_.delete_!)
 	}
 }
@@ -222,7 +222,7 @@ trait FatChain{
 			.exerciseDate(cashier.openerDate.is)
 			.obs(obs.format(cashier.idForCompany.is.toString, paymentType.name.is))
 			.account(paymentType.defaltAccount.is)
-			.auto_?(true)
+			.autoCreated_?(true)
 			.cashier(cashier.id.is)
 			.paymentType(paymentType.id.is)
 			.costCenter(AuthUtil.unit.costCenter.is)

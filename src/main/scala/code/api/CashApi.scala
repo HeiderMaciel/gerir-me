@@ -62,6 +62,8 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 							  ("customerUseCredit",pt.customerUseCredit_?.is), // 21/11/2017 rigel
 							  ("numDaysForReceive",pt.numDaysForReceive.is),
 							  ("fidelity",pt.fidelity_?.is),
+							  ("gift",pt.gift_?.is),
+							  ("needGiftInfo",pt.needGiftInfo_?.is),
 							  ("accept_installment",pt.acceptInstallment_?.is)
 							 )
 					})

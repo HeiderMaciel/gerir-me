@@ -11,7 +11,11 @@ import net.liftweb.common.{Box,Full,Empty}
 
 import _root_.java.math.MathContext; 
 
-class Cheque extends Audited[Cheque] with PerCompany with IdPK with CreatedUpdated with CreatedUpdatedBy with WithCustomer{ 
+class Cheque extends Audited[Cheque] with PerCompany 
+with PerUnit
+with IdPK with CreatedUpdated 
+with CreatedUpdatedBy 
+with WithCustomer{ 
     def getSingleton = Cheque 
     object bank extends MappedLongForeignKey(this,Bank)
     object account extends MappedPoliteString(this,255)
@@ -29,6 +33,13 @@ class Cheque extends Audited[Cheque] with PerCompany with IdPK with CreatedUpdat
 		override def dbIndexed_? = true
 		override def defaultValue = AccountPayable.IN
 	}
+    // para diferenciar cheque criados direto no financeiro
+    // manualmente
+    object autoCreated_? extends MappedBoolean(this) {
+        override def defaultValue = true; // criados no caixa
+        override def dbColumnName = "autocreated"
+    }
+    object obs extends MappedPoliteString(this.asInstanceOf[MapperType], 255)
 
     def customerName = {
         customer obj match {

@@ -94,7 +94,7 @@ class Cashier extends LongKeyedMapper[Cashier]
     def outputValue = {
         AccountPayable.findAll(By(AccountPayable.cashier,this),
             By(AccountPayable.toConciliation_?,false),
-            By(AccountPayable.auto_?,false),
+            By(AccountPayable.autoCreated_?,false),
             BySql(" cheque is null ",IHaveValidatedThisSQL("",""))
             ).map((a) =>
             if(a.typeMovement.is == AccountPayable.OUT)
@@ -107,7 +107,7 @@ class Cashier extends LongKeyedMapper[Cashier]
     def outputCheque = {
         AccountPayable.findAll(By(AccountPayable.cashier,this),
             By(AccountPayable.toConciliation_?,false),
-            By(AccountPayable.auto_?,false),
+            By(AccountPayable.autoCreated_?,false),
             BySql(" cheque is not null ",IHaveValidatedThisSQL("",""))
             ).map((a) =>
             if(a.typeMovement.is == AccountPayable.OUT)
@@ -119,7 +119,7 @@ class Cashier extends LongKeyedMapper[Cashier]
     def inputValue = {
         AccountPayable.findAll(By(AccountPayable.cashier,this),
             By(AccountPayable.toConciliation_?,false),
-            By(AccountPayable.auto_?,false)).map((a) =>
+            By(AccountPayable.autoCreated_?,false)).map((a) =>
             if(a.typeMovement.is == AccountPayable.IN)
                 a.value.is
             else

@@ -102,16 +102,21 @@ with CanCloneThis[AccountPayable] {
             paid_?.set(c.received)
           } else {
             // se não é novo ou se é pago o status do lançamento 
-            // determina o status do cheque sempre
-            def efetivePaymentDate:Box[Date]  = {
-              if (fieldOwner.paid_?.is) {
-                Full(fieldOwner.dueDate) 
-              } else {
-                Empty
+            // determina o status do cheque sempre, se for saída
+            if (typeMovement == AccountPayable.OUT) {
+              def efetivePaymentDate:Box[Date]  = {
+                if (fieldOwner.paid_?.is) {
+                  Full(fieldOwner.dueDate) 
+                } else {
+                  Empty
+                }
               }
+              c.received(fieldOwner.paid_?.is).efetivePaymentDate.setFromAny(efetivePaymentDate)
+              c.save
+            } else {
+              // quando é entrada o cheque está sendo recebido e 
+              // está na casa
             }
-            c.received(fieldOwner.paid_?.is).efetivePaymentDate.setFromAny(efetivePaymentDate)
-            c.save
           }
         }
         case _ => 
@@ -140,7 +145,7 @@ with CanCloneThis[AccountPayable] {
     override def defaultValue=0
   }
 
-  object auto_? extends MappedBoolean(this) {
+  object autoCreated_? extends MappedBoolean(this) {
     override def dbIndexed_? = false
     override def dbColumnName = "autocreated"
   }
@@ -276,7 +281,7 @@ with CanCloneThis[AccountPayable] {
     }
     // reseta recebimento de cheque se o lançamento for excluido
     // desde que o lancto não seja auto - gerado pelo caixa
-    if (!auto_?) {
+    if (!autoCreated_?) {
       cheque.obj match {
         case Full(c:Cheque) => {
           c.received (false)
@@ -579,7 +584,7 @@ with CanCloneThis[AccountPayable] {
       .obs("Gerado pelo processo de consolidação")
       .account(accountId)
       .paid_?(true)
-      .auto_?(true)
+      .autoCreated_?(true)
       //.cashier(cashier.id.is)
       //.paymentType(paymentType.id.is)
       .costCenter(AuthUtil.unit.costCenter.is)

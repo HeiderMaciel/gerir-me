@@ -148,7 +148,12 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 					parcelnum <- S.param("parcelnum") ?~ "parcelnum parameter missing" ~> 400
 					parceltot <- S.param("parceltot") ?~ "parceltot parameter missing" ~> 400
 					paymenttype <- S.param("paymenttype") ?~ "paymenttype parameter missing" ~> 400
+
 					cheque <- S.param("cheque") ?~ "cheque parameter missing" ~> 400
+					ch_bank = S.param("ch_bank") openOr "0" 
+					ch_agency = S.param("ch_agency") openOr "" 
+					ch_account = S.param("ch_account") openOr "" 
+					ch_number = S.param("ch_number") openOr "" 
 
 				} yield {
 					try {
@@ -264,7 +269,6 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 								ap.save
 							}
 
-							JBool (true)
 						}else{
 							if(user_parceled.toBoolean){
 								for( i <- 0 to user_parcels.toInt-1) {
@@ -278,8 +282,46 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 								register(value.toDouble,
 									dueDate, exerciseDate, paymentDate)
 							}
-							JBool(true)
 						}
+
+						if(ch_bank != "0" && ch_agency != "" && 
+							ch_account != "" && ch_number != "") {
+							// duedate da tela ou do ap 
+							// paymentdate
+							val pd = if (paymentDateStr != "") {
+								paymentDate
+							} else {
+								dueDate
+							}
+							val received = if (movementType.get.toInt == AccountPayable.OUT) {
+								true
+							} else {
+								false
+							}
+							val ch =
+								Cheque
+								.createInCompany
+								.autoCreated_?(false)
+								.dueDate(dueDate) 
+								.paymentDate(pd)
+								.movementType(movementType.get.toInt)
+								.received(received)
+								.customer(userId) // sacado ou favorecido
+								.value(value.toDouble)
+								.bank(ch_bank.toLong)
+								.agency(ch_agency.toString)
+								.account(ch_account.toString)
+								.number(ch_number.toString)
+								.unit(unitId)
+								.obs(obs);
+							//	)
+							ch.save;
+							val ap = AccountPayable.findByKey(apAuxId).get
+							ap.cheque(ch.id.is)
+							ap.save
+						}
+
+						JBool (true)
 					} catch {
 						case e:Exception => JString(e.getMessage)
 					}
