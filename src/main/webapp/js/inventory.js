@@ -250,6 +250,11 @@
     });
     
     $("#b_add").click(function() {
+      if ($("#type").val() == "Transfer") {
+        if ($("#unit_of").val() == $("#unit_to").val()) {
+          return alert ("Não faz sentido transferir produtos de uma unidade para ela mesma!")
+        }
+      }
       if ($("#causeh").val() == "9") {
         if ($("#cause").val() != null && $("#cause").val() != 0 && $("#cause").val() != 9) {
           alert ("Apenas o motivo solcitação de compras pode ser utilizado nesta transação ");
