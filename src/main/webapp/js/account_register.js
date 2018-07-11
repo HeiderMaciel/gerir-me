@@ -3,6 +3,10 @@
   var AccountPayable, AccountMovement, Category, accountsId;
   var callApiLock = false;
 
+  var chequeid = ""
+
+  var hasFinancialadModule = false;
+
   accountsId = [];
 
   Category = (function() {
@@ -125,11 +129,12 @@
       this.paymenttype = $("#paymenttype_select").val();
 
       this.cheque = $("#cheque_select").val();
-      this.ch_bank = $("#ch_bank").val();
-      this.ch_agency = $("#ch_agency").val();
-      this.ch_account = $("#ch_account").val();
-      this.ch_number = $("#ch_number").val();
-
+      if (hasFinancialadModule) {
+        this.ch_bank = $("#ch_bank").val();
+        this.ch_agency = $("#ch_agency").val();
+        this.ch_account = $("#ch_account").val();
+        this.ch_number = $("#ch_number").val();
+      }
       this.unitvalue = $("#unitvalue").val();
       this.recurrence_id = $("#recurrence_id").val();
       this.recurrence_all = $("#recurrence_all").is(":checked");
@@ -291,6 +296,8 @@
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       obj = _ref[_i];
       if (String(obj.id) === id) {
+        chequeid = obj.cheque_id
+        $("#cheque_select").chequeField(true, obj.cheque_id);
         AccountPayable.actualId = obj.id;
         $("#value").val(obj.value);
         $("#date").val(getDateBr(new Date(obj.dueDate)));
@@ -298,7 +305,6 @@
         $("#paymentDate").val(obj.paymentDate !== "" ? getDateBr(new Date(parseInt(obj.paymentDate))) : "");
         $("#paid").attr("checked", obj.paid);
         $("#obs_account").val(obj.obs);
-        $("#cheque_account").val(obj.cheque_desc);
         $("#complement_account").val(obj.complement);
         $("#type_select").val(obj.type);
         $("#category_select").val(obj.category_id).change();
@@ -314,7 +320,10 @@
         $("#unit_select").val(obj.unit_id).change();
         $("#costcenter_select").val(obj.costcenter_id).change();
         $("#paymenttype_select").val(obj.paymenttype_id).change();
-        $("#cheque_select").val(obj.cheque_id).change();
+        $("#cheque_account").val(obj.cheque_desc);
+        setTimeout(function() {
+        $("#cheque_select").val(chequeid).change();
+        }, 1000);
         $("#unitvalue").val(obj.unitvalue);
 //        $("#unitvalue").val(obj.unitvalue);
         $("#conciliate").val(obj.conciliate);
@@ -539,7 +548,6 @@
         var credit, debit, obj, ret, total, _i, _len;
         var hasUnitModule = $('.has-unit-module').length > 0;
         var hasCostcenterModule = $('.has-costcenter-module').length > 0;
-        var hasFinancialadModule = $('.has-financialad-module').length > 0;
         var aggregIcon = "";
         var aggregTitle = "";
         eval("results = " + results);
@@ -774,7 +782,6 @@
     $("#unit_select_filter, #unit_select").unitField(false, false, true);
     $("#costcenter_select_filter, #costcenter_select").costcenterField(true);
     $("#paymenttype_select_filter, #paymenttype_select").paymentTypeField(true, true);
-    $("#cheque_select").chequeField(true);
 
     $("#category_select").change(function() {
       var category;
@@ -844,6 +851,7 @@
         "keyboard": true,
         "backdrop": true
       });
+      $("#cheque_select").chequeField(true, "0");
       return setTimeout(function() {
         return $("#category_select").select2('open');
       }, 100);
@@ -946,6 +954,9 @@
         return 
       }
     });
+
+    hasFinancialadModule = $('.has-financialad-module').length > 0;
+
     $("#unit").unitField(false, false, true);
     $("#costcenter").costcenterField();
     $("#paymenttype").paymentTypeField();

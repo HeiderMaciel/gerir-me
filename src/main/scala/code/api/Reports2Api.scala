@@ -2118,6 +2118,11 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case _ => " and ap1.conciliate = 0 "
 				}			
 
+				val verunit:String = S.param("verunit") match {
+					case Full(p) if(p != "")=> " and ap1.unit = ap.unit "
+					case _ => " and 1 = 1 "
+				}			
+
 				def start:Date = S.param("start") match {
 					case Full(p) => Project.strToDateOrToday(p)
 					case _ => new Date()
@@ -2182,7 +2187,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					  )
 					  and ap1.toconciliation = false and ap.company = ap1.company
 					  and ap1.typemovement = ap.typemovement
-					  and ap1.unit = ap.unit
+					  %s
 					  %s
 					  %s
 					where ap.company = ? 
@@ -2196,7 +2201,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					order by 
 					ap.duedate, ap.id, ap1.duedate, (ap1.value = ap.value)
 					"""
-				toResponse(SQL_REPORT.format(account_fin, show_conciliated, 
+				toResponse(SQL_REPORT.format(verunit, account_fin, show_conciliated, 
 					account_ofx,payment_type, 
 					obsFilterofx, obsFilterfin),
 					List(days, days, margin, margin, 

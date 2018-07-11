@@ -186,16 +186,17 @@ var DataManagerClass = function() {
 			});
 		}
 	};
-	this.getCheques = function(callback) {
-		if (cheques.length > 0) {
+	this.getCheques = function(cheque, callback) {
+/*		if (cheques.length > 0) {
 			callback(cheques)
 		} else {
-			url = "/cash/getCheques";
+*/
+			url = "/cash/getCheques/" + cheque;
 			$.get(url, function(t) {
 				eval("cheques = " + t);
 				callback(cheques);
 			});
-		}
+//		}
 	};
 	this.getBanks = function(callback) {
 		if (banks.length > 0) {

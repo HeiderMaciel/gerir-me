@@ -102,8 +102,8 @@ with CanCloneThis[AccountPayable] {
             paid_?.set(c.received)
           } else {
             // se não é novo ou se é pago o status do lançamento 
-            // determina o status do cheque sempre, se for saída
-            if (typeMovement == AccountPayable.OUT) {
+            // determina o status do cheque sempre, se for saída ou se for lancamento de caixa autocreated
+            if (typeMovement == AccountPayable.OUT || autoCreated_?) {
               def efetivePaymentDate:Box[Date]  = {
                 if (fieldOwner.paid_?.is) {
                   Full(fieldOwner.dueDate) 
@@ -114,7 +114,7 @@ with CanCloneThis[AccountPayable] {
               c.received(fieldOwner.paid_?.is).efetivePaymentDate.setFromAny(efetivePaymentDate)
               c.save
             } else {
-              // quando é entrada o cheque está sendo recebido e 
+              // quando é entrada manual o cheque está sendo recebido e 
               // está na casa
             }
           }

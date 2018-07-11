@@ -70,9 +70,10 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 				)
 		}
 
-		case "cash" :: "getCheques" :: Nil JsonGet _ => {
+		case "cash" :: "getCheques" :: chequeId  :: Nil JsonGet _ => {
 			JsArray(
 				Cheque.findAllInCompany(
+			        BySql(" (received = false or id = ?) ",IHaveValidatedThisSQL("",""), chequeId.toLong),
 					OrderBy (Cheque.id, Ascending)).map((ch:Cheque)=>{
 						JsObj(
 							  ("status","success"),

@@ -112,9 +112,18 @@ jQuery.fn.termsField = function(allow_all, callback, termsSelector) {
 	});
 };
 
-jQuery.fn.chequeField = function(allow_null, callback, allow_all, show_all) {
+/*
+jQuery.fn.chequeField = function(allow_null) {
+	return this.each(function() {
+		makeSelect(this, 'getCheques', allow_null, "Selecione um cheque");
+	});
+};
+*/
+
+jQuery.fn.chequeField = function(allow_null, cheque, callback, allow_all, show_all) {
 	var field = this;
-	DataManager.getCheques(function(items) {
+//	alert ("vaiiii ============ " + cheque)
+	DataManager.getCheques(cheque, function(items) {
 		var html = ""
 		if (allow_null) {
 			html = "<option value='' selected='true'> Selecione um cheque</option>";
