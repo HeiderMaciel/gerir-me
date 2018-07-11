@@ -49,7 +49,7 @@
             total_to_pay = totalObj.total;
             // unit /0
             var unitparm = $("#unit").val() || '0';
-            var dttypeparm = $("#dttype").val() || '1'; // competencia
+            var dttypeparm = $("#dttype_commission").val() || '1'; // competencia
             $.get("/accountpayable/list_user/"+startDate()+"/"+endDate()+"/"+unitparm+"/"+$("#user").val()+"/"+dttypeparm,function(results){
                         var hasUnitModule = $('.has-unit-module').length > 0;
                         var ret = ""

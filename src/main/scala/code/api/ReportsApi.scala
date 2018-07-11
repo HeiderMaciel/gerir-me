@@ -513,7 +513,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
                           td.activity,
                           td.product
                           from commision co
-                          inner join payment pa on(pa.id = co.payment)
+                          inner join payment pa on(pa.id = co.payment and pa.datepayment <= ?)
                           left join cashier ca on(ca.id = pa.cashier)
                           inner join paymentdetail pd on(pd.id = co.payment_detail)
                           inner join paymenttype pt on(pt.id=pd.typepayment)
@@ -552,7 +552,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 	                        td.activity,
 	                        td.product
 					        from commision co
-					        inner join payment pa on(pa.id = co.payment)
+					        inner join payment pa on(pa.id = co.payment and pa.datepayment <= ?)
 					        left join cashier ca on(ca.id = pa.cashier)
 					        inner join paymentdetail pd on(pd.id = co.payment_detail)
 					        inner join paymenttype pt on(pt.id=pd.typepayment)
@@ -576,9 +576,9 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					"""
 				if(rel_mini == 0){
 					//info (user + " = = = = = = = = = = = = = = = =  = = == = = = = = = = = =")
-					toResponse(SQL_REPORT.format(user, productclass, units),List(AuthUtil.company.id.is, start, end))
+					toResponse(SQL_REPORT.format(user, productclass, units),List(end, AuthUtil.company.id.is, start, end))
 				} else {
-					toResponse(SQL_REPORT_MINI.format(user, productclass, units),List(AuthUtil.company.id.is, start, end))
+					toResponse(SQL_REPORT_MINI.format(user, productclass, units),List(end, AuthUtil.company.id.is, start, end))
 				}
 			}
 
@@ -616,7 +616,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					case Full(p) => p
 					case _ => "0,1";
 				}
-				def dttypes:String = S.param("dttype") match {
+				def dttypes:String = S.param("dttype_commission") match {
 					case Full(p) => p
 					case _ => "0"; // vencimento
 				}
