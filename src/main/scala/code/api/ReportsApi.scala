@@ -451,7 +451,7 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 								""".format(user, productclass, units),List(AuthUtil.company.id.is, start, end))
 			}
 
-			case "report" :: "commissions" :: Nil Post _ => {
+			case "report" :: "commissions" :: future :: Nil Post _ => {
 /*
 				def user = S.param("user") match {
 					case Full(p) => p.toLong
@@ -574,12 +574,30 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					        cu.short_name,customer.short_name, customer.id, td.price,ba.short_name,p.short_name, co.payment_date, td.product, td.activity
 					        order by datepayment desc, pa.command, pa.detailPaymentAsText, cu.short_name, customer.short_name, customer.id, p.short_name, co.payment_date;  
 					"""
-				if(rel_mini == 0){
-					//info (user + " = = = = = = = = = = = = = = = =  = = == = = = = = = = = =")
-					toResponse(SQL_REPORT.format(user, productclass, units),List(end, AuthUtil.company.id.is, start, end))
+				if (future == "false") {
+					if(rel_mini == 0){
+						//info (user + " = = = = = = = = = = = = = = = =  = = == = = = = = = = = =")
+						toResponse(SQL_REPORT.format(user, productclass, units),List(end, AuthUtil.company.id.is, start, end))
+					} else {
+						toResponse(SQL_REPORT_MINI.format(user, productclass, units),List(end, AuthUtil.company.id.is, start, end))
+					}
 				} else {
-					toResponse(SQL_REPORT_MINI.format(user, productclass, units),List(end, AuthUtil.company.id.is, start, end))
+				 	// future
+					val endoftime = Project.strToDateOrToday("31/12/3012")
+				    def endplusone = {
+				      val cal = Calendar.getInstance()
+				      cal.setTime(end); 
+				      cal.add(java.util.Calendar.DATE, 1);
+				      cal.getTime()
+				    }
+					if(rel_mini == 0){
+						//info (user + " = = = = = = = = = = = = = = = =  = = == = = = = = = = = =")
+						toResponse(SQL_REPORT.format(user, productclass, units),List(end, AuthUtil.company.id.is, endplusone, endoftime))
+					} else {
+						toResponse(SQL_REPORT_MINI.format(user, productclass, units),List(end, AuthUtil.company.id.is, endplusone, endoftime))
+					}
 				}
+
 			}
 
 			case "report" :: "sales_and_commission" :: Nil Post _=> {

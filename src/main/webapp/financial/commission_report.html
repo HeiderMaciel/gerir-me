@@ -92,9 +92,13 @@
     fields[12] = "none"; // activity
     fields[13] = "none"; // product
 //    fields[7] = "real";
-    var url = "/report/commissions";
+
+    $(".future_data").hide();
+
+    var url = "/report/commissions/";
     var total_to_pay = 0.00;
     var request = function(){
+      var future = $('#pending_commissions').is(':checked');
       var total = 0.00;
       var total_commission = 0.00;
       var user = $('#user').val()
@@ -102,7 +106,9 @@
         alert("Profissional inválido!")
         return
       }
-      renderReport(url,fields,$("#form_report").serializeObject(),"#grid", function(data){
+      // false pq aqui não são as pendentes (futuro) 
+      // e sim as do período
+      renderReport(url+"false",fields,$("#form_report").serializeObject(),"#grid", function(data){
         data.forEach(function(row){
           total_commission += parseFloat(row[8]);
         });
@@ -151,6 +157,21 @@
           $("#total").val((total).formatMoney());
         });
       });
+      if (future) {
+        $(".future_data").show();
+        var total_commission_future = 0.0;
+        // true pq aqui são as pendentes (futuro) 
+        // e não as do período
+        renderReport(url+"true",fields,$("#form_report").serializeObject(),"#gridfuture", function(data){
+          data.forEach(function(row){
+            total_commission_future += parseFloat(row[8]);
+          });
+          $("#total_commission_future").val(total_commission_future.formatMoney());
+          $("#total_commission_future").change();
+        });
+      } else {
+        $(".future_data").hide();
+      }
     }
     $("#send").click(request);
     //request();
@@ -201,8 +222,10 @@
             </label>
               <div class="input">
                 <div class="inline-inputs">
-                  <input class="local_storage url_parameter" name="rel_mini" id='rel_mini' type='checkbox' />
+                  <input class="local_storage url_parameter" name="rel_mini" id='rel_mini' type='checkbox' /> Comissões Pendentes
+                  <input class="local_storage url_parameter" name="pending_commissions" id='pending_commissions' type='checkbox' />
                   <span class="help-block">Mostrar a comissão acumulada de cada atendimento</span>
+                  <span class="help-block">Mostrar as comissões pendentes</span>
                 </div>
               </div>
           </div>
@@ -277,14 +300,24 @@
             <div class="input-prepend" style="float:left; padding-right:10px">
               <span class="add-on"><img src="/images/money.png" width="16"></span>
               <input style="color:black;" class="small disabled value_to_env" data-env-value="LIQUIDO" data-env-ext="LIQUIDO_EXT"" id="to_pay" name="to_pay" size="19" placeholder="0.00" type="text" disabled='true'>
-              <span class="help-block">Líquido para pagamento</span>
+              <span class="help-block">Líquido p/ pagamento</span>
             </div>
+            <span class="future_data">
+              <div class="input-prepend" style="float:left; padding-right:10px">
+                <span class="add-on"><img src="/images/user.png" width="16"></span>
+                <input style="color:black;" class="small disabled value_to_env" data-env-value="COMISSAO_PEND" data-env-ext="COMISSAO_PEND_EXT" id="total_commission_future" name="total_commission_future" size="19" placeholder="0.00" type="text" disabled='true'>
+                <span class="help-block">Total de comissões pendentes</span>
+              </div>
+            </span>
           </div>
         </div>
       </div>                      
     </form>
   </div>
 
+  <h1>
+    Comissões Correntes
+  </h1>
   <table id="grid" class="bordered-table zebra-striped">
       <thead>
         <th class='lift:SecuritySnippet.isShowSalesToUser'>Caixa</th>
@@ -302,6 +335,29 @@
       <tbody>
       </tbody>
   </table>
+  <span class="future_data">
+  <h1>
+    Comissões Pendentes
+  </h1>
+
+  <table id="gridfuture" class="bordered-table zebra-striped">
+      <thead>
+        <th class='lift:SecuritySnippet.isShowSalesToUser'>Caixa</th>
+        <th class='lift:SecuritySnippet.isShowSalesToUser'>Comanda</th>
+        <th>Data Atend</th>
+        <th>Data Prof Rec</th>
+        <th class="clearfix lift:SecuritySnippet.hasUnitModule">Unidade</th>
+        <th><span data-i18n='Cliente'></span></th>
+        <th>Prod / Serv</th>
+        <th class='lift:SecuritySnippet.isShowSalesToUser'>Val Pag</th>
+        <th>Val Comissão</th>
+        <th class="clearfix lift:SecuritySnippet.hasAuxiliarModule"><span data-i18n='Assistente'></span></th>
+        <th>Forma Pagto</th>
+      </thead>
+      <tbody>
+      </tbody>
+  </table>
+  </span>
   <h1>
     Vales e outros
   </h1>
