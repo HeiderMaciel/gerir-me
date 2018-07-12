@@ -87,6 +87,8 @@ object PaymentApi extends RestHelper {
 					),
 					("customerId",c.customer.is),
 					("bank",c.bank.is),
+					("bankName",c.bankName),
+					("bankLogo",c.bankLogo),
 					("account",c.account.is),
 					("value",c.value.is.toFloat),
 					("auditstr", c.auditStr),

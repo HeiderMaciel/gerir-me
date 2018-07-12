@@ -57,7 +57,8 @@
         }
         $("#grid tbody").append("<tr>" +
           "<td>" + cheque.id + "</td>" +
-          "<td title='" + title + "' style='background-color:" + color_back + "'>" + cheque.bank + "</td>" + 
+          "<td title='" + title + "' style='background-color:" + color_back + "'>" +
+            "<img width='24px' src='" + cheque.bankLogo + "' title='" + cheque.bank + " " + cheque.bankName + "'/>" + "</td>" + 
           "<td title='" + title + "' style='background-color:" + color_back + "'>" + cheque.agency + "</td>" +
           "<td title='" + title + "' style='background-color:" + color_back + "'>" + cheque.account + "</td>" + 
           "<td title='" + title + "' style='background-color:" + color_back + "'>" + cheque.number + "</td>" + 

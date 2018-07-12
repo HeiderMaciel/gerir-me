@@ -551,6 +551,7 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
 
   def chequesNotReceived = Cheque.findAllInCompany(By(Cheque.received, false), 
     By(Cheque.movementType, AccountPayable.IN), 
+    BySql (" paymentDate is not null ",IHaveValidatedThisSQL("","")), 
     OrderBy(Cheque.dueDate, Descending),
     OrderBy(Cheque.bank, Ascending),
     OrderBy(Cheque.agency, Ascending),

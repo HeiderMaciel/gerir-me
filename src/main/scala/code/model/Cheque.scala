@@ -55,6 +55,13 @@ with WithCustomer{
         }        
     }
 
+    def bankLogo = {
+        bank obj match {
+            case Full(u) => u.logo.is
+            case _ => "/images/question.png"
+        }        
+    }
+
     def chequeDesc : String = {
         val chequePre : String = 
         if (dueDate.after(Project.today)) "*** " else "";
