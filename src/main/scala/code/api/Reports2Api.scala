@@ -167,7 +167,13 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case _ => ""
 				}			
 				def maxcli:Int = S.param("maxcli") match {
-					case Full(p) => p.toInt
+					case Full(p) => {
+						if (p != "") {
+							p.toInt
+						} else {
+							20
+						}
+					}
 					case _ => 20
 				}
 				def rankingtype:String = S.param("rankingtype") match {
@@ -222,7 +228,13 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case _ => " and " + Treatment.unitsToShowSql
 				}			
 				def maxcli:Int = S.param("maxcli") match {
-					case Full(p) => p.toInt
+					case Full(p) => {
+						if (p != "") {
+							p.toInt
+						} else {
+							20
+						}
+					}
 					case _ => 20
 				}
 

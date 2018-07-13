@@ -192,8 +192,14 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					case _ => " and " + Treatment.unitsToShowSql
 				}			
 				def maxprof:Int = S.param("maxprof") match {
-					case Full(p) => p.toInt
-					case _ => 20
+					case Full(p) => {
+						if (p != "") {
+							p.toInt
+						} else {
+							80
+						}
+					}
+					case _ => 80
 				}
 
 				val sql = """select row_number () OVER (ORDER BY valor_total desc) AS pos, * from (

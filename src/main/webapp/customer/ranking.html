@@ -82,7 +82,8 @@
   <div class="">
       <form id="form_report" class="well form-search" method='get'>
         <h1>
-          <span class="lift:CompanySnippet.thumb"> </span>Relatório Ranking de Clientes
+          <span class="lift:CompanySnippet.thumb"> </span>
+          <input class="report_title local_storage" id="title_ranking_report" name="title_ranking_report" size="30" type="text" value="Relatório Ranking de Clientes"/>
         </h1>
         <div class="row">
         <div class="span8">
@@ -136,7 +137,7 @@
           <div class="clearfix">
             <label for="maxcli">Limite Clientes</label>
             <div class="input">
-              <input id = "maxcli" name="maxcli" class="mini" type="text" value = "20"/>
+              <input id = "maxcli" name="maxcli" class="mini" type="number" value = "20"/>
               <span class="help-block">Quantidade limite de clientes no ranking</span>
             </div>
           </div>            

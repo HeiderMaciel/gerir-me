@@ -70,7 +70,8 @@
   </script>   
     <form id="form_report" class="well form-search" method='get'>
       <h1>
-       <span class="lift:CompanySnippet.thumb"> </span>  Ranking de Profissionais
+        <span class="lift:CompanySnippet.thumb"> </span>
+        <input class="report_title local_storage" id="title_prof_ranking_report" name="title_prof_ranking_report" size="30" type="text" value="Relatório Ranking de Profissionais"/>
       </h1>
       <div class="row">
         <div class="span8">
@@ -115,7 +116,7 @@
           <div class="clearfix">
             <label for="maxcli">Limite <span data-i18n='Profissionais'></span></label>
             <div class="input">
-              <input id = "maxprof" name="maxprof" class="mini" type="text" value = "80"/>
+              <input id = "maxprof" name="maxprof" class="mini" type="number" value = "80"/>
               <span class="help-block">Quantidade limite de <span data-i18n='Profissionais'></span> no ranking</span>
             </div>
           </div>            
