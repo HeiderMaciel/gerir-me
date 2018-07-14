@@ -84,6 +84,7 @@ object OfxUtil {
                if (ofxid != transaction.getCheckNumber()) {
                 ofxid = ofxid + " * " + transaction.getCheckNumber()
                }
+               ofxid = strAccountId + ofxid
                //println ("vaiii ================ " + invoice.trim);
                val ctMov = AccountPayable.count (
                 // antes testava só a duedate, mas qdo o fx é conciliado,
