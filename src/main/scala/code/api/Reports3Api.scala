@@ -189,7 +189,7 @@ object Reports3 extends RestHelper with ReportRest with net.liftweb.common.Logge
 				mi.short_name, 
 				oc.name, id.name,
 				trim (trim (bp.street || ', ' || bp.number_c || ' ' || bp.complement)
-				|| ', ' || bp.district || ', ' || ci.name || '-' || st.short_name || ', ' || postal_code),
+				|| ', ' || bp.district || ', ' || coalesce (ci.name,'') || '-' || coalesce (st.short_name,'') || ', ' || postal_code),
 				cu.name, 
 
 				(select max (bp1.name) from business_pattern bp1 where id in 
