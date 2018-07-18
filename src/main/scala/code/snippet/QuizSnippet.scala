@@ -33,6 +33,10 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 	def groups = ("0", "Selecione um Grupo") :: UserGroup.
 		findAllInCompany(OrderBy(UserGroup.name, Ascending)).map(t => (t.id.is.toString, t.name.is))
 
+	def questionTypes = DomainTable.findAll(
+		By(DomainTable.domain_name,"quizQuestionType"),
+		OrderBy(DomainTable.cod, Ascending)).map(t => (t.cod.is,t.name.is))
+/*
 	def questionTypes = (
 		("0", "Texto")::
 		("1", "Parágrafo")::
@@ -42,7 +46,9 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		("5", "Valor")::
 		("6", "Data")::
 		Nil).map(t => (t._1,t._2))
+*/
 
+/*
 	def questionSizes = (
 		("0", "Mini")::
 		("1", "Curto")::
@@ -50,19 +56,27 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		("3", "Grande")::
 		("4", "X Grande")::
 		("5", "XX Grande")::Nil).map(t => (t._1,t._2))
+*/
 
-	def questionPositions = (
-		("0", "Só")::
-		("1", "Início")::
-		("2", "Meio")::
-		("3", "Fim")::Nil).map(t => (t._1,t._2))
+	def questionSizes = DomainTable.findAll(
+		By(DomainTable.domain_name,"quizQuestionSize"),
+		OrderBy(DomainTable.cod, Ascending)).map(t => (t.cod.is,t.name.is))
 
+	def questionPositions = DomainTable.findAll(
+		By(DomainTable.domain_name,"quizQuestionPosition"),
+		OrderBy(DomainTable.cod, Ascending)).map(t => (t.cod.is,t.name.is))
+
+	def questionFormats = DomainTable.findAll(
+		By(DomainTable.domain_name,"quizQuestionFormat"),
+		OrderBy(DomainTable.name, Ascending)).map(t => (t.cod.is,t.name.is))
+/*
 	def questionFormats = (
 		("0", "Reduzido - Esquerda")::
 		("2", "Reduzido - Topo")::
 		("3", "Longo - Esquerda")::
 		("1", "Longo - Topo")::
 		Nil).map(t => (t._1,t._2))
+*/
 
 	def quizSection = S.param("quizSection") match {
 		case Full(s) => s
@@ -173,6 +187,10 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 							"short_name" -> Text(ac.short_name.is),
 							"quizsectionname" -> Text(ac.quizSectionName),
 							"quizdomainname" -> Text(ac.quizDomainName),
+							"quizpositionname" -> Text(ac.quizQuestionPositionName),
+							"quiztypename" -> Text(ac.quizQuestionTypeName),
+							"quizformatname" -> Text(ac.quizQuestionFormatName),
+							"quizsizename" -> Text(ac.quizQuestionSizeName),
 							"obs" -> Text(ac.obs.is),
 							"orderinsection" -> Text(ac.orderInSection.toString),
 							"actions" -> <a class="btn" href={"/quiz_admin/edit_question?id="+ac.id.is}>Editar</a>,

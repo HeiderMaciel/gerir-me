@@ -84,6 +84,50 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
         case _ => ""
     }
 
+    def quizQuestionPositionName:String = {
+        val aclist = DomainTable.findAll (
+            By(DomainTable.cod, this.quizQuestionPosition.toString),
+            By(DomainTable.domain_name,"quizQuestionPosition"))
+        if (aclist.length > 0) {
+            aclist(0).short_name
+        } else {
+            ""
+        }
+    }
+
+    def quizQuestionFormatName:String = {
+        val aclist = DomainTable.findAll (
+            By(DomainTable.cod, this.quizQuestionFormat.toString),
+            By(DomainTable.domain_name,"quizQuestionFormat"))
+        if (aclist.length > 0) {
+            aclist(0).short_name
+        } else {
+            ""
+        }
+    }
+
+    def quizQuestionSizeName:String = {
+        val aclist = DomainTable.findAll (
+            By(DomainTable.cod, this.quizQuestionSize.toString),
+            By(DomainTable.domain_name,"quizQuestionSize"))
+        if (aclist.length > 0) {
+            aclist(0).short_name
+        } else {
+            ""
+        }
+    }
+
+    def quizQuestionTypeName:String = {
+        val aclist = DomainTable.findAll (
+            By(DomainTable.cod, this.quizQuestionType.toString),
+            By(DomainTable.domain_name,"quizQuestionType"))
+        if (aclist.length > 0) {
+            aclist(0).short_name
+        } else {
+            ""
+        }
+    }
+
     def domain: List[QuizDomainItem] = quizDomain.obj match {
         case Full(d) => QuizDomainItem.findAll(By(QuizDomainItem.quizDomain, quizDomain.is), OrderBy(QuizDomainItem.orderInDomain, Ascending))
         case _ => Nil
