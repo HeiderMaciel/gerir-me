@@ -40,7 +40,10 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 						pay.command as command,
 						(select avg(price) from deliverydetail dd where dd.delivery=dc.id and dd.product=pbom.id ) as price,
 						c.idforcompany,
-						dc.efetivedate
+						dc.efetivedate,
+						p.id,
+						pbom.id,
+						pbom.productclass
 						from
 						deliverycontrol dc
 						inner join product p on(p.id = dc.product)
@@ -49,7 +52,8 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 						left join payment pay on( pay.id = dc.payment)
 						left join cashier c on( c.id = pay.cashier)
 						where dc.customer = ?
-						group by ddd.product, pbom.name, p.name, pay.command,c.idforcompany, dc.efetivedate, dc.id, pbom.id
+						group by ddd.product, pbom.name, pbom.productclass, 
+						p.name, p.id, pay.command,c.idforcompany, dc.efetivedate, dc.id, pbom.id
 						order by dc.efetivedate desc
 				;""";
 				//				--and ((select count(1) from deliverydetail dd where dd.delivery=dc.id and used=false and dd.product=pbom.id ) >0 )
@@ -87,6 +91,18 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 				        ("date",t(7) match {
 				           case a:Any => a.toString
 				           case _ => "" 
+				        }),
+						("delivery_id",t(8) match {
+				           case a:Any => a.toString.toInt
+				           case _ => 0
+				        }),
+						("product_id",t(9) match {
+				           case a:Any => a.toString.toInt
+				           case _ => 0
+				        }),
+						("product_class",t(10) match {
+				           case a:Any => a.toString.toInt
+				           case _ => 0
 				        })
 						)
 				}))				

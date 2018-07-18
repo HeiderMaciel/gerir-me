@@ -426,10 +426,17 @@ $(function() {
       eval("dataset=" + data);
       var table = "";
       for (i in dataset) {
+        var item = ""
+        if (dataset[i].product_class == "1" ) {
+          item = "<a href='/product_admin/edit?id="+dataset[i].product_id+"' target='_product_maste'>"+dataset[i].product_name+"</a>"
+        } else {
+          item = "<a href='/activity/edit?id="+dataset[i].product_id+"' target='_activity_maste'>"+dataset[i].product_name+"</a>"
+        } 
         var total = dataset[i].un_used + dataset[i].used;
-        table += "<tr><td>" + dataset[i].delivery_name + "</td>";
+        table += "<tr>"
+        table += "<td>" + "<a href='/product_admin/edit?id="+dataset[i].delivery_id+"' target='_product_maste'>"+dataset[i].delivery_name+"</a>" + "</td>";
         table += "<td>" + getDateBr(new Date(dataset[i].date)) + "</td>";
-        table += "<td>" + dataset[i].product_name + "</td>";
+        table += "<td>" + item + "</td>";
         table += "<td>" + dataset[i].cashier + "</td>"
         table += "<td>" + dataset[i].command + "</td>"
         table += "<td>" + (dataset[i].saleprice).formatMoney() + "</td>";
