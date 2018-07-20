@@ -111,6 +111,10 @@ with CanCloneThis[AccountPayable] {
                   Empty
                 }
               }
+              if (c.received && !fieldOwner.paid_?.is) {
+                var obsAux = c.obs;
+                c.obs ((obsAux + " Revertido " + AuthUtil.user.short_name.is + " " + Project.dateTimeToStr(new Date())).trim)
+              }
               c.received(fieldOwner.paid_?.is).efetivePaymentDate.setFromAny(efetivePaymentDate)
               c.save
             } else {
@@ -284,9 +288,14 @@ with CanCloneThis[AccountPayable] {
     if (!autoCreated_?) {
       cheque.obj match {
         case Full(c:Cheque) => {
+          if (c.received) {
+            var obsAux = c.obs;
+            c.obs ((obsAux + " Revertido " + AuthUtil.user.short_name.is + " " + Project.dateTimeToStr(new Date())).trim)
+          }
           c.received (false)
           c.efetivePaymentDate (null)
           c.save
+          // procurar outros lancamento com este cheque e reverter tb
         }
         case _ => 
       }

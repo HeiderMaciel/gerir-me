@@ -55,6 +55,12 @@
         } else {
           color = ""
         }
+        var obsColor = "";
+        if (cheque.obs.indexOf('Revertido') != -1) {
+          obsColor = "red"
+        } else {
+          obsColor = ""
+        }
         $("#grid tbody").append("<tr>" +
           "<td>" + cheque.id + "</td>" +
           "<td title='" + title + "' style='background-color:" + color_back + "'>" +
@@ -66,6 +72,7 @@
           "<td>" + cheque.date + "</td>" + 
           "<td style='color:" + color + "'>" + cheque.gooddate + "</td>" + 
           "<td>" + "<a href='/customer/edit?id="+cheque.customerId+"' target='_customer_maste'>"+cheque.customer+"</a>"+ "</td>" +
+          "<td style='color:" + obsColor + "'>" + cheque.obs + "</td>" +
 // rigel 19/06/2018
 // comentei pq marcava o chque sem marcar o lancto financeiro
 // e nem alterava saldo e conta
