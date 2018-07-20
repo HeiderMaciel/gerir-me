@@ -343,7 +343,7 @@
         } else {
           $('#b_mark_as_unpaid').hide();
         }
-        if (obj.cashier_id) {
+        if (obj.cashier_id || obj.conciliate > 0) {
           $('#b_upd_cashier_account').show();
         } else {
           $('#b_upd_cashier_account').hide();

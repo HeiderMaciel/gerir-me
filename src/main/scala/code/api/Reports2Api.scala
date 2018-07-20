@@ -2058,7 +2058,9 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 				def category = AccountCategory.balanceControlCategory.id.is;
 
 				lazy val SQL_REPORT = """
-					select ah.currentvalue, ah.paymentdate, ah.paymentdate + 1, ah.id from accounthistory ah
+					select ah.currentvalue, ah.paymentdate, 
+					ah.paymentdate + 1, ah.id 
+					from accounthistory ah
 					inner join accountpayable ap on ap.company = ah.company
 						and ap.account = ah.account and ap.id = ah.accountpayable 
 						and ap.category = ?
@@ -2066,6 +2068,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					and ah.paymentdate < ?
 					and ah.unit = ?
 					order by ah.paymentdate desc, ah.id desc
+					limit 10
 					"""
 				toResponse(SQL_REPORT,
 					List(category, AuthUtil.company.id.is, 
@@ -2094,8 +2097,10 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					ct.short_name, 
 					bp.short_name, ap.obs, 
 					ap.typemovement,
-					case when (ap.typemovement = 0) then ap.value else null end as entrada , 
-					case when (ap.typemovement = 1) then ap.value else null end as saida , 
+					case when (ap.typemovement = 0) then ap.value else (ap.value * (-1)) end as valor , 
+--					case when (ap.typemovement = 0) then ap.value else null end as entrada , 
+--					case when (ap.typemovement = 1) then ap.value else null end as saida , 
+					case when (ap.typemovement = 0) then ap.aggregateValue else (ap.aggregateValue * (-1)) end as agregado , 
 					ap.paid, conciliate, ap.id, ap.id, ap.category, null, null, ap.account, ap.unit
 					from accountpayable ap 
 					inner join accountcategory ct on ct.id = ap.category
@@ -2107,7 +2112,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					(ap.paymentdate is null
 					and duedate between ? and ?))
 					and ap.unit = ?
-					order by 3, 1
+					order by 3 asc, aggregateId desc, aggregateValue desc, ap.id
 					"""
 				toResponse(SQL_REPORT.format(account),
 					List(AuthUtil.company.id.is, start, end, 

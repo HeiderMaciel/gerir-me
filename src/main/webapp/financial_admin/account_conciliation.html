@@ -28,8 +28,8 @@
             row[0] + "'/>"
       }
     }
-    fields[1] = "date";
-    fields[2] = "date";
+    fields[1] = "dateDDMM";
+    fields[2] = "dateDDMM";
 /*
 //  experimentopara setar cor
     fields[5] = {
@@ -41,6 +41,12 @@
       }
     }
 */
+    fields[5] = {
+      type : "format",
+      decode: function(name, row) {
+        return "<p title='" + row[5] + "'>" + row[5].substr(0,25) +"</p>"
+      }
+    }
     fields[6] = {
       type : "format",
       decode: function(name, row) {
@@ -48,8 +54,29 @@
             (row[6] == 0 ? 'add' : 'remove') + ".png\"/>"
       }
     }
-    fields[7] = "realNull";
-    fields[8] = "realNull";
+    fields[6] = "none";
+    fields[7] = {
+      type : "format",
+      decode: function(name, row) {
+        var color = ""
+        if (parseFloat(row[7]) < 0) {
+          color = "red"
+        }
+        return "<p style='color:" + color + "'><b>" + 
+            realDecode (row[7]) + "</b><p/>"
+      }
+    }
+    fields[8] = {
+      type : "format",
+      decode: function(name, row) {
+        var color = ""
+        if (parseFloat(row[8]) < 0) {
+          color = "red"
+        }
+        return "<p style='color:" + color + "'><b>" + 
+            realNullDecode (row[8]) + "</b><p/>"
+      }
+    }
     fields[9] = {
       type : "format",
       decode: function(name, row) {
@@ -106,11 +133,14 @@
       type : "format",
       decode: function(name, row) {
           if (row[10] != "0") {
+            conciliatedLin += parseFloat(row[7]);
+/*
             if (row[6] == "0") {
               conciliatedLin += parseFloat(row[7]);
             } else {
               conciliatedLin -= parseFloat(row[8]);
             }
+*/
           }
           return eval (conciliatedLin).formatMoney()
       }
@@ -118,14 +148,19 @@
     fields[15] = {
       type : "format",
       decode: function(name, row) {
+          total_generalLin += parseFloat(row[7]);
+/*
           if (row[6] == "0") {
             total_generalLin += parseFloat(row[7]);
           } else {
             total_generalLin -= parseFloat(row[8]);
           }
+*/
           return eval (total_generalLin).formatMoney()
       }
     }
+    fields[16] = 'none';
+    fields[17] = 'none';
     var url = "/report/account_conciliation";
     var total_general = 0.00;
     var conciliated = 0.0;
@@ -175,20 +210,25 @@
           data.forEach(function(row){
             count += 1;
             if (row[10] != 0) {
+              conciliated += parseFloat(row[7]);
+/*
               if (row[6] == 0) {
                 conciliated += parseFloat(row[7]);
               } else {
                 conciliated -= parseFloat(row[8]);
               }
+*/
             } else {
               count_open += 1;
             }
+            total_general += parseFloat(row[7]);
+/*
             if (row[6] == 0) {
               total_general += parseFloat(row[7]);
             } else {
               total_general -= parseFloat(row[8]);
             }
-
+*/
           });
 
           $("#conciliated").val((conciliated).formatMoney());
@@ -300,6 +340,13 @@
       }
     });
     $("#consolidateTotal").click(function() {
+      var today = getDateBr(new Date());
+      if (today == $("#end").val()) {
+        if (confirm ("Não é comum fazer a consolidação total até a data corrente, deseja prosseguir mesmo assim?")) {
+        } else {
+          return
+        }
+      }
       if (new Date() < brToUsDate($("#end").val())) {
         return alert ("Não é possivel fazer a consolidação total, pois a data do fim do período não pode ser maior que a data corrente!");
       }
@@ -312,7 +359,9 @@
       if ($("#total_gap").val() != $("#total_ggap").val()) {
         return alert ("Só é possivel fazer a consolidação total e geração de um saldo definitivo para o período quando todos os lançamentos no período estiverem pelo menos conciliados!");
       }
-      if (confirm("Tem certeza que deseja consolidar a conta?")) {
+      var msgAux = "";
+      msgAux = "\n\nSerá gerado um ajuste de saldo de " + $("#total_gap").val()
+      if (confirm("Tem certeza que deseja consolidar a conta?" + msgAux)) {
         var url = "/accountpayable/consolidateTotal/"
         url = url + encodeURIComponent($("#start").val()) + "/" + encodeURIComponent($("#end").val()) + "/" + $("#account").val()+"/"+$("#total_gap").val()
         return $.get(url, function(t) {
@@ -398,12 +447,12 @@
               <div class="inline-inputs">
                 <div class="lift:SecuritySnippet.isShowSalesToUser input-prepend" style="float:left; padding-right:10px">
                   <span class="add-on"><img src="/images/money.png" width="16"></span>
-                  <input class="small" id="conciliated" name="conciliated" size="19" placeholder="0.00" type="text" disabled>
+                  <input style="color:black;" class="small" id="conciliated" name="conciliated" size="19" placeholder="0.00" type="text" disabled>
                   <span class="help-block">Conciliado</span>
                 </div>
                 <div class="input-prepend" style="float:left; padding-right:10px">
                   <span class="add-on"><img src="/images/user.png" width="16"></span>
-                  <input class="small" id="total_gap" name="total_gap" size="19" placeholder="0.00" type="text" disabled>
+                  <input style="color:black;" class="small" id="total_gap" name="total_gap" size="19" placeholder="0.00" type="text" disabled>
                   <span class="help-block">Diferença</span>
                 </div>
               </div>
@@ -455,14 +504,14 @@
   <table id="grid" class="bordered-table zebra-striped">
       <thead>
         <th><input type="checkbox" id='check_all'/></th>
-        <th>Vencimento</th>
-        <th>Pagamento</th>
+        <th title='Data de Vencimento'>Vencto</th>
+        <th title='Data de Pagamento'>Pagto</th>
         <th>Categoria</th>
-        <th>Parceiro</th>
-        <th>Obs</th>
-        <th>Tipo</th>
-        <th>Entrada</th>
-        <th>Saída</th>
+        <th>Parceiro.............</th>
+        <th>Obs..................</th>
+        <!--th>Tipo</th-->
+        <th>Valor</th>
+        <th>Agregado</th>
         <th>Pago</th>
         <th>Editar Excluir_</th>
         <th title='Conciliar'>Conc</th>

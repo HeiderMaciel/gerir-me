@@ -260,15 +260,15 @@ with CanCloneThis[AccountPayable] {
 
   override def delete_! = {
     if(AuthUtil.? && (!AuthUtil.user.isAdmin && !AuthUtil.user.isFinancialManager)){
-      //info ("************************* não é adm nem gerente ")
       throw new RuntimeException("Somente Administradores e Gerentes Financeiros podem excluir lançamentos")
     }
     if ((!cashier.isEmpty) && (Cashier.checkifclosed(cashier))) {
-      //info ("************************* caixa fehcado")
       throw new RuntimeException("Não é permitido excluir lançamento de caixa fechado")
     }
     if (conciliate > 0) {
-      throw new RuntimeException("Não é permitido excluir lançamento conciliado")
+      if(AuthUtil.? && (!AuthUtil.user.isAdmin)){
+        throw new RuntimeException("Somente Administradores podem excluir lançamentos conciliados")
+      }
     }
     if(debted_?.is){
       accountBox match {

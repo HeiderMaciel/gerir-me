@@ -437,7 +437,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 					}
 					try {
 						if (partiallySecure == "true") {
-							c.complement((complement + " Alteração de lançamento de caixa fechado " + AuthUtil.user.short_name.is + " " + Project.dateTimeToStr(new Date())).trim)
+							c.complement((complement + " Alteração de lançamento de caixa fechado e/ou conciliado " + AuthUtil.user.short_name.is + " " + Project.dateTimeToStr(new Date())).trim)
 							c.partiallySecureSave
 						} else {
 							c.save;

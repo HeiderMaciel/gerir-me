@@ -71,6 +71,10 @@ var ageDecode = function (value) {
   return (res)
 }
 
+var dateDecodeDDMM = function (value) {
+  return !value || value == "" ? "" : (getDateBr(FactoryDate.byTime(value))).substr(0,5);
+}
+
 var dateDecode = function (value) {
   return !value || value == "" ? "" : getDateBr(FactoryDate.byTime(value));
 }
@@ -181,6 +185,8 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
     switch (type) {
     case "date":
       return dateDecode(value);
+    case "dateDDMM":
+      return dateDecodeDDMM(value);
     case "age":
       return ageDecode(value);
     case "dateTime":
