@@ -894,7 +894,7 @@
       return AccountPayable.addUpd_account (false);
     });
     $(".b_upd_cashier_account").click(function() {
-      if (confirm("Tem certeza que deseja alterar lançamento de caixa fechado?")) {
+      if (confirm("Tem certeza que deseja alterar lançamento de caixa fechado e/ou conciliado?")) {
         return AccountPayable.addUpd_account (true);
       }
     });

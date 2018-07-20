@@ -79,6 +79,8 @@ var dateDecode = function (value) {
   return !value || value == "" ? "" : getDateBr(FactoryDate.byTime(value));
 }
 
+// fazer aqui um substr para trazer só HH:mm
+// ninguém usa com data tem a soma dos 2 decodes
 var timeDecode = function (value) {
   return !value ? "" : getHourBr(FactoryDate.byTime(value));
 }
@@ -191,7 +193,7 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
       return ageDecode(value);
     case "dateTime":
       return dateDecode(value) + " " + timeDecode(value);
-    case "time":
+    case "time": // niguém usa deveria ser só time
       return dateDecode(value) + " " + timeDecode(value);
     case "boolean":
       return booleanDecode(value);

@@ -7,7 +7,7 @@ $(function() {
     };
     var fields = [];
     //fields[0] = "date";
-    fields[0] = "time";
+    fields[0] = "dateTime";
     fields[1] = "none";
     fields[2] = "none";
     fields[6] = {
