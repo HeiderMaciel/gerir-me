@@ -557,32 +557,38 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 				case _ => false
 			}
 			lazy val status = S.param("status") match {
-				case Full(s) if(s != "All") => {
-					val statusFilter = if(s == "7") {
-						Treatment.PreOpen
-					}else if(s == "0"){
-						Treatment.Open
-					}else if(s == "1"){
-						Treatment.Missed
-					}else if(s == "8"){
-						Treatment.ReSchedule
-					}else if(s == "2"){
-						Treatment.Arrived
-					}else if(s == "3"){
-						Treatment.Ready
-					}else if(s == "4"){
-						Treatment.Paid
-					}else if(s == "5"){
-						Treatment.Deleted
-					}else if(s == "6"){
-						Treatment.Confirmed
-					}else if(s == "9"){
-						Treatment.Budget
-					}else{
-						Treatment.Deleted
+				case Full(s) => 
+					if(s == "All") {
+						BySql[code.model.Treatment]("1 =1",IHaveValidatedThisSQL("",""))
+					} else if (s == "NoPaid") {
+						// todos menos excluidos e pagos
+						BySql[code.model.Treatment](" status2 in (0,1,2,3 ,6,7,8,9) ",IHaveValidatedThisSQL("",""))	
+					} else {
+						val statusFilter = if(s == "7") {
+							Treatment.PreOpen
+						}else if(s == "0"){
+							Treatment.Open
+						}else if(s == "1"){
+							Treatment.Missed
+						}else if(s == "8"){
+							Treatment.ReSchedule
+						}else if(s == "2"){
+							Treatment.Arrived
+						}else if(s == "3"){
+							Treatment.Ready
+						}else if(s == "4"){
+							Treatment.Paid
+						}else if(s == "5"){
+							Treatment.Deleted
+						}else if(s == "6"){
+							Treatment.Confirmed
+						}else if(s == "9"){
+							Treatment.Budget
+						}else {
+							Treatment.Deleted
+						}
+						By(Treatment.status2, statusFilter)
 					}
-					By(Treatment.status2, statusFilter)
-				}
 				case _ => BySql[code.model.Treatment]("1 =1",IHaveValidatedThisSQL("",""))
 			}
 
