@@ -53,7 +53,7 @@ object DeliveryControl extends DeliveryControl with LongKeyedMapperPerCompany[De
                         total,
                         used,
                         un_used,
-                        price,                        
+                        coalesce (price, 0),                        
                         (price * total) as total_price,
                         (price * un_used) as reamaining,
                         command,
