@@ -25,6 +25,13 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 	Pagination Methods
 	*/
 	def pageObj = User
+
+	def itens = S.param("itenspp_user") match {
+		case Full(s) => s.toInt
+		case _ => 20
+	}
+	
+	override def itemsPerPage = itens;
 	
 	def statusFilter: List[Int] = if(showAll){
 		List(User.STATUS_OK, User.STATUS_BLOCKED, User.STATUS_INACTIVE)

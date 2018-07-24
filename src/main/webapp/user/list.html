@@ -23,17 +23,24 @@
 			<form>
 				<div class="form-inline">
 					<div class="form-group">
-						<input class="local_storage form-control name_user" id="name_user" name="name" placeholder="Nome"/>
+						<input class="local_storage form-control name_user" id="name_user" name="name" placeholder="Nome" size="20"/>
 					</div>
 
 					<div class="form-group">
-						<input class="form-control" name="phone" placeholder="Telefone"/>
+						<input class="form-control" name="phone" placeholder="Telefone" size="10"/>
 					</div>
 
 					<div class="form-group">
 						<label for="userGroup"><span data-i18n='Grupo'></span></label>
-						<select style="width: 210px" size="30" id="userGroup" class='local_storage' name="userGroup"></select>	
+						<select style="width: 170px" size="20" id="userGroup" class='local_storage' name="userGroup"></select>	
 					</div>
+
+					<div class="form-group">
+						<label for="itenspp_user">Itens por Página</label>
+						<input class="form-control" name="itenspp_user" placeholder="" size="3"
+						value="20"/>
+					</div>
+
 
 					<div class="form-group">
 						<input class="all" id="all" name="all" type="checkbox"/>Mostrar todos?
@@ -48,8 +55,18 @@
 	</div>
 
 	<!-- List with professionals -->
+	<a onclick="return ExcellentExport.excel(this, 'table_result', 'data');"
+	href="#" download="data.xls" class="btn excel_buttton"
+	title="Exportar para excel">
+	<img style="width: 16px;" src="/images/excel.png" />
+	</a>  
+	<a onclick="return ExcellentExport.csv(this, 'table_result', ';');"
+	href="#" download="data.csv" class="btn excel_buttton"
+	title="Exportar para csv">
+	<img style="width: 16px;" src="/images/generate.png" />
+	</a>  
 	<div class="row">
-		<table class="vr-table table table-striped table-bordered table-hover table-zoomed-out">
+		<table id="table_result" class="vr-table table table-striped table-bordered table-hover table-zoomed-out">
 			<thead>
 				<th>Id</th>
 				<th>Foto</th>			
