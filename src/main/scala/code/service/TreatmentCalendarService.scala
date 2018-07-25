@@ -149,7 +149,7 @@ object TreatmentCalendarService {
           0 AS conflits,
           u.name, c.imagethumb, tr.status2, coalesce (pr.color, ''), 
           c.valueinaccount, tr.unit, 
-          to_char (tr.updatedat, 'dd/mm hh24:mi') 
+          fu_auditstr (tr.createdby, tr.createdat, tr.updatedby, tr.updatedat)
           FROM treatment tr
           INNER JOIN business_pattern c on(tr.customer=c.id)
           INNER JOIN business_pattern u on(tr.user_c=u.id)
