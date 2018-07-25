@@ -239,10 +239,13 @@ var Pet = {
 var Environment = {
 	replaceEnvironmentVars: function (value) {
 		var user = "";
+		var customer = "";
 		if (value) {
 			for (var key in Environment) {
 				if (!$.isFunction(Environment[key])) {
-					if (key.toLowerCase() == 'user') {
+					if (key.toLowerCase() == 'customer') {
+						customer = Environment[key];
+					} else if (key.toLowerCase() == 'user') {
 						user = Environment[key];
 					} else {
 						value = value.replaceAll("##" + key + "##", Environment[key]);
@@ -252,24 +255,64 @@ var Environment = {
 				}
 			}
 		}
-		if (user != "") {
-			$.post("/api/v2/terms/user", {
-	          "id": user,
-	          "msg": value
-	        }, function(r){
-	          var msg = (eval(r));
-	          value = msg;
-//	          alert (value);
-	        });
-		    setTimeout(function() {
-		    	// rigel 28/01/2018
-		    	// marretei o set do reprocess aqui 
-		    	// pq não consegui fazer o timeou segurar
-				var $termsElements = $(".terms_and_conditions");
-				$termsElements.html(value);
-		       return value;
-		    }, 1000);
-  		} else {
+		if (customer != "" || user != "") {
+			if (customer != "" && user != "") {
+				$.post("/api/v2/terms/both", {
+		          "id": customer,
+		          "iduser": user,
+		          "msg": value
+		        }, function(r){
+		          var msg = (eval(r));
+		          value = msg;
+	//	          alert (value);
+		        });
+			    setTimeout(function() {
+			    	// rigel 28/01/2018
+			    	// marretei o set do reprocess aqui 
+			    	// pq não consegui fazer o timeou segurar
+					var $termsElements = $(".terms_and_conditions");
+					$termsElements.html(value);
+			       return value;
+			    }, 1000);
+			} else {
+				if (customer != "") {
+					$.post("/api/v2/terms/customer", {
+			          "id": customer,
+			          "msg": value
+			        }, function(r){
+			          var msg = (eval(r));
+			          value = msg;
+		//	          alert (value);
+			        });
+				    setTimeout(function() {
+				    	// rigel 28/01/2018
+				    	// marretei o set do reprocess aqui 
+				    	// pq não consegui fazer o timeou segurar
+						var $termsElements = $(".terms_and_conditions");
+						$termsElements.html(value);
+				       return value;
+				    }, 1000);
+				}
+		  		if (user != "") {
+					$.post("/api/v2/terms/user", {
+			          "id": user,
+			          "msg": value
+			        }, function(r){
+			          var msg = (eval(r));
+			          value = msg;
+		//	          alert (value);
+			        });
+				    setTimeout(function() {
+				    	// rigel 28/01/2018
+				    	// marretei o set do reprocess aqui 
+				    	// pq não consegui fazer o timeou segurar
+						var $termsElements = $(".terms_and_conditions");
+						$termsElements.html(value);
+				       return value;
+				    }, 1000);
+		  		} 
+		  	}
+	  	} else {
 			return value;
 		}
 	},

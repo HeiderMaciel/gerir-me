@@ -46,6 +46,35 @@ object TermsApi extends  RestHelper with ReportRest with net.liftweb.common.Logg
 				}
 
 			}
+			case "api" :: "v2" :: "terms" :: "customer" :: Nil Post _ =>{
+				try{
+					def id:String = S.param("id") openOr "0"
+					def msg:String = S.param("msg") openOr "0"
+					var msg_aux = msg
+					val ac = Customer.findByKey(id.toLong).get
+					msg_aux = ac.replaceMessage (ac, msg_aux);
+		 			JString (msg_aux)
+				}catch{
+					case e:RuntimeException => (ParamFailure(e.getMessage, 500)) : Box[JValue]
+					case _ => JString("Error")
+				}
+			}
+			case "api" :: "v2" :: "terms" :: "both" :: Nil Post _ =>{
+				try{
+					def id:String = S.param("id") openOr "0"
+					def iduser:String = S.param("iduser") openOr "0"
+					def msg:String = S.param("msg") openOr "0"
+					var msg_aux = msg
+					val ac = Customer.findByKey(id.toLong).get
+					msg_aux = ac.replaceMessage (ac, msg_aux);
+					val ac1 = User.findByKey(iduser.toLong).get
+					msg_aux = ac1.replaceMessage (ac1, msg_aux);
+		 			JString (msg_aux)
+				}catch{
+					case e:RuntimeException => (ParamFailure(e.getMessage, 500)) : Box[JValue]
+					case _ => JString("Error")
+				}
+			}
 		}
 
 }

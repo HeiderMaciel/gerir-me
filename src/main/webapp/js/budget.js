@@ -1,6 +1,9 @@
 $(function() {
+    $("#terms").termsField();
     $('#tooth').toothField(false);
     $("#offsale").offSaleField(true);
+    $("#bp_manager").change(); // força substituir termo ##var##
+//    $("#bp_sponsor").change(); // força substituir termo ##var##
     $("#new_item").click(function() {
 alert (" na var function click aqui não chega NUNCA !!!!!! ")
       var agora = getHourBr(FactoryDate.byTime(Date.toDay().getTime()));
@@ -43,29 +46,25 @@ alert (" na var function click aqui não chega NUNCA !!!!!! ")
     $("#print_message").click(function(){
         var message_print = $('#toprint').html();
         var header = "";
-        if ($('.has-pet-system').length > 0) {
-          header = "ebellepet"
-        } else if ($('.has-edoctus-system').length > 0) {
-          header = "edoctus"
-        } else if ($('.has-ephysio-system').length > 0) {
-          header = "ephysio"
-        } else if ($('.has-gerirme-system').length > 0) {
-          header = "gerirme"
-        } else {
-          header = "ebelle"
-        }
-
         var logo = "";
         if ($('.has-pet-system').length > 0) {
           logo = "ebellepet"
+          header = "ebellepet"
         } else if ($('.has-edoctus-system').length > 0) {
           logo = "edoctus"
+          header = "edoctus"
+        } else if ($('.has-esmile-system').length > 0) {
+          logo = "esmile"
+          header = "esmile"
         } else if ($('.has-ephysio-system').length > 0) {
           logo = "ephysio"
+          header = "ephysio"
         } else if ($('.has-gerirme-system').length > 0) {
+          header = "gerirme"
           logo = "gerirme"
         } else {
           logo = "ebelle"
+          header = "ebelle"
         }
 
         // um trailer gerar 
@@ -77,15 +76,17 @@ alert (" na var function click aqui não chega NUNCA !!!!!! ")
           " <meta charset='utf-8'> " +
           " <title>" + header + "</title> " +
           " </head> " +
+/*
         '<img width="35px" style="padding-right: 10px" src="/images/logo_ftr_'+logo+'.png"/>' + 
         header + " Gestão Integrada " + 
         '<img width="70px" style="padding-right: 10px" src="http://images.vilarika.com.br/company/'+AuthUtil.company.image+'"/>' + 
-        " <br></p>"
+*/
+        " <br></p>" + $("#terms_and_conditions").html();
         var printWindow = window.open("", "MsgPrintWindow");
         printWindow.document.write(header + message_print);
-        //setTimeout(function(){
+        setTimeout(function(){
           printWindow.print();
-        //}, 500);
+        }, 500);
     });
 
 

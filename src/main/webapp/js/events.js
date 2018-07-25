@@ -97,7 +97,14 @@ var updateReportSection = function() {
 };
 
 var updateReportItems = function() {
+
+	// tem um settimeout na primeira chamada e/ou no f5 
+	// para pegar o check
+    var print = $("input[@id=print_command]:checked").length == 1;
+
     var fields = [];
+	fields[0] = "none";
+	fields[1] = "none";
     fields[2] = {
       type: "format",
       decode: function(name, row) {
@@ -110,31 +117,41 @@ var updateReportItems = function() {
     }
     fields[3] = "textNull";
     // 4 obs
-    fields[5] = "real";
-    fields[6] = "real";
-    fields[7] = "real";
-    fields[8] = "real";
-    fields[8] = {
-      type : "format",
-      decode: function(name, row) {
-        var color = ""
-        if (parseFloat(row[8]) < parseFloat(row[5])) {
-          color = "green" 
-        } else if (parseFloat(row[8]) > parseFloat(row[5])) {
-          color = "red" 
-        } else {
-          // vai assumir cor default	
-        }
-	    return "<p style='color:" + color + "'>" + 
-	        realDecode(row[8]) + "<p/>"
-      }
-    }
-    fields[9] = "real";
-    fields[11] = {
-		type: "format",
-		decode: function(id, row) {
-			return "<span style='margin-right:4px'><a class='btn' href='/treatment/treatmentdetail?id=" + row[11] + "' target='_treatdetail_maste'>Editar</a></span>" +
-				"<span><a class='btn danger' target='_blank' onclick='deleteItems(" + row[12] + ")'>Excluir</a></span>";
+    if (print) {
+	    fields[5] = "none";
+	    fields[6] = "none";
+	    fields[7] = "none";
+	    fields[8] = "none";
+	    fields[9] = "none";
+	    fields[10] = "none";
+	    fields[11] = "none";
+    } else {
+	    fields[5] = "real";
+	    fields[6] = "real";
+	    fields[7] = "real";
+	    fields[8] = "real";
+	    fields[8] = {
+	      type : "format",
+	      decode: function(name, row) {
+	        var color = ""
+	        if (parseFloat(row[8]) < parseFloat(row[5])) {
+	          color = "green" 
+	        } else if (parseFloat(row[8]) > parseFloat(row[5])) {
+	          color = "red" 
+	        } else {
+	          // vai assumir cor default	
+	        }
+		    return "<p style='color:" + color + "'>" + 
+		        realDecode(row[8]) + "<p/>"
+	      }
+	    }
+	    fields[9] = "real";
+	    fields[11] = {
+			type: "format",
+			decode: function(id, row) {
+				return "<span style='margin-right:4px'><a class='btn' href='/treatment/treatmentdetail?id=" + row[11] + "' target='_treatdetail_maste'>Editar</a></span>" +
+					"<span><a class='btn danger' target='_blank' onclick='deleteItems(" + row[12] + ")'>Excluir</a></span>";
+			}
 		}
 	}
     fields[12] = "none";
@@ -185,7 +202,9 @@ $(function() {
 		updateReportStake();
 		updateReportCondition();
 		updateReportSection();
-		updateReportItems();
+        setTimeout(function() {
+			updateReportItems();
+        }, 1000);
 		$("#add_stakeholder").click(function() {
 			$.post("/project/add_stakeholder/" + gup('id'), {
 					bp_stakeholder: $("#bp_stakeholder").val(),

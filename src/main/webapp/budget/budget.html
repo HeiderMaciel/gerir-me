@@ -6,6 +6,7 @@
   <style>
     @import url("/js/datetimepicker/jquery.datetimepicker.css");
   </style>
+  <script src="/js/writtenform.js"></script>
   <script type="text/javascript" src='/js/default/animal.js'>
   </script>
   <script type="text/javascript" src="/js/budget.js"></script>
@@ -131,7 +132,7 @@
                 <label for="bp_sponsor"><span data-i18n='Cliente'></span></label>
                 <div class="input">
                   <span>
-                    <input data-url-name="bp_sponsor" class='mini id_customer_search url_parameter' id='bp_sponsor' name="bp_sponsor" /> 
+                    <input data-url-name="bp_sponsor" class="mini id_customer_search url_parameter value_to_env" data-env-value='CUSTOMER' id='bp_sponsor' name="bp_sponsor" /> 
                     <input class="name_customer_search" name="bp_sponsorname" id="bp_sponsorname"  size="30" type="text" placeholder="Nome"/>    
                   </span>
                 </div>
@@ -140,8 +141,8 @@
                 <label for="bp_manager"><span data-i18n='Profissional'></span></label>
                 <div class="input">
                   <span>
-                    <input class='mini id_customer_search' id='bp_manager' name="bp_manager" /> 
-                    <input class="name_customer_search" name="manager" id="manager"  size="30" type="text" placeholder="Nome" data-just_user='true'/>
+                    <input class="mini id_customer_search value_to_env" data-env-value='USER' id='bp_manager' name="bp_manager" /> 
+                    <input class="name_customer_search"  name="manager" id="manager"  size="30" type="text" placeholder="Nome" data-just_user='true'/>
                   </span>
                   <span class="help-block">Responsável</span>
                 </div>
@@ -166,6 +167,14 @@
                   <input class="xlarge disabled" disabled="true" id="auditstr" name="auditstr"  type="text"/>
                 </div>
               </div>                     
+              <div class="clearfix">
+                <label for="terms">Termos</label>
+                  <div class="input">
+                    <div class="inline-inputs">
+                        <select class="local_storage" name="terms" id="terms"></select>
+                    </div>
+                  </div>
+              </div>
             </span>
           </span>
         </span>
@@ -183,6 +192,15 @@
                 <div class="clearfix">
                   <div class="input">
                     <a class="btn primary" onclick="new_detail()">Novo item</a>
+                  </div>
+                </div>
+                <div class="clearfix">
+                  <label for="print_command">Impressão
+                  </label>
+                  <div class="input">
+                    <div class="inline-inputs">
+                      <input class="local_storage" name="print_command" id='print_command' type='checkbox' />
+                    </div> 
                   </div>
                 </div>
               </div>
@@ -214,21 +232,21 @@
                     </div>
                   </div>
                 </div>
-            <div id="toprint">
+            <div class="value_to_env" data-env-value="ITENS" id="toprint">
             <table id="table_items" class='bordered-table zebra-striped'>
               <thead>
                 <tr>
-                  <th>Orçamento</th>
-                  <th>Seção</th>
-                  <th>Prod/Serv</th>
+                  <!--th>Orçamento</th>
+                  <th>Seção</th-->
+                  <th><span data-i18n='Serviço'></span></th>
                   <th>Dente</th>
                   <th>Obs</th>
-                  <th>Pr Lista</th>
-                  <th>Tot Lista</th>
-                  <th>Qtde</th>
-                  <th>Pr Unit</th>
-                  <th>Pr Total</th>
-                  <th>Realiz</th>
+                  <th class="hide_on_print">Pr Lista</th>
+                  <th class="hide_on_print">Tot Lista</th>
+                  <th class="hide_on_print">Qtde</th>
+                  <th class="hide_on_print">Pr Unit</th>
+                  <th class="hide_on_print">Pr Total</th>
+                  <th class="hide_on_print">Realiz</th>
                   <th class="hide_on_print">Ações</th>
                 </tr>
               </thead>
@@ -236,8 +254,9 @@
               </tbody>
             </table>
             </div>
-                    <input class="btn primary" type="button" id='print_message' value='Imprimir' />
-                    <span class="help-block">_</span>
+              <input class="btn primary" type="button" id='print_message' value='Imprimir' />
+              <span class="help-block">_</span>
+              <span class='terms_and_conditions' id='terms_and_conditions'></span>
             </div>
             </form>
           </div>
