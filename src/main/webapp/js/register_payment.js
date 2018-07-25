@@ -1073,10 +1073,15 @@
       valdevido = (-1 * glb_valueinaccount);
       if (hasCustomerAccount && 
         valCustomerAccount > valdevido) {
-        messages.push("Valor de conta cliente na tabela de ítens " + 
-          valCustomerAccount.formatMoney() +
-          "\n\n maior que o devido pelo cliente " +
-          valdevido.formatMoney() + " !"); 
+        // if contorna erro de arredondamento pq o valor 
+        // no banco pode estar quebrado, mas no item do caixa 
+        // arredonda em duas casas
+        if (valCustomerAccount - valdevido > 0.001) {
+          messages.push("Valor de conta cliente na tabela de ítens " + 
+            valCustomerAccount.formatMoney() +
+            "\n\n maior que o devido pelo cliente " +
+            valdevido.formatMoney() + " !"); 
+        }
       }
 
       if (hasCustomerAccount && hasCustomerCredit) {
