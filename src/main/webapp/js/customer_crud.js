@@ -183,19 +183,26 @@ $(function() {
 
       fields[5] = {
         type: "format",
-        decode: function(value) {
+        decode: function(name, row) {
           // tazer flag no rel e testar a chamada
           //'<span style="margin-right:4px"><a class="btn" target="_quiz_maste"  href="/quiz/quiz_applying?applying_id='+value+'">Editar</a></span>'+
-          return '<span style="margin-right:4px"><a class="btn" target="_quiz_maste"  href="/quiz/quizapply?id='+value+'">Texto</a></span>'+
-                '<span style="margin-right:4px"><a class="btn" target="_quiz_maste"  href="/quiz/quiz_applying?applying_id='+value+'">Questões</a></span>'+
-                '<input data-id="' + value + '" type="button" class="btn danger quiz_remove" value="Excluir">';
+          var questions = "";
+          var text = "";
+          if (row[11] > "0") {
+            questions = '<span style="margin-right:4px"><a class="btn" target="_quiz_maste"  href="/quiz/quiz_applying?applying_id='+row[5]+'">Questões</a></span>'
+          } else {
+            text = '<span style="margin-right:4px"><a class="btn" target="_quiz_maste"  href="/quiz/quizapply?id='+row[5]+'">Texto</a></span>'
+          }
+          return text + questions +
+                '<input data-id="' + row[5] + '" type="button" class="btn danger quiz_remove" value="Excluir">';
         }
       }
       fields[6] = "none"
       fields[7] = "none"
       fields[8] = "none"
       fields[9] = "none"
-      fields[10] = "none"
+      fields[10] = "none" // bp name
+      fields[11] = "none" // count questions
       var message_total = "";
       var bindEvent = function() {
         $(".quiz_remove").click(function() {

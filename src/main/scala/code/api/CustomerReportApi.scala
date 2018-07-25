@@ -88,7 +88,7 @@ object CustomerReportApi extends RestHelper with ReportRest {
 				union
 				select dateevent, age(date(now()), dateevent), pr.name, tr.obs, icd.namecomp, tr.id, null, false, 
 				trim (COALESCE (icd.namecomp,'') || ' </span><br></span>' || tr.obs || '</span><br></span>' || td.obs || '</span><br></span>' || ted.obs || '</span><br></span>'),
-				pr.showinrecords, bp.name
+				pr.showinrecords, bp.name, 0
 				from treatment tr 
 				inner join business_pattern bp on bp.id = tr.customer
 				inner join treatmentdetail td on td.treatment = tr.id
@@ -103,7 +103,10 @@ object CustomerReportApi extends RestHelper with ReportRest {
 				val sql_quiz = """
 				select * from (
 				select qa.applydate, age(date(now()), applydate), qu.name, qa.obs, ug.short_name, qa.id, qa.id,
-					(qu.message <> ''), qa.message, qu.showinrecords, bp.name			  
+					(qu.message <> ''), qa.message, qu.showinrecords, bp.name, 
+					(select count(1) from quizquestion qq
+					inner join quizsection qs on qs.id = qq.quizsection and qs.quiz = qu.id and qs.status = 1
+					where qq.company = qu.company and qq.status = 1 )			  
 				    from quizapplying qa 
 					inner join business_pattern bp on bp.id = qa.business_pattern
 					left join quiz qu on qu.id = qa.quiz

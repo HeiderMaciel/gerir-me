@@ -88,6 +88,12 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
         " 1 = 1 "
     }
 
+	def othersShowAll = if (checkBooleanParamenter("all")) {
+		" 1 = 1 "
+	} else {
+		" status = 1 "
+	}		
+
 	def findForListParamsWithoutOrder: List[QueryParam[Quiz]] = List(Like(Quiz.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"))
 	override def page = {
 		if(!showAll){
@@ -143,8 +149,9 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 			
 			}
 
-			QuizSection.findAllInCompany(
+			QuizSection.findAllInCompanyWithInactive(
 				Like(QuizSection.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+				BySql (othersShowAll,IHaveValidatedThisSQL("","")),
 				OrderBy(QuizSection.quiz,Ascending),
 				OrderBy(QuizSection.orderInQuiz,Ascending),
 				OrderBy(QuizSection.name,Ascending)
@@ -176,8 +183,9 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 			
 			}
 
-			QuizQuestion.findAllInCompany(
+			QuizQuestion.findAllInCompanyWithInactive(
 				Like(QuizQuestion.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+				BySql (othersShowAll,IHaveValidatedThisSQL("","")),
 				BySql (quizSectionList,IHaveValidatedThisSQL("","")),
 				OrderBy(QuizQuestion.quizSection,Ascending),
 				OrderBy(QuizQuestion.orderInSection,Ascending),
@@ -216,7 +224,10 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 			
 			}
 
-			QuizDomain.findAllInCompany(OrderBy(QuizDomain.name,Ascending)).flatMap(ac => 
+			QuizDomain.findAllInCompanyWithInactive(
+				Like(QuizDomain.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+				BySql (othersShowAll,IHaveValidatedThisSQL("","")),
+				OrderBy(QuizDomain.name,Ascending)).flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
 							"obs" -> Text(ac.obs.is),
 							"actions" -> <a class="btn" href={"/quiz_admin/edit_domain?id="+ac.id.is}>Editar</a>,
@@ -253,7 +264,9 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		    }
 		
 		    //BySql (quizDomainList,IHaveValidatedThisSQL("",""))
-			QuizDomainItem.findAllInCompany(
+			QuizDomainItem.findAllInCompanyWithInactive(
+				Like(QuizDomainItem.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"),
+				BySql (othersShowAll,IHaveValidatedThisSQL("","")),
 				OrderBy(QuizDomainItem.quizDomain,Ascending),
 				OrderBy(QuizDomainItem.orderInDomain,Ascending),
 				OrderBy(QuizDomainItem.name,Ascending),
