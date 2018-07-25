@@ -79,6 +79,12 @@
                 //$("#quiz-questions").val(questions.join(","));
             }
 
+            function setMultiple(element, name) {
+                element.attr('multiple', name);
+                //questions.push(name);
+                //$("#quiz-questions").val(questions.join(","));
+            }
+
             function setId(element, name) {
                 element.attr('id', name);
                 //questions.push(name);
@@ -112,13 +118,20 @@
                         template = createParagraph(question);
                         break;
                     case 2:
-                        template = createList(question);
+                        template = createList(question, false);
                         break;
                     case 3:
                         template = createMultiple(question);
                         break;
-                    case 4:
+                    case 4: // pode mais de 1 radio
                         template = createMoreThanOne(question);
+                        break;
+                    case 5: // valor
+                        break;
+                    case 5: // data
+                        break;
+                    case 7: // pode mais de 1
+                        template = createList(question, true);
                         break;
                 }
 
@@ -197,7 +210,7 @@
                 return template;
             }
 
-            function createList(question) {
+            function createList(question, morethanone) {
                 if (question.position == "0") {
                     var template = $($("#list-template").html());
                 } else if (question.position == "1") {
@@ -211,18 +224,31 @@
                 formatQuestion (question, template)
 
                 var select = template.find('select');
-                setName(select, question.id);
                 setClass(select, question.size);
+                if (morethanone) {
+                    setName(select, question.id + 'L');
+                    setMultiple(select, '');
+                } else {
+                    setName(select, question.id);
+                }
 
                 question.domain.forEach(function(domain) {
                     var option = $('<option />')
                             .attr('value', domain.id)
                             .text(domain.name);
 
+                    question.value.split(",").forEach(function(value){
+                        if (domain.id == value) {
+                            option.attr('selected', 'selected');
+                        }
+                    });
+                    /* Antes não fazia split pq list
+                    não era multiplo agora sempre faz
+                    pq funiona mesmo que não seja
                     if (domain.id == question.value) {
                         option.attr('selected', 'selected');
                     }
-
+                    */
                     select.append(option);
                 });
 
@@ -367,7 +393,7 @@
                         <div class="input-prepend" style='float:left; padding-right:10px'>
                             <span id='labeltop' class="label-top">uai só</span>
                             <span style='color:black;' class="add-on hide_mobile"></span> 
-                            <select class="xlarge" ></select>
+                            <select class="xlarge"></select>
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -379,12 +405,12 @@
             <div>
                 <p><b></b></p>
                 <label for="obs" style='color:black; font-weight: bold; float:left; padding-right:20px' >esq ini</label>
-                <span style='float:left; padding-right:145px' >_</span>
+                <span style='float:left; padding-right:145px' ><br/><br/><br/><br/>_</span>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">uai meio</span>
                     <span style='color:black;' class="add-on hide_mobile"></span>
-                    <select class="xlarge" ></select>
+                    <select class="xlarge"  ></select>
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -410,7 +436,7 @@
                 <div class="input-append">
                     <span id='labeltop' class="label-top">uai fim</span>
                     <span style='color:black;' class="add-on hide_mobile"></span>
-                    <select class="xlarge" ></select>
+                    <select class="xlarge"></select>
                     <span class="help-block"></span>
                 </div>
                 <br/><br/>

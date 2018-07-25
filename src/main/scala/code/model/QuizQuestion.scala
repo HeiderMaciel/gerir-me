@@ -43,9 +43,12 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
         /*
         0 Texto
         1 Texto longo
-        2 Escolha de uma lista (domínio)
+        2 Escolha de uma lista select (domínio)
         3 Múltipla escolha (domínio)
-        4 Escolha de uma lista (+ de uma opção)
+        4 Escolha radio (+ de uma opção)
+        5 valor
+        6 data
+        7 Escolha select (+ de uma opção)
         */
     }
     object quizQuestionSize extends MappedInt(this)with LifecycleCallbacks { 
@@ -63,14 +66,7 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
         // meio 2
         // fim 3
     }
-    //object quizQuestionType extends MappedEnum(this,QuizQuestion.QuizQuestionType){
-        /*
-        0 Texto
-        1 Texto longo
-        2 Escolha de uma lista (domínio)
-        3 Múltipla escolha (domínio)
-        4 Escolha de uma lista (+ de uma opção)
-        */
+
     object addon extends MappedPoliteString(this,255)
 
 
