@@ -3,7 +3,7 @@
 
   extenso[1] = 'um';
   extenso[2] = 'dois';
-  extenso[3] = 'tres';
+  extenso[3] = 'três';
   extenso[4] = 'quatro';
   extenso[5] = 'cinco';
   extenso[6] = 'seis';
