@@ -877,7 +877,7 @@ class WrittenForm(val val1: Double) {
     Map(
       1 -> "um",
       2 -> "dois",
-      3 -> "tres",
+      3 -> "três",
       4 -> "quatro",
       5 -> "cinco",
       6 -> "seis",
