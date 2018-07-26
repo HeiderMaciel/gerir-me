@@ -191,6 +191,7 @@ var updateReportItems = function() {
       $("#totaldesc").val((precolista-precototal).formatMoney());
       $("#totalperc").val((100-(precototal * 100 / precolista)).formatMoney());
       $("#totalbudget").val((precototal).formatMoney());
+      $("#totalbudget").change();
       // payment conditions
       $("#totalbudgetpc").val((precototal).formatMoney());
     });
