@@ -555,6 +555,11 @@ $(function() {
         obs: $("#quiz_obs").val(),
         customer: gup("id")
       }, function(results) {
+        if(results > 1 || results > "1"){
+          // ok
+        }else{
+          alert(results);
+        }
         // TESTAR o message para ver o tipo de abertura
         window.open("/quiz/quizapply?id=" + results, "_quiz_maste")
         // alert("Questionário adicionado com sucesso!");

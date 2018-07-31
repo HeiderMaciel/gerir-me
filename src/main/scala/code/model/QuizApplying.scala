@@ -56,8 +56,14 @@ class QuizApplying extends Audited[QuizApplying] with PerCompany with IdPK with 
             (AuthUtil.company.appType.isEsmile) || 
             (AuthUtil.company.appType.isEbellepet) || 
            (AuthUtil.company.appType.isEphysio)) {
-            if (this.applyDate.before(today)) {
-                throw new RuntimeException("Não é permitido alterar prontuário em data posterior à sua criação")
+            if (isNew) {
+                if (this.applyDate.before(today)) {
+                    throw new RuntimeException("Não é permitido criar prontuário com data anterior à corrente")
+                }
+            } else {
+                if (this.applyDate.before(today)) {
+                    throw new RuntimeException("Não é permitido alterar prontuário em data posterior à sua criação")
+                }
             }
         }
 

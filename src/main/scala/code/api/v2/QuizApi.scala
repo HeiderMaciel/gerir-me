@@ -37,6 +37,7 @@ object QuizApi extends  RestHelper with ReportRest with net.liftweb.common.Logge
 				} yield {
 					var message_aux = Customer.replaceMessage (cust, ac.message.is)
 					message_aux = User.replaceMessage (AuthUtil.user, message_aux)
+					try {
 					//JBool(
 						QuizApplying.createInCompany.
 						business_pattern(customer.toLong).
@@ -45,10 +46,13 @@ object QuizApi extends  RestHelper with ReportRest with net.liftweb.common.Logge
 						message(message_aux).
 						save
 					//	)
-					val thisQuiz = QuizApplying.findAll (By(QuizApplying.business_pattern, customer.toLong),
-						By(QuizApplying.quiz, quiz.toInt),
-						OrderBy(QuizApplying.id,Descending))(0); 
-					JInt (thisQuiz.id.is)
+						val thisQuiz = QuizApplying.findAll (By(QuizApplying.business_pattern, customer.toLong),
+							By(QuizApplying.quiz, quiz.toInt),
+							OrderBy(QuizApplying.id,Descending))(0); 
+						JInt (thisQuiz.id.is)
+					} catch {
+						case e:Exception => JString(e.getMessage)
+					}
 				}
 			}
 			case  "api" :: "v2" :: "quiz" :: id :: Nil Delete _ => {
