@@ -32,7 +32,7 @@ var trStatusdecode = function(name, row, showhint){
     title ='excluído'
   } else if (status == '6') {
     statstr = 'Confirmed'
-    title ='confirmado1'
+    title ='confirmado'
   } else if (status == '7') {
     statstr = 'PreOpen'
     title ='pré agendado'

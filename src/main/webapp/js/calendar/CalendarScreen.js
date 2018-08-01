@@ -123,6 +123,7 @@ var CalendarScreen = {
 		$("#date_treatment").val(getDateBr(calEvent.start));
 		$("#hour_treatment").val(getHourBr(calEvent.start));
 		$("#obs_treatment").val(calEvent.obs);
+		$("#auditstr_treatment").val(calEvent.auditstr);
 		$("#hour_treatment_end").val(getHourBr(calEvent.end));
 		$("#when_treatment").html(calEvent.end.getTextWhen());
 		if (!isNew) {
