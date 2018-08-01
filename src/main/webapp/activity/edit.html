@@ -42,7 +42,7 @@
                   <div class="input-prepend">
                     <input class="medium" id="short_name" name="short_name" size="30" type="text"/>
                     <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/name.html' rel="popover" class="_popover_basic _help">
-                      <img src="/images/info.gif" width="20">
+                      <img src="/images/info.gif" width="16">
                     </a>
                   </div>
                   <span class="help-block">Nome do serviço completo e nome reduzido, este último usado em alguns relatórios</span>
@@ -190,11 +190,18 @@
                   <input class="mini" id="commission" name="commission" size="30" type="text"/>
                   <span class="add-on">%</span>
                   <a href="" class="_popover_basic" rel="popover" data-content="A comissão aqui no serviço funciona como um percentual base, podendo ser diferenciada por profissional quando o mesmo for associado ao serviço em questão. Pacotes de serviços devem ser cadastrados como produtos que por sua vez são configurados com os serviços e sessões desejados. No caso de pacotes o profissional receberá a comissão sobre os serviços quando as sessões dos mesmos forem sendo realizadas" data-original-title="Informação">
-                    <img width='20' src="/images/info.gif"/>
+                    <img width="16" src="/images/info.gif"/>
                   </a>
                 </div>
               </div>
             </div>
+            <div class="clearfix">
+              <label for="discountToCommission">Desconta tx Comissão?</label>
+              <div class="input">
+                <select name="discountToCommission"></select>
+                <span class="help-block">Se desconta possíveis taxas na comissão deste serviço</span>
+              </div>
+            </div>          
             <div class="lift:SecuritySnippet.hasAuxiliarModule clearfix">
               <label for="auxPercent">Perc <span data-i18n='Assistente'></label>
               <div class="input">
@@ -202,7 +209,7 @@
                   <input class="mini currency" id="auxPercent" name="auxPercent" size="30" type="text"/>
                   <span class="add-on">%</span> 
                   <a href="" class="_popover_basic" rel="popover" data-content="Percentual do valor do serviço, subtraído da comissão do profissional e pago ao assistente caso haja um" data-original-title="Informação">
-                    <img width='20' src="/images/info.gif"/>
+                    <img width='16' src="/images/info.gif"/>
                   </a>
                 </div>
               </div>
@@ -210,11 +217,11 @@
             <div class="lift:SecuritySnippet.hasAuxiliarModule clearfix">
               <label for="auxPrice">Valor <span data-i18n='Assistente'></label>
               <div class="input">
-                <div class="input-append">
+                <div class="input-prepend">
                   <span class="add-on"><img src='/images/dre.png' width="16"/></span> 
                   <input class="mini currency" id="auxPrice" name="auxPrice" size="30" type="text"/>
                   <a href="" class="_popover_basic" rel="popover" data-content="Parcela do valor do serviço, subtraído da comissão do profissional e pago ao assistente caso haja um" data-original-title="Informação">
-                    <img width='20' src="/images/info.gif"/>
+                    <img width='16' src="/images/info.gif"/>
                   </a>
                 </div>
               </div>
@@ -226,7 +233,7 @@
                   <input class="mini currency" id="auxHousePercent" name="auxHousePercent" size="30" type="text"/>
                   <span class="add-on">%</span> 
                   <a href="" class="_popover_basic" rel="popover" data-content="Percentual do valor do serviço, pago ao assistente pela casa caso haja um" data-original-title="Informação">
-                    <img width='20' src="/images/info.gif"/>
+                    <img width='16' src="/images/info.gif"/>
                   </a>
                 </div>
               </div>
@@ -234,11 +241,11 @@
             <div class="lift:SecuritySnippet.hasAuxiliarModule clearfix">
               <label for="auxHousePrice">Valor Casa <span data-i18n='Assistente'></label>
               <div class="input">
-                <div class="input-append">
+                <div class="input-prepend">
                   <span class="add-on"><img src='/images/dre.png' width="16"/></span> 
                   <input class="mini currency" id="auxHousePrice" name="auxHousePrice" size="30" type="text"/>
                   <a href="" class="_popover_basic" rel="popover" data-content="Parcela do valor do serviço, pago pela casa ao assistente caso haja um" data-original-title="Informação">
-                    <img width='20' src="/images/info.gif"/>
+                    <img width='16' src="/images/info.gif"/>
                   </a>
                 </div>
               </div>
@@ -252,7 +259,7 @@
                   <span class="add-on"><img src='/images/clock.png'/></span>
                   <input class="time mini" id="duration" name="duration" size="30" type="text"/>
                   <a href="" class="_popover_basic" rel="popover" data-content="A duração do serviço determina o espaço de tempo que será ocupado na agenda por uma ocorrência do mesmo. Para um serviço de 30 minutos você deve informar 00:30, para um serviço de uma hora você pode informar 00:60 ou 01:00, para um serviço de uma hora e meia, 01:30 ou 00:90. Se for preenchido 30:00 você estará determinando um serviço de 30 horas" data-original-title="Informação">
-                    <img width='20' src="/images/info.gif"/>
+                    <img width='16' src="/images/info.gif"/>
                   </a>
                 </div>
               </div>
@@ -313,7 +320,7 @@
               <div class="input">
                 <select name="allowSimultaneos"></select>
                 <a href="" class="_popover_basic" rel="popover" data-content="Marque apenas se este serviço não puder ser agendado simultaneamente para mais de um profissional, no caso por exemplo de envolver um recurso (sala, aparelho, etc), que não possa ser utilizado por mais de uma pessoa ao mesmo tempo" data-original-title="Informação">
-                  <img width='20' src="/images/info.gif"/>
+                  <img width='16' src="/images/info.gif"/>
                 </a>
               </div>
             </div>          
@@ -337,7 +344,7 @@
               <div class="input">
                 <select multiple="multiple" class="medium" id="discounts" name="discounts"></select>
                 <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/product_discount.html' rel="popover" class="_popover_basic _help">
-                  <img src="/images/info.gif" width="20">
+                  <img src="/images/info.gif" width="16">
                 </a>
                 <span class="help-block">Descontos serão deduzidos da comissão</span>
               </div>
@@ -349,7 +356,7 @@
                   <input class="mini currency" id="discountPercent" name="discountPercent" size="30" type="text"/>
                   <span class="add-on">%</span> 
                   <a href="" class="_popover_basic" rel="popover" data-content="Percentual do valor do serviço, subtraído do preço para cálculo da comissão do profissional. Se algum desconto ou acréscimo for apliacado ao preço original do serviço no pagamento, o valor de desconto será alterado proporcionalmente" data-original-title="Informação">
-                    <img width='20' src="/images/info.gif"/>
+                    <img width='16' src="/images/info.gif"/>
                   </a>
                 </div>
               </div>
@@ -357,11 +364,11 @@
             <div class="clearfix">
               <label for="discountPrice">Valor Desconto</label>
               <div class="input">
-                <div class="input-append">
+                <div class="input-prepend">
                   <span class="add-on"><img src='/images/dre.png' width="16"/></span> 
                   <input class="mini currency" id="discountPrice" name="discountPrice" size="30" type="text"/>
                   <a href="" class="_popover_basic" rel="popover" data-content="Valor absoluto subtraído do preço do serviço para cálculo da comissão do profissional" data-original-title="Informação">
-                    <img width='20' src="/images/info.gif"/>
+                    <img width='16' src="/images/info.gif"/>
                   </a>
                 </div>
               </div>
@@ -387,7 +394,7 @@
                 <select class="medium" id="status" name="status" >
                 </select>
                 <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/status.html' rel="popover" class="_popover_basic _help">
-                  <img src="/images/info.gif" width="20">
+                  <img src="/images/info.gif" width="16">
                 </a>
                 <span class="help-block">Status do serviço</span>
               </div>
@@ -444,7 +451,7 @@
                     <div class="input-prepend">
                       <textarea class="xlarge" id="sitedescription" name="sitedescription" size="16"></textarea>
                       <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/portal.html' rel="popover" class="_popover_basic _help">
-                        <img src="/images/info.gif" width="20">
+                        <img src="/images/info.gif" width="16">
                       </a>
                       <span class="help-block">Descrição como aparecerá no site/portal</span>
                     </div>

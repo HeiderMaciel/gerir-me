@@ -47,6 +47,12 @@ trait ProductMapper[OwnerType <: ProductMapper[OwnerType]] extends Audited[Owner
         override def defaultValue = 0.00
     }
 
+    // para aplicar ou nãopossiveis taxas de cartão - rigel 01/08/2018
+    object discountToCommission_? extends MappedBoolean(this){
+        override def dbColumnName = "discountToCommission"
+        override def defaultValue = true
+    }
+
     object auxPrice extends MappedCurrency(this) {// valor pago ao assistente
         override def defaultValue = 0.00
     }   

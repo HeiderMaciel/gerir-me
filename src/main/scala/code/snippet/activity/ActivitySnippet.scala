@@ -255,6 +255,7 @@ class  ActivitySnippet extends BootstrapPaginatorSnippet[Activity] with SnippetU
 				(f:String) => ac.commission(BusinessRulesUtil.snippetToDouble(f))))&
 			"name=commissionAbs" #> (SHtml.text(ac.commissionAbs.is.toString, 
 				(f:String) => ac.commissionAbs(BusinessRulesUtil.snippetToDouble(f))))&
+			"name=discountToCommission" #> (SHtml.checkbox(ac.discountToCommission_?, ac.discountToCommission_?(_)))&
 			"name=auxPrice" #> (SHtml.text(ac.auxPrice.is.toString, 
 				(f:String) => ac.auxPrice(BusinessRulesUtil.snippetToDouble(f))))&
 			"name=auxPercent" #> (SHtml.text(ac.auxPercent.is.toString, 
