@@ -51,26 +51,35 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
   def saveAnswer(applyingId: Long, questionId: String)= {
     val questionIdClean = questionId.split("L")(0)
     val questionIdLong = questionIdClean.toLong
+    val ac = QuizQuestion.findByKey (questionIdLong).get;
     val value: String = if(questionId contains "L") {
       S.params(questionId).mkString(",")
     } else {
       S.param(questionIdClean).getOrElse("")
     }
 
-    //info(questionId + " => " + value)
-    val quizAnswer =
-      QuizAnswer.findAll(
-        By(QuizAnswer.quizApplying, applyingId),
-        By(QuizAnswer.quizQuestion, questionIdLong)) match {
-          case l:List[QuizAnswer] if !l.isEmpty => l.head
-          case _ => QuizAnswer.createInCompany
-        }
+    var domainItem = 0;
+    var valDomain = value;
+    if (ac.quizDomainName != "") {
+      if (ac.domainItemNoAnswer.toString == value) {
+        valDomain = ""
+      }
+    }
+    if ((value != "" && valDomain != "") || ac.saveIfNoAnswer_?) {
+      val quizAnswer =
+        QuizAnswer.findAll(
+          By(QuizAnswer.quizApplying, applyingId),
+          By(QuizAnswer.quizQuestion, questionIdLong)) match {
+            case l:List[QuizAnswer] if !l.isEmpty => l.head
+            case _ => QuizAnswer.createInCompany
+          }
 
-    quizAnswer
-      .quizApplying(applyingId)
-      .quizQuestion(questionIdLong)
-      .valueStr(value)
-      .save
+      val r = quizAnswer
+        .quizApplying(applyingId)
+        .quizQuestion(questionIdLong)
+        .valueStr(value)
+        .save
+    }  
   }
 
   def quizJson(quizApplyingId: Long) = {
@@ -135,6 +144,8 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
     JsObj(
       ("id", domain.id.is),
       ("name", domain.name.is),
+      ("short_name", domain.short_name.is),
+      ("valueStr", domain.valueStr.is),
       ("obs", domain.obs.is),
       ("color", domain.color.is))
   }

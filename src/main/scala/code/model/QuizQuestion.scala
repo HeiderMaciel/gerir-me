@@ -29,6 +29,14 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
         override def defaultValue = false
         override def dbColumnName = "history"
     }    
+    object saveIfNoAnswer_? extends MappedBoolean(this){
+        override def defaultValue = false
+        override def dbColumnName = "saveifnoanswer"
+    }    
+    object printIfNoAnswer_? extends MappedBoolean(this){
+        override def defaultValue = false
+        override def dbColumnName = "printifnoanswer"
+    }    
     object rank extends MappedDecimal(this,MathContext.DECIMAL64,4)
     object quizDomain extends MappedLongForeignKey(this, QuizDomain) // opcional
     object quizDomainItemRight extends MappedLongForeignKey(this, QuizDomainItem) // opcional
@@ -129,6 +137,16 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
         case _ => Nil
     }
 
+    def domainItemNoAnswer = {
+        val ac = QuizDomainItem.findAll (
+            By (QuizDomainItem.quizDomain, quizDomain),
+            By (QuizDomainItem.valueStr, ""));
+        if (ac.length > 0) {
+            ac(0).id
+        } else {
+            0;
+        }
+    }
     override def delete_! = {
         if(QuizAnswer.count(By(QuizAnswer.quizQuestion,this.id)) > 0){
            throw new RuntimeException("Existe resposta para esta questão!")

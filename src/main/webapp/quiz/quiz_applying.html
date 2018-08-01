@@ -235,7 +235,7 @@
                 question.domain.forEach(function(domain) {
                     var option = $('<option />')
                             .attr('value', domain.id)
-                            .text(domain.name);
+                            .text(domain.valueStr);
 
                     question.value.split(",").forEach(function(value){
                         if (domain.id == value) {
@@ -267,7 +267,7 @@
                     var option = li.clone();
                     var input = option.find('label input');
                     input.attr('value', domain.id);
-                    option.find('label span').text(domain.name);
+                    option.find('label span').text(domain.valueStr);
                     if (domain.color) {
                         option.find('label span').attr("style","background-color:"+domain.color)
                     }
@@ -296,7 +296,7 @@
                     var option = li.clone();
                     var input = option.find('label input');
                     input.attr('value', domain.id);
-                    option.find('label span').text(domain.name);
+                    option.find('label span').text(domain.valueStr);
                     question.value.split(",").forEach(function(value){
                         if (domain.id == value) {
                             input.attr('checked', 'checked');

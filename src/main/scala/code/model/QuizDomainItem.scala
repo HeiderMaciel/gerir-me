@@ -69,6 +69,11 @@ from quizdomainitem where company = 398 and quizdomain = 7;
     where company = ? and quizdomain = ?;
   """
   override def save() = {
+    if (isNew) {
+      if (this.valueStr == "") {
+        this.valueStr(BusinessRulesUtil.toCamelCase(this.name))
+      }
+    }
     val r = super.save
 
     DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.quizDomain.is :: Nil)

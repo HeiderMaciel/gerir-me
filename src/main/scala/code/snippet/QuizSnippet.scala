@@ -272,6 +272,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 				OrderBy(QuizDomainItem.name,Ascending),
 				BySql (quizDomainList,IHaveValidatedThisSQL("",""))).flatMap(ac => 
 			bind("f", xhtml,"name" -> Text(ac.name.is),
+							"valuestr" -> Text(ac.valueStr.is),
 							"quizdomainname" -> Text(ac.quizDomainName),
 							"orderindomain" -> Text(ac.orderInDomain.is.toString),
 							"obs" -> Text(ac.obs.is),
@@ -394,6 +395,8 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		    "name=quizQuestionSize" #> (SHtml.select(questionSizes,Full(ac.quizQuestionSize.is.toString),(v:String) => ac.quizQuestionSize(v.toInt)))&
 		    "name=quizQuestionPosition" #> (SHtml.select(questionPositions,Full(ac.quizQuestionPosition.is.toString),(v:String) => ac.quizQuestionPosition(v.toInt)))&
 			"name=history" #> (SHtml.checkbox(ac.history_?, ac.history_?(_)))&
+			"name=saveIfNoAnswer" #> (SHtml.checkbox(ac.saveIfNoAnswer_?, ac.saveIfNoAnswer_?(_)))&
+			"name=printIfNoAnswer" #> (SHtml.checkbox(ac.printIfNoAnswer_?, ac.printIfNoAnswer_?(_)))&
 		    "name=addon" #> (SHtml.text(ac.addon.is, ac.addon(_)))&
 			"name=rank" #> (SHtml.text(ac.rank.is.toString, (v:String) =>{ if(v !=""){ac.rank(v.toDouble)};}))&
 			"name=orderinsection" #> (SHtml.text(ac.orderInSection.is.toString, (v:String) => ac.orderInSection(v.toInt)))&
@@ -457,6 +460,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 			}
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
+		    "name=valueStr" #> (SHtml.text(ac.valueStr.is, ac.valueStr(_)))&
 		    "name=quizDomain" #> (SHtml.select(domains,Full(ac.quizDomain.is.toString),(s:String) => ac.quizDomain( s.toLong)))&
 			"name=orderindomain" #> (SHtml.text(ac.orderInDomain.is.toString, (v:String) => ac.orderInDomain(v.toInt)))&
 		    "name=color" #> (SHtml.text(ac.color.is, ac.color(_)))&
