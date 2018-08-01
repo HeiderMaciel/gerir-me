@@ -145,6 +145,13 @@ var CalendarScreen = {
 	},
 	getActivities: function() {
 		DataManager.getActivities($("#user_treatment").val(), function(activitysObj) {
+			if (activitysObj.length < 1) {
+				var msg = "Você não tem serviços/procedimentos cadastrados, " +
+				"ou ainda não associou serviços/procedimentos a este profissional.\n\n" +
+				"Faça a associação no cadastro do profissional na aba de serviços " +
+				"ou verifique o parâmetro <Associa Profissional / Serviço> em Configurações"
+				alert (msg)
+			}
 			global_activitiesObj = activitysObj;
 			$('#activitys option').remove();
 			var ret = "";
