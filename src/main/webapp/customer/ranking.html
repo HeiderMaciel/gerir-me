@@ -11,15 +11,20 @@
     $("#end").val(getDateBr(new Date()));    
     var fields = [];
     fields[0] = "int";
+    fields[1] = {
+      type: "format",
+      decode: function(name, row) {
+        // para envio de email deve aparecer em um decode
+        // tem exemplos de receber um id como parm ai usa push(id) como no birhtdays
+        customers.push(row[7]); 
+        return "<a href='/customer/edit?id=" + row[7] + "' target='_customer_maste'>" + name + "</a>";
+      }
+    }
     fields[2] = "int";
     fields[3] = "real";
-    fields[6] = {
-      type : "format",
-      decode : function(id){
-        customers.push(id);
-        return "<a class='btn' href='/customer/edit?id="+id+"' target='_customer_maste'>Ir</a>"
-      }
-    };    
+    fields[3] = "real";
+    fields[7] = "none";
+
     var url = "/report/customer_ranking";
     var request = function(){
       customers=[];
@@ -178,9 +183,9 @@
         <th>Nome</th>
         <th>Quantidade</th>
         <th>Total</th>
+        <th>Ticket Médio</th>
         <th>Telefone</th>
         <th>Email</th>
-        <th>Ir</th>
       </thead>
       <tbody>
       </tbody>
