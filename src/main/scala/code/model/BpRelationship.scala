@@ -73,6 +73,9 @@ class BpRelationship extends Audited[BpRelationship] with KeyedMapper[Long, BpRe
         super.delete_!
     }
     override def save = {
+        if (relationship.isEmpty) {
+          throw new RuntimeException("Um tipo de relacionamento precisa ser informado")
+        }
         val isNew = this.id.is match {
             case p:Long if(p > 0) => false
             case _ => true
