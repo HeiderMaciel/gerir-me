@@ -44,7 +44,9 @@ alert (" na var function click aqui não chega NUNCA !!!!!! ")
     });
 
     $("#print_message").click(function(){
-        var message_print = $('#toprint').html();
+        //var message_print = $('#toprint').html();
+        var message_print = extract_table ("table_items", true, "style='border:0'");
+//        var message_print = extract_table ("table_items", false, "style='padding-right:20px'");
         var header = "";
         var logo = "";
         if ($('.has-pet-system').length > 0) {
@@ -82,8 +84,15 @@ alert (" na var function click aqui não chega NUNCA !!!!!! ")
         '<img width="70px" style="padding-right: 10px" src="http://images.vilarika.com.br/company/'+AuthUtil.company.image+'"/>' + 
 */
         " <br></p>" + $("#terms_and_conditions").html();
+        header = header.replace("##itens##", message_print);
         var printWindow = window.open("", "MsgPrintWindow");
-        printWindow.document.write(header + message_print);
+        // o close garante que se a janela já tinha sido 
+        // aberta com algum conteudo anterior este de agora 
+        // não seja acrescentado
+        printWindow.close();
+        // aqui abre de novo zerada
+        printWindow = window.open("", "MsgPrintWindow");
+        printWindow.document.write(header);
         setTimeout(function(){
           printWindow.print();
         }, 500);
@@ -100,6 +109,53 @@ alert (" na var function click aqui não chega NUNCA !!!!!! ")
 
     return;
 })
+
+//
+// essa função deve ir para o repots.js ou util.js
+//
+var extract_table = function(a, asTable, style) {
+  a = a.nodeType ? a : document.getElementById(a);
+  var cellEnd = "";
+  var rowEnd = "";
+  var listEnd = "";
+  var tableEnd = "";
+  var c = "";
+
+  if (asTable) { // table
+    cellEnd = "</td><td " + style + ">";
+    rowEnd = "</tr><tr " + style + "><td " + style + ">";
+    listEnd = "</tr>";
+    tableEnd = "</tbody></table>";
+    c = "<table " + style + "><tbody><tr " + style + "><td " + style + ">";
+  } else { // lista simples
+    cellEnd = "</span><span " + style + ">";
+    rowEnd = "</span><br/><br/><span " + style + ">";
+    listEnd = "</span><br/>";
+    tableEnd = "</span><br/>";
+    c = "<span " + style + ">";
+  }
+
+  var l, k;
+  for (d = 0; d < a.rows.length; d++) {
+    l = a.rows[d];
+    for (b = 0; b < l.cells.length; b++) {
+      k = l.cells[b];
+      var c = c + (b ? cellEnd : ""),
+        m = k.textContent.trim();
+      k = m;
+      var t = -1 !== m.indexOf(cellEnd) || -1 !== m.indexOf("\r") || -1 !== m.indexOf("\n");
+      (m = -1 !== m.indexOf('"')) && (k = k.replace(/"/g, '""'));
+      if (t || m) k = '"' + k + '"';
+      c += k
+    }
+    if (d+1 == a.rows.length) {
+      c += listEnd
+    } else {
+      c += rowEnd
+    }
+  }
+  return c + tableEnd;
+};
 
 var getActivities = function() {
   DataManager.getActivities($("#user_budget").val(), function(activitysObj) {
