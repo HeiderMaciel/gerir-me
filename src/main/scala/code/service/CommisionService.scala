@@ -211,13 +211,13 @@ trait CommissionCalculator {
 
   def discountPerPaymentType(value: Double, payment_detail: PaymentDetail, user:User, treatment_detail: TreatmentDetail): Double = {
     val act = (treatment_detail.activityType == "activity")
-    val actprod_discountToCommission_? = if (act) {
+    def actprod_discountToCommission:Boolean = if (act) {
       treatment_detail.activity.obj.get.discountToCommission_?
     } else {
-      treatment_detail.activity.obj.get.discountToCommission_?
+      treatment_detail.product.obj.get.discountToCommission_?
     }
     // rigel 18/10/2017
-    if (user.discountToCommission_? && actprod_discountToCommission_?) {
+    if (user.discountToCommission_? && actprod_discountToCommission) {
       val pt = payment_detail.typePaymentObj.get;
       if (pt.deliveryContol_? && pt.percentDiscountToCommision.is == 0) {
         // se a forma de pagamento é baixa de pacote e o percent na comissão == 0
