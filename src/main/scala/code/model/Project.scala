@@ -134,6 +134,32 @@ println ("vaiiiii ======================= no project opt " + opt)
         case Full(t) => t.name.is
         case _ => ""
     }
+
+    def projectClassTerms = projectClass.obj match {
+        case Full(t) => t.terms.is
+        case _ => 0l
+    }
+    def projectClassPrintType = projectClass.obj match {
+        case Full(t) => t.printType.is
+        case _ => 0l
+    }
+    def projectClassHeaderStyle = projectClass.obj match {
+        case Full(t) => t.headerStyle.is
+        case _ => ""
+    }
+    def projectClassBodyStyle = projectClass.obj match {
+        case Full(t) => t.bodyStyle.is
+        case _ => ""
+    }
+    def projectClassContentStyle = projectClass.obj match {
+        case Full(t) => t.contentStyle.is
+        case _ => ""
+    }
+    def projectClassColumns = projectClass.obj match {
+        case Full(t) => t.columns.is
+        case _ => ""
+    }
+
     def removeStakeholder(idStaclHolder:Long) = {
         StakeHolder.findByKey(idStaclHolder).get.delete_!
     }
@@ -206,6 +232,18 @@ class ProjectClass extends Audited[ProjectClass] with PerCompany with IdPK
     override def updateShortName = false
     object obs extends MappedPoliteString(this,255)
     object projectType extends  MappedLongForeignKey(this, ProjectType)
+    object terms extends  MappedLongForeignKey(this, Terms)
+    object printType extends MappedInt(this)with LifecycleCallbacks { 
+        override def defaultValue = 0
+        // table 0
+        // list 1
+    }
+    object headerStyle extends MappedPoliteString(this,255) {
+        override def defaultValue = "style='border:0'";
+    }
+    object bodyStyle extends MappedPoliteString(this,255)
+    object contentStyle extends MappedPoliteString(this,255)
+    object columns extends MappedPoliteString(this,255)
 
     def projectTypeName = projectType.obj match {
         case Full(t) => t.name.is

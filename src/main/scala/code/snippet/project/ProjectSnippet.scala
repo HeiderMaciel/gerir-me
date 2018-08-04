@@ -22,9 +22,19 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
 
 	def units = ("0", "Selecione uma Unidade") :: CompanyUnit.findAllInCompany().map(t => (t.id.is.toString, t.name.is))
 	def types = ("0", "Selecione um Tipo de Projeto") :: ProjectType.findAllInCompany.map(t => (t.id.is.toString,t.name.is))
-	def classes = ("0", "Selecione uma Classe de Projeto") :: ProjectClass.findAllInCompany.map(t => (t.id.is.toString,t.name.is))
+	def classes = if (ProjectClass.findAllInCompany.length != 1) {
+			("0", "Selecione uma Classe de Projeto") :: ProjectClass.findAllInCompany.map(t => (t.id.is.toString,t.name.is))
+		} else {
+			ProjectClass.findAllInCompany.map(t => (t.id.is.toString,t.name.is))
+		}
+
+	def termss = ("0", "Selecione um Termo") :: Terms.findAllInCompany.map(t => (t.id.is.toString,t.name.is))
 	def stages = ("0", "Selecione um Estágio") :: ProjectStage.findAllInCompany.map(t => (t.id.is.toString,t.name.is))
 	def costcenters = ("0" -> "Selecione um Centro de Custo")::CostCenter.findAllInCompany.map(cc => (cc.id.is.toString,cc.name.is))
+	def printTypes = (
+		("0", "Tabela")::
+		("1", "Lista")::
+		Nil).map(t => (t._1,t._2))
 
 	def findForListParamsWithoutOrder: List[QueryParam[Project1]] = List(Like(Project1.search_name,"%"+BusinessRulesUtil.clearString(name)+"%"))
 	override def page = {
@@ -248,6 +258,13 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=projecttype" #> (SHtml.select(types,Full(ac.projectType.is.toString),(s:String) => ac.projectType( s.toLong)))&
+		    "name=terms" #> (SHtml.select(termss,Full(ac.terms.is.toString),(s:String) => ac.terms( s.toLong)))&
+		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
+		    "name=printType" #> (SHtml.select(printTypes,Full(ac.printType.is.toString),(v:String) => ac.printType(v.toInt)))&
+		    "name=headerStyle" #> (SHtml.text(ac.headerStyle.is, ac.headerStyle(_)))&
+		    "name=bodyStyle" #> (SHtml.text(ac.bodyStyle.is, ac.bodyStyle(_)))&
+		    "name=contentStyle" #> (SHtml.text(ac.contentStyle.is, ac.contentStyle(_)))&
+		    "name=columns" #> (SHtml.text(ac.columns.is, ac.columns(_)))&
 			"name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_))++SHtml.hidden(process))
 
 		}catch {
@@ -326,6 +343,7 @@ println ("vaiiiiii ========= opt " + opt )
 			"name=bp_sponsor" #> (SHtml.text(ac.bp_sponsor.is.toString, (p:String) => ac.bp_sponsor(BusinessRulesUtil.snippetToLong(p))))&
 			"name=bp_manager" #> (SHtml.text(ac.bp_manager.is.toString, (p:String) => ac.bp_manager(BusinessRulesUtil.snippetToLong(p))))&
 			"name=manager" #> (SHtml.text(ac.bp_managerName, (a:String) => {}))&
+		    "name=terms1" #> (SHtml.select(termss,Full(ac.projectClassTerms.toString), (a:String) => {}))&
 			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt))++SHtml.hidden(process))			
 		}catch {
 		    case e: NoSuchElementException => S.error("Projeto não existe!")

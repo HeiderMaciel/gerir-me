@@ -2,6 +2,9 @@ $(function() {
     $("#terms").termsField();
     $('#tooth').toothField(false);
     $("#offsale").offSaleField(true);
+    setTimeout(function(){
+      $("#terms").val($("#terms1").val()).change();
+    }, 500);
     $("#bp_manager").change(); // força substituir termo ##var##
 //    $("#bp_sponsor").change(); // força substituir termo ##var##
     $("#new_item").click(function() {
