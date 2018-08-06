@@ -618,7 +618,9 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
     def searchCustomerAsDto(company:Long,name:String,phone:String,email:String,maxResult:Int=30, page:Int=1, user:Boolean = false):List[SearchCustomerDto] = {
         def offset = (page-1)*maxResult
         def filterUser = if(user){
-                " and is_employee = true "
+                // se userstatus = 1 ou rescisao is null traz sempre
+                // se recisão am té 45 dias traz tb
+                " and is_employee = true and ((date(now()) - resignationdate) < 45 or resignationdate is null or userstatus = 1)"
             }else{
                 ""
             }
@@ -640,7 +642,7 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
             AND  ( (phone like ? or mobile_phone like ?) )  
             AND  ( (email like ?) )  
             %s
-            ORDER BY search_name  ASC   LIMIT ? OFFSET ?
+            ORDER BY search_name  ASC, id asc LIMIT ? OFFSET ?
         """
         def nameLiked = "%"+BusinessRulesUtil.clearString(name)+"%"
         def phoneLiked = "%"+phone+"%"
