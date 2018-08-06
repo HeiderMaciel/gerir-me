@@ -205,13 +205,19 @@ var Customer = {
 		}
 	},
 	customerSelectAutoCompleteFormat: function (a) {
+		var phoneAux = ""
+		if (a.phone == "") {
+			phoneAux = "<b style='color:red'>Sem telefone</b>";
+		} else {
+			phoneAux = '<small style="font-size:10px; font-style:italic">'+a.phone+'</small>';
+		}
 		if (a.isemployee) {
-			return a.name + " <b>Profissional</b> " + '<small style="font-size:10px; font-style:italic"> > ' + a.obs + " " + a.phone + ' </small>';
+			return a.name + " <b>Profissional</b> " + '<small style="font-size:10px; font-style:italic"> > ' + a.obs + ' </small>' + " " + phoneAux;
 		} else {
 			if (a.obs) {
-				return a.name + '<small style="font-size:10px; font-style:italic"> > ' + a.obs + " " + a.phone + ' </small>';
+				return a.name + '<small style="font-size:10px; font-style:italic"> > ' + a.obs + '</small>' + " " + phoneAux;
 			} else {
-				return a.name + '<small style="font-size:10px; font-style:italic"> > ' + a.phone + ' </small>';
+				return a.name + " " + phoneAux;
 			}
 		}
 	}
