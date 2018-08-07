@@ -152,7 +152,18 @@
                 }
 
             }
-
+            function templateQuestion (question, templateType) {
+                if (question.position == "0") {
+                    var template = $($("#" + templateType + "-template").html());
+                } else if (question.position == "1") {
+                    var template = $($("#" + templateType + "i-template").html());
+                } else if (question.position == "2") {
+                    var template = $($("#" + templateType + "m-template").html());
+                } else {
+                    var template = $($("#" + templateType + "f-template").html());
+                }
+                return template
+            }    
             function formatQuestion (question, template) {
                 setId(template.find('label:first'), "labelleft"+question.id);
                 setId(template.find('.label-top'), "labeltop"+question.id);
@@ -184,7 +195,8 @@
             }
 
             function createText(question) {
-                var template = $($("#text-template").html());
+                var template = templateQuestion (question, "text");
+
                 formatQuestion (question, template)
                 var input = template.find('input');
                 input.val(question.value);
@@ -211,15 +223,7 @@
             }
 
             function createList(question, morethanone) {
-                if (question.position == "0") {
-                    var template = $($("#list-template").html());
-                } else if (question.position == "1") {
-                    var template = $($("#listi-template").html());
-                } else if (question.position == "2") {
-                    var template = $($("#listm-template").html());
-                } else {
-                    var template = $($("#listf-template").html());
-                }
+                var template = templateQuestion (question, "list");
 
                 formatQuestion (question, template)
 
@@ -361,17 +365,65 @@
             <div class="clearfix">
                 <p><b></b></p>
                 <label style='color:black; font-weight: bold' id='labelleft' for="obs"></label>
-
                 <div class="input">
+
+                <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">text</span>
+                    <span style='color:black;' class="add-on hide_mobile"></span>
+                    <input class="xlarge" id="obs" name="obs" type="text"/>
+                    <span class="help-block"></span>
+                </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="texti-template">
+            <div>
+                <p><b></b></p>
+                <label for="obs" style='color:black; font-weight: bold; float:left; padding-right:20px' >esq ini</label>
+                <span style='float:left; padding-right:145px' ><br/><br/><br/><br/>_</span>
+
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                    <span id='labeltop' class="label-top">text</span>
+                    <span style='color:black;' class="add-on hide_mobile"></span>
                     <input class="xlarge" id="obs" name="obs" type="text"/>
                     <span class="help-block"></span>
                 </div>
             </div>
         </script>
 
+        <script type="text/template" id="textm-template">
+            <div>
+                <p><b></b></p>
+                <label id='labelleft' style='color:black; font-weight: bold; float:left; padding-right:20px' for="obs">esq meio</label>
+
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                    <span id='labeltop' class="label-top">text</span>
+                    <span style='color:black;' class="add-on hide_mobile"></span>
+                    <input class="xlarge" id="obs" name="obs" type="text"/>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </script>
+        <script type="text/template" id="textf-template">
+            <div>
+                <p><b></b></p>
+                <label id='labelleft' style='color:black; font-weight: bold; float:left; padding-right:20px' for="obs">esq meio</label>
+
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                    <span id='labeltop' class="label-top">text</span>
+                    <span style='color:black;' class="add-on hide_mobile"></span>
+                    <input class="xlarge" id="obs" name="obs" type="text"/>
+                    <span class="help-block"></span>
+                </div>
+                <br/><br/>
+                <br/><br/>
+                <br/><br/>
+            </div>
+        </script>
+
         <script type="text/template" id="paragraph-template">
-            <div class="clearfix">
+            <div id='text' class="clearfix">
                 <p><b></b></p>
                 <label style='color:black; font-weight: bold' for="obs"></label>
 
