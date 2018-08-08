@@ -203,7 +203,8 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				}
 
 				val sql = """select row_number () OVER (ORDER BY valor_total desc) AS pos, * from (
-					select * from (select bp.name profissional , count(td.price) quantidade, sum(td.price) valor_total,
+					select * from (select bp.name profissional , count(td.price) as quantidade, sum(td.price) as valor_total,
+					round (sum(td.price)/count(td.price),2) as ticket,
 					trim (bp.mobile_phone || ' ' || bp.phone || ' ' || bp.email_alternative) as telefone , bp.email as email, bp.id as idp	
 					from treatment tr
 					inner join treatmentdetail td on (td.treatment = tr.id and td.company = tr.company and td.price <> 0)

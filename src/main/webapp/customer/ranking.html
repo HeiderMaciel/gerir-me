@@ -26,11 +26,21 @@
     fields[7] = "none";
 
     var url = "/report/customer_ranking";
+    var total = 0.00;
+    var qty = 0.00;
     var request = function(){
       customers=[];
       renderReport(url,fields,$("#form_report").serializeObject(),"#grid",function(data){
-        // tá bugado pelo nro de colunas o grafico espera 3 tem 7 no relatório
-        //drawChart(data);
+        total = 0.00;
+        qty = 0.00;
+        data.forEach(function(row){
+          total += parseFloat(row[3]);
+          qty += parseFloat(row[2]);
+        });
+        $("#total").val(total.formatMoney());
+        $("#qty").val(qty.formatMoney());
+        $("#ticket").val((total/qty).formatMoney());
+        drawChart(data);
       });
     }
     DataManager.getPaymentTypes(function(paymentTypes){
@@ -69,11 +79,14 @@
       google.load("visualization", "1", {packages:["corechart"]});
       function drawChart(data) {
         data = data.map(function(item){
-          item[2]= window.parseInt(item[2])
-          item[3]= window.parseFloat(item[3])
-          return item;
+          var lin = [];
+          lin[0]=item[1]
+          lin[1]= window.parseInt(item[2])
+          lin[2]= window.parseFloat(item[3])
+          lin[3]= window.parseFloat(item[4])
+          return lin;
         })
-        data = jQuery.merge([["Nome","Quantidade","Valor"]],data);
+        data = jQuery.merge([["Nome","Quantidade","Valor","Ticket Médio"]],data);
         data = google.visualization.arrayToDataTable(data);
         var options = {
           title: 'Ranking de clientes',
@@ -91,90 +104,113 @@
           <input class="report_title local_storage" id="title_ranking_report" name="title_ranking_report" size="30" type="text" value="Relatório Ranking de Clientes"/>
         </h1>
         <div class="row">
-        <div class="span8">
-          <div class="clearfix">
-            <label for="start">Intervalo</label>
-            <div class="input">
-              <div class="inline-inputs">
-                <div class="input-prepend" style="float:left; padding-right:10px">
-                  <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
-                  <input type="text" class="input-small date" id='start' name="start" placeholder="Início">
-                </div>
-                <div class="input-prepend" style="float:left; padding-right:10px">
-                  <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
-                  <input type="text" class="input-small date" id='end' name="end" placeholder="Fim">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="clearfix">
-            <label for="productclass">Tipo</label>
-              <div class="input">
-                <div class="inline-inputs">
-                    <select class="local_storage" name="productclass" id="productclass">
-                        <option value='1,0'>Todos</option>
-                        <option value='1'>Produtos</option>
-                        <option value='0'>Serviços</option>
-                     </select>
-                     <span class="help-block">Tipos de Comissões (ex: Prod / Ser)</span>
-                </div>
-              </div>
-          </div>
-          <div class="clearfix">
-            <label for="payment_type">Formas de Pagamento</label>
-              <div class="input">
-                <div class="inline-inputs">
-                  <select class="url_parameter alow_all" multiple="multiple" name="payment_type" id='payment_type'>
-                  </select>
-                </div>
-              </div>
-          </div>                        
-          <div class="clearfix lift:SecuritySnippet.hasUnitModule">
-            <label for="unit">Unidade </label>
-            <div class="input">
-              <div class="inline-inputs">
-                <select id="unit" name="unit"></select>
-                <span class="help-block">Unidade do atendimento, mesmo que o cliente tenha outra unidade no cadastro
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="clearfix">
-            <label for="maxcli">Limite Clientes</label>
-            <div class="input">
-              <input id = "maxcli" name="maxcli" class="mini" type="number" value = "20"/>
-              <span class="help-block">Quantidade limite de clientes no ranking</span>
-            </div>
-          </div>            
-          <div class="clearfix">
-            <label for="buscar"></label>
-            <div class="input">
-              <button type="button" id="send" class="btn success">Buscar</button>
-            </div>
-          </div>
-        </div>
-        <div class="span7">
-          <fieldset>
-            <legend>Envio de E-mail</legend>
+          <div class="span8">
             <div class="clearfix">
-              <label for="">Notificação</label>
+              <label for="start">Intervalo</label>
               <div class="input">
-                <select name="send_message" id="send_message"></select>
-                <span class="help-block">Selecione uma mensagem para enviar aos clientes</span>
+                <div class="inline-inputs">
+                  <div class="input-prepend" style="float:left; padding-right:10px">
+                    <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
+                    <input type="text" class="input-small date" id='start' name="start" placeholder="Início">
+                  </div>
+                  <div class="input-prepend" style="float:left; padding-right:10px">
+                    <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
+                    <input type="text" class="input-small date" id='end' name="end" placeholder="Fim">
+                  </div>
+                </div>
               </div>
             </div>
             <div class="clearfix">
-              <label for=""></label>
+              <label for="productclass">Tipo</label>
+                <div class="input">
+                  <div class="inline-inputs">
+                      <select class="local_storage" name="productclass" id="productclass">
+                          <option value='1,0'>Todos</option>
+                          <option value='1'>Produtos</option>
+                          <option value='0'>Serviços</option>
+                       </select>
+                       <span class="help-block">Tipos de Comissões (ex: Prod / Ser)</span>
+                  </div>
+                </div>
+            </div>
+            <div class="clearfix">
+              <label for="payment_type">Formas de Pagamento</label>
+                <div class="input">
+                  <div class="inline-inputs">
+                    <select class="url_parameter alow_all" multiple="multiple" name="payment_type" id='payment_type'>
+                    </select>
+                  </div>
+                </div>
+            </div>                        
+            <div class="clearfix lift:SecuritySnippet.hasUnitModule">
+              <label for="unit">Unidade </label>
               <div class="input">
-                <a type="button" id="send_notifications" class="btn primary">
-                  <img width="16px" src="/images/mail.png"/>
-                  Enviar
-                </a>
+                <div class="inline-inputs">
+                  <select id="unit" name="unit"></select>
+                  <span class="help-block">Unidade do atendimento, mesmo que o cliente tenha outra unidade no cadastro
+                  </span>
+                </div>
               </div>
             </div>
-          </fieldset>
-        </div>
-        </div>
+            <div class="clearfix">
+              <label for="buscar"></label>
+              <div class="input">
+                <button type="button" id="send" class="btn success">Buscar</button>
+              </div>
+            </div>
+          </div>
+          <div class="span7">
+            <div class="clearfix">
+              <label for="maxcli">Limite Clientes</label>
+              <div class="input">
+                <input id = "maxcli" name="maxcli" class="mini" type="number" value = "20"/>
+                <span class="help-block">Quantidade limite de clientes no ranking</span>
+              </div>
+            </div>            
+            <fieldset>
+              <legend>Envio de E-mail</legend>
+              <div class="clearfix">
+                <label for="">Notificação</label>
+                <div class="input">
+                  <select name="send_message" id="send_message"></select>
+                  <span class="help-block">Selecione uma mensagem para enviar aos clientes</span>
+                </div>
+              </div>
+              <div class="clearfix">
+                <label for=""></label>
+                <div class="input">
+                  <a type="button" id="send_notifications" class="btn primary">
+                    <img width="16px" src="/images/mail.png"/>
+                    Enviar
+                  </a>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div class="span13">
+            <div class="clearfix">
+              <label for="start_date">Total </label>
+              <div class="input">
+                <div class="inline-inputs">
+                  <div class="lift:SecuritySnippet.isShowSalesToUser input-prepend" style="float:left; padding-right:10px">
+                    <span class="add-on"><img src="/images/money.png" width="16"></span>
+                    <input style="color:black;" class="small disabled" id="total" name="total" size="19" placeholder="0.00" type="text" disabled='true'>
+                    <span class="help-block">Valor Total</span>
+                  </div>
+                  <div class="input-prepend" style="float:left; padding-right:10px">
+                    <span class="add-on"><img src="/images/user.png" width="16"></span>
+                    <input style="color:black;" class="small disabled" id="qty" name="qty" size="19" placeholder="0.00" type="text" disabled='true'>
+                    <span class="help-block">Quantidade Total</span>
+                  </div>
+                  <div class="input-prepend" style="float:left; padding-right:10px">
+                    <span class="add-on"><img src="/images/money.png" width="16"></span>
+                    <input style="color:black;" class="small disabled" id="ticket" name="ticket" size="19" placeholder="0.00" type="text" disabled='true'>
+                    <span class="help-block">Ticket Médio</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
       </form>
   </div>
   <table id="grid" class="bordered-table zebra-striped">
