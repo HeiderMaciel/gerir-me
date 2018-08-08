@@ -66,7 +66,8 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		By(DomainTable.domain_name,"quizQuestionPosition"),
 		OrderBy(DomainTable.cod, Ascending)).map(t => (t.cod.is,t.name.is))
 
-	def questionFormats = DomainTable.findAll(
+	def questionFormats =  ("4", "ambos"):: ("5", "nenhum")::
+		DomainTable.findAll(
 		By(DomainTable.domain_name,"quizQuestionFormat"),
 		OrderBy(DomainTable.name, Ascending)).map(t => (t.cod.is,t.name.is))
 /*

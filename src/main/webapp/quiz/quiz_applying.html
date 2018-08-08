@@ -79,6 +79,10 @@
                 //$("#quiz-questions").val(questions.join(","));
             }
 
+            function setStyle(element, name) {
+                element.attr('style', name);
+            }
+
             function setMultiple(element, name) {
                 element.attr('multiple', name);
                 //questions.push(name);
@@ -134,28 +138,53 @@
                 section.append(template);
                 if (question.format == "0") {
                     // reduzido left
-                    $("#labeltop"+question.id).remove();
+                   $("#labeltop"+question.id).remove();
+                   if (question.position == "1") {
+                      // inicio
+                      setStyle(template.find('.left-gap'), "float:left; padding-right:0px");
+                      template.find('.left-gap').text("");
+                   }
                 } else if (question.format == "3") {
                     // longo left
-                    $("#labeltop"+question.id).remove();
+                   $("#labeltop"+question.id).remove();
+                   if (question.position == "1") {
+                      // inicio
+                      setStyle(template.find('.left-gap'), "float:left; padding-right:0px");
+                      template.find('.left-gap').text("");
+                   }
                 } else if (question.format == "1") {
                     // paragrafo
                     $("#labeltop"+question.id).remove();
                     $("#labelleft"+question.id).remove();
-                } else {
+                } else if (question.format == "2") {
                     // reduzido top
+                    $("#labelleft"+question.id).remove();
+                } else if (question.format == "4") {
+                    // ambos
+                   if (question.position == "1") {
+                                        // inicio
+                      setStyle(template.find('.left-gap'), "float:left; padding-right:0px");
+                      template.find('.left-gap').text("");
+                   }
+                } else if (question.format == "5") {
+                    // nenhum
+                    $("#labeltop"+question.id).remove();
                     $("#labelleft"+question.id).remove();
                 }
 
             }
             function templateQuestion (question, templateType) {
                 if (question.position == "0") {
+                    // só
                     var template = $($("#" + templateType + "-template").html());
                 } else if (question.position == "1") {
+                    // inicio
                     var template = $($("#" + templateType + "i-template").html());
                 } else if (question.position == "2") {
+                    // meio
                     var template = $($("#" + templateType + "m-template").html());
                 } else {
+                    // fim da linha
                     var template = $($("#" + templateType + "f-template").html());
                 }
                 return template
@@ -171,15 +200,18 @@
                 } else if (question.format == "0"){
                     // enunciado short name esquerda
                     template.find('label:first').text(question.short_name);
-//                    $("#labeltop"+question.id).remove();
                 } else if (question.format == "3"){
-                    // enunciado short name esquerda
+                    // enunciado longo name esquerda
                     template.find('label:first').text(question.name);
-//                    $("#labeltop"+question.id).remove();
                 } else if (question.format == "2") {
                     // enunciado short name topo
                     template.find('.label-top').text(question.short_name);
-//                    $("#labelleft"+question.id).remove();
+                } else if (question.format == "4"){
+                    // ambos sem tirar o topo
+                    // enunciado longo name esquerda
+                    template.find('label:first').text(question.name);
+                } else if (question.format == "5"){
+                    // nenhum
                 }
                 if (question.obs) {
                     template.find('.help-block').text(question.obs);
@@ -262,7 +294,6 @@
 
                 var ul = template.find('ul');
                 var li = template.find('li');
-
                 question.domain.forEach(function(domain) {
                     var option = li.clone();
                     var input = option.find('label input');
@@ -279,7 +310,6 @@
 
                     ul.append(option);
                 });
-
                 $('li:first', ul).remove();
 
                 return template;
@@ -302,10 +332,18 @@
                             input.attr('checked', 'checked');
                         }
                     });
-
+                    var lb1 = option.find('label');
+                    /* poe na horizontal, mas cada opção desce um px
+                      setStyle (lb1, "float:left;padding-right:20px")
+                    */
                     ul.append(option);
                 });
+                // se descomenta aqui sobre poe a class
+                // inputs-list e fica na horizontal, mas 
+                // muito espaçado
+                // setClass (ul, "horizontal")
 
+                // retirar o exemlo "option..." que foi clonado 
                 $('li:first', ul).remove();
 
                 return template;
@@ -364,7 +402,7 @@
                 <div class="input">
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
-                    <span id='labeltop' class="label-top">text</span>
+                    <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on hide_mobile"></span>
                     <input class="xlarge" id="obs" name="obs" type="text"/>
                     <span class="help-block"></span>
@@ -377,10 +415,10 @@
             <div>
                 <p><b></b></p>
                 <label id='labelleft' for="obs" style='color:black; font-weight: bold; float:left; padding-right:20px' >esq ini</label>
-                <span style='float:left; padding-right:145px' ><br/><br/><br/><br/>_</span>
+                <span id="leftgap" class="left-gap" style='float:left; padding-right:145px' ><br/><br/><br/><br/>_</span>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
-                    <span id='labeltop' class="label-top">text</span>
+                    <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on hide_mobile"></span>
                     <input class="xlarge" id="obs" name="obs" type="text"/>
                     <span class="help-block"></span>
@@ -394,7 +432,7 @@
                 <label id='labelleft' style='color:black; font-weight: bold; float:left; padding-right:20px' for="obs">esq meio</label>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
-                    <span id='labeltop' class="label-top">text</span>
+                    <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on hide_mobile"></span>
                     <input class="xlarge" id="obs" name="obs" type="text"/>
                     <span class="help-block"></span>
@@ -407,7 +445,7 @@
                 <label id='labelleft' style='color:black; font-weight: bold; float:left; padding-right:20px' for="obs">esq meio</label>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
-                    <span id='labeltop' class="label-top">text</span>
+                    <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on hide_mobile"></span>
                     <input class="xlarge" id="obs" name="obs" type="text"/>
                     <span class="help-block"></span>
@@ -453,7 +491,7 @@
             <div>
                 <p><b></b></p>
                 <label for="obs" style='color:black; font-weight: bold; float:left; padding-right:20px' >esq ini</label>
-                <span style='float:left; padding-right:145px' ><br/><br/><br/><br/>_</span>
+                <span id="leftgap" class="left-gap" style='float:left; padding-right:145px' ><br/><br/><br/><br/>_</span>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">uai meio</span>

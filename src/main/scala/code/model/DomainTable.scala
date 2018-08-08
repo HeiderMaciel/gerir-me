@@ -17,6 +17,9 @@ class DomainTable extends LongKeyedMapper[DomainTable] with IdPK {
     object status extends MappedInt(this) {
         override def defaultValue = 1;
     }
+    object orderInDomain extends MappedInt(this){
+	    override def defaultValue = 1000
+	}
 } 
 
 object DomainTable extends DomainTable with LongKeyedMetaMapper[DomainTable]{
