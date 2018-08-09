@@ -44,10 +44,11 @@ trait Imageble{
   
   def thumbPath = imagethumb.is match {
     case img:String if(img!="") => 
-      if (!Project.isLocalHost || true) {
+      if (!Project.isLocalHost || 
+        Props.get("photo.local").get == "false") {
         Props.get("photo.urlbase").get+imagePath+"/"+img
       } else {
-        "/images/"+imagePath+"/"+img
+        "http://127.0.0.1:8080/images/"+imagePath+"/"+img
       }
     case _ => ""
   }  

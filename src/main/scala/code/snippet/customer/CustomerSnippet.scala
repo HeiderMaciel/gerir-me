@@ -339,8 +339,8 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 	  		<div>
 	  			{
 	  				getCustomer.images.map((image:ImageCustomer)=>{
-	  					<a href={image.image.is} target="imagepage" >
-	  						<img src={image.image.is} width="200"/>	
+	  					<a href={image.thumbPath} target="imagepage" >
+	  						<img src={image.thumbPath} width="200"/>	
 	  					</a>
 	  				})
 	  			}

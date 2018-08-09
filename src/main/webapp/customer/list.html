@@ -1,10 +1,12 @@
 	<div id="main" class="lift:surround?with=dashboard_customer;at=content">
 	<script type="text/javascript">
-		var lastCustomerSerach = localStorage.getItem('lastCustomerSerach');
-		if(lastCustomerSerach && document.location.href.indexOf('name_customer_origin') === -1){
-			document.location.href += '?'+lastCustomerSerach;
+		var lastCustomerSearch = localStorage.getItem('lastCustomerSearch');
+		if(lastCustomerSearch && document.location.href.indexOf('name_customer_origin') === -1){
+			if (document.location.search.indexOf(localStorage.getItem('lastCustomerSearch')) == -1) {
+				document.location.href += '?'+lastCustomerSearch;
+			}
 		}
-		localStorage.setItem('lastCustomerSerach', document.location.href.split('?')[1] || '');
+		localStorage.setItem('lastCustomerSearch', document.location.href.split('?')[1] || '');
 		$(function(){
 			$("#id").keypress(function(e){
 			  if(e.keyCode ==13){

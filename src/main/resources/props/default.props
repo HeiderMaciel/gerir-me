@@ -40,6 +40,11 @@ mail.port=465
 mail.password=rika775072
 #---------------------------
 photo.path=/var/www/html/images/
+#--só vale local, local acessa local ou acessa web
+#--web só acessa web
+#-- p cessar imagens locais http-server em /var/www/html
+photo.local=true
+#---------------
 #tentei nao deu certo
 #photo.urlbase=https://images.gerirme.app/
 photo.urlbase=http://images.vilarika.com.br/

@@ -52,6 +52,7 @@ BTW, I already have the current version stored in $rootScope.version, so using t
 
 mateus acha que default prop de boletos não usa mais
 inclusive o covênio que está lá é o velho
+dá pra testar local agora, ver o boleto gerado
 
 criar projeto no git
 não acrescentar oi inicializar e seguir os passos
@@ -251,6 +252,11 @@ datas erradas na CCZS
 09/03/1965
 24/03/1952
 04/03/1965
+
+alterar 
+default.props
+photo.local=true
+#-- p cessar imagens locais http-server em /var/www/html
 
 diretorio de imagens
 /var/www/html/images
