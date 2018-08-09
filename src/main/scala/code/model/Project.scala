@@ -140,8 +140,8 @@ println ("vaiiiii ======================= no project opt " + opt)
         case _ => 0l
     }
     def projectClassPrintType = projectClass.obj match {
-        case Full(t) => t.printType.is
-        case _ => 0l
+        case Full(t) => t.printType.is.toString
+        case _ => "0"
     }
     def projectClassHeaderStyle = projectClass.obj match {
         case Full(t) => t.headerStyle.is

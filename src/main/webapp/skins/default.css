@@ -46,6 +46,15 @@
  		font-size: 12px;
  		border-collapse: collapse;
  	}
+ 	/* criado para retirar borda de orçamento na impressão
+ 	*/
+ 	table.withnoborder {
+		border: 0px solid black !important;
+	}
+ 	.withnoborder td, .withnoborder th {
+ 		border: 0px solid black !important;
+ 	}
+
  	.quebrapagina {
    		page-break-before: always;
    		display: block;

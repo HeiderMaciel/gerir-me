@@ -261,10 +261,10 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
 		    "name=terms" #> (SHtml.select(termss,Full(ac.terms.is.toString),(s:String) => ac.terms( s.toLong)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=printType" #> (SHtml.select(printTypes,Full(ac.printType.is.toString),(v:String) => ac.printType(v.toInt)))&
-		    "name=headerStyle" #> (SHtml.text(ac.headerStyle.is, ac.headerStyle(_)))&
-		    "name=bodyStyle" #> (SHtml.text(ac.bodyStyle.is, ac.bodyStyle(_)))&
-		    "name=contentStyle" #> (SHtml.text(ac.contentStyle.is, ac.contentStyle(_)))&
-		    "name=columns" #> (SHtml.text(ac.columns.is, ac.columns(_)))&
+		    "name=headerStyle" #> (SHtml.textarea(ac.headerStyle.is, ac.headerStyle(_)))&
+		    "name=bodyStyle" #> (SHtml.textarea(ac.bodyStyle.is, ac.bodyStyle(_)))&
+		    "name=contentStyle" #> (SHtml.textarea(ac.contentStyle.is, ac.contentStyle(_)))&
+		    "name=columns" #> (SHtml.textarea(ac.columns.is, ac.columns(_)))&
 			"name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_))++SHtml.hidden(process))
 
 		}catch {
@@ -344,6 +344,11 @@ println ("vaiiiiii ========= opt " + opt )
 			"name=bp_manager" #> (SHtml.text(ac.bp_manager.is.toString, (p:String) => ac.bp_manager(BusinessRulesUtil.snippetToLong(p))))&
 			"name=manager" #> (SHtml.text(ac.bp_managerName, (a:String) => {}))&
 		    "name=terms1" #> (SHtml.select(termss,Full(ac.projectClassTerms.toString), (a:String) => {}))&
+			"name=projectClassPrintType" #> (SHtml.text(ac.projectClassPrintType, (a:String) => {}))&
+			"name=projectClassHeaderStyle" #> (SHtml.text(ac.projectClassHeaderStyle, (a:String) => {}))&
+			"name=projectClassBodyStyle" #> (SHtml.text(ac.projectClassBodyStyle, (a:String) => {}))&
+			"name=projectClassContentStyle" #> (SHtml.text(ac.projectClassContentStyle, (a:String) => {}))&
+			"name=projectClassColumns" #> (SHtml.text(ac.projectClassColumns, (a:String) => {}))&
 			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt))++SHtml.hidden(process))			
 		}catch {
 		    case e: NoSuchElementException => S.error("Projeto não existe!")

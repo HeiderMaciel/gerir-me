@@ -1,4 +1,5 @@
 $(function() {
+    $('#classattr').hide();
     $("#terms").termsField();
     $('#tooth').toothField(false);
     $("#offsale").offSaleField(true);
@@ -48,7 +49,11 @@ alert (" na var function click aqui não chega NUNCA !!!!!! ")
 
     $("#print_message").click(function(){
         //var message_print = $('#toprint').html();
-        var message_print = extract_table ("table_items", true, "style='border:0'");
+        var message_print = extract_table ("table_items", 
+          true, $("#projectClassHeaderStyle").val(),//  " class='withnoborder' style='border:0'"
+          $("#projectClassBodyStyle").val(), 
+          $("#projectClassContentStyle").val(), 
+          $("#projectClassColumns").val());
 //        var message_print = extract_table ("table_items", false, "style='padding-right:20px'");
         var header = "";
         var logo = "";
@@ -116,7 +121,8 @@ alert (" na var function click aqui não chega NUNCA !!!!!! ")
 //
 // essa função deve ir para o repots.js ou util.js
 //
-var extract_table = function(a, asTable, style) {
+var extract_table = function(a, asTable, headerStyle,
+  bodyStyle, contentStyle, columns) {
   a = a.nodeType ? a : document.getElementById(a);
   var cellEnd = "";
   var rowEnd = "";
@@ -125,17 +131,17 @@ var extract_table = function(a, asTable, style) {
   var c = "";
 
   if (asTable) { // table
-    cellEnd = "</td><td " + style + ">";
-    rowEnd = "</tr><tr " + style + "><td " + style + ">";
+    cellEnd = "</td><td " + contentStyle + ">";
+    rowEnd = "</tr><tr " + contentStyle + "><td " + contentStyle + ">";
     listEnd = "</tr>";
     tableEnd = "</tbody></table>";
-    c = "<table " + style + "><tbody><tr " + style + "><td " + style + ">";
+    c = "<table " + headerStyle + "><tbody " + bodyStyle + "><tr " + bodyStyle + "><td " + contentStyle + ">";
   } else { // lista simples
-    cellEnd = "</span><span " + style + ">";
-    rowEnd = "</span><br/><br/><span " + style + ">";
+    cellEnd = "</span><span " + contentStyle + ">";
+    rowEnd = "</span><br/><br/><span " + contentStyle + ">";
     listEnd = "</span><br/>";
     tableEnd = "</span><br/>";
-    c = "<span " + style + ">";
+    c = "<span " + headerStyle + ">";
   }
 
   var l, k;
