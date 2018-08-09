@@ -35,7 +35,18 @@
 		    	}
 		    }
 		};
-	    fields[9] = "none"; // nome da company_customer
+	    if (!isSuperAdmin) {
+		    fields[9] = "none"; // nome da company_customer
+		} else {
+			// boleto local
+		    fields[9] = {
+			    type : "format",
+			    decode : function(id,row){
+			    	// local mostra mesmo que pago
+		        	return row[9] + "  " + "<a target='_blank' href='http://localhost:8000/boleto.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/bar_code.png'/>"
+			    }
+			};
+		}
 	    if (!isSuperAdmin) {
 	    	fields[10] = "none";
 		}
@@ -66,6 +77,7 @@
 	        <th>Pago?</th>
 	        <th>Data do pagamento</th>
 	        <th>Imprimir Boleto</th>
+	        <th class="lift:SecuritySnippet.isSuperAdmin" title="só super adm vê">Boleto local</th>
 	        <th class="lift:SecuritySnippet.isSuperAdmin" title="só super adm vê">obs*</th>
 	      </thead>
 	      <tbody>

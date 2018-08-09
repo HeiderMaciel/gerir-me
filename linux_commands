@@ -50,6 +50,30 @@ BTW, I already have the current version stored in $rootScope.version, so using t
 
 */
 
+mateus acha que default prop de boletos não usa mais
+inclusive o covênio que está lá é o velho
+
+criar projeto no git
+não acrescentar oi inicializar e seguir os passos
+usar https ao inves de ssh pede usuario e senha do git
+instalar o PHP
+digitar php e ele vai sugerir o upt-get
+sudo apt-get install php5-cli
+
+fazer git push no local
+cd /var/www/html/boleto
+git reset --hard HEAD
+git pull
+
+executar no raiz do projeto no git - para subir o PHP
+php -S localhost:8000
+http://localhost:8000/boleto.php
+
+
+
+http://localhost:8000/boleto.php
+
+
 
 INSERT INTO ESPECIALIDADESCLINICAS
 VALUES (1, 'Prevenção');
