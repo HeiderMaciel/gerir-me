@@ -237,6 +237,8 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
       .originalDate(dateToPayment) // rigel 29/04/2017 
       .obs("")
       .paid(false)
+      .createdBy(6)
+      .updatedBy(6)
       .save
     monthly
   }
