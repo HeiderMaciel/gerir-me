@@ -336,15 +336,25 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 
   	def imageList = {
   		try{
-	  		<div>
+	      <div class="row">
 	  			{
 	  				getCustomer.images.map((image:ImageCustomer)=>{
+	        <div class="span3">
+	        	<div>
 	  					<a href={image.thumbPath} target="imagepage" >
-	  						<img src={image.thumbPath} width="200"/>	
+	  						<img src={image.thumbPath} height="200"/>	
 	  					</a>
+	  				</div>
+	  				<div>
+						<a class="btn danger" onclick={"del_image(" + image.id.is + ")"}>
+						Excluir
+     	  				</a>
+     	  				<hr style="border-top: medium double #333; color: #333;"/>
+     	  			</div>
+	  		</div>
 	  				})
 	  			}
-	  		</div>
+	  	  </div>
   		}catch{
   			case _ => <div></div>
   		}

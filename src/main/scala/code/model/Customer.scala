@@ -160,7 +160,11 @@ class Customer extends BusinessPattern[Customer]{
     // 02/03/2018 coloquei o round pq as vezes perdia precisão
     override def totalDebit:Double = BusinessRulesUtil.roundHalfUp (this.valueInAccount.is);
 //    def thumb = Gravatar(email,16,"R")
-    def images = ImageCustomer.findAll(By(ImageCustomer.customer,this))
+
+    def images = ImageCustomer.findAll(
+        By(ImageCustomer.customer,this),
+        By(ImageCustomer.deleted_?, false),
+        OrderBy(ImageCustomer.id, Ascending))
 
     def registerDelivery(productId:Long,treatmentDetailId:Long,paymentDetailId:Long, amount:Int, price:Float, efetivedate:Date){
         val deliveryNotUseds = deliveryDetailNotUsed(productId)

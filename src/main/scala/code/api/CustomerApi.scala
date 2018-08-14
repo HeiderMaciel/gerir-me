@@ -84,5 +84,16 @@ object CustomerApi extends RestHelper {
 				customer.company.set(AuthUtil.company.id.is)
 				JsObj(("id", customer.nextIdForCompany))
 			}
+
+			case "customer" :: "del_image" :: Nil Post _ => {
+				try { 
+					def tdId:String = S.param("tdid") openOr "0"
+					val ac = ImageCustomer.findByKey (tdId.toLong).get
+					ac.delete_!
+					JInt(1)
+				} catch {
+				  case e: Exception => JString(e.getMessage)
+				}			
+			}
 		}
 }

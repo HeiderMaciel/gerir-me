@@ -21,6 +21,7 @@ class ImageCustomer extends Audited[ImageCustomer]
 with IdPK 
 with CreatedUpdated 
 with CreatedUpdatedBy  
+with LogicalDelete[ImageCustomer]
 with PerCompany 
 with Imageble 
 with WithCustomer {

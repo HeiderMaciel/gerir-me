@@ -610,25 +610,25 @@
     <div class="pill-content">
         <div id="images" class='tab_content'>
             <form class="lift:UploadImageCustomer?form=post;multipart=true">
-            <!--form id="MyForm" action="http://api2.transloadit.com/assemblies" enctype="multipart/form-data" method="POST"-->
                 <input type="hidden" name='id' id="id_user_images"/>
-                <input type="hidden" name="params" value="{&quot;auth&quot;:{&quot;key&quot;:&quot;7f81cf59322e4238adec65c94cdcfe5b&quot;},&quot;template_id&quot;:&quot;49786b3752fe43a59ba5dc06d92d80ff&quot;,&quot;redirect_url&quot;:&quot;#&quot;}" />
                 <input type="file" name="file" />
                 <input type="submit" class="btn success" value="Enviar">
             </form>
-            <!--script type="text/javascript" src="//assets.transloadit.com/js/jquery.transloadit2.js"></script>
-            <script type="text/javascript">
-                // We call .transloadit() after the DOM is initialized:
-                $(document).ready(function() {
-                 try{
-                  $('#MyForm').transloadit({
-                   wait: true
-                 });
-                }catch(e){
-                
-                }
-                });
-            </script-->
+            <script>
+              function del_image (imageId) {
+                if (confirm("Deseja excluir a imagem ?")) {
+                    return $.post("/customer/del_image", {
+                      "tdid": imageId
+                    }, function(results) {
+                      if(results === 1 || results == "1"){
+                        alert("Imagem excluída com sucesso");
+                      }else{
+                        alert(eval(results));
+                      }
+                    });
+                };
+              };
+            </script>
             <span class="lift:CustomerSnippet.imageList"></span>
         </div>
         <div id="account" class='tab_content'>
