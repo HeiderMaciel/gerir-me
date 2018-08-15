@@ -11,15 +11,6 @@
 
   Category = (function() {
     function Category() {
-/* isso era para inserir category no lançamento
-   vira bagunça
-      this.name = $("#name_category").val();
-      this.obs = $("#obs").val();
-      this.complement = $("#complement").val();
-      this.color = $("#color").val();
-      this.typeMovement = $("#type_category").val();
-      this.userAssociated = $("#userAssociated").is(':checked');
-*/
     }
 
     return Category;

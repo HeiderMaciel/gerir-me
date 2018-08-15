@@ -89,16 +89,6 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 				})
 				JInt(1)
 			}
-/*
-			case "accountpayable" :: "consolidate" :: Nil Post _ => {
-			case "accountpayable" :: "mark_as_conciliated" :: Nil Post _ => {
-			case "accountpayable" :: "changeofx" :: idofx :: customer :: obs :: categ :: Nil JsonGet _ => {
-			case "accountpayable" :: "conciliate" :: id :: Nil JsonGet _ => {
-			case "accountpayable" :: "conciliateofx" :: 
-			case "accountpayable" :: "consolidate" :: id :: Nil JsonGet _ => {
-			case "accountpayable" :: "consolidateofx" :: 
-			case "accountpayable" :: "consolidateTotal" :: paymentStart :: paymentEnd :: accountId :: value :: Nil JsonGet _ => {
-*/
 			case "accountpayable"::"remove_checked" :: Nil Post _ => {
 				try {
 					val ids = S.param("ids").get

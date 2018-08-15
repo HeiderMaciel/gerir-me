@@ -56,17 +56,19 @@ object ConciliationApi extends RestHelper with ReportRest with net.liftweb.commo
 				}
 			}
 
-			case "accountpayable" :: "changeofx" :: idofx :: customer :: obs :: categ :: Nil JsonGet _ => {
+			case "accountpayable" :: "changeofx" :: idofx :: customer :: exercisedate :: obs :: categ :: Nil JsonGet _ => {
 				try{
 					val ap = AccountPayable.findByKey(idofx.toLong).get
 					if (!ap.paid_?) {
 						ap.paid_? (true);
 					}
+					ap.exerciseDate(Project.strToDateOrToday(exercisedate))
 					ap.obs(obs)
 					ap.user (customer.toLong)
 					ap.category (categ.toLong)
 					ap.toConciliation_? (false);
-					ap.makeAsConciliated
+					ap.save // para dar erro se for o caso
+					ap.makeAsConciliated // aqui o save é partiallysercure
 					JInt(1)
 				} catch {
 					case e:Exception => JString(e.getMessage)

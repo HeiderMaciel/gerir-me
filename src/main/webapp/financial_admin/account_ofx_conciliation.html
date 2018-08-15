@@ -8,9 +8,49 @@
   $(function(){
     $("#account_ofx").accountField(true);
     $("#account_fin").accountField(true);
-    $("#category_select").categoryAccountField(true);
+    //$("#category_select").categoryAccountField(true);
     $("#unit_select").unitField(false, true, false);
     $("#unit_select").val(AuthUtil.unit.id).change();
+
+    Category = (function() {
+      function Category() {
+      }
+
+      return Category;
+
+    })();
+
+    Category.list = [];
+
+    Category.getListFromServer = function() {
+      return $.get("/account/category/list", function(results) {
+        var i, ret, _i, _len;
+        eval("results = " + results);
+        Category.list = results;
+        ret += "<option value=''>Selecione uma categoria</option>";
+        for (_i = 0, _len = results.length; _i < _len; _i++) {
+          i = results[_i];
+          ret += "<option value='" + i.id + "'>" + i.name + "</option>";
+        }
+        $("#category_select:input").html(ret);
+        return //$("#category_select:input").change();
+      });
+    };
+
+    // copido do account_register
+    // talvez possa ser generalizado
+    Category.getById = function(id) {
+      var category, _i, _len, _ref;
+      _ref = Category.list;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        category = _ref[_i];
+        if (category.id === parseInt(id)) {
+          return category;
+        }
+      }
+    };
+
+    Category.getListFromServer();
 
     DataManager.getPaymentTypes(function(paymentTypes){
           var ret = "";
@@ -22,7 +62,7 @@
     });
 
     //$("#start").val(getDateBr(new Date().getStartOfMonth()));
-    if (AuthUtil.company.id == 13333) {
+    if (AuthUtil.company.id == -1) {
       $("#start").val('01/01/2018');
       $("#end").val('31/01/2018');
     } else {
@@ -51,6 +91,8 @@
           return "<a href='#' data-idofx='" + 
             row [4] + 
             "' data-obs='" + row [1] + 
+            "' data-data='" + row [0] + 
+            "' data-tpm='" + row [2] + 
             "' data-categ='" + row [12] + 
             "' data-value='" + row [3] + 
             "' class='action_change'><img width='16px' title='validar ofx' src='/images/tick.png'></a>" +
@@ -270,6 +312,8 @@
         });
         $(".action_change").click(function() {
           return changeOne($(this).attr("data-idofx"),
+            $(this).attr("data-tpm"),
+            $(this).attr("data-data"),
             $(this).attr("data-obs"),
             $(this).attr("data-categ"),
             $(this).attr("data-value"));
@@ -284,7 +328,39 @@
         } else {
           cust = $("#customer").val();
         }
-        return $.get("/accountpayable/changeofx/" + $("#idofx").val() + "/" + cust + "/" + encodeURIComponent($("#obs").val()) + "/" + $("#category_select").val() , function(results) {
+        if (!$("#category_select").val() || $("#category_select").val() == "") {
+          return alert ("Selecione uma categoria")
+        } else {
+          var category;
+          category = Category.getById($("#category_select").val());
+          // duplicado de account_register
+          // pode ser generalizado
+          // talvez devesse estar no ap.scala
+          if (category.userAssociated) { 
+            if (cust === "0" || cust == "") {
+              if (!confirm("Tem certeza que deseja cadastrar um lançamento sem profissional para esta categoria?")) {
+                return alert ("Operação cancelada!");
+              }
+            }
+          }
+          if (category.isparent) { 
+            return alert ("Não é permitido fazer lançamento em categoria totalizadora. Operação cancelada!");
+          }
+          // até aqui
+          if (category.typeMovement != 
+            $("#tpmofx").val()) {
+              var catlanc = "saída";
+              var catofx = "entrada";
+              if (category.typeMovement == "0") {
+                catlanc = "entrada";
+                catofx = "saída";
+              }
+            if (!confirm ("Categoria informada é de " + catlanc + " e tipo de movimentação do ofx é de " + catofx + ", confirma lançamento?")) {
+              return;
+            }
+          }
+        }
+        return $.get("/accountpayable/changeofx/" + $("#idofx").val() + "/" + cust + "/" + encodeURIComponent($("#exerciseDate").val()) + "/" +encodeURIComponent($("#obs").val()) + "/" + $("#category_select").val() , function(results) {
           if(results === 1 || results == "1"){
             alert("Lançamento ofx atualizado e conciliado com sucesso!");  
           }else{
@@ -297,14 +373,18 @@
         });
     };
 
-    var changeOne = function(idofx, obs, categ, value) {
+    var changeOne = function(idofx, tpmofx, data, obs, categ, value) {
       $("#idofx").val(idofx);
+      $("#tpmofx").val(tpmofx);
       $("#valofx").val(value);
+      $("#exerciseDate").val(getDateBr(FactoryDate.byTime(data)));
       $("#obs").val(obs);
       $("#customer").val("");
       $("#customer").change();
       //$("#name_customer").val("");
-      $("#category_select").val(categ);
+      // para obrigar usuário a selecionar categoria e
+      // não salvar o ofx com a categoria default
+      $("#category_select").val("");
       $("#category_select").change();
       return $("#ofx_modal").modal({
         "show": true,
@@ -617,8 +697,22 @@
                         <span>
                           <input class="mini" id="valofx" name="valofx" size="30" type="text" disabled='true'/>
                         </span>
+                        <span>
+                          <input class="mini" id="tpmofx" name="tpmofx" size="30" type="hidden"/>
+                        </span>
                       </div>
                    </div>
+                </div>
+                <div class="clearfix">
+                  <label for="exerciseDate">Data de Competência</label>
+                    <div class="input">
+                      <div class="inline-inputs">
+                          <div style="float:left; padding-right:10px" class="input-prepend">
+                            <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
+                            <input type="text" size="19" name="exerciseDate" id="exerciseDate" class="input-small date">
+                          </div>
+                      </div>
+                    </div>
                 </div>
                 <div class="clearfix">
                   <label for="category_select">Categoria</label>
