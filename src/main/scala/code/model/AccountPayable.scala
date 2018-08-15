@@ -492,9 +492,11 @@ with CanCloneThis[AccountPayable] {
     val ap = AccountPayable.findByKey(id.toLong).get
     var partialValue = ap.aggregateValue;
     var dif = apofx.value - ap.aggregateValue
+/*
     if (dif < 0.0 && partial) {
       throw new RuntimeException("Conciliação/Consolidação Parcial só é possível se valor do ofx for maior que o valor agregado")
     }
+*/
     aplist.map((apl) => {
       if (!apl.paid_?) {
         apl.paid_? (true);
@@ -545,7 +547,21 @@ with CanCloneThis[AccountPayable] {
     }
     if (partial) {
       if (aggreg && dif != 0.0) {
-        apofx.value(apofx.value - partialValue).save
+        val auxOfxTm:Int = if (apofx.value > partialValue) {
+            apofx.typeMovement
+          } else if (apofx.typeMovement == AccountPayable.IN) {
+            AccountPayable.OUT
+          } else {
+            AccountPayable.IN
+          }
+        val auxOfxValue:Double = if (apofx.value > partialValue) {
+            apofx.value - partialValue
+          } else {
+            partialValue - apofx.value
+          }
+
+        apofx.value(auxOfxValue).
+        typeMovement(auxOfxTm).save
       } else {
         apofx.delete_!
       }
