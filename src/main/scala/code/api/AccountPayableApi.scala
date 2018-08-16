@@ -147,6 +147,10 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 
 				} yield {
 					try {
+						var lcheque = cheque.split(",")
+						if (lcheque.length < 1) {
+							lcheque (0) = "0"
+						}
 						def cashierObj = Cashier.findByKey(cashier.toLong)
 						def dueDate =  Project.strToDateOrToday(dueDateStr)
 						def paymentDate =  Project.strOnlyDateToDate(paymentDateStr)
@@ -171,11 +175,13 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 						}else{
 							paymenttype.toLong
 						}
+						/* nao usa mais agora é lcheque
 						def chequeId = if(cheque == "" || cheque == "null") {
 							0l
 						}else{
 							cheque.toLong
 						}
+						*/
 						def cashierBox:Box[Cashier] = cashierObj match {
 							case Full(c:Cashier) => Full(c)
 							case _ => if(cashier_number != "") {
@@ -184,7 +190,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 								Empty
 							}
 						}
-						def register(valueReal:Double, dueDate:Date, exerciseDate:Date,
+						def register(i:Int, valueReal:Double, dueDate:Date, exerciseDate:Date,
 							paymentDate:Date) {
 							val account =
 							AccountPayable
@@ -205,7 +211,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 							.parcelNum(parcelnum.toInt)
 							.parcelTot(parceltot.toInt)
 							.paymentType(paymentTypeId)
-							.cheque(chequeId)
+							.cheque(lcheque(i).toLong)
 
 							if(out_of_cacashier.toBoolean) {
 								account.cashier(cashierBox)
@@ -230,7 +236,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 							}else{
 								BusinessRulesUtil.sunDate(dueDate,recurrence_type.toInt,recurrence_term.toInt)
 							}
-							register(value.toDouble,dueDate, 
+							register(0,value.toDouble,dueDate, 
 								exerciseDate, paymentDate)
 							//JBool(
 							val rec =
@@ -265,12 +271,15 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 									def date = {
 									BusinessRulesUtil.sunDate(dueDate,Recurrence.MONTHLY,i)
 									}
-									register(value.toDouble/user_parcels.toDouble,
+									register(0,value.toDouble/user_parcels.toDouble,
 										date, date, null)
 								}
 							}else{
-								register(value.toDouble,
-									dueDate, exerciseDate, paymentDate)
+								var i = 0;
+								for( i <- 0 until lcheque.length){
+									register(i,value.toDouble,
+										dueDate, exerciseDate, paymentDate)
+								}
 							}
 						}
 
@@ -311,7 +320,7 @@ object AccountPayableApi extends RestHelper with ReportRest with net.liftweb.com
 							ap.save
 						}
 
-						JBool (true)
+						JInt (lcheque.length)
 					} catch {
 						case e:Exception => JString(e.getMessage)
 					}

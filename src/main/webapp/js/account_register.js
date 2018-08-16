@@ -118,8 +118,16 @@
       this.unit = $("#unit_select").val();
       this.costcenter = $("#costcenter_select").val();
       this.paymenttype = $("#paymenttype_select").val();
-
-      this.cheque = $("#cheque_select").val();
+      // toString pq cheque agora é múltiplo
+      if (!$("#cheque_select").val() || $("#cheque_select").val() == "") {
+        this.cheque = "0"
+      } else {
+        this.cheque = $("#cheque_select").val().toString();
+        if (this.cheque.indexOf(",")==0) {
+          this.cheque = this.cheque.substring (1,this.cheque.length-1)
+        }
+      }
+     // console.log(this.cheque)
       if (hasFinancialadModule) {
         this.ch_bank = $("#ch_bank").val();
         this.ch_agency = $("#ch_agency").val();
@@ -137,6 +145,11 @@
     }
 
     validate = function(account) {
+      var res = account.cheque.split(",");
+      if (res.length > 1 && account.recurrence) {
+        throw "Lançamento de múltiplos cheques não pode ser recorrente. Operação cancelada!";
+      }
+
       var category;
       category = Category.getById(account.category);
       if (category.userAssociated) { 
@@ -254,9 +267,13 @@
             }
           });
         } else {
-          return $.post("/accountpayable/add", new AccountPayable(), function(t) {
-            if (t == 'true') {
-              alert("Lançamento cadastrado com sucesso!");
+          return $.post("/accountpayable/add", new AccountPayable(), function(results) {
+            if($.isNumeric (results)){
+              if (parseInt(results) == 1) {
+                alert("Lançamento cadastrado com sucesso!");
+              } else {
+                alert(results + " (" + writtenForm (parseInt(results),"","")+ ") Lançamentos cadastrados com sucesso!");
+              }
               AccountPayable.getListFromServer();
               AccountPayable.actualId = false;
               $("#account_modal").modal({
@@ -266,7 +283,7 @@
               return;
             } else {
               callApiLock = false;
-              return alert("Erro ao cadastrar lançamento! \n\n" + eval (t));
+              return alert("Erro ao cadastrar lançamento! \n\n" + eval (results));
             }
           });
         }
@@ -833,7 +850,7 @@
     });
     $(".new_account").click(function() {
       AccountPayable.newAccount();
-      // não faz sentido reverter lançameno novo
+      // não faz sentido reverter lançamento novo
       $('#b_mark_as_unpaid').hide();
       // nem atualizar lançamento de caixa
       $('#b_upd_cashier_account').hide();
