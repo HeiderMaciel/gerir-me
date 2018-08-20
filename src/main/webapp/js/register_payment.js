@@ -1626,6 +1626,11 @@
   var processOffSale = function() {
     $("#offsale").val(Customer.current.offsale).change();
   };
+  var formatbank = function (item) {
+    var strAux = "";
+    strAux = "<img src='"+ DataManager.bankLogo (item.id) + "' width='16px'/> " + item.text;
+    return strAux;
+  }
   $(function() {
     $("#cashiers_select").change(function() {
       global_cashier = $("#cashiers_select")[0].cashiers_map[$(this).val()];
@@ -1646,6 +1651,11 @@
     Customer.addonsListeners.push(processPrice);
     Customer.addonsListeners.push(processOffSale);
     $("#bank").bankField();
+    $("#bank").select2({ 
+      formatResult : formatbank,
+      formatSelection: formatbank
+    });
+
     $("#payment_type_value").keypress(function(e) {
       if (e.keyCode == 13) {
         $("#add_payment").click();

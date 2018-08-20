@@ -210,6 +210,21 @@ var DataManagerClass = function() {
 		}
 	};
 
+	this.bankLogo = function (id) {
+	    var bank, _i, _len, _ref;
+	    if (id) {
+	      _ref = banks;
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        bank = _ref[_i];
+	        if (bank.id === parseInt(id)) {
+	          return bank.logo;
+	        }
+	      }
+	    } else {
+	    	return ""
+	    }
+  	};
+
 	this.getCivilStatuses = function(callback) {
 		if (civilstatuses.length > 0) {
 			callback(civilstatuses)

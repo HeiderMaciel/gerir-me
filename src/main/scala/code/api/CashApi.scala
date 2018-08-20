@@ -348,9 +348,18 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 		case "cash" :: "getActivities" :: Nil JsonGet _ =>{
 			JsArray(TreatmentService
 			.activitiesMap.map((a) => {
+				val priceAux = if (AuthUtil.user.isFinancialManager) {
+					if (a.salePrice != 0) {
+						" " + a.salePrice.toDouble
+					} else {
+						""
+					}
+				} else {
+					""
+				}
 				JsObj(
 						("status","success"),
-						("name",a.name.is),
+						("name",a.name.is + priceAux),
 						("price",a.salePrice.toDouble),
 						("duration",a.duration.is),
 						("bpmonthly",a.bpmonthly_?.is),
@@ -409,9 +418,18 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 				val user = User.findByKey(userParm).get
 				JsArray(TreatmentService
 				.activitiesMapByUser(user, false).map((a) => {
+					val priceAux = if (AuthUtil.user.isFinancialManager) {
+						if (TreatmentService.price(a,user) != 0) {
+							" " + TreatmentService.price(a,user).toDouble
+						} else {
+							""
+						}
+					} else {
+						""
+					}
 					JsObj(
 							("status","success"),
-							("name",a.name.is),
+							("name",a.name.is + priceAux),
 							("price",TreatmentService.price(a,user).toDouble),
 							("duration",TreatmentService.duration(a,user)),
 							("bpmonthly",a.bpmonthly_?.is),

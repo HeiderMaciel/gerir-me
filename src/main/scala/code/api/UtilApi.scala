@@ -29,7 +29,11 @@ object UtilApi extends RestHelper  with net.liftweb.common.Logger  {
 	serve {
 		case "crud" :: "banks" :: Nil Get _ =>{
 			JsArray(Bank.findAll(OrderBy(Bank.short_name, Ascending)).map((bank)=>{
-				JsObj(("name",bank.short_name.is + " " + bank.banknumber.is), ("id",bank.id.is), ("long_name",bank.name.is))
+				JsObj(("name",bank.short_name.is + " " + 
+					   	bank.banknumber.is), 
+					("id",bank.id.is), 
+					("long_name",bank.name.is),
+					("logo",bank.logo.is))
 			}
 			))
 		}
