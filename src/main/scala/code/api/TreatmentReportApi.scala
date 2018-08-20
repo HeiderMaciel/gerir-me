@@ -561,8 +561,8 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					if(s == "All") {
 						BySql[code.model.Treatment]("1 =1",IHaveValidatedThisSQL("",""))
 					} else if (s == "NoPaid") {
-						// todos menos excluidos e pagos
-						BySql[code.model.Treatment](" status2 in (0,1,2,3 ,6,7,8,9) ",IHaveValidatedThisSQL("",""))	
+						// todos menos 5 excluidos e 4 pagos, 8 desmarcou e 1 faltou
+						BySql[code.model.Treatment](" status2 in (0,2,3 ,6,7,9) ",IHaveValidatedThisSQL("",""))	
 					} else {
 						val statusFilter = if(s == "7") {
 							Treatment.PreOpen

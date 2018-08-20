@@ -149,6 +149,9 @@
       if (res.length > 1 && account.recurrence) {
         throw "Lançamento de múltiplos cheques não pode ser recorrente. Operação cancelada!";
       }
+      if (res.length > 1 && account.user_parceled) {
+        throw "Lançamento de múltiplos cheques não pode ser parcelado. Operação cancelada!";
+      }
 
       var category;
       category = Category.getById(account.category);
