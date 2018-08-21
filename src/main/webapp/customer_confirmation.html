@@ -1,0 +1,37 @@
+<div id="main" class="lift:surround?with=bootstrap;at=content">
+  <script src="/js/util.js"></script>
+  <script type="text/javascript">
+	  $(function(){
+        $("#confirmed").hide();
+        $("#rescheduled").hide();
+        $("#error").hide();
+	  	var urlParm = gup ("id").split(",");
+	  	url = "/system/makeStatusAs/" +
+	  		urlParm[0] + "/" + urlParm[1] + "/" + 
+	  		urlParm[2] + "/" + urlParm[3] + "/" + 
+	  		urlParm[4]
+	  	return $.get(url, function(t) {
+	  		eval("result = " + t)
+	    	if (result.status == "success") {
+	    		if (urlParm[4] == "6") {
+		       		$("#confirmed").show();
+		        } else if (urlParm[4] == "8") {
+		       		$("#rescheduled").show();
+		        }
+	    	} else {
+	       		$("#error").show();
+	    	}
+	  	});
+	  });
+  </script>
+  <div>
+	<h3>Confirmação de Cliente/Paciente</h3>
+	<span class="span12">
+		<h1 id='confirmed' name='confirmed'>Atendimento confirmado com sucesso</h1>
+		<h1 id='rescheduled' name='rescheduled'>Desmarcado</h1>
+  		<span class="span7">
+		<h1 id='error' name='error'>Erro ao atualizar</h1>
+    	</span>
+	</span>
+  </div>
+</div>

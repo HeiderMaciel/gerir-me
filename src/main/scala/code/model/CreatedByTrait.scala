@@ -89,32 +89,34 @@ trait CreatedUpdatedBy extends CreatedByTrait with UpdatedByTrait
       Project.dateToMonthAndDay(updatedAt)
     }
 
-  lazy val auditStr:String = if (createdById != updatedById) {
-    "Criado por " + createdByName + " " + 
-      createdAtStr + " " +
-      Project.dateToHours(createdAt) + "\n" +
-    "Alterado por " + updatedByName + " " + 
-      updatedAtStr + " " +
-      Project.dateToHours(updatedAt)
-  } else if (Project.dateToStr(createdAt) !=
-    Project.dateToStr(updatedAt)) {
-    "Criado por " + createdByName + " " + 
-      createdAtStr + " " +
-      Project.dateToHours(createdAt) + " \n" +
-    "Alterado em " + 
-      updatedAtStr + " " +
-      Project.dateToHours(updatedAt)
-  } else if (Project.dateToHours(createdAt) !=
-    Project.dateToHours(updatedAt)) {
-    "Criado por " + createdByName + " " + 
-      createdAtStr + " " +
-      Project.dateToHours(createdAt) + " \n" +
-    "Alterado em " + 
-      Project.dateToHours(updatedAt)
-  } else {
-    "Criado por " + createdByName + " " + 
-      createdAtStr + " " +
-      Project.dateToHours(createdAt)
+  lazy val auditStr:String = {
+    if (createdById != updatedById) {
+      "Criado por " + createdByName + " " + 
+        createdAtStr + " " +
+        Project.dateToHours(createdAt) + "\n" +
+      "Alterado por " + updatedByName + " " + 
+        updatedAtStr + " " +
+        Project.dateToHours(updatedAt)
+    } else if (Project.dateToStr(createdAt) !=
+      Project.dateToStr(updatedAt)) {
+      "Criado por " + createdByName + " " + 
+        createdAtStr + " " +
+        Project.dateToHours(createdAt) + " \n" +
+      "Alterado em " + 
+        updatedAtStr + " " +
+        Project.dateToHours(updatedAt)
+    } else if (Project.dateToHours(createdAt) !=
+      Project.dateToHours(updatedAt)) {
+      "Criado por " + createdByName + " " + 
+        createdAtStr + " " +
+        Project.dateToHours(createdAt) + " \n" +
+      "Alterado em " + 
+        Project.dateToHours(updatedAt)
+    } else {
+      "Criado por " + createdByName + " " + 
+        createdAtStr + " " +
+        Project.dateToHours(createdAt)
+    }
   }
 }
 

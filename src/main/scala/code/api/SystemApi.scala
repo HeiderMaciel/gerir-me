@@ -124,6 +124,32 @@ object SystemApi extends RestHelper {
 			code.daily.DailyReport.sendAllAccountPayablesMail (Project.tomorrow, Company.notifyForTomorrow)
 			JInt(1)
 		}		
+
+		case "system" :: "makeStatusAs" :: id :: 
+			company :: customer :: 
+			user :: status :: Nil JsonGet _ => {
+			val ac = Treatment.findAll(
+				By (Treatment.id, id.toLong),
+				By (Treatment.company, company.toLong),
+				By (Treatment.customer, customer.toLong),
+				By (Treatment.user, user.toLong)
+			)
+			if (ac.length > 0) {
+				if (status == "6") {
+					ac(0).markAsConfirmed
+					ac(0).insecureSave
+					JsObj(("status","success"))
+				} else if (status == "8") {
+					ac(0).markAsReSchedule
+					ac(0).insecureSave
+					JsObj(("status","success"))
+				} else {
+					JsObj(("status","failed"))
+				}
+			} else {
+				JsObj(("status","failed"))
+			}
+		}
 		
 		case "system" :: "makeMailAsRead" :: id :: Nil JsonGet _ => {
 			val ac = LogMailSend.find(id.toLong).get

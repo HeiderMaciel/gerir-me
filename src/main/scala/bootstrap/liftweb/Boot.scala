@@ -394,6 +394,7 @@ class Boot {
         Menu(Loc("Home", Link(List("index"), true, "/index"),"index",Hidden)),
         //Menu.i("a") / "angular_resource",
 //        Menu(Loc("Login", Link(List("login"), true, "/login"),"Login",Hidden)),
+        Menu(Loc("Confirmação", Link(List("customer_confirmation"), true, "/customer_confirmation"), "Confirma",Hidden)),
         Menu(Loc("Planos", Link(List("pricing"), true, pricingUrl), "Planos",Hidden)),
         Menu(Loc("Planos Ephysio", Link(List("pricing_ephysio"), true, "/pricing_ephysio"), "Planos",Hidden)),
         Menu(Loc("docs", Link(List("docs"), true, "/docs/empty"), "Planos",Hidden)),

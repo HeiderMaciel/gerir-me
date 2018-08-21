@@ -184,6 +184,18 @@ object DailyReport{
 									<br/>
 									<hr/>
 								</div>
+								<div style="display:none">
+									<p>
+									Para confirmar clique <a href = {"http://" + company.appShortName + ".vilarika.com.br/customer_confirmation?id=" + 
+									a.id + "," + a.company + "," + a.customer + "," + a.user + ",6"}>aqui</a>.
+									</p>
+								</div>
+								<div style="display:none">
+									<p>
+									Para desmarcar clique <a href = {"http://" + company.appShortName + ".vilarika.com.br/customer_confirmation?id=" + 
+									a.id + "," + a.company + "," + a.customer + "," + a.user + ",8"}>aqui</a>.
+									</p>
+								</div>
 							)
 						)
 					}
