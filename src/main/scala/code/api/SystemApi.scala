@@ -135,16 +135,28 @@ object SystemApi extends RestHelper {
 				By (Treatment.user, user.toLong)
 			)
 			if (ac.length > 0) {
+				val cu = Customer.findByKey (customer.toLong).get
+				val us = User.findByKey (user.toLong).get
 				if (status == "6") {
 					ac(0).markAsConfirmed
 					ac(0).insecureSave
-					JsObj(("status","success"))
+					JsObj(("status","success"),
+						("customer", cu.name.is),
+						("user", us.name.is),
+						("group", us.userGroupName),
+						("start", ac(0).start.is.toString),
+						("address", ac(0).unit.obj.get.getPartner.full_address),
+						("phones", ac(0).unit.obj.get.getPartner.allPhones),
+						("message", ""))
+
 				} else if (status == "8") {
 					ac(0).markAsReSchedule
 					ac(0).insecureSave
-					JsObj(("status","success"))
+					JsObj(("status","success"),
+						("message", ""))
 				} else {
-					JsObj(("status","failed"))
+					JsObj(("status","failed"),
+						("message", "Atendimento não encontrado"))
 				}
 			} else {
 				JsObj(("status","failed"))

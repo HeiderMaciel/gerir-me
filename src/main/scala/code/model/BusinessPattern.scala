@@ -189,6 +189,10 @@ with PerCity{
       }      
     }  
 
+    def allPhones:String = {
+      ((phone + " " + mobilePhone + " ").trim + " " + email_alternative).trim
+    }
+
     def cityDefaultValue:String = if(AuthUtil.? ){
           AuthUtil.unit.getPartner.city.is
       }else{
