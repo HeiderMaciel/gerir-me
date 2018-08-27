@@ -202,7 +202,9 @@ with CanCloneThis[AccountPayable] {
 
   def makeAsPaid = this.paid_?(true).partiallySecureSave
 
-  def makeAsUnPaid = this.paid_?(false).partiallySecureSave
+  def makeAsUnPaid = this.paid_?(false).
+    paymentDate (Project.strToDateOrNull("")).
+    partiallySecureSave
 
   def makeAsConciliated = {
     if (this.conciliate.is == 0) {
