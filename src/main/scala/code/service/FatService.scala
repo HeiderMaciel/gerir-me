@@ -88,7 +88,7 @@ object FatService extends net.liftweb.common.Logger {
 						// salva o valoragregado no primeiro
 						AccountPayable.findByKey (aggregId).get.
 						aggregateValue(sum).
-						aggregateLabel ("Cx %s fp (%s) === Agregado  ".
+						aggregateLabel ("Cx %s fp %s === Agregado  ".
 							format(cashier.idForCompany.is.toString, 
 							paymentType.name.is)).
 						save
@@ -121,7 +121,7 @@ object FatService extends net.liftweb.common.Logger {
 						// salva o valoragregado no primeiro
 						AccountPayable.findByKey (aggregId).get.
 						aggregateValue(sum).
-						aggregateLabel ("Cx %s fp (%s) === Agregado  ".
+						aggregateLabel ("Cx %s fp %s === Agregado  ".
 							format(cashier.idForCompany.is.toString, 
 							paymentType.name.is)).
 						save
@@ -174,13 +174,13 @@ trait FatChain{
 			if (categoryOnProduct) {
 				val discountCat = paymentDetail.discountCategoryByType (paymentType.defaltDicountCategory.obj.get)
 				val discountMovement = createAccount(cashier,paymentType,discountValue, discountCat,
-					"Cx %s fp (%s)-desconto", AccountPayable.OUT)
+					"Cx %s fp %s-desconto", AccountPayable.OUT)
 				Full(discountMovement)
 			} else {
 				paymentType.defaltDicountCategory.obj match {
 					case Full(accDiscount) => {
 						val discountMovement = createAccount(cashier,paymentType,discountValue, accDiscount,
-							"Cx %s fp (%s)-desconto", AccountPayable.OUT)
+							"Cx %s fp %s-desconto", AccountPayable.OUT)
 						Full(discountMovement)
 					}
 					case _ =>{
@@ -193,7 +193,7 @@ trait FatChain{
 		}
 	}
 	def buildDefaltAccount(cashier:Cashier,paymentDetail:PaymentDetail,paymentType:PaymentType,value:Double,
-		obs:String = "Cx %s fp (%s)-fechamento") = {
+		obs:String = "Cx %s fp %s-fechamento") = {
 			val realValue = if(paymentType.defaltDicountCategory.obj.isEmpty){
 							value * ((100-paymentType.percentDiscountToReceive.is)/100)
 						}else{
@@ -212,7 +212,7 @@ trait FatChain{
 	}
 	def createDiscountAccount()={}
 	def createAccount(cashier:Cashier,paymentType:PaymentType,value:Double, 
-		category:AccountCategory,obs:String = "Faturamento fechamento do caixa (%s) valores em (%s)", accountType:Int=AccountPayable.IN)  = {
+		category:AccountCategory,obs:String = "Faturamento fechamento do caixa %s valores em %s", accountType:Int=AccountPayable.IN)  = {
 		//info(obs)
 		val account = AccountPayable
 			.createInCompany
@@ -251,7 +251,7 @@ object ReceiveAtSight extends FatChain{
 			paymentDetail.foreach((pd)=>{
 				try{
 					buildDefaltAccount(cashier, pd, paymentType, pd.value.is.toDouble,
-						"Cx %s fp (%s)" + " (%s)".format(pd.payment.obj.get.customer.obj.get.name.is)+"-a vista").foreach((am)=>{
+						"Cx %s fp %s" + " %s".format(pd.payment.obj.get.customer.obj.get.name.is)+"-a vista").foreach((am)=>{
 							am match {
 								case Full(movement) => {
 									movement.dueDate(cashier.openerDate.is)
@@ -303,7 +303,7 @@ object ReceiveFixDays extends FatChain{
 			paymentDetail.foreach((pd)=>{
 				try{
 					buildDefaltAccount(cashier, pd, paymentType, pd.value.is.toDouble,
-						"Cx %s fp (%s)" + " (%s)".format(pd.payment.obj.get.customer.obj.get.name.is)+"-proj dias").foreach((am)=>{
+						"Cx %s fp %s" + " %s".format(pd.payment.obj.get.customer.obj.get.name.is)+"-proj dias").foreach((am)=>{
 							am match {
 								case Full(movement) => {
 									movement.dueDate(calendar.getTime)
@@ -336,7 +336,7 @@ object ReceiveAddValueToUser extends FatChain{
 
 
 				buildDefaltAccount(cashier, pd, paymentType, pd.value.is,
-					"Cx %s fp (%s)" + bpname + " serviço "+"(%s)".format(pd.treatmentDetailsAsText)).foreach(
+					"Cx %s fp %s" + bpname + " serviço "+"%s".format(pd.treatmentDetailsAsText)).foreach(
 					(am)=>{
 							am match {
 								case Full(movement) => {
@@ -375,7 +375,7 @@ object ReceiveCheque extends FatChain{
 			try{
 				val cheque = pd.cheque
 				buildDefaltAccount(cashier, pd, paymentType, cheque.value.toDouble,
-					"Cx %s fp (%s)" + " (%s)".format(cheque.customer.obj.get.name.is)+"-cheque").foreach((am)=>{
+					"Cx %s fp %s" + " %s %s".format(cheque.number.trim(), cheque.customer.obj.get.name.is)+"-cheque").foreach((am)=>{
 							am match {
 								case Full(movement) => {
 									movement.dueDate(cheque.dueDate)
@@ -411,7 +411,7 @@ object ReceiveParceled extends FatChain{
 				// do aggregatedId e o if na sequencia
 				// rigel ago/2017
 				var aggregId = 0l;
-				buildDefaltAccount(cashier, pd, paymentType, pd.value.is.toDouble,"Cx %s fp (%s)" + " (%s)".format(pd.payment.obj.get.customer.obj.get.name.is)+"-parcelado").foreach((am)=>{
+				buildDefaltAccount(cashier, pd, paymentType, pd.value.is.toDouble,"Cx %s fp %s" + " %s".format(pd.payment.obj.get.customer.obj.get.name.is)+"-parcelado").foreach((am)=>{
 							am match {
 								case Full(movement) => {
 									movement.dueDate(pd.dueDate.is)
@@ -473,7 +473,7 @@ object ReceiveNextMonth extends FatChain{
 			paymentDetail.foreach((pd)=>{
 				try{
 					buildDefaltAccount(cashier, pd, paymentType, pd.value.is.toDouble,
-						"Cx %s fp (%s)" + " (%s)".format(pd.payment.obj.get.customer.obj.get.name.is)+"-prox mês").foreach((am)=>{
+						"Cx %s fp %s" + " %s".format(pd.payment.obj.get.customer.obj.get.name.is)+"-prox mês").foreach((am)=>{
 						am match {
 							case Full(movement) => {
 								movement.dueDate(calendar.getTime)
