@@ -71,7 +71,7 @@
           "<td>" + (cheque.value.formatMoney()) + "</td>" +
           "<td>" + cheque.date + "</td>" + 
           "<td style='color:" + color + "'>" + cheque.gooddate + "</td>" + 
-          "<td>" + "<a href='/customer/edit?id="+cheque.customerId+"' target='_customer_maste'>"+cheque.customer+"</a>"+ "</td>" +
+          "<td>" + "<a style='line-height: 105%' href='/customer/edit?id="+cheque.customerId+"' target='_customer_maste'>"+cheque.customer+"</a>"+ "</td>" +
           "<td style='color:" + obsColor + "'>" + cheque.obs + "</td>" +
 // rigel 19/06/2018
 // comentei pq marcava o chque sem marcar o lancto financeiro
@@ -95,6 +95,9 @@
   };
 
   $(function() {
+    $("#send").click(function() {
+      return Cheque.getListFromServer();
+    });
     return Cheque.getListFromServer();
   });
 
