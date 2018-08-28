@@ -117,6 +117,24 @@ with CanCloneThis[AccountPayable] {
               }
               c.received(fieldOwner.paid_?.is).efetivePaymentDate.setFromAny(efetivePaymentDate)
               c.save
+              // procura outro lançamento com este cheque
+              // se for o caso só deve ter um mesmo e autoCreated
+              // gerado pelo fechamento de caixa
+              // importante que se a empresa paga um fornecedor com
+              // com cheque de cliente e ele volta o lançamento que 
+              // deve ser alterado é o feito ao fornecedor e o do caixa 
+              // vai ser tratado aqui e não o contrário
+              val aclist = AccountPayable.findAllInCompany (
+                NotBy(AccountPayable.id, id),
+                By(AccountPayable.cheque, cheque),
+                By(AccountPayable.autoCreated_?, true))
+              aclist.foreach((ap) => {  
+                if (paid_?) {
+                  ap.makeAsPaid 
+                } else {
+                  ap.makeAsUnPaid
+                }
+              });
             } else {
               // quando é entrada manual o cheque está sendo recebido e 
               // está na casa
@@ -202,10 +220,12 @@ with CanCloneThis[AccountPayable] {
 
   def makeAsPaid = this.paid_?(true).partiallySecureSave
 
-  def makeAsUnPaid = this.paid_?(false).
+  def makeAsUnPaid = {
+    this.paid_?(false).
     paymentDate (Project.strToDateOrNull("")).
     partiallySecureSave
-
+  }
+    
   def makeAsConciliated = {
     if (this.conciliate.is == 0) {
       this.conciliate(1).partiallySecureSave
