@@ -69,12 +69,19 @@ Date.prototype.getServerTime = function(){
 };
 var FactoryDate = {};
 FactoryDate.byTime = function(time){
+  // rigel - 29/08/2018
+  // datas no mozilla firefox vinham nan/nan/nan
+  // testar no sfari / opera apple
+  var navigator = window.navigator.userAgent;
+  if (navigator.indexOf ("Firefox") >= 0) {
+  	return new Date(time);
+  } else {
 	if(time.replace){
 		return new Date(time.replace(/-/g, '/'));
 	}else{
 		return new Date(time);
 	}
-	
+  } 	
 };
 /**
  * Fix problems about date objects just to brazilian Daylight Saving
