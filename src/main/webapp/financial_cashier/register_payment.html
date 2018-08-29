@@ -430,6 +430,8 @@
                       <input class="small" id="agency" name="agency" size="10" type="text"/>
                       <span class='label-inline'>Conta</span>
                       <input class="normal" id="account" name="account" size="20" type="text"/>
+                      <span class='label-inline'>Obs</span>
+                      <input class="normal" id="cheque_obs" name="cheque_obs" size="20" type="text" placeholder="para cheque de terceiros por exemplo"/>
                     </div>
                   </div>
                 </div>
@@ -464,6 +466,7 @@
                 <th class="has_cheque">Agência</th>
                 <th class="has_cheque">Conta</th>
                 <th class="has_cheque">Dt Cheque</th>
+                <th class="has_cheque">Obs</th>
                 <th>Ação</th>
               </tr>
             </thead>
@@ -487,6 +490,7 @@
                   <td class="has_cheque"><input  ng-show="paymentDetail.chequeInfo" ng-model="paymentDetail.chequeInfo.account" class="small"/></td>
                   <td class="has_cheque"><input ui-date ng-show="paymentDetail.chequeInfo" date ng-model="paymentDetail.chequeInfo.cheque_date" class="small"/></td>
                   <td><a href="#" ng-click="paymentDetail.remove()"><img src='../images/delete.png'/></a></td>
+                  <td class="has_cheque"><input  ng-show="paymentDetail.chequeInfo" ng-model="paymentDetail.chequeInfo.cheque_obs" class="small"/></td>
                 </tr>
             </tbody>
           </table>

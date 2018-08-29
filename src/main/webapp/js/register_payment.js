@@ -1402,7 +1402,8 @@
           bank: parseInt($(":input[name=bank]").val()),
           bank_name: $(":input[name=bank] option[selected]").text(),
           account: $(":input[name=account]").val(),
-          cheque_number: $(":input[name=cheque_number]").val()
+          cheque_number: $(":input[name=cheque_number]").val(),
+          cheque_obs: $(":input[name=cheque_obs]").val()
         };
         paymentRegister(getPaymentTypeById($('#payment_type').val()), chequeInfoObj);
       } else if (paymentType.needCardInfo) {
@@ -1411,7 +1412,8 @@
           bank: 0,
           bank_name: "",
           account: "",
-          cheque_number: $(":input[name=card_number]").val()
+          cheque_number: $(":input[name=card_number]").val(),
+          cheque_obs: ""
         };
         paymentRegister(getPaymentTypeById($('#payment_type').val()), chequeInfoObj);
       } else {

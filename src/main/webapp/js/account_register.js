@@ -591,6 +591,12 @@
             aggregIcon = "";
             aggregTitle
           }
+          var dataAux = "";
+          if (request.dttype == "1" && obj.exerciseDate != obj.dueDate) {
+            dataAux = " " + (getDateBr(new Date(obj.exerciseDate)))
+          } else if (request.dttype == "2" && obj.paymentDate != obj.dueDate) {
+            dataAux = " " + (getDateBr(new Date (parseInt(obj.paymentDate))))
+          }
           ret += "<tr>" + 
             "<td><input type='checkbox' class='account_payable' value='" + 
             obj.id + "'/></td>" +
@@ -601,7 +607,7 @@
             "<a " + aggregTitle + " href='#' data-id='" + 
             obj.id + "' class='action_edit'>" + 
             obj.id + aggregIcon + "</a>" + "</td>" ) + 
-            "<td>" + (getDateBr(new Date(obj.dueDate))) + "</td>" +
+            "<td>" + (getDateBr(new Date(obj.dueDate))) + dataAux + "</td>" +
 //            "<td>" + obj.category + "</td>" +
             "<td>"+"<a href='/financial_admin/account_category?id="+obj.category_id+"' target='_customer_maste'>"+obj.category+"</a>"+"</td>" +
             "<td>" + obj.obs_trunc + "</td>" +

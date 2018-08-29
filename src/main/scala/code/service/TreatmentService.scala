@@ -812,7 +812,7 @@ object  TreatmentService extends net.liftweb.common.Logger {
 									typePayment.toInt,
 									treatment.totalValue(0).toDouble,  
 									false,
-									ChequeRequest("", "", 0, "",""),
+									ChequeRequest("", "", 0, "","",""),
 									Project.dateToStr(treatment.start.is),
 									0 // valueToPoints
 						)::Nil,

@@ -101,6 +101,12 @@ with CanCloneThis[AccountPayable] {
             // seta com o status do cheque
             paid_?.set(c.received)
           } else {
+            if (!paid_?.is) {
+              println ("vaiii +++++++++++++++++++++++++++ TRUE ")
+              paymentDate.set (Project.strToDateOrNull(""))
+            } else {
+              println ("vaiii +++++++++++++++++++++++++++ false ")
+            }
             // se não é novo ou se é pago o status do lançamento 
             // determina o status do cheque sempre, se for saída ou se for lancamento de caixa autocreated
             if (typeMovement == AccountPayable.OUT || autoCreated_?) {
@@ -373,7 +379,6 @@ with CanCloneThis[AccountPayable] {
       val au = a.getAccountUnit (thisUnit)
       au.register(this)
     }
-
   }
 
   override def save() = {
@@ -422,6 +427,8 @@ with CanCloneThis[AccountPayable] {
       // 22/08/2016 feito o save primeiro para ter o id e carimbar no hist alteracao 
       if (this.paid_?.is) {
          this.debted_?(true)
+      } else {
+
       }
       if (this.paid_?.is) {
         super.save

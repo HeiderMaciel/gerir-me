@@ -344,6 +344,7 @@ object  PaymentService extends  net.liftweb.common.Logger  {
 		.agency(p.chequeInfo.agency)
 		.number(p.chequeInfo.cheque_number)
 		.value(paymentDetail.value.is)
+		.obs(p.chequeInfo.cheque_obs)
 		.paymentDate(p.chequeInfo.datePayment)
 		.receivedDate(receivedDate)
 		.dueDate(goodTo)
@@ -515,7 +516,7 @@ case class PaymentRequst(treatments:List[TreatmentDTO],payments:List[PaymentDTO]
 		
 	}
 };
-case class ChequeRequest(account:String,agency:String,bank:Long,cheque_number:String,date_for_payment:String){
+case class ChequeRequest(account:String,agency:String,bank:Long,cheque_number:String,date_for_payment:String, cheque_obs:String){
 	def datePayment = Project.strOnlyDateToDate(date_for_payment)
 }
 
