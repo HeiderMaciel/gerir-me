@@ -5,10 +5,17 @@
   <script src="/js/jquery.tablesorter.pager.js"></script>
   <script type="text/javascript">
     $(function () {
+      var callApiLock = false;
       $("#send").click(function(){
-        $.post('/payroll/process_start', {start:$('#start').val(), end:$('#end').val(), dttype:$('#dttype').val()}, function(){
-          alert('Gerado com sucesso!');
-        });
+        if (!callApiLock) {
+          callApiLock = true
+          $.post('/payroll/process_start', {start:$('#start').val(), end:$('#end').val(), dttype:$('#dttype_commission').val()}, function(){
+            alert('Gerado com sucesso!');
+            callApiLock = false;
+          });
+        } else {
+          alert("Já existe um processo em andamento. Aguarde o fim do processamento para clicar novamente!");
+        }
       });
     });
   </script>
@@ -35,19 +42,20 @@
         </div>
       </div>      
       <div class="clearfix">
-          <label for="dttype">Tipo Data lanc</label>
-            <div class="input">
-              <div class="inline-inputs">
-                  <select class="local_storage" name="dttype" id="dttype">
-                      <option value='0'>Vencimento</option>
-                      <option value='1'>Competência</option>
-                      <option value='2'>Pagamento</option>
-                  </select>
-                  <a href="" class="_popover_basic" rel="popover" data-content="Determina se os lançamentos financeiros serão acessados pela data de Vencimento, Pagamento ou Competência" data-original-title="Informação">
-                    <img width='20' src="/images/info.gif"/>
-                  </a>
-              </div>
-            </div>
+        <label for="dttype_commission">Tipo Data lanc</label>
+        <div class="input">
+          <div class="inline-inputs">
+              <select class="local_storage" name="dttype_commission" id="dttype_commission">
+                  <option value='1'>Competência</option>
+                  <option value='0'>Vencimento</option>
+                  <option value='2'>Pagamento</option>
+              </select>
+              <a href="" class="_popover_basic" rel="popover" data-content="Determina se os lançamentos financeiros serão acessados pela data de Vencimento, Pagamento ou Competência, o mais comum no caso de comissão é por data de competência" data-original-title="Informação">
+                <img width='20' src="/images/info.gif"/>
+              </a>
+          </div>
+        </div>
+      </div>
       </div>
       <div class="clearfix">
         <label for="send"></label>
