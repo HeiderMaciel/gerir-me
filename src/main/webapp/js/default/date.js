@@ -75,6 +75,21 @@ FactoryDate.byTime = function(time){
   var navigator = window.navigator.userAgent;
   if (navigator.indexOf ("Firefox") >= 0) {
   	return new Date(time);
+  } else if (navigator.indexOf ("Windows") >= 0) {
+	if(time.replace){
+	  	if (time.indexOf ("00:00:00") >= 0) {
+		   time = (time.replace(/-/g, '/')).substring (0,10)
+		   return new Date(time);
+		} else {
+		// data com time só funcionou com - e não com /	
+		   time = (time).substring (0,10)
+		   +"T"+time.substring (11,19)
+		   time = time.replace(/ /g,"T")+".000Z"
+		   return new Date(time);
+	  	}
+	} else {
+		return new Date(time);
+	}
   } else if  ((navigator.indexOf ("Safari") >= 0) &&
   	(navigator.indexOf ("Chrome") == -1)) {
 	if(time.replace){
@@ -183,6 +198,10 @@ var getHourBr = function(d) {
 	return date_str;
 }
 var getDateBr = function(d) {
+	// 2018 08 -rigel testei nulo pq dava erro
+	if (d == null) {
+		return "";
+	}
 	month = d.getMonth() + 1;
 	if (month < 10) {
 		month = "0" + month;

@@ -26,7 +26,10 @@
 		    type : "format",
 		    decode : function(id,row){
 		    	if(!row[7]) {
-		        	return "<a target='_blank' href='http://boleto.vilarika.com.br/boleto/boleto.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/bar_code.png'/>"
+		    		// rigel 2018 agosto
+		    		// troquei o (new Date(row[4]).getDateBr())
+		    		// para o dateDecode para funcionar no I.E
+		        	return "<a target='_blank' href='http://boleto.vilarika.com.br/boleto/boleto.php?data="+dateDecode(row[4])+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/bar_code.png'/>"
 /*
 		        	return "<a target='_blank' href='/docs/notice.html'><img width='32' src='/images/bar_code.png'/>"
 */
@@ -35,7 +38,7 @@
 		    	}
 		    }
 		};
-	    if (!isSuperAdmin) {
+	    if (!isSuperAdmin || (document.location.href.indexOf("localhost") == -1)) {
 		    fields[9] = "none"; // nome da company_customer
 		} else {
 			// boleto local
@@ -43,7 +46,7 @@
 			    type : "format",
 			    decode : function(id,row){
 			    	// local mostra mesmo que pago
-		        	return row[9] + "  " + "<a target='_blank' href='http://localhost:8000/boleto.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/bar_code.png'/>"
+		        	return "<a target='_blank' href='http://localhost:8000/boleto.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/bar_code.png'/>" + " <br/> " + row[9]
 			    }
 			};
 		}
@@ -77,7 +80,7 @@
 	        <th>Pago?</th>
 	        <th>Data do pagamento</th>
 	        <th>Imprimir Boleto</th>
-	        <th class="lift:SecuritySnippet.isSuperAdmin" title="só super adm vê">Boleto local</th>
+	        <th class="lift:SecuritySnippet.isSuperAdmin" title="só super adm vê">Boleto local*</th>
 	        <th class="lift:SecuritySnippet.isSuperAdmin" title="só super adm vê">obs*</th>
 	      </thead>
 	      <tbody>
