@@ -47,8 +47,8 @@
             <label for="allowCashierOut">Aceita saída do caixa?</label>
             <div class="input">
               <input id="allowCashierOut" name='allowCashierOut'>
-              <a href="" class="_popover_basic" rel="popover" data-content="Somente a conta caixa deve ter este campo marcado, o que vai fazer com que o sistema solicite o número do caixa no momento em que um lançamento financeiro for feito nesta conta" data-original-title="Informação">
-                <img width='20' src="/images/info.gif"/>
+              <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/account.html#allowcashierout' rel="popover" class="_popover_basic _help">
+                <img src="/images/info.gif" width="20">
               </a>
               <span class="help-block">Aceita que o valor dessa conta saia ou entre do caixa</span>
             </div>
@@ -60,7 +60,18 @@
               <span class="help-block">O saldo dessa conta será controlado?</span>
             </div>
           </div>
-          
+          <div class="clearfix">
+            <label for="creditCard">Cartão?</label>       
+            <div class="input">
+              <div class='inline-inputs'>
+                <input name='creditCard'/> 
+                <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/account.html#creditcard' rel="popover" class="_popover_basic _help">
+                  <img src="/images/info.gif" width="20">
+                </a>
+                <span class="help-block">Para validação na importação de OFX</span>
+              </div>
+            </div>
+          </div>
           <div class="clearfix">
             <label for="status">Status</label>
             <div class="input">

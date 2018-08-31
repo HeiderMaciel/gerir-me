@@ -27,6 +27,12 @@ import net.sf.ofx4j.io.OFXParseException
 
 object OfxUtil {
 
+  // para controlar vários nro(s) de cartão no mesmo ofx
+  // pode ocorrer no caso de cancelamento de cartão e 
+  // utilização de um novo
+  // o primeiro teste da ieda tinha 3
+  var alreadyValidated = false;
+
   def execute(file:File, category:Long, account:Long):String = {
      var trnGood = 0;
      var trnBad = 0;
@@ -114,30 +120,46 @@ object OfxUtil {
                          .save
                  trnGood += 1; 
                } else {
+                println ("vaiiiii rejeitadas ========== " + ofxid.trim)
                  trnBad += 1; 
                }
           })
         });
       }
+      alreadyValidated = false;
       //println ("vaiiii ============ Importadas " + trnGood + "\n\n Rejeitadas " + trnBad);
       (" Importadas " + trnGood + "\n\nRejeitadas " + trnBad)
   }
   def validateAccount (account : Long, strAccountId : String) {
-    val acu = AccountCompanyUnit.findAll (
-        By (AccountCompanyUnit.account, account),
-        By (AccountCompanyUnit.unit, AuthUtil.unit.id.is))(0)
-     if (BusinessRulesUtil.clearString (acu.accountStr) == "") {
-        throw new RuntimeException("Número da conta no cadastro precisa ser informado");
-     } 
-     if (strAccountId.indexOf (BusinessRulesUtil.clearString (acu.accountStr)) == -1) {
-        throw new RuntimeException("Número da Conta " + BusinessRulesUtil.clearString (acu.accountStr) + " não encontrada no ofx " + strAccountId);
-     }
-     if (BusinessRulesUtil.clearString (acu.agency) == "") {
-        throw new RuntimeException("Número da agência no cadastro precisa ser informado");
-     } 
-     if (strAccountId.indexOf (BusinessRulesUtil.clearString (acu.agency)) == -1) {
-        throw new RuntimeException("Número da Agência " + BusinessRulesUtil.clearString (acu.agency) + " não encontrada no ofx " + strAccountId);
-     }
-    true
+    // para o caso de vários nros de cartão no mesmo ofx
+    // só valida o primeiro 
+    if (!alreadyValidated) {
+      val ac = Account.findAll (
+          By (Account.id, account))(0);
+
+      val acu = AccountCompanyUnit.findAll (
+          By (AccountCompanyUnit.account, account),
+          By (AccountCompanyUnit.unit, AuthUtil.unit.id.is))(0)
+       if (BusinessRulesUtil.clearString (acu.accountStr) == "") {
+          throw new RuntimeException("Número da conta no cadastro precisa ser informado");
+       } 
+       if (strAccountId.indexOf (BusinessRulesUtil.clearString (acu.accountStr)) == -1) {
+          throw new RuntimeException("Número da Conta " + BusinessRulesUtil.clearString (acu.accountStr) + " não encontrada no ofx " + strAccountId);
+       }
+       // no caso de cartão de crédito não vem agência branchid
+       // e acctid é o nro do cartão ou parte dele
+       // pelo menos no BB e no Bradesco
+       //
+       if (!ac.creditCard_?) {  
+         if (BusinessRulesUtil.clearString (acu.agency) == "") {
+            throw new RuntimeException("Número da agência no cadastro precisa ser informado");
+         } 
+         if (strAccountId.indexOf (BusinessRulesUtil.clearString (acu.agency)) == -1) {
+            throw new RuntimeException("Número da Agência " + BusinessRulesUtil.clearString (acu.agency) + " não encontrada no ofx " + strAccountId);
+         }
+      }
+    }
+    alreadyValidated = true;
+    alreadyValidated
   }
 }

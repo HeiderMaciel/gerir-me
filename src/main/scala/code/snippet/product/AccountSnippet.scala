@@ -119,6 +119,7 @@ class  AccountSnippet  extends BootstrapPaginatorSnippet[Account] {
 		    "name=bank" #> (SHtml.select(banksSelect,Full(ac.bank.is.toString),(s:String) => ac.bank(s.toLong)))&
 		    "name=allowCashierOut" #> (SHtml.checkbox(ac.allowCashierOut_?.is,ac.allowCashierOut_?(_)))&
 		    "name=balanceControl" #> (SHtml.checkbox(ac.balanceControl_?.is,ac.balanceControl_?(_)))&
+			"name=creditCard" #> (SHtml.checkbox(ac.creditCard_?, ac.creditCard_?(_)))&
 //			"name=value" #> (SHtml.text(ac.value.is.toString, (v:String) => { if(v !="")ac.value(v.toDouble)} ))&
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_))++SHtml.hidden(process))
 		}catch {

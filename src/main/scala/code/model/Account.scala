@@ -59,6 +59,11 @@ class Account extends Audited[Account]
     override def dbColumnName = "balancecontrol"
   }
 
+  object creditCard_? extends MappedBoolean(this){
+    override def defaultValue = false
+    override def dbColumnName = "creditCard"
+  }
+
   def  getAccountUnit (unit : CompanyUnit): AccountCompanyUnit = {
     if (AccountCompanyUnit.count (
         By(AccountCompanyUnit.unit, unit),
