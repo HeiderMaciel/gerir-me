@@ -1,4 +1,21 @@
 <div id="main" class="lift:surround?with=dashboard_customer&at=content">
+    <script type="text/javascript" src="/js/passwork_force.js"></script>
+    <script>
+      var validate = function () {
+        var password = $("#password_text").text();
+        if(password != "Média" && password != "Forte" && password != "Muito forte" && password !=""){
+          alert("Senha "+password+". Altere antes de salvar!");
+          return false;
+        }
+        return true;
+      }
+      $(function(){
+        $(".password_container input").pstrength();
+        if (document.location.href.indexOf("localhost") == -1) {
+            $(".password_container").hide
+        }
+      })
+    </script>   
     <div class="lift:CustomerSnippet.maintain">
         <form class="crud_form lift:form.ajax" id="customer_form">
             <div class="well">
@@ -81,7 +98,7 @@
                             <label for="obs">Observação</label>
                             <div class="input">
                                 <input class="large" id="obs" name="obs" size="30" type="textarea"/>
-                                <span class="help-block">Observação</span>
+                                <!--span class="help-block">Observação</span-->
                             </div>
                         </div>
                         <div class="clearfix lift:SecuritySnippet.hasCrmModule">
@@ -199,8 +216,11 @@
                             <div class="input">
                                 <div class="input-prepend">
                                     <span class="hide_mobile add-on">@</span>
-                                    <input class="xlarge" id="email" name="email" size="16" type="text">
-                                    <span class="help-inline">E-mail de contato</span>
+                                    <input class="xlarge" id="cemail" name="cemail" size="16" type="text">
+                                </div>
+                                <div class="input-prepend password_container lift:SecuritySnippet.isSuperAdmin">
+                                    <input class="medium password" type="password" id="password" name="password" size="30" type="text" autocomplete="off"/>
+                                    <span class="help-block">Password cliente - só super admin tem acesso</span>
                                 </div>
                                 <span class="lift:SecuritySnippet.isSuperAdmin help-block"><a href="#" onclick="startLogin()">Facebook</a></span>
                             </div>
@@ -320,14 +340,14 @@
                                     <select class="medium" id="unit" name="unit" >
                                     </select>
                                 </div>
-                                <span class="help-block">Unidade do cliente</span>
+                                <!--span class="help-block">Unidade do cliente</span-->
                             </div>
                         </div>
                         <div class="clearfix lift:SecuritySnippet.hasOffSaleModule">
                             <label for="offsale">Convênio </label>
                             <div class="input">
                                 <select name="offsale" id='offsale'></select>
-                                <span class="help-block">Convênio</span>
+                                <!--span class="help-block">Convênio</span-->
                             </div>
                         </div>
                         <div class="clearfix lift:SecuritySnippet.hasOffSaleModule">

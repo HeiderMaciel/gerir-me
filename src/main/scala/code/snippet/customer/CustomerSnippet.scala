@@ -257,7 +257,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 		    "name=external_id" #> (SHtml.text(ac.external_id.is, ac.external_id(_)))&
 		    "name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&
 		    "name=obscomplement" #> (SHtml.textarea(ac.obsComplement.is, ac.obsComplement(_)))&
-		    "name=email" #> (SHtml.text(ac.email.is, ac.email(_))) &
+		    "name=cemail" #> (SHtml.text(ac.email.is, ac.email(_))) &
 			"name=senNotifications" #> (SHtml.text(ac.senNotifications.is, ac.senNotifications(_)))&
 		    "name=website" #> (SHtml.text(ac.website.is, ac.website(_))) &
 		    "name=barcode" #> (SHtml.text(ac.barcode.is, ac.barcode(_)))&
@@ -317,6 +317,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 			"name=lat" #> (SHtml.text(ac.lat.is, ac.lat(_)))&
 			"name=number" #> (SHtml.text(ac.number.is, ac.number(_)))&
 			"name=complement" #> (SHtml.text(ac.complement.is, ac.complement(_)))&
+		    "name=password" #> (SHtml.password(ac.password.is, ac.password(_))) &
 			"#img_thumb" #> ac.thumb&
 			"name=manager" #> (SHtml.text(ac.bp_managerName, (a:String) => {}))&
 			"name=indicatedby" #> (SHtml.text(ac.bp_indicatedbyName, (a:String) => {}))&
