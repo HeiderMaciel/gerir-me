@@ -235,6 +235,10 @@ object CompanySnippet{
 //			"name=autoIncrementCommand" #> (SHtml.checkbox(ac.autoIncrementCommand_?, ac.autoIncrementCommand_?(_)))&
 		    "name=commandControl" #> (SHtml.select(cmdControl,Full(ac.commandControl.is.toString),(v:String) => ac.commandControl(v.toInt)))&
 		    "name=calendarPub" #> (SHtml.select(cPubControl,Full(ac.calendarPub.is.toString),(v:String) => ac.calendarPub(v.toInt)))&
+			"name=hoursToCancelPub" #> (SHtml.text(ac.hoursToCancelPub.is.toString, 
+				(f:String) => ac.hoursToCancelPub(BusinessRulesUtil.snippetToInt(f))))&
+			"name=hoursToConfirmPub" #> (SHtml.text(ac.hoursToConfirmPub.is.toString, 
+				(f:String) => ac.hoursToConfirmPub(BusinessRulesUtil.snippetToInt(f))))&
 		    "name=calendarUrl" #> (SHtml.text(ac.calendarUrl.is,ac.calendarUrl(_)))&
 			"name=autoOpenCalendar" #> (SHtml.checkbox(ac.autoOpenCalendar_?, ac.autoOpenCalendar_?(_)))&
 			"name=allowrepeatcommand" #> (SHtml.checkbox(ac.allowRepeatCommand_?, ac.allowRepeatCommand_?(_)))&
@@ -259,6 +263,7 @@ object CompanySnippet{
 			"name=packCommissionOnMissed" #> (SHtml.checkbox(ac.packCommissionOnMissed_?, ac.packCommissionOnMissed_?(_)))&
 			"name=cmdChangeDate" #> (SHtml.checkbox(ac.cmdChangeDate_?, ac.cmdChangeDate_?(_)))&
 			"name=cmdAskCommand" #> (SHtml.checkbox(ac.cmdAskCommand_?, ac.cmdAskCommand_?(_)))&
+			"name=cmdAskProfessional" #> (SHtml.checkbox(ac.cmdAskProfessional_?, ac.cmdAskProfessional_?(_)))&
 			"name=categoryOnProduct" #> (SHtml.checkbox(ac.categoryOnProduct_?, ac.categoryOnProduct_?(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is,ac.short_name(_)))&
 		    "name=phone" #>(SHtml.text(ac.phone.is,ac.phone(_)))&
@@ -271,6 +276,7 @@ object CompanySnippet{
 			"name=calendarShowPhone" #> (SHtml.checkbox(ac.calendarShowPhone_?, ac.calendarShowPhone_?(_)))&
 			"name=calendarShowLight" #> (SHtml.checkbox(ac.calendarShowLight_?, ac.calendarShowLight_?(_)))&
 			"name=calendarShowInterval" #> (SHtml.checkbox(ac.calendarShowInterval_?, ac.calendarShowInterval_?(_)))&
+			"name=calendarShortActivity" #> (SHtml.checkbox(ac.calendarShortActivity_?, ac.calendarShortActivity_?(_)))&
 			"name=calendarShowActivity" #> (SHtml.checkbox(ac.calendarShowActivity_?, ac.calendarShowActivity_?(_)))&
 			"name=calendarShowDifUnit" #> (SHtml.checkbox(ac.calendarShowDifUnit_?, ac.calendarShowDifUnit_?(_)))&
 			"name=calendarShowSponsor" #> (SHtml.checkbox(ac.calendarShowSponsor_?, ac.calendarShowSponsor_?(_)))&

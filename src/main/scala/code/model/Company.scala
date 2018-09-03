@@ -413,7 +413,7 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
   }
 
   object cmdAskProfessional_? extends MappedBoolean(this) {
-    override def defaultValue = false;
+    override def defaultValue = true;
     override def dbColumnName = "cmdAskProfessional"
   }
 
