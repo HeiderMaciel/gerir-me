@@ -115,6 +115,10 @@ with PerCity{
     object height extends MappedDecimal(this,MathContext.DECIMAL64,2) {
         override def defaultValue = 0.00
     }
+    object shoeSize extends MappedDecimal(this,MathContext.DECIMAL64,2) {
+        override def defaultValue = 0.00
+    }
+    
     object document extends MappedPoliteString(this,20)
     object document_company extends MappedPoliteString(this,20)
     object document_identity extends MappedPoliteString(this,20)

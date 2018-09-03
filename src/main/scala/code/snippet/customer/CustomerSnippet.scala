@@ -284,6 +284,7 @@ class  CustomerSnippet extends BootstrapPaginatorSnippet[Customer] with net.lift
 		    "name=civilstatus" #> (SHtml.select(civilstatuses,Full(ac.civilstatus.is.toString),(v:String) => ac.civilstatus(v.toInt)))&
 		    "name=weight" #> (SHtml.text(ac.weight.is.toString, (s:String) => ac.weight(BusinessRulesUtil.snippetToDouble(s))))&
 		    "name=height" #> (SHtml.text(ac.height.is.toString, (s:String) => ac.height(BusinessRulesUtil.snippetToDouble(s))))&
+		    "name=shoesize" #> (SHtml.text(ac.shoeSize.is.toString, (s:String) => ac.shoeSize(BusinessRulesUtil.snippetToDouble(s))))&
 			"name=bmi" #> (SHtml.text(ac.BMI, (a:String) => {}))&
 			"name=ageBirth" #> (SHtml.text(ac.ageBirth, (a:String) => {}))&
 			"name=birthday" #> (SHtml.text(getDateAsString(ac.birthday),

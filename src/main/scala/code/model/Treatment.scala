@@ -249,9 +249,17 @@ with WithCustomer with net.liftweb.common.Logger{
                             ""
                         }
                     if (AuthUtil.company.appType.isEsmile) {
-                        (details map(_.nameActivityTooth) reduceLeft(_+", "+_))
+                        if (AuthUtil.company.calendarShortActivity_?) {
+                            (details map(_.shortNameActivityTooth) reduceLeft(_+", "+_))
+                        } else {
+                            (details map(_.nameActivityTooth) reduceLeft(_+", "+_))
+                        }
                     } else {
-                        petName + (details map(_.nameActivity) reduceLeft(_+", "+_))
+                        if (AuthUtil.company.calendarShortActivity_?) {
+                            petName + (details map(_.shortNameActivity) reduceLeft(_+", "+_))
+                        } else {
+                            petName + (details map(_.nameActivity) reduceLeft(_+", "+_))
+                        }
                     }                        
                 }
                 case _ => {

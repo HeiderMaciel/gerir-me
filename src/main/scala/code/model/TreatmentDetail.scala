@@ -335,6 +335,16 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
         }
     }
 
+    def shortNameActivity:String = {
+         activity.obj match {
+            case Full(a) => a.short_name.is
+            case _ => product.obj match {
+                case Full(p) => p.short_name.is
+                case _ => ""
+            }  
+        }
+    }
+
     def nameOffSale:String = {
        offsale.obj match {
         case Full(a) => a.name.is
@@ -354,6 +364,16 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
             case Full(a) => (a.name.is + " " + tooth).trim
             case _ => product.obj match {
                 case Full(p) => p.name.is
+                case _ => ""
+            }  
+        }
+    }
+
+    def shortNameActivityTooth:String = {
+         activity.obj match {
+            case Full(a) => (a.short_name.is + " " + tooth).trim
+            case _ => product.obj match {
+                case Full(p) => p.short_name.is
                 case _ => ""
             }  
         }

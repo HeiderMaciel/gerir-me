@@ -104,6 +104,7 @@ class CompanyUnit
      def isEphysioU = appTypeU.is == Company.SYSTEM_EPHYSIO
      def isEbellepetU = appTypeU.is == Company.SYSTEM_EBELLEPET
   }
+  object calendarUrl extends MappedPoliteString(this, 100)
 
   override def updateShortName = false
   def getSingleton = CompanyUnit

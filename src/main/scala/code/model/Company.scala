@@ -156,6 +156,10 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
       override def defaultValue = Company.PLAN_BASIC
   }
 
+  object historyInterval extends MappedInt(this) { // in months
+    override def defaultValue = 12;
+  }
+
   object calendarInterval extends MappedInt(this) {
     override def defaultValue = 30
   }
@@ -170,6 +174,8 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
   object calendarEnd extends MappedInt(this) {
     override def defaultValue = 18
   }
+
+  object calendarStatuses extends MappedPoliteString(this,555)
 
   object calendarShowId_? extends MappedBoolean(this) {
     override def defaultValue = false
@@ -187,6 +193,12 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
     override def defaultValue = true
     override def dbColumnName = "calendarShowInterval"
   }
+
+  object calendarShortActivity_? extends MappedBoolean(this) {
+    override def defaultValue = true
+    override def dbColumnName = "calendarShortActivity"
+  }
+
   object calendarShowActivity_? extends MappedBoolean(this) {
     override def defaultValue = true
     override def dbColumnName = "calendarShowActivity"
@@ -244,6 +256,12 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
   object animalBirthdayNotificationId extends MappedLong(this)
 
   object calendarPub extends MappedInt(this){
+      override def defaultValue = 0
+  }    
+  object hoursToCancelPub extends MappedInt(this){
+      override def defaultValue = 0
+  }    
+  object hoursToConfirmPub extends MappedInt(this){
       override def defaultValue = 0
   }    
   object calendarUrl extends MappedPoliteString(this, 100)
@@ -394,12 +412,18 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
     override def dbColumnName = "cmdAskCommand"
   }
 
+  object cmdAskProfessional_? extends MappedBoolean(this) {
+    override def defaultValue = false;
+    override def dbColumnName = "cmdAskProfessional"
+  }
+
   object categoryOnProduct_? extends MappedBoolean(this) {
     override def defaultValue = false
     override def dbColumnName = "categoryOnProduct"
   }
 
   object toCancelAnAppointment extends MappedPoliteString(this,255)
+  object mailAppointmentSignature extends MappedPoliteString(this,255)
   object expenseReceiptObs extends MappedPoliteString(this,2000)
   object recordsCustInfo extends MappedPoliteString(this,2000)
 

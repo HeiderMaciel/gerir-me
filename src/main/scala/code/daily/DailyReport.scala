@@ -161,7 +161,8 @@ object DailyReport{
 		val treatments = TreatmentService.loadTreatmentByCustomer(customer, date,company)
 		val num = treatments.size
 		val description = extDay (date)
-		val confirm = if (company.id == 1 || company.id == 8) {
+		val confirm = if (company.id == 1 || company.id == 8
+			|| company.id == 334 /* equilibrar */) {
 			"visible"
 		} else {
 			"none"

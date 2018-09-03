@@ -64,16 +64,19 @@ object CompanySnippet{
 //			println (S.hostName + "++++++++++++++++++============================")
 			  def product1:String = if (S.hostName.contains ("gerir")) {
 					ac.appType(2)
+					ac.calendarInterval(36)
 			      " gerir-me "
 			    }else if (S.hostName.contains ("egrex")) {
 					ac.appType(5)
 			      " e-grex "
 			    }else if (S.hostName.contains ("esmile")) {
 					ac.appType(3)
+					ac.calendarInterval(36)
 			      " e-smile "
 			    }else if (S.hostName.contains ("edoctus")) {
 					ac.appType(4)
 					ac.calendarInterval(30)
+					ac.historyInterval(36)
 			      " e-doctus "
 			    }else if (S.hostName.contains ("efisio") || S.hostName.contains ("ephysio")) {
 			    	ac.calendarStart(7)
@@ -243,6 +246,7 @@ object CompanySnippet{
 		    "name=name" #> (SHtml.text(ac.name.is,ac.name(_)))&
 		    "name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&
 		    "name=toCancelAnAppointment" #> (SHtml.textarea(ac.toCancelAnAppointment.is, ac.toCancelAnAppointment(_)))&
+		    "name=calendarStatuses" #> (SHtml.textarea(ac.calendarStatuses.is, ac.calendarStatuses(_)))&
 		    "name=bpmStartDay" #>(SHtml.text(ac.bpmStartDay.is.toString,(s:String) => ac.bpmStartDay(s.toInt)))&
 		    "name=bpmDaysToAlert" #>(SHtml.text(ac.bpmDaysToAlert.is.toString,(s:String) => ac.bpmDaysToAlert(s.toInt)))&
 		    "name=bpmDaysToEmail" #>(SHtml.text(ac.bpmDaysToEmail.is.toString,(s:String) => ac.bpmDaysToEmail(s.toInt)))&
@@ -258,6 +262,7 @@ object CompanySnippet{
 			"name=categoryOnProduct" #> (SHtml.checkbox(ac.categoryOnProduct_?, ac.categoryOnProduct_?(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is,ac.short_name(_)))&
 		    "name=phone" #>(SHtml.text(ac.phone.is,ac.phone(_)))&
+		    "name=historyInterval" #>(SHtml.text(ac.historyInterval.is.toString,(s:String) => ac.historyInterval(s.toInt)))&
 		    "name=calendarInterval" #>(SHtml.text(ac.calendarInterval.is.toString,(s:String) => ac.calendarInterval(s.toInt)))&
 		    "name=calendarIntervalAlt" #>(SHtml.text(ac.calendarIntervalAlt.is.toString,(s:String) => ac.calendarIntervalAlt(s.toInt)))&
 			"name=calendarStart" #>(SHtml.text(ac.calendarStart.is.toString,(s:String) => ac.calendarStart(s.toInt)))&		    
