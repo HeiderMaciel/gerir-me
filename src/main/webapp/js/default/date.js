@@ -75,7 +75,7 @@ FactoryDate.byTime = function(time){
   var navigator = window.navigator.userAgent;
   if (navigator.indexOf ("Firefox") >= 0) {
   	return new Date(time);
-  } else if (navigator.indexOf ("Windows") >= 0) {
+  } else if (navigator.indexOf ("Xindows") >= 0) {
 	if(time.replace){
 	  	if (time.indexOf ("00:00:00") >= 0) {
 		   time = (time.replace(/-/g, '/')).substring (0,10)
