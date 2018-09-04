@@ -350,6 +350,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 					}
 				}
 			}
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=quiz" #> (SHtml.select(quizs,Full(ac.quiz.is.toString),(s:String) => ac.quiz( s.toLong)))&
@@ -384,6 +385,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 					}
 				}
 			}
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=quizSection" #> (SHtml.select(sections,Full(ac.quizSection.is.toString),(s:String) => ac.quizSection( s.toLong)))&
@@ -427,6 +429,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 					}
 				}
 			}
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=min" #> (SHtml.text(ac.min.is, ac.min(_)))&
@@ -458,6 +461,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 					}
 				}
 			}
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=valueStr" #> (SHtml.text(ac.valueStr.is, ac.valueStr(_)))&
@@ -527,6 +531,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 					}
 				}
 			}
+			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=userGroup" #> (SHtml.select(groups,Full(ac.userGroup.is.toString),(s:String) => ac.userGroup( s.toLong)))&

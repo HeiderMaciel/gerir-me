@@ -649,6 +649,30 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
       message_aux
   }
 
+  override def save() = {
+      val r = super.save
+
+/*
+      if ((quiz.isEmpty)) {
+        throw new RuntimeException("Não é permitido seção sem questionário/prontuário")
+      }
+*/
+      
+      val ac = Customer.findAll (By(Customer.id, partner));
+      if (status != 1) {
+        if (ac.length > 0) {
+          ac(0).status(0).insecureSave
+        }
+      } else {
+        if (ac.length > 0) {
+          if (ac(0).status != 1) {
+            ac(0).status(1).insecureSave
+          }
+        }
+      }
+      r
+  }
+
 }
 
 object Company extends Company with LongKeyedMapperPerCompany[Company] with SitebleMapper[Company] {
