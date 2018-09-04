@@ -356,16 +356,19 @@
     };
 
     Manager.del_detail = function (tdId) {
-        return $.post("/command/del_detail", {
-          "tdid": tdId
-        }, function(results) {
-          if(results === 1 || results == "1"){
-            alert("Serviço excluído com sucesso");
-          }else{
-            alert(eval(results));
-          }
-          return Manager.getListFromServer();
-        });
+        var message = "Tem certeza que deseja excluir o atendimento?";
+        if(confirm(message)){
+          return $.post("/command/del_detail", {
+            "tdid": tdId
+          }, function(results) {
+            if(results === 1 || results == "1"){
+              alert("Serviço excluído com sucesso");
+            }else{
+              alert(eval(results));
+            }
+            return Manager.getListFromServer();
+          });
+        }
     };
 
     Manager.set_auxiliar = function (userId, tdId) {
