@@ -114,6 +114,13 @@ object SecuritySnippet {
         NodeSeq.Empty
       }
 
+      def isFinancialManager(in:NodeSeq):NodeSeq ={
+        if (AuthUtil.user.isFinancialManager)
+        in
+        else
+        NodeSeq.Empty
+      }
+
       def isCustomer(in:NodeSeq):NodeSeq ={
         if (AuthUtil.user.isCustomer)
         in

@@ -20,14 +20,23 @@ $(function(){
   $("#unit").unitField(true);
   var total = 0.0;
   var count = 0;
+
+  var hasFinancialManager = $('.has-financial-manager').length > 0;
   $("#in_commands tr").each(function(i, item){
     if(i > 0) {
       total += parseFloat($($(item).find('td').get(8)).text());
       count += 1;
     }
   });
-  $("#total").val(total.formatMoney());
-  $("#count").val(count);
+
+  var cashierId = $('#cashier').val() || $('#number').val();
+
+  if (hasFinancialManager || cashierId || gup("cashier")) {
+    $("#total").val(total.formatMoney());
+    $("#count").val(count);
+  } else {
+    $("#total").hide
+  }
   getCashiers();
   $("#detail_print").click(function(){
     window.open('/financial_cashier/comman_conference_print?'+$("#form_search :input").serialize(),'print_window_command')

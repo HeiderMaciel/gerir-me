@@ -13,9 +13,13 @@
       $("#start").val(getDateBr(new Date().getStartOfMonth()));
       $("#end").val(getDateBr(new Date()));    
       var request = function(){
+        var hasFinancialManager = $('.has-financial-manager').length > 0;
         cashierId = $('#cashier').val() || $('#number').val();
-       // if (!cashierId){
-       //   alert("Caixa inválido!") ieda faz resumo mensal sem informar caixa
+        if (!hasFinancialManager) {
+          if (!cashierId){
+           return alert("É preciso selecionar um caixa") 
+          }
+        }
        // } else {
           var params = $("#form_report").serializeObject();
           requestCashiersPaymentTypes(params, "#grid", "#total", true);
@@ -62,10 +66,12 @@
             <div class="inline-inputs">
               <div class="input-prepend style='float:left; padding-right:10px'">
                <select name="cashier" class="xlarge" id="cashier"></select>
-               <span class="help-block">Selecione um caixa na lista ou digite o número</span>
+               <span class="help-block">Selecione um caixa na lista</span>
              </div>
-             <div class="input-prepend">
+             <input type="hidden" class="has-financial-manager lift:SecuritySnippet.isFinancialManager" value="1">
+             <div class="input-prepend lift:SecuritySnippet.isFinancialManager">
               <input class="mini" id="number" name="number" size="5 " type="text"/>           
+              <span class="help-block">Ou digite o número</span>
             </div>
           </div>
         </div>

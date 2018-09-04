@@ -527,7 +527,7 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 
             if (!isFinancialManager) {
                 if (isCashierGeneral && isCashier) {
-                    throw new RuntimeException ("Se a permissão Caixa Geral foi especificada, não é necessário especificar a permissão de caixa")
+                    throw new RuntimeException ("Se a permissão Caixa Geral foi especificada, não é necessário especificar a permissão de Caixa")
                 }
             }
 
