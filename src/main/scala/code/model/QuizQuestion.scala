@@ -174,6 +174,9 @@ from quizquestion where company = 398 and quizsection = 7;
         (this.quizQuestionType == 0)) {
         throw new RuntimeException ("Se tem domínio o tipo não deve ser texto")
     }
+    if ((quizSection.isEmpty)) {
+      throw new RuntimeException("Não é permitido questão sem seção")
+    }
     val r = super.save
 
     DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.quizSection.is :: Nil)

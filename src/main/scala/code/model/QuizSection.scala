@@ -64,6 +64,10 @@ class QuizSection extends Audited[QuizSection] with PerCompany with IdPK with Cr
     override def save() = {
         val r = super.save
 
+        if ((quiz.isEmpty)) {
+          throw new RuntimeException("Não é permitido seção sem questionário/prontuário")
+        }
+
         DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.quiz.is :: Nil)
 
         r

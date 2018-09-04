@@ -74,6 +74,11 @@ from quizdomainitem where company = 398 and quizdomain = 7;
         this.valueStr(BusinessRulesUtil.toCamelCase(this.name))
       }
     }
+
+    if ((quizDomain.isEmpty)) {
+      throw new RuntimeException("Não é permitido item sem domínio")
+    }
+
     val r = super.save
 
     DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.quizDomain.is :: Nil)
