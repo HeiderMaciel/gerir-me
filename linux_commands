@@ -535,6 +535,16 @@ http://nb.transitobh.com.br/
 no ci.transitobh.com.br
 construir o PDF-server
 
+= = = = = = = = = =  
+data e time zone no servidor
+ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+
+sudo timedatectl set-timezone UTC
+
+date -s "19 APR 2012 11:14:00"
+
+= = = = = = = = = = = 
+
 http://pm2.keymetrics.io/docs/usage/quick-start/
 diretorio de logs 
 cd /root/.pm2/logs
@@ -544,6 +554,7 @@ git pull
 pm2 stop all        
 pm2 restart all     
 
+cd /var/lib/jenkins/app/gerir-me
 pm2 start gerirme.json
 
 Se quiser que o pm2 inicie com o sistema:
