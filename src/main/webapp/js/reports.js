@@ -42,6 +42,18 @@ var trStatusdecode = function(name, row, showhint){
   } else if (status == '9') {
     statstr = 'Budget'
     title ='orçamento'
+  } else if (status == '10') {
+    statstr = 'ReScheduled'
+    title ='remarcou'
+  } else if (status == '11') {
+    statstr = 'OnGoing'
+    title ='em atendimento'
+  } else if (status == '12') {
+    statstr = 'Canceled'
+    title ='desmarcado empresa'
+  } else if (status == '13') {
+    statstr = 'ReOpen'
+    title ='remarcado empresa'
   }
   if (showhint) {
     return "<p>" + title + "</p>"

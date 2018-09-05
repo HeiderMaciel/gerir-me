@@ -38,6 +38,11 @@ trait TreatmentStatus {
     val PreOpen = 7
     val ReSchedule = 8
     val Budget = 9
+    val ReScheduled = 10
+    val OnGoing = 11
+    val Canceled = 12 // by company
+    val ReOpen = 13 // by company
+
 //        val Open, Missed, Arrived,Ready,Paid, Deleted, Confirmed, PreOpen, ReSchedule, Budget = Value
     // no pilates é imperativo separar a falta (missed) da remarcação (reschedule)
 }

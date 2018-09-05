@@ -213,6 +213,7 @@ object CompanySnippet{
 			def process(): JsCmd= {
 				try {
 					ac.save	
+					ac.calendarStatuses(S.params("calendarStatuses").foldLeft("")(_+","+_))
 				   	S.notice("Alterado com sucesso!")
 		   		}catch{
 					case (e:net.liftweb.http.ResponseShortcutException) =>{
@@ -250,7 +251,7 @@ object CompanySnippet{
 		    "name=name" #> (SHtml.text(ac.name.is,ac.name(_)))&
 		    "name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&
 		    "name=toCancelAnAppointment" #> (SHtml.textarea(ac.toCancelAnAppointment.is, ac.toCancelAnAppointment(_)))&
-		    "name=calendarStatuses" #> (SHtml.textarea(ac.calendarStatuses.is, ac.calendarStatuses(_)))&
+//		    "name=calendarStatuses" #> (SHtml.textarea(ac.calendarStatuses.is, ac.calendarStatuses(_)))&
 		    "name=bpmStartDay" #>(SHtml.text(ac.bpmStartDay.is.toString,(s:String) => ac.bpmStartDay(s.toInt)))&
 		    "name=bpmDaysToAlert" #>(SHtml.text(ac.bpmDaysToAlert.is.toString,(s:String) => ac.bpmDaysToAlert(s.toInt)))&
 		    "name=bpmDaysToEmail" #>(SHtml.text(ac.bpmDaysToEmail.is.toString,(s:String) => ac.bpmDaysToEmail(s.toInt)))&
@@ -272,6 +273,7 @@ object CompanySnippet{
 		    "name=calendarIntervalAlt" #>(SHtml.text(ac.calendarIntervalAlt.is.toString,(s:String) => ac.calendarIntervalAlt(s.toInt)))&
 			"name=calendarStart" #>(SHtml.text(ac.calendarStart.is.toString,(s:String) => ac.calendarStart(s.toInt)))&		    
 			"name=calendarEnd" #>(SHtml.text(ac.calendarEnd.is.toString,(s:String) => ac.calendarEnd(s.toInt)))&
+			"name=calendarStatuses_text" #> (SHtml.text(ac.calendarStatuses, (a:String) => {}))&
 			"name=calendarShowId" #> (SHtml.checkbox(ac.calendarShowId_?, ac.calendarShowId_?(_)))&
 			"name=calendarShowPhone" #> (SHtml.checkbox(ac.calendarShowPhone_?, ac.calendarShowPhone_?(_)))&
 			"name=calendarShowLight" #> (SHtml.checkbox(ac.calendarShowLight_?, ac.calendarShowLight_?(_)))&

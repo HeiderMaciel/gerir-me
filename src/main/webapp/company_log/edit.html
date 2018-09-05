@@ -1,4 +1,10 @@
 <div id="main" class="lift:surround?with=bootstrap;at=content">
+	<script>
+	  $(function(){
+		var str = $("#calendarStatuses_text_id input").val();
+		$("#calendarStatuses").val(str.split(",")).change();
+	  })
+	</script>   
 	<div>
 		<form  method="post" class="lift:companySnippet.form">
 			<div class="well">
@@ -232,6 +238,32 @@
 			              		<span class="help-block">Hora inicial e final para aceitar agendamentos</span>
 				            </div>
 			          	</div>
+						<span id='calendarStatuses_text_id' class="hide">
+						  <input name="calendarStatuses_text"/>
+						</span>
+						<!--div class="clearfix">
+						  <label for="calendarStatuses">Statuses</label>
+						   <div class="input">
+							  <div class='inline-inputs'>
+								<div class="input-prepend" style='float:left; padding-right:10px'>
+								  <select multiple="multiple" class="xlarge" id="calendarStatuses" name="calendarStatuses" >
+									  <option value="7">PréAgendado</option>
+									  <option value="0">Agendado</option>
+									  <option value="6">Confirmado</option>
+									  <option value="2">Chegou</option>
+									  <option value="11">em Atendimento</option>
+									  <option value="3">Atendido</option>
+									  <option value="1">Faltou</option>
+									  <option value="8">Desmarcou</option>
+									  <option value="10">Remarcou</option>
+									  <option value="12">Desmarc empresa</option>
+									  <option value="13">Remarc empresa</option>
+								  </select>
+								  <span class="help-block">Status que podem ser usados na agenda</span>
+								</div>
+							  </div>
+						   </div>
+						</div-->
 						<!--div class="clearfix">
 						é true para todo mundo nao faz sentido - 11/04/2017
 				            <label for="autoOpenCalendar">Auto abrir a agenda?</label>
