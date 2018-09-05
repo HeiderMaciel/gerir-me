@@ -73,42 +73,62 @@ FactoryDate.byTime = function(time){
   // datas no mozilla firefox vinham nan/nan/nan
   // testar no sfari / opera apple
   var navigator = window.navigator.userAgent;
+  //alert (navigator)
   if (navigator.indexOf ("Firefox") >= 0) {
   	return new Date(time);
-  } else if (navigator.indexOf ("Xindows") >= 0) {
+  } else if (navigator.indexOf ("MSIE") >= 0) {
 	if(time.replace){
 	  	if (time.indexOf ("00:00:00") >= 0) {
 		   time = (time.replace(/-/g, '/')).substring (0,10)
 		   return new Date(time);
 		} else {
 		// data com time só funcionou com - e não com /	
-		   time = (time).substring (0,10)
-		   +"T"+time.substring (11,19)
-		   time = time.replace(/ /g,"T")+".000Z"
-		   return new Date(time);
+	       if (new Date (time.replace(/-/g, '/')) == 'Invalid Date') {
+			   time = (time).substring (0,10)
+			   +"T"+time.substring (11,19)
+			   time = time.replace(/ /g,"T")+".000Z"
+			   return new Date(time);
+		   } else {
+               return new Date(time.replace(/-/g, '/'));
+		   }	
 	  	}
 	} else {
 		return new Date(time);
 	}
   } else if  ((navigator.indexOf ("Safari") >= 0) &&
-  	(navigator.indexOf ("Chrome") == -1)) {
+  	(navigator.indexOf ("Chrome") == -1) &&
+  	(navigator.indexOf ("CriOS") == -1)) {
 	if(time.replace){
 	  	if (time.indexOf ("00:00:00") >= 0) {
 		   time = (time.replace(/-/g, '/')).substring (0,10)
 		   return new Date(time);
 		} else {
-		// data com time só funcionou com - e não com /	
-		   time = (time).substring (0,10)
-		   +"T"+time.substring (11,19)
-		   time = time.replace(/ /g,"T")+".000Z"
-		   return new Date(time);
+			if(time.replace){
+				if (new Date (time.replace(/-/g, '/')) == 'Invalid Date') {
+				   time = (time).substring (0,10)
+				   +"T"+time.substring (11,19)
+				   time = time.replace(/ /g,"T")+".000Z"
+				   return new Date(time);
+				} else {
+					return new Date(time.replace(/-/g, '/'));
+				}
+			}else{
+				return new Date(time);
+			}
 	  	}
 	} else {
 		return new Date(time);
 	}
   } else {
 	if(time.replace){
-		return new Date(time.replace(/-/g, '/'));
+		if (new Date (time.replace(/-/g, '/')) == 'Invalid Date') {
+		   time = (time).substring (0,10)
+		   +"T"+time.substring (11,19)
+		   time = time.replace(/ /g,"T")+".000Z"
+		   return new Date(time);
+		} else {
+			return new Date(time.replace(/-/g, '/'));
+		}
 	}else{
 		return new Date(time);
 	}
