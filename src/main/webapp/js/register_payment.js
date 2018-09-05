@@ -1478,7 +1478,7 @@
       throw "O valor do cheque deve ser o mesmo do pagamento!";
     }
     for (var i in chequeInfo) {
-      if (chequeInfo[i] === "" && i != 'account') {
+      if (chequeInfo[i] === "" && i != 'account' && i != 'cheque_obs') {
         throw "Existem informações em branco no cheque por favor preencha todos os campos!";
       }
     }
