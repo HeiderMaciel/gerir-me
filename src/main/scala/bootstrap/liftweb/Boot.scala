@@ -433,6 +433,7 @@ class Boot {
 
         Menu(Loc("Cliente", Link(List("customer"), true, "/customer/list"),customerMenuLabel,customerAccess)),
         Menu(Loc("ClienteForlist", Link(List("customer_form_list"), true, "/customer/list_form"),"Convênio",customerAccess,Hidden)),
+        Menu(Loc("Unificar", Link(List("customer_admin"), true, "/customer_admin/unific_customer"),"Unificar",customerAccess,Hidden)),
 
         Menu(Loc("Convênio", Link(List("offsale"), true, "/offsale/list"),"Convênio",financialAccess,Hidden)),
         Menu(Loc("Mensalidade", Link(List("monthly"), true, "/monthly/list_monthly"),"Mensalidade",superAdmin,Hidden)),

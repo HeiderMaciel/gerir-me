@@ -72,6 +72,14 @@ object CustomerApi extends RestHelper {
 				val customerSource = Customer.findAllInCompany(By(Customer.id, customerSrc.toLong))(0)
 				val customerDestination = Customer.findAllInCompany(By(Customer.id, customerDest.toLong))(0)
 				try {
+					if (customerSource.valueInAccount != 0.0 ||
+						customerSource.valueInPoints != 0.0 ||
+						customerDestination.valueInAccount != 0.0 ||
+						customerDestination.valueInPoints != 0.0) {
+						if (!AuthUtil.user.isFinancialManager) {
+					      throw new Exception("Para unificar clientes com saldo diferente de zero, seja em moeda corrente ou pontos fidelidade, você precisa ter permissão de Administrador ou Gerente Financeiro")
+						}
+					}
 					Customer.unificCustomer(customerSource, customerDestination, bptype)
 					JInt(1)
 				} catch {
