@@ -46,7 +46,7 @@
 	            </div>
           	</div>
 			<div class="clearfix">
-	            <label for="email"><span data-i18n='Profissional'></span> / <span data-i18n='Serviço'></span></label>
+	            <label for="userActivityAssociate"><span data-i18n='Profissional'></span> / <span data-i18n='Serviço'></span></label>
 	            <div class="input">
 	                <input id="userActivityAssociate" name='userActivityAssociate'>
 	              <span class="help-block">Associar <span data-i18n='Profissional'></span> ao <span data-i18n='Serviço'></span></span>
@@ -66,36 +66,6 @@
 	              <span class="help-block">Fatura por categoria em produto/serviço</span>
 	            </div>
           	</div>
-			<div class="clearfix">
-	            <label for="email">Receber Notificações por E-mail</label>
-	            <div class="input">
-	                <input id="notify" name='notify'>
-	              <span class="help-block">Receber notificações por e-mail</span>
-	              <span class="label important">Ao marcar esta opção vocé passará a receber notificações por e-mail de contas a pagar no dia!</span>
-	            </div>
-          	</div>
-			<div class="clearfix">
-	            <label for="notify">Notificar Pagar/Receber</label>
-	            <div class="input">
-			    	<div class='inline-inputs'>
-			      		<div class="input-prepend" style='padding-right:10px'>
-			    			<input class="mini" id="financialNotification" name='financialNotification'>
-						<span data-i18n='Clientes'></span>
-							<input class="mini" id="customerNotification" name='customerNotification'>
-						<span data-i18n='Profissionais'></span>
-							<input class="mini" id="userNotification" name='userNotification'>
-						</div>
-					</div>
-	                <span class="help-block">0-Não notifica 1-Notifica 21:30 2-Notifica 01:00</span>
-                </div>
-            </div>
-            <div class="clearfix">
-              <label for="toCancelAnAppointment">Política Cancel</label>
-               <div class="input">
-                  <input class="large" id="toCancelAnAppointment" name="toCancelAnAppointment" size="30" type="textarea"/>
-                  <span class="help-block">Política de cancelamento enviada na notificação do cliente</span>
-               </div>
-            </div>          
 			<!--div class="clearfix">
 	            <label for="autoIncrementCommand">Incrementar automaticamente comandas</label>
 	            <div class="input">
@@ -118,7 +88,7 @@
 	            </div>
           	</div>           	           	
 			<div class="clearfix lift:SecuritySnippet.isSuperAdmin">
-	            <label for="cmdChangeDate">Troca data na command?</label>
+	            <label for="cmdChangeDate">Troca data na comanda?</label>
 	            <div class="input">
 	              <input id="cmdChangeDate" name='cmdChangeDate'>
 	            </div>
@@ -195,6 +165,7 @@
 			<span>
 				<ul class="tabs">
 		          <li class="active tab"><a href="#agenda">Agenda</a></li>
+		          <li class="tab"><a href="#notifytab">Notificações</a></li>
 				  <li class="lift:SecuritySnippet.hasBpmonthlyModule tab"><a href="#bpmonthly">Mensalidades</a></li>
 				  <li class="lift:SecuritySnippet.hasOffSaleModule tab"><a href="#offsale">Convênio</a></li>
 				  <li class="lift:SecuritySnippet.hasPackageModule tab"><a href="#package">Pacote</a></li>
@@ -211,7 +182,7 @@
 				            </div>
 			          	</div>          	
 						<div class="clearfix">
-				            <label for="email">Intervalos da Agenda</label>
+				            <label for="calendarInterval">Intervalos da Agenda</label>
 				            <div class="input">
 						    	<div class='inline-inputs'>
 						      		<div class="input-prepend" style='float:left; padding-right:10px'>
@@ -225,7 +196,7 @@
 				            </div>
 			          	</div>
 						<div class="clearfix">
-							<label for="name">Início / Fim Agenda</label>        
+							<label for="calendarStart">Início / Fim Agenda</label>        
 						 	<div class="input">
 						    	<div class='inline-inputs'>
 						      		<div class="input-prepend" style='float:left; padding-right:10px'>
@@ -351,6 +322,70 @@
 				              <span class="help-block">Para acessar a agenda ebelle.com.br/agenda.html/complemento</span>
 			                </div>
 			            </div>
+				    </div>
+				  </div>
+				  <div class="tab_content row" id="notifytab">
+				    <div class='span8'>
+						<div class="clearfix">
+				            <label for="notify">Receber Notificações por E-mail</label>
+				            <div class="input">
+				                <input id="notify" name='notify'>
+				              <span class="help-block">Receber notificações por e-mail</span>
+				              <span class="label important">Ao marcar esta opção vocé passará a receber notificações por e-mail de contas a pagar no dia!</span>
+				            </div>
+			          	</div>
+						<div class="clearfix">
+				            <label for="financialNotification">Notificar Pagar/Receber</label>
+				            <div class="input">
+						    	<div class='inline-inputs'>
+						      		<div class="input-prepend" style='padding-right:10px'>
+						    			<input class="mini" id="financialNotification" name='financialNotification'>
+								</div>
+				                <span class="help-block">0-Não notifica 1-Notifica 21:30 2-Notifica 01:00</span>
+			                </div>
+			            </div>
+						<div class="clearfix">
+				            <label for="customerNotification">Notificar Clientes</label>
+				            <div class="input">
+						    	<div class='inline-inputs'>
+						      		<div class="input-prepend" style='padding-right:10px'>
+										<input class="mini" id="customerNotification" name='customerNotification'>
+									<span data-i18n='Profissionais'></span>
+										<input class="mini" id="userNotification" name='userNotification'>
+									</div>
+								</div>
+				                <span class="help-block">0-Não notifica 1-Notifica 21:30 2-Notifica 01:00</span>
+			                </div>
+			            </div>
+			            <div class="clearfix">
+			              <label for="mailAppointmentSignature">Assinatura</label>
+			               <div class="input">
+			                  <input class="large" id="mailAppointmentSignature" name="mailAppointmentSignature" size="30" type="textarea"/>
+			                  <span class="help-block">Assinatura enviada na notificação do cliente</span>
+			               </div>
+			            </div>          
+						<div class="clearfix">
+				            <label for="hoursToConfirmPub">Horas Confirmar</label>
+				            <div class="input">
+						    	<div class='inline-inputs'>
+						      		<div class="input-prepend" style='padding-right:10px'>
+										<input class="mini" id="hoursToConfirmPub" name='hoursToConfirmPub'>
+									Cancelar
+										<input class="mini" id="hoursToCancelPub" name='hoursToCancelPub'>
+						                <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/company.html#notify' rel="popover" class="_popover_basic _help">
+						                  <img src="/images/info.gif" width="20">
+						                  </a>
+									</div>
+								</div>
+			                </div>
+			            </div>
+			            <div class="clearfix">
+			              <label for="toCancelAnAppointment">Política Cancel</label>
+			               <div class="input">
+			                  <input class="large" id="toCancelAnAppointment" name="toCancelAnAppointment" size="30" type="textarea"/>
+			                  <span class="help-block">Política de cancelamento enviada na notificação do cliente</span>
+			               </div>
+			            </div>          
 				    </div>
 				  </div>
 				</div>

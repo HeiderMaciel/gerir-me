@@ -161,8 +161,12 @@ object DailyReport{
 		val treatments = TreatmentService.loadTreatmentByCustomer(customer, date,company)
 		val num = treatments.size
 		val description = extDay (date)
-		val confirm = if (company.id == 1 || company.id == 8
-			|| company.id == 334 /* equilibrar */) {
+		val confirmDisplay = if (company.hoursToConfirmPub != 0) {
+			"visible"
+		} else {
+			"none"
+		}
+		val cancelDisplay = if (company.hoursToCancelPub != 0) {
 			"visible"
 		} else {
 			"none"
@@ -190,13 +194,13 @@ object DailyReport{
 									<br/>
 									<hr/>
 								</div>
-								<div style={"display:"+ confirm +""}>
+								<div style={"display:"+ confirmDisplay +""}>
 									<p><b>
 									Para confirmar sua presença, por favor, <a href = {"http://" + company.appShortName + ".vilarika.com.br/customer_confirmation?id=" + 
 									a.id + "," + a.company + "," + a.customer + "," + a.user + ",6"}>clique aqui</a>.
 									</b></p>
 								</div>
-								<div style={"display:"+ confirm +""}>
+								<div style={"display:"+ cancelDisplay +""}>
 									<p><b>
 									Para desmarcar esse atendimento, por favor, <a href = {"http://" + company.appShortName + ".vilarika.com.br/customer_confirmation?id=" + 
 									a.id + "," + a.company + "," + a.customer + "," + a.user + ",8"}>clique aqui</a>.

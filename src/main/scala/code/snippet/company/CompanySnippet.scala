@@ -251,6 +251,7 @@ object CompanySnippet{
 		    "name=name" #> (SHtml.text(ac.name.is,ac.name(_)))&
 		    "name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&
 		    "name=toCancelAnAppointment" #> (SHtml.textarea(ac.toCancelAnAppointment.is, ac.toCancelAnAppointment(_)))&
+		    "name=mailAppointmentSignature" #> (SHtml.textarea(ac.mailAppointmentSignature.is, ac.mailAppointmentSignature(_)))&
 //		    "name=calendarStatuses" #> (SHtml.textarea(ac.calendarStatuses.is, ac.calendarStatuses(_)))&
 		    "name=bpmStartDay" #>(SHtml.text(ac.bpmStartDay.is.toString,(s:String) => ac.bpmStartDay(s.toInt)))&
 		    "name=bpmDaysToAlert" #>(SHtml.text(ac.bpmDaysToAlert.is.toString,(s:String) => ac.bpmDaysToAlert(s.toInt)))&
