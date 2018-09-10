@@ -19,6 +19,11 @@
     fields[4] = "dateTime";
     fields[5] = "boolean";
     fields[7] = "none";
+    if (document.location.href.indexOf("localhost") == -1){
+      fields[8] = "none";
+    } else {
+      // mostra a mensagem em ambiente local
+    }
     var total = 0.00;
     var total_read = 0.00;
     var total_notread = 0.00;

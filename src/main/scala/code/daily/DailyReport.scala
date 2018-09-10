@@ -171,6 +171,13 @@ object DailyReport{
 		} else {
 			"none"
 		}
+
+		def url (company:Company) = if (Project.isLocalHost) {
+           "localhost:7171/"
+        } else {
+	       "http://" + company.appShortName + ".vilarika.com.br/"
+        }
+
 		val xml = <div>
 					<img width="100px" src={company.thumb_web}/>
 					<br/>
@@ -196,14 +203,20 @@ object DailyReport{
 								</div>
 								<div style={"display:"+ confirmDisplay +""}>
 									<p><b>
-									Para confirmar sua presença, por favor, <a href = {"http://" + company.appShortName + ".vilarika.com.br/customer_confirmation?id=" + 
-									a.id + "," + a.company + "," + a.customer + "," + a.user + ",6"}>clique aqui</a>.
+									Para confirmar sua presença, por favor, <a href = {url (company) + 
+									"customer_confirmation?id=" + 
+									a.id + "," + a.company + "," + 
+									a.customer + "," + a.user + 
+									",6"}>clique aqui</a>.
 									</b></p>
 								</div>
 								<div style={"display:"+ cancelDisplay +""}>
 									<p><b>
-									Para desmarcar esse atendimento, por favor, <a href = {"http://" + company.appShortName + ".vilarika.com.br/customer_confirmation?id=" + 
-									a.id + "," + a.company + "," + a.customer + "," + a.user + ",8"}>clique aqui</a>.
+									Para desmarcar esse atendimento, por favor, <a href = {url (company) + 
+									"customer_confirmation?id=" + 
+									a.id + "," + a.company + "," + 
+									a.customer + "," + a.user + 
+									",8"}>clique aqui</a>.
 									</b></p>
 								</div>
 							)

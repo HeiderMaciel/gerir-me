@@ -28,7 +28,8 @@ class LogMailSend extends LongKeyedMapper[LogMailSend] with IdPK with CreatedUpd
 object LogMailSend extends LogMailSend with LongKeyedMapperPerCompany[LogMailSend] with OnlyCurrentCompany[LogMailSend]{
     val SQL_TO_REPORT = """
         select lm.subject,bp.name, lm.to_c,lm.createdat, 
-        lm.updatedat, lm.read, lm.times, bp.id from logmailsend lm
+        lm.updatedat, lm.read, lm.times, bp.id, lm.message 
+        from logmailsend lm
         left join business_pattern bp on bp.id = business_pattern
         where lm.company = ? and date (lm.createdat) between ? and ? 
         and lower (subject) like '%s' and %s
