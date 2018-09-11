@@ -35,6 +35,13 @@ class PaymentTypesSnippet extends BootstrapPaginatorSnippet[PaymentType]{
 
 	def categoriesForSelect = ("0" ,"Nenhum") :: AccountCategory.findAllInCompany(OrderBy(AccountCategory.name, Ascending)).map(a =>(a.id.is.toString,a.name.is))
 	def accountsForSelect = ("0" ,"Nenhum") :: Account.findAllInCompany(OrderBy(Account.name, Ascending)).map(a =>(a.id.is.toString,a.name.is))
+	def usersForSelect = ("0" ,"Nenhum") :: User.findAllInCompany(OrderBy(User.name, Ascending)).map(a =>{
+		def compl = if (a.userStatus == 1) {
+			""
+		} else {
+			" <span style='color:red'><b>inativo</b></span>"
+		}
+		(a.id.is.toString,a.name.is + compl)})
 
 	def paymenttypes(xhtml: NodeSeq): NodeSeq = {
 			var id:String = ""
@@ -134,6 +141,7 @@ class PaymentTypesSnippet extends BootstrapPaginatorSnippet[PaymentType]{
 			"name=customerRegisterDebit" #> (SHtml.checkbox(ac.customerRegisterDebit_?, ac.customerRegisterDebit_?(_)))&
 			"name=addUserAccountToDiscount" #> (SHtml.checkbox(ac.addUserAccountToDiscount_?, ac.addUserAccountToDiscount_?(_)))&
 			"name=allowCustomeraddUserToDiscount" #> (SHtml.checkbox(ac.allowCustomeraddUserToDiscount_?, ac.allowCustomeraddUserToDiscount_?(_)))&
+			"name=user" #> (SHtml.select(usersForSelect,Full(ac.user.is.toString),(s:String) => ac.user(s.toLong)))&
 			"name=bpmonthly" #> (SHtml.checkbox(ac.bpmonthly_?, ac.bpmonthly_?(_)))&
 			"name=offSale" #> (SHtml.checkbox(ac.offSale_?, ac.offSale_?(_)))&
 			"name=fidelity" #> (SHtml.checkbox(ac.fidelity_?, ac.fidelity_?(_)))&

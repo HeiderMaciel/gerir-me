@@ -343,7 +343,9 @@ object ReceiveAddValueToUser extends FatChain{
 									// nesta forma de pagamento se o customer não for profissional
 									// tem que gerar o vale no user do treatment mesmo
 									// 
-									val bp : Long = if (pd.customer.obj.get.is_user_?.is) {
+									val bp : Long = if (!paymentType.user.isEmpty) {
+										paymentType.user.is
+									} else if (pd.customer.obj.get.is_user_?.is) {
 										pd.customer
 									} else {
 										pd.user.toLong
