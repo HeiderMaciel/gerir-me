@@ -226,13 +226,21 @@ object  TreatmentService extends net.liftweb.common.Logger {
 	}	
 	def loadTreatmentByCustomer(customer:Customer,date:Date,company:Company):List[Treatment] = {
 		Treatment.findAll(By(Treatment.customer,customer.id.is),
-						  By(Treatment.company,company),
-						  By(Treatment.hasDetail,true),
-						  // -- deletado desmarcou faltou
-						  BySql(" status not in (5,8,1) ",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00")),
-						  BySql("dateevent = date(?)",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"),date),
-						  OrderBy(Treatment.start,Ascending)
-						 )
+			By(Treatment.company,company),
+			By(Treatment.hasDetail,true),
+			// -- deletado desmarcou faltou
+			BySql(" status not in (5,8,1) ",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00")),
+			BySql("dateevent = date(?)",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"),date),
+			OrderBy(Treatment.start,Ascending)
+			)
+	}	
+	// terminar
+	def loadTDetailByCustomer(customer:Customer,date:Date,company:Company):List[TreatmentDetail] = {
+		TreatmentDetail.findAll (By(TreatmentDetail.company,company),
+			 // -- deletado desmarcou faltou
+			 BySql(" tr.status not in (5,8,1) ",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00")),
+			 BySql(" tr.dateevent = date(?) and tr.hasdetail = true",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"),date)
+			)
 	}	
 	def loadTreatmentByCustomerNotPaid(customer:Customer,date:Date) = {
 		loadTreatmentByCustomer(customer,date).filter(_.status != Treatment.Paid)

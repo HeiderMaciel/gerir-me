@@ -296,15 +296,9 @@ object DailyReport{
 								<div>
 									<br/>
 									<b>Profissional</b> : {a.userName}<br/>
-										<b>Horário</b> : de {Project.dateToHours(a.start.is)} até {Project.dateToHours(a.end.is)}
+										<b>Horário</b> : de {Project.dateToHours(a.start.is)} 
 									<br/>
 										<b>Atendimentos</b> : {a.descritionDetails}
-									<br/>
-										<b>Local</b> : {company.name.is} - Unidade {a.unit.obj.get.name}
-									<br/>
-										<b>Telefone</b> : {company.phone.is}
-									<br/>
-										<b>Endereço</b> : {a.unit.obj.get.getPartner.full_address}
 									<br/>
 									<hr/>
 								</div>
