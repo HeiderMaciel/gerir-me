@@ -100,8 +100,9 @@ object EmailUtil {
       "rigel.ferreira@vilarika.com.br" :: Nil
     } else {
       "mateus.freira@gmail.com" :: "rigel.ferreira@hotmail.com" :: 
-      "rigel.ferreira@gmail.com" :: 
+      "rigel.ferreira@vilarika.com.br" :: 
       "suporte@vilarika.com.br" :: 
+      "karina.pisa@vilarika.com.br" :: 
       "karina_pisa@hotmail.com" :: "hrmaciel@vilarika.com.br" :: Nil
   }
   //val rigeltest = "rigel.ferreira@gmail.com" :: "rigel.ferreira@hotmail.com" :: "rigel.ferreira@vilarika.com.br" :: Nil

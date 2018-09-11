@@ -428,6 +428,9 @@ $(function(){
 	$(".send_email_customer").click(function(){
 		sendEmailCustomer({id:$("#treatment_id").val()});
 	});
+	$(".send_rank_email_customer").click(function(){
+		sendRankEmailCustomer({id:$("#treatment_id").val()});
+	});
 	$(".send_email_user").click(function(){
 		sendEmailUser({id:$("#treatment_id").val()});
 	});

@@ -74,6 +74,25 @@ var sendEmailCustomer = function(calEvent){
   } 
 }
 
+var sendRankEmailCustomer = function(calEvent){
+  if(confirm("Tem certeza que deseja enviar um e-mail para o cliente?")){
+    var url = "/social/treatments/rank_customer/"+calEvent.id;
+    $.ajax(url,{"type": "GET", "success" : function(response){
+      // TESTAR no sendEmailUser também
+      //
+      eval("var t ="+response);
+      if (t.message) {
+      alert("Erro ao enviar E-mail! " + t.message);
+      } else {
+        alert("Enviado com sucesso!");
+      }
+    }, "error" : function(response){
+      eval("var t ="+response);
+      alert("Erro ao enviar E-mail! " + t.message);
+    }});
+  } 
+}
+
 var sendEmailUser = function(calEvent){
   if(confirm("Tem certeza que deseja enviar um e-mail para o profissional?")){
     var url = "/social/treatments/notify_user/"+calEvent.id;

@@ -111,6 +111,57 @@ object  TreatmentService extends net.liftweb.common.Logger {
 			)		
 		)
 	}
+
+	def sendTreatmentsRankEmailCustomer(id:Long) = {
+		val treatment = Treatment.findByKey(id).get
+		val customer = treatment.customer.obj.get
+		val company = treatment.company.obj.get
+		val companyEmail = company.email.is
+        val mail = code.daily.DailyReport.treatmentsRankCustomer(customer,company, treatment.dateEvent)
+        val title = if (AuthUtil.company.appType.isEgrex) {
+        	"Atendimento Membro "+company.name.is
+        	}else if (AuthUtil.company.appType.isEphysio) {
+        	"Atendimento Paciente "+company.name.is
+        	}else if (AuthUtil.company.appType.isEdoctus) {
+        	"Atendimento Paciente "+company.name.is
+        	}else{
+        	"Atendimento Cliente "+company.name.is
+        	}
+        val location = company.name.is+" - Unidade"+treatment.unit.obj.get.name;
+/*
+		EmailUtil.sendMailTo(
+			customer.email.is.toString, mail, title, company,
+			FullAttachment(
+							"atendimento.ics",
+							"text/calendar", 
+							treatment.toIcs(title)
+			)
+		)
+*/
+        var cunit = if (!customer.unit.isEmpty) {
+                CompanyUnit.findByKey(customer.unit).get
+            } else {
+                // unidade vilarika
+                CompanyUnit.findByKey(7).get
+            }
+        if (customer.email.is.toString == "") {
+		    throw new RuntimeException(customer.name.is + " não possui email cadastrado.")
+        }
+
+		EmailUtil.sendMailCustomer(cunit,
+			Company.findByKey (customer.company).get, 
+			customer.email.is.toString,
+			mail, 
+			title, 
+			customer.id.is,
+			FullAttachment(
+							"atendimento.ics",
+							"text/calendar", 
+							treatment.toIcs(title)
+			)
+		)
+	}
+
 	def revertPrices(id:Long) = {
 		Treatment.findByKey(id).get.revertPrices
 	}

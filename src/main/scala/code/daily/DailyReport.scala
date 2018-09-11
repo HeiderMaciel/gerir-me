@@ -274,6 +274,99 @@ object DailyReport{
 		xml		
 	}
 
+	def treatmentsRankCustomer (customer:Customer,company:Company, date:Date = new Date) = {
+		val treatments = TreatmentService.loadTreatmentByCustomer(customer, date,company)
+		val num = treatments.size
+		val description = extDay (date)
+
+		def url (company:Company) = if (Project.isLocalHost) {
+           "localhost:7171/"
+        } else {
+	       "http://" + company.appShortName + ".vilarika.com.br/"
+        }
+
+		val xml = <div>
+					<img width="100px" src={company.thumb_web}/>
+					<br/>
+					Olá {customer.name.is}, <br/><br/>{description} você tem {num} atendimento(s) marcado(s), abaixo detalhes:
+					{
+						treatments.map(
+							a =>
+							(
+								<div>
+									<br/>
+									<b>Profissional</b> : {a.userName}<br/>
+										<b>Horário</b> : de {Project.dateToHours(a.start.is)} até {Project.dateToHours(a.end.is)}
+									<br/>
+										<b>Atendimentos</b> : {a.descritionDetails}
+									<br/>
+										<b>Local</b> : {company.name.is} - Unidade {a.unit.obj.get.name}
+									<br/>
+										<b>Telefone</b> : {company.phone.is}
+									<br/>
+										<b>Endereço</b> : {a.unit.obj.get.getPartner.full_address}
+									<br/>
+									<hr/>
+								</div>
+
+<table align="left" border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td width="4" height="50" style="width:2px; height:50px; line-height:0; font-size:0">
+</td>
+<td align="center" valign="middle" style="width:50px; height:50px; border-radius:25px; background:#B72025">
+<a href="https:/tracksale.co/s/sao-marcos_fcc21a4d0e9b6f728ca3fa119fabb9f9?aNPS=0" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="font-size:16px; font-weight:bold; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; text-decoration:none; line-height:50px; display:block"><span style="color:#ffffff">0</span> </a></td>
+<td width="4" height="50" style="width:2px; height:50px; line-height:0; font-size:0">
+</td>
+<td align="center" valign="middle" style="width:50px; height:50px; border-radius:25px; background:#D62027">
+<a href="https:/tracksale.co/s/sao-marcos_fcc21a4d0e9b6f728ca3fa119fabb9f9?aNPS=1" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="font-size:16px; font-weight:bold; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; text-decoration:none; line-height:50px; display:block"><span style="color:#ffffff">1</span> </a></td>
+<td width="4" height="50" style="width:2px; height:50px; line-height:0; font-size:0">
+</td>
+<td align="center" valign="middle" style="width:50px; height:50px; border-radius:25px; background:#F05223">
+<a href="https:/tracksale.co/s/sao-marcos_fcc21a4d0e9b6f728ca3fa119fabb9f9?aNPS=2" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="font-size:16px; font-weight:bold; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; text-decoration:none; line-height:50px; display:block"><span style="color:#ffffff">2</span> </a></td>
+<td width="4" height="50" style="width:2px; height:50px; line-height:0; font-size:0">
+</td>
+<td align="center" valign="middle" style="width:50px; height:50px; border-radius:25px; background:#F36F21">
+<a href="https:/tracksale.co/s/sao-marcos_fcc21a4d0e9b6f728ca3fa119fabb9f9?aNPS=3" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="font-size:16px; font-weight:bold; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; text-decoration:none; line-height:50px; display:block"><span style="color:#ffffff">3</span> </a></td>
+<td width="4" height="50" style="width:2px; height:50px; line-height:0; font-size:0">
+</td>
+<td align="center" valign="middle" style="width:50px; height:50px; border-radius:25px; background:#FAA823">
+<a href="https:/tracksale.co/s/sao-marcos_fcc21a4d0e9b6f728ca3fa119fabb9f9?aNPS=4" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="font-size:16px; font-weight:bold; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; text-decoration:none; line-height:50px; display:block"><span style="color:#ffffff">4</span> </a></td>
+<td width="4" height="50" style="width:2px; height:50px; line-height:0; font-size:0">
+</td>
+<td align="center" valign="middle" style="width:50px; height:50px; border-radius:25px; background:#FFCA27">
+<a href="https:/tracksale.co/s/sao-marcos_fcc21a4d0e9b6f728ca3fa119fabb9f9?aNPS=5" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="font-size:16px; font-weight:bold; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; text-decoration:none; line-height:50px; display:block"><span style="color:#ffffff">5</span> </a></td>
+<td width="4" height="50" style="width:2px; height:50px; line-height:0; font-size:0">
+</td>
+<td align="center" valign="middle" style="width:50px; height:50px; border-radius:25px; background:#ECDB12">
+<a href="https:/tracksale.co/s/sao-marcos_fcc21a4d0e9b6f728ca3fa119fabb9f9?aNPS=6" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="font-size:16px; font-weight:bold; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; text-decoration:none; line-height:50px; display:block"><span style="color:#ffffff">6</span> </a></td>
+<td width="4" height="50" style="width:2px; height:50px; line-height:0; font-size:0">
+</td>
+<td align="center" valign="middle" style="width:50px; height:50px; border-radius:25px; background:#E8E73D">
+<a href="https:/tracksale.co/s/sao-marcos_fcc21a4d0e9b6f728ca3fa119fabb9f9?aNPS=7" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="font-size:16px; font-weight:bold; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; text-decoration:none; line-height:50px; display:block"><span style="color:#ffffff">7</span> </a></td>
+<td width="4" height="50" style="width:2px; height:50px; line-height:0; font-size:0">
+</td>
+<td align="center" valign="middle" style="width:50px; height:50px; border-radius:25px; background:#C5D92D">
+<a href="https:/tracksale.co/s/sao-marcos_fcc21a4d0e9b6f728ca3fa119fabb9f9?aNPS=8" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="font-size:16px; font-weight:bold; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; text-decoration:none; line-height:50px; display:block"><span style="color:#ffffff">8</span> </a></td>
+<td width="4" height="50" style="width:2px; height:50px; line-height:0; font-size:0">
+</td>
+<td align="center" valign="middle" style="width:50px; height:50px; border-radius:25px; background:#AFD136">
+<a href="https:/tracksale.co/s/sao-marcos_fcc21a4d0e9b6f728ca3fa119fabb9f9?aNPS=9" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="font-size:16px; font-weight:bold; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; text-decoration:none; line-height:50px; display:block"><span style="color:#ffffff">9</span> </a></td>
+<td width="4" height="50" style="width:2px; height:50px; line-height:0; font-size:0">
+</td>
+<td align="center" valign="middle" style="width:50px; height:50px; border-radius:25px; background:#64B64D">
+<a href="https:/tracksale.co/s/sao-marcos_fcc21a4d0e9b6f728ca3fa119fabb9f9?aNPS=10" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="font-size:16px; font-weight:bold; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; text-decoration:none; line-height:50px; display:block"><span style="color:#ffffff">10</span> </a></td>
+</tr>
+</tbody>
+</table>
+<br/><br/><br/>
+							)
+						)
+					}
+				  </div>
+		xml		
+	}
+
 	def monthlyHtml(company:Company,monthly:Monthly,user:User) = {
 		val xml = 
 			<div>
