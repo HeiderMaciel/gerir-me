@@ -789,3 +789,521 @@ server {
 </tr>
 </tbody>
 </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="main" class="lift:surround?with=bootstrap;at=content">
+  <script>
+    $(function(){
+    var str = $("#calendarStatuses_text_id input").val();
+    $("#calendarStatuses").val(str.split(",")).change();
+    })
+  </script>   
+  <div>
+    <form  method="post" class="lift:companySnippet.form">
+      <div class="well">
+        <label class="hide_mobile" for="btn"></label>
+                <input class="btn success lift:SecuritySnippet.isNotAdminRead" type="submit" value="Salvar">
+        <a class="btn primary" href="/financial/payment_forms_list">
+          Formas de Pagamento
+        </a>
+        <a class="btn primary" href="/company/payroll_event_list">
+          Verbas Folha de Pagamento
+        </a>
+      </div>
+      <div class="clearfix">
+        <label for="name">Nome</label>        
+        <div class="input">
+            <div class='inline-inputs'>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                  <input class="xlarge" id="name" name="name" size="30" type="text"/>
+                </div>
+                <div class="input-prepend">
+                  <input class="medium" id="short_name" name="short_name" size="30" type="text"/>
+                </div>
+                <span class="help-block">Nome da empresa completo e nome reduzido, este último usado em alguns relatórios</span>
+            </div>
+        </div>
+      </div>
+      <div class="clearfix">
+              <label for="phone">Telefone</label>
+              <div class="input">
+                <input class="medium phone" id="phone" name="phone" size="30" type="text">
+                <span class="help-block">Telefone da empresa</span>
+              </div>
+            </div>
+      <div class="clearfix">
+              <label for="contact">Contato</label>
+              <div class="input">
+                <input class="medium" id="contact" name="contact" size="30" type="text">
+                <span class="help-block">Nome da pessoa para contato</span>
+              </div>
+            </div>
+      <div class="clearfix">
+              <label for="userActivityAssociate"><span data-i18n='Profissional'></span> / <span data-i18n='Serviço'></span></label>
+              <div class="input">
+                  <input id="userActivityAssociate" name='userActivityAssociate'>
+                <span class="help-block">Associar <span data-i18n='Profissional'></span> ao <span data-i18n='Serviço'></span></span>
+              </div>
+            </div>
+      <div class="clearfix">
+              <label for="showSalesToUser">Faturamento <span data-i18n='Profissional'></span></label>
+              <div class="input">
+                  <input id="showSalesToUser" name='showSalesToUser'>
+                <span class="help-block">Mostra valor faturado do <span data-i18n='Profissional'></span>, além da comissão</span>
+              </div>
+            </div>
+      <div class="clearfix">
+              <label for="categoryOnProduct">Fatura por categoria</label>
+              <div class="input">
+                <input id="categoryOnProduct" name='categoryOnProduct'>
+                <span class="help-block">Fatura por categoria em produto/serviço</span>
+              </div>
+            </div>
+      <!--div class="clearfix">
+              <label for="autoIncrementCommand">Incrementar automaticamente comandas</label>
+              <div class="input">
+                <input id="autoIncrementCommand" name='autoIncrementCommand'>
+                <span class="help-block">Não utiliza comanda numerada</span>
+              </div>
+            </div-->
+      <div class="clearfix">
+        <label for="commandControl">Controle de Comandas</label>
+        <div class="input">
+          <select class="xlarge" id="commandControl" name="commandControl" >
+          </select>
+        </div>
+      </div>
+      <div class="clearfix">
+              <label for="allowrepeatcommand">Aceita repetir comanda no mesmo dia?</label>
+              <div class="input">
+                <input id="allowrepeatcommand" name='allowrepeatcommand'>
+                <span class="help-block">Caso essa opção seja marcada, o sistema permitirá a repetição de comandas no mesmo dia</span>
+              </div>
+            </div>                        
+      <div class="clearfix lift:SecuritySnippet.isSuperAdmin">
+              <label for="cmdChangeDate">Troca data na comanda?</label>
+              <div class="input">
+                <input id="cmdChangeDate" name='cmdChangeDate'>
+              </div>
+            </div>                        
+      <div class="clearfix lift:SecuritySnippet.isSuperAdmin">
+              <label for="cmdAskCommand">Pede nro comanda?</label>
+              <div class="input">
+                <input id="cmdAskCommand" name='cmdAskCommand'>
+              </div>
+            </div>                        
+            <div class="clearfix">
+                <label for="website">Web Site</label>
+                <div class="input">
+                    <div class="input-prepend">
+                        <span class="add-on">@</span>
+                        <input class="xlarge" id="website" name="website" size="16" type="text">
+                    </div>
+                    <span class="help-block">Web site </span>
+                </div>
+            </div>
+      <div class="clearfix">
+              <label for="email">E-mail</label>
+              <div class="input">
+                <div class="input-prepend">
+                  <span class="add-on">@</span>
+                  <input class="xlarge disabled" id="email_dis" name="email_dis" size="16" type="text">
+                </div>
+                <span class="help-block">E-mail de contato</span>
+              </div>
+            </div>
+            <div class="lift:SecuritySnippet.isSuperAdmin clearfix">
+              <label for="email">E-mail</label>
+              <div class="input">
+                <div class="input-prepend">
+                  <span class="add-on">@</span>
+                  <input class="xlarge" id="email" name="email" size="16" type="text">
+                </div>
+                <span class="help-block">E-mail de contato</span>
+              </div>
+              <label for="partner">Partner</label>
+              <div class="input">
+                <input class="small" id="partner" name="partner" size="30" type="text">
+                <span class="help-block">Nro do cliente na empresa 1 - VilarikA</span>
+              </div>
+              <label for="status">Status</label>
+              <div class="input">
+          <input class="mini" id="status" name='status'>
+                </div>
+              <label for="apptype">App Type</label>
+              <div class="input">
+          <input class="large" id="apptype" name='apptype'>
+                  <span class="help-block">1-ebelle 2-gerirme 3-esmile 4-edoctus 5-egrex 6-ephysio 7-ebellepet</span>
+                </div>
+              <label for="bpIdForCompany">bpIdForCompany</label>
+              <div class="input">
+          <input class="mini" id="bpIdForCompany" name='bpIdForCompany'>
+                  <span class="help-block">0 não edita 1 gera e edita 2 não gera e edita </span>
+                  <span class="help-block">Administrador edita sempre</span>
+                </div>
+              <div class="clearfix">
+                <label for="obs">Observação</label>
+                 <div class="input">
+                    <input class="large" id="obs" name="obs" size="30" type="textarea"/>
+                    <span class="help-block">Observação para justificar status</span>
+                 </div>
+              </div>          
+            </div>
+      <div class="well">
+              <label class="hide_mobile" for="btn"></label>
+              <div class="input">
+          <input type="submit" class="submit btn success lift:SecuritySnippet.isNotAdminRead"  value="Salvar" class="btn success"/>
+        </div>
+      </div>
+      <span>
+        <ul class="tabs">
+              <li class="active tab"><a href="#agenda">Agenda</a></li>
+              <li class="tab"><a href="#notifytab">Notificações</a></li>
+          <li class="lift:SecuritySnippet.hasBpmonthlyModule tab"><a href="#bpmonthly">Mensalidades</a></li>
+          <li class="lift:SecuritySnippet.hasOffSaleModule tab"><a href="#offsale">Convênio</a></li>
+          <li class="lift:SecuritySnippet.hasPackageModule tab"><a href="#package">Pacote</a></li>
+              <li class="tab"><a href="#photo">Logo</a></li>
+        </ul>
+        <div class="pill-content">
+          <div class="active tab_content row" id="agenda">
+            <div class='span8'>
+            <div class="clearfix">
+                    <label for="useTreatmentAsAClass">Agrupa atendimentos</label>
+                    <div class="input">
+                        <input id="useTreatmentAsAClass" name='useTreatmentAsAClass'>
+                      <span class="help-block">Agrupa atendimentos em conflito como uma Turma</span>
+                    </div>
+                  </div>            
+            <div class="clearfix">
+                    <label for="calendarInterval">Intervalos da Agenda</label>
+                    <div class="input">
+                  <div class='inline-inputs'>
+                      <div class="input-prepend" style='float:left; padding-right:10px'>
+                            <input class="mini" id="calendarInterval" name='calendarInterval'>
+                  </div>                        
+                        </div>
+                    <div class="input-prepend">
+                          <input class="mini" id="calendarIntervalAlt" name='calendarIntervalAlt'>
+                      </div>
+                      <span class="help-block">Intervalos na agenda, principal e alternativo, em minutos</span>
+                    </div>
+                  </div>
+            <div class="clearfix">
+              <label for="calendarStart">Início / Fim Agenda</label>        
+              <div class="input">
+                  <div class='inline-inputs'>
+                      <div class="input-prepend" style='float:left; padding-right:10px'>
+                            <input class="mini" id="calendarStart" name='calendarStart'>
+                          </div>
+                        </div>
+                    <div class="input-prepend">
+                          <input class="mini" id="calendarEnd" name='calendarEnd'>
+                      </div>
+                        <span class="help-block">Hora inicial e final para aceitar agendamentos</span>
+                    </div>
+                  </div>
+            <span id='calendarStatuses_text_id' class="hide">
+              <input name="calendarStatuses_text"/>
+            </span>
+            <!--div class="clearfix">
+              <label for="calendarStatuses">Statuses</label>
+               <div class="input">
+                <div class='inline-inputs'>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                  <select multiple="multiple" class="xlarge" id="calendarStatuses" name="calendarStatuses" >
+                    <option value="7">PréAgendado</option>
+                    <option value="0">Agendado</option>
+                    <option value="6">Confirmado</option>
+                    <option value="2">Chegou</option>
+                    <option value="11">em Atendimento</option>
+                    <option value="3">Atendido</option>
+                    <option value="1">Faltou</option>
+                    <option value="8">Desmarcou</option>
+                    <option value="10">Remarcou</option>
+                    <option value="12">Desmarc empresa</option>
+                    <option value="13">Remarc empresa</option>
+                  </select>
+                  <span class="help-block">Status que podem ser usados na agenda</span>
+                </div>
+                </div>
+               </div>
+            </div-->
+            <!--div class="clearfix">
+            é true para todo mundo nao faz sentido - 11/04/2017
+                    <label for="autoOpenCalendar">Auto abrir a agenda?</label>
+                    <div class="input">
+                      <input id="autoOpenCalendar" name='autoOpenCalendar'>
+                      <span class="help-block">Abrir automaticamente a agenda?</span>
+                    </div>
+                  </div--> 
+            <div class="clearfix">
+                    <label for="calendarShowId">Mostra id <span data-i18n='Clientes'></span></label>
+                    <div class="input">
+                      <input id="calendarShowId" name='calendarShowId'>
+                      <span class="help-block">Mostra o id dos <span data-i18n='Clientes'></span>?</span>
+                    </div>
+                  </div> 
+            <div class="clearfix">
+                    <label for="calendarShowPhone">Mostra Telefones <span data-i18n='Clientes'></span></label>
+                    <div class="input">
+                      <input id="calendarShowPhone" name='calendarShowPhone'>
+                      <span class="help-block">Mostra os telefones dos <span data-i18n='Clientes'></span>? Mas só para quem tem a permissão clientes</span>
+                    </div>
+                  </div> 
+            <div class="clearfix">
+                    <label for="calendarShowLight">Mostra Cores Claras</label>
+                    <div class="input">
+                      <input id="calendarShowLight" name='calendarShowLight'>
+                      <span class="help-block">Mostra cores claras ao invés de cores fortes?</span>
+                    </div>
+                  </div> 
+            <div class="clearfix">
+                    <label for="calendarShowInterval">Mostra Inicio/Término</label>
+                    <div class="input">
+                      <input id="calendarShowInterval" name='calendarShowInterval'>
+                      <span class="help-block">Mostra o horário de início e fim de cada agendamento?</span>
+                    </div>
+                  </div> 
+            <div class="clearfix">
+                    <label for="calendarShowActivity">Mostra o <span data-i18n='Serviço'></span></label>
+                    <div class="input">
+                      <input id="calendarShowActivity" name='calendarShowActivity'>
+                      <span class="help-block">Mostra o <span data-i18n='Serviço'></span> agendado?</span>
+                    </div>
+                  </div> 
+            <div class="clearfix lift:SecuritySnippet.hasUnitModule">
+                    <label for="calendarShowDifUnit">Mostra Dif Unidade</label>
+                    <div class="input">
+                      <input id="calendarShowDifUnit" name='calendarShowDifUnit'>
+                      <span class="help-block">Mostra agendamentos de unidades diferentes da corrente?</span>
+                    </div>
+                  </div> 
+            <div class="clearfix lift:SecuritySnippet.hasRelationModule">
+                    <label for="calendarShowSponsor">Mostra Pai/Mae/Resp Fin</label>
+                    <div class="input">
+                      <input id="calendarShowSponsor" name='calendarShowSponsor'>
+                      <span class="help-block">Mostra pai ou mãe ou responsável financeiro?</span>
+                    </div>
+                  </div> 
+            <div class="clearfix">
+                    <label for="calendarAllAsConfirmed">Todos no dia como confirmados</label>
+                    <div class="input">
+                      <input id="calendarAllAsConfirmed" name='calendarAllAsConfirmed'>
+                      <span class="help-block">Troca todos os atendimentos do cliente no dia para confirmado?</span>
+                    </div>
+                  </div> 
+            <div class="clearfix">
+                    <label for="calendarAllAsArrived">Todos no dia como chegou</label>
+                    <div class="input">
+                      <input id="calendarAllAsArrived" name='calendarAllAsArrived'>
+                      <span class="help-block">Troca todos os atendimentos do cliente no dia para chegou?</span>
+                    </div>
+                  </div> 
+            <div class="clearfix">
+              <label for="calendarPub">Agenda Pública</label>
+              <div class="input">
+                <select class="xlarge" id="calendarPub" name="calendarPub" >
+                </select>
+              </div>
+            </div>
+                  <div class="clearfix">
+                      <label for="calendarUrl">Compl url agenda</label>
+                      <div class="input">
+                          <div class="input-prepend">
+                              <input class="xlarge" id="calendarUrl" name="calendarUrl" size="16" type="text">
+                          </div>
+                      <span class="help-block">Para acessar a agenda ebelle.com.br/agenda.html/complemento</span>
+                      </div>
+                  </div>
+            </div>
+          </div>
+          <div class="tab_content row" id="notifytab">
+            <div class='span8'>
+            <div class="clearfix">
+                    <label for="notify">Receber Notificações por E-mail</label>
+                    <div class="input">
+                        <input id="notify" name='notify'>
+                      <span class="help-block">Receber notificações por e-mail</span>
+                      <span class="label important">Ao marcar esta opção vocé passará a receber notificações por e-mail de contas a pagar no dia!</span>
+                    </div>
+                  </div>
+            <div class="clearfix">
+                    <label for="financialNotification">Notificar Pagar/Receber</label>
+                    <div class="input">
+                  <div class='inline-inputs'>
+                      <div class="input-prepend" style='padding-right:10px'>
+                      <input class="mini" id="financialNotification" name='financialNotification'>
+                </div>
+                        <span class="help-block">0-Não notifica 1-Notifica 21:30 2-Notifica 01:00</span>
+                      </div>
+                  </div>
+            <div class="clearfix">
+                    <label for="customerNotification">Notificar Clientes</label>
+                    <div class="input">
+                  <div class='inline-inputs'>
+                      <div class="input-prepend" style='padding-right:10px'>
+                    <input class="mini" id="customerNotification" name='customerNotification'>
+                  <span data-i18n='Profissionais'></span>
+                    <input class="mini" id="userNotification" name='userNotification'>
+                  </div>
+                </div>
+                        <span class="help-block">0-Não notifica 1-Notifica 21:30 2-Notifica 01:00</span>
+                      </div>
+                  </div>
+                  <div class="clearfix">
+                    <label for="mailAppointmentSignature">Assinatura</label>
+                     <div class="input">
+                        <input class="large" id="mailAppointmentSignature" name="mailAppointmentSignature" size="30" type="textarea"/>
+                        <span class="help-block">Assinatura enviada na notificação do cliente</span>
+                     </div>
+                  </div>          
+            <div class="clearfix">
+                    <label for="hoursToConfirmPub">Horas Confirmar</label>
+                    <div class="input">
+                  <div class='inline-inputs'>
+                      <div class="input-prepend" style='padding-right:10px'>
+                    <input class="mini" id="hoursToConfirmPub" name='hoursToConfirmPub'>
+                  Cancelar
+                    <input class="mini" id="hoursToCancelPub" name='hoursToCancelPub'>
+                            <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/company.html#notify' rel="popover" class="_popover_basic _help">
+                              <img src="/images/info.gif" width="20">
+                              </a>
+                  </div>
+                </div>
+                      </div>
+                  </div>
+                  <div class="clearfix">
+                    <label for="toCancelAnAppointment">Política Cancel</label>
+                     <div class="input">
+                        <input class="large" id="toCancelAnAppointment" name="toCancelAnAppointment" size="30" type="textarea"/>
+                        <span class="help-block">Política de cancelamento enviada na notificação do cliente</span>
+                     </div>
+                  </div>          
+            </div>
+          </div>
+        </div>
+        <div class="pill-content">
+          <div class="tab_content row" id="bpmonthly">
+            <div class='span8'>
+              <div class="clearfix">
+                <label for="bpmStartDay">Dia Início</label>
+                <div class="input">
+                  <div class='inline-inputs'>
+                    <input class="mini" id="bpmStartDay" name="bpmStartDay" size="30" type="text"/>
+                  </div>
+                  <span class="help-block">0 dia da venda. Outro dia de início</span>
+                </div>
+              </div>
+              <div class="clearfix">
+                <label for="bpmDaysToAlert">Dias Alerta</label>
+                <div class="input">
+                  <div class='inline-inputs'>
+                    <input class="mini" id="bpmDaysToAlert" name="bpmDaysToAlert" size="30" type="text"/>Email
+                    <input class="mini" id="bpmDaysToEmail" name="bpmDaysToEmail" size="30" type="text"/>
+                  </div>
+                  <span class="help-block">Dias faltantes para alertar usuário/Dias faltantes notificar cliente</span>
+                </div>
+              </div>
+            <div class="clearfix">
+                  <label for="bpmCommissionOnSale">Comissão na Venda</label>
+                  <div class="input">
+                    <input id="bpmCommissionOnSale" name='bpmCommissionOnSale'>
+                    <span class="help-block">Calcula comissão na venda da mensalidade</span>
+                  </div>
+                </div>
+            <div class="clearfix">
+                  <label for="bpmCommissionOnReady">Comissão no Atendido</label>
+                  <div class="input">
+                    <input id="bpmCommissionOnReady" name='bpmCommissionOnReady'>
+                    <span class="help-block">Calcula comissão quando status é alterado para atendido</span>
+                  </div>
+                </div>
+            <div class="clearfix">
+                  <label for="bpmCommissionOnMissed">Comissão na Falta</label>
+                  <div class="input">
+                    <input id="bpmCommissionOnMissed" name='bpmCommissionOnMissed'>
+                    <span class="help-block">Calcula comissão quando status é alterado para Faltou</span>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="tab_content row" id="offsale">
+            <div class='span8'>
+            <div class="clearfix">
+                  <label for="offCommissionOnReady">Comissão no Atendido</label>
+                  <div class="input">
+                    <input id="offCommissionOnReady" name='offCommissionOnReady'>
+                    <span class="help-block">Calcula comissão quando status é alterado para atendido</span>
+                  </div>
+                </div>
+            <div class="clearfix">
+                  <label for="offCommissionOnMissed">Comissão na Falta</label>
+                  <div class="input">
+                    <input id="offCommissionOnMissed" name='offCommissionOnMissed'>
+                    <span class="help-block">Calcula comissão quando status é alterado para Faltou</span>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="tab_content row" id="package">
+            <div class='span8'>
+            <div class="clearfix">
+                  <label for="packCommissionOnReady">Comissão no Atendido</label>
+                  <div class="input">
+                    <input id="packCommissionOnReady" name='packCommissionOnReady'>
+                    <span class="help-block">Calcula comissão quando status é alterado para atendido</span>
+                  </div>
+                </div>
+            <div class="clearfix">
+                  <label for="packCommissionOnMissed">Comissão na Falta</label>
+                  <div class="input">
+                    <input id="packCommissionOnMissed" name='packCommissionOnMissed'>
+                    <span class="help-block">Calcula comissão quando status é alterado para Faltou</span>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </span>
+    </form>
+      <div class="tab_content" id='photo'>
+          <div class="lift:CompanySnippet.logo">
+            
+          </div>
+      <form class="lift:UploadLogo?form=post;multipart=true">
+        <div class="clearfix">
+          <label for="name">Alterar Logomarca</label>
+          <div class="input">
+            <input type="text" name='file' id='file'/>
+            <span class="help-block">Selecione sua logomarca</span>
+          </div>
+        </div>
+        <div class="clearfix">
+          <label for="name"></label>
+          <div class="input">
+            <div class="input-prepend">
+              <input type="submit" value="Enviar" id='submit' class="btn success"/>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
