@@ -1084,6 +1084,12 @@
         }
       }
 
+      if (hasCustomerCredit && valdevido > 0.0) {
+        messages.push("Não é razoável comprar Crédito cliente sendo que o cliente já tem um débito!" +
+          "\n\n" + "Para pagar o que ele deve, exclua ou ignore o crédito no caixa, clique no botão vermelho (quitar conta cliente) que fica próximo ao valor de débito e faça a quitação" +
+          "\n\n" + "Caso ele ainda vá comprar um crédito faça isso numa transação separada"); 
+      }
+
       if (hasCustomerAccount && hasCustomerCredit) {
         messages.push("Pagamento de Conta cliente e compra de Crédito cliente, devem ser efetuadas em transações separadas!" +
           "\n\n" + "Você pode ignorar um dos itens fazer o pagamento e depois acessar o cliente/comanda para fazer um segundo pagamento"); 
