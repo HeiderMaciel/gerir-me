@@ -343,6 +343,7 @@ println ("vaiiiiii ========= opt " + opt )
 			"name=bp_sponsor" #> (SHtml.text(ac.bp_sponsor.is.toString, (p:String) => ac.bp_sponsor(BusinessRulesUtil.snippetToLong(p))))&
 			"name=bp_manager" #> (SHtml.text(ac.bp_manager.is.toString, (p:String) => ac.bp_manager(BusinessRulesUtil.snippetToLong(p))))&
 			"name=manager" #> (SHtml.text(ac.bp_managerName, (a:String) => {}))&
+			"name=bp_sponsorname" #> (SHtml.text(ac.bp_sponsorName, (a:String) => {}))&
 		    "name=terms1" #> (SHtml.select(termss,Full(ac.projectClassTerms.toString), (a:String) => {}))&
 			"name=projectClassPrintType" #> (SHtml.text(ac.projectClassPrintType, (a:String) => {}))&
 			"name=projectClassHeaderStyle" #> (SHtml.text(ac.projectClassHeaderStyle, (a:String) => {}))&

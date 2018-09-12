@@ -87,6 +87,14 @@ println ("vaiiiii ======================= no project opt " + opt)
           ""
         }
     }
+    def bp_sponsorName : String = {
+        if (bp_sponsor != 0) {
+          val ac = Customer.findByKey(bp_sponsor).get
+          ac.name;
+        } else {
+          ""
+        }
+    }
 
     def hasSponsor = bp_sponsor.obj  match {
         case Full(a) => true
