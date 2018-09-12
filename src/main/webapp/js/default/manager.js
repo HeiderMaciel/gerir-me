@@ -167,7 +167,7 @@ var Customer = {
 		//deliverys[0].used = true;
 		return budgets[0].price;
 	},
-	customerSelectAutoCompleteName: function (customer) {
+	customerSelectAutoCompleteName: function (customer, msg_off) {
 		$.get("/customer_api/addons/" + customer.id, function (addons) {
 			eval("var addons=" + addons)
 			Customer.current = {
@@ -179,11 +179,13 @@ var Customer = {
 				"budgets": addons.budgets,
 				"bpmonthlys": addons.bpmonthlys
 			}
-			for (var i = addons.messages.length - 1; i >= 0; i--) {
-				if (addons.messages[i].message != '' && customer.id != last_notifier_customer) {
-					alert(addons.messages[i].message);
-				}
-			};
+			if (!msg_off) {
+				for (var i = addons.messages.length - 1; i >= 0; i--) {
+					if (addons.messages[i].message != '' && customer.id != last_notifier_customer) {
+						alert(addons.messages[i].message);
+					}
+				};
+			}
 			last_notifier_customer = customer.id;
 			localStorage.setItem("last_notifier_customer", customer.id);
 			for (var i in Customer.addonsListeners) {

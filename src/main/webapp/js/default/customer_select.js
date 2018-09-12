@@ -50,10 +50,12 @@ $(function() {
 					dataType: 'text',
 					quietMillis: 300,
 					data: function(term, page) { // page is the one-based page number tracked by Select2
+						//alert (" no search " + $(field).data('msg_off'))
 						return {
 							name: term, //search term
 							page: page,
 							phone: '',
+							msg_off: !!$(field).data('msg_off'),
 							user : !!$(field).data('just_user')
 						};
 					},
@@ -71,7 +73,18 @@ $(function() {
 				formatResult: Customer.customerSelectAutoCompleteFormat, // omitted for brevity, see the source of this page
 				formatSelection: function(a) {
 					$('.id_customer_search', parent_customer_search).val(a.id).change();
-					return Customer.customerSelectAutoCompleteName(a)
+					//alert (" vaii no auto " + $(field).data('msg_off'))
+					var msg_off = false;
+					var data_msg_off = "";
+					data_msg_off = $(field).data('msg_off')
+					if (data_msg_off == "undefined" || data_msg_off == undefined) {
+						msg_off = false;
+					} else {
+						if (data_msg_off == true || data_msg_off == "true") {
+							msg_off = true;
+						}
+					}
+					return Customer.customerSelectAutoCompleteName(a, msg_off)
 				}, // omitted for brevity, see the source of this page
 				dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
 				escapeMarkup: function(m) {
@@ -94,11 +107,22 @@ $(function() {
 			$(".id_customer_search", parent_customer_search).change();
 		}
 		$(".name_customer_search span", parent_customer_search).html(name);
+//		alert (" vaiii " + $(".name_customer_search").attr ('data-msg_off'))
 		$("#customer_search").modal("hide");
+		var msg_off = false;
+		var data_msg_off = "";
+		data_msg_off = $(".name_customer_search").attr ('data-msg_off');
+		if (data_msg_off == "undefined" || data_msg_off == undefined) {
+			msg_off = false;
+		} else {
+			if (data_msg_off == true || data_msg_off == "true") {
+				msg_off = true;
+			}
+		}
 		Customer.customerSelectAutoCompleteName({
 			"name": name,
 			"id": id
-		});
+		}, msg_off);
 	};	
 	autocompletCustomerPrepare();
 	prepareSearch();
