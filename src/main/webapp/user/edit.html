@@ -452,7 +452,6 @@
                 <li><a href="#bankaccount" data-toggle="tab">Contas Bancárias</a></li>
                 <li class="lift:SecuritySnippet.hasUnitModule"><a href="#companyunit" data-toggle="tab">Unidades</a></li>
                 <li><a href="#usergroup" data-toggle="tab"><span data-i18n='Grupos'></span></a></li>
-                <li><a href="#photo" data-toggle="tab">Foto</a></li>
                 <li></li>
             </ul>
 
@@ -734,6 +733,27 @@
                     </div>
                 </div>
 
+
+                <script>
+                    $(function () {
+                        $("#id_user_image").val(gup("id"));
+                        $('.tabs').tabs();
+                        if(gup("id_")){
+                            $('a[href=#service]').click();
+                            $("#add_service").click();
+                            window.scrollTo(0, 815);
+                        }
+
+                        $("#user_activity").tablesorter();
+                    });
+                </script>
+        <!--</form>-->
+    </div>
+            <ul class="nav nav-tabs">
+                <li><a href="#photo" data-toggle="tab">Foto</a></li>
+                <li></li>
+            </ul>
+            <div class="tab-content">
                 <div id="photo" class="tab-pane">
                     <form class="lift:UploadImage?form=post;multipart=true">
                         <input type="hidden" name="id" id="id_user_image"/>
@@ -754,21 +774,5 @@
                         </div>
                     </form>
                 </div>
-
-                <script>
-                    $(function () {
-                        $("#id_user_image").val(gup("id"));
-                        $('.tabs').tabs();
-                        if(gup("id_")){
-                            $('a[href=#service]').click();
-                            $("#add_service").click();
-                            window.scrollTo(0, 815);
-                        }
-
-                        $("#user_activity").tablesorter();
-                    });
-                </script>
             </div>
-        <!--</form>-->
-    </div>
 </div>
