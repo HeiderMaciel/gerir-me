@@ -400,6 +400,10 @@ object EmailUtil {
 //            <a href="http://" + {appName} + ".vilarika.com.br/"><img src="http://" + appName + ".vilarika.com.br/images/logo.png" style="width: 100px;"/></a>
 //             <img src={"http://" + appName + ".vilarika.com.br/system/makeMailAsRead/"+id.toString} style="width: 0px;"/>
 
+/*
+            {"""Tenha um bom dia!<br/>
+            Atenciosamente equipe"""} {companyName}
+*/
   def teamfooterHtml(id:Long, appName:String, companyName:String) = <div>
             Tenha um bom dia!<br/>
             Atenciosamente equipe {companyName}

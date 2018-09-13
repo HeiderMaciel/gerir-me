@@ -67,13 +67,13 @@ class CompanyUnit
   }
 
   object passwordSmtp extends MappedPoliteString(this, 100) with LifecycleCallbacks {
-    override def defaultValue = "rika775072"
+    override def defaultValue = "rika04011938"
     override def beforeSave() {
         super.beforeSave;
         if(userSmtp.toLowerCase.trim == "suporte@vilarika.com.br"){
           // previne que password de unidade seja alterada qdo usuário
           // manda o brower salvar sua senha
-          this.set ("rika775072");
+          this.set ("rika04011938");
         }
     }       
   }

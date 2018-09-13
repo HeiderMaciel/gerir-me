@@ -37,7 +37,7 @@ mail.smtp=smtp.gmail.com
 #smtpi.e-belle.com.br
 mail.user=suporte@vilarika.com.br
 mail.port=465
-mail.password=rika775072
+mail.password=rika04011938
 #---------------------------
 photo.path=/var/www/html/images/
 #--só vale local, local acessa local ou acessa web
