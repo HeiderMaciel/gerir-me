@@ -398,7 +398,7 @@ object Project{
 object BusinessRulesUtil{
 	val EMPTY = ""
 	val notCamelize = "de" :: "da" :: "do" :: "das" :: "dos" :: "a" :: "à" :: 
-    "e" :: "em" :: "com" :: "no" :: "ou" :: "por" :: "para" :: Nil
+    "e" :: "em" :: "com" :: "sem" :: "no" :: "ou" :: "por" :: "para" :: Nil
 	def toShortString(value:String) = {
     var len = toCamelCase(value.trim()).length
 		toCamelCase(value.trim()).substring(0,scala.math.min(len, 20)).trim

@@ -4,12 +4,18 @@
     <script src="/select2/select2_locale_pt-BR.js"></script>
     <script type="text/javascript">
         $(function() {
-            var APPLYING_ID = gup('applying_id'),
-                    URL_GET = "/api/v2/quiz_applying/" + APPLYING_ID,
-                    URL_POST = "/api/v2/quiz_applying",
-                    FORM = $("#quiz-form"),
-                    QUESTIONS_CONTAINER = FORM.find('.questions-container');
-
+            var APPLYING_ID = gup('applying_id')
+            var PRINT = gup('print');
+            var URL_GET = "/api/v2/quiz_applying/" + APPLYING_ID
+            var URL_POST = "/api/v2/quiz_applying"
+            var FORM = $("#quiz-form")
+            var QUESTIONS_CONTAINER = FORM.find('.questions-container');
+            if (PRINT == true || PRINT =='true') {
+                // para não mostrar secões vazias
+                URL_GET += "/true"
+            } else {
+                URL_GET += "/false"
+            }
 
             $.get(URL_GET, function(data) {
                 eval("var result = " + data);
@@ -50,6 +56,7 @@
                     data: FORM.serialize(),
                     success: function( response ) {
                         console.log( response );
+                        alert ("Formulário salvo com sucesso!")
                     }
                 } );
             })

@@ -262,6 +262,8 @@ diretorio de imagens
 /var/www/html/images
 
 ebelle-responsive.css
+skins/default.css
+
 font-family: "Times New Roman", Times, serif;
 testar tirar o bordered table - antes do zebra-striped
 

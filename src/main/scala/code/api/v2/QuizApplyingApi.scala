@@ -16,8 +16,8 @@ import net.liftweb.mapper._
 
 object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
   serve {
-    case "api" :: "v2" :: "quiz_applying" :: id :: Nil JsonGet _ => {
-      quizJson(id.toLong)
+    case "api" :: "v2" :: "quiz_applying" :: id :: print :: Nil JsonGet _ => {
+      quizJson(id.toLong, print.toBoolean)
     }
 
     case "api" :: "v2" :: "quiz_applying" :: Nil Post _ => {
@@ -82,7 +82,7 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
     }  
   }
 
-  def quizJson(quizApplyingId: Long) = {
+  def quizJson(quizApplyingId: Long, print:Boolean) = {
     val qa = QuizApplying.findByKey(quizApplyingId)
     val quiz = qa.get.quiz.obj.get
     val bp = qa.get.business_pattern.obj.get
@@ -93,7 +93,7 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
       ("obs", quiz.obs.is),
       ("bpName", bp.name.is),
       ("bpId", bp.id.is),
-      ("sections", JsArray(quiz.sections.map(sectionJson(_, quizApplyingId)))))
+      ("sections", JsArray(quiz.sections(quizApplyingId, print).map(sectionJson(_, quizApplyingId)))))
   }
 
   def sectionJson(section: QuizSection, quizApplyingId: Long) = {

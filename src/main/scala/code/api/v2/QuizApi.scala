@@ -89,10 +89,12 @@ object QuizApi extends  RestHelper with ReportRest with net.liftweb.common.Logge
 		}
 
 		def quizJson(quiz: Quiz) = {
+println ("vaiiiii ========================== AQUI NAO DEVE" )
+
 			JsObj(
 				("id", quiz.id.is),
 				("name", quiz.name.is),
-				("sections", JsArray(quiz.sections.map(sectionJson(_)))))
+				("sections", JsArray(quiz.sections(-1,false).map(sectionJson(_)))))
 		}
 
 		def sectionJson(section: QuizSection) = {

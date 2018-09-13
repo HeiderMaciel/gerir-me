@@ -35,9 +35,20 @@ class Quiz extends Audited[Quiz] with PerCompany with IdPK with CreatedUpdated w
         case _ => ""
     }
 
-    def sections = {
-        QuizSection.findAll(By(QuizSection.quiz, this.id.is), 
-            OrderBy(QuizSection.orderInQuiz, Ascending), OrderBy(QuizSection.id, Ascending))
+    def sections (quizapplying:Long, print:Boolean)= {
+        def sql = if (print) {
+            """ id in (select qq.quizsection from quizanswer 
+            inner join quizquestion qq on
+            qq.id = quizquestion
+            where quizapplying = ?) """
+        } else {
+            " ( 1 = 1 or ? > -2 )"
+        }
+        QuizSection.findAll(
+            By(QuizSection.quiz, this.id.is), 
+            BySql (sql, IHaveValidatedThisSQL("",""), quizapplying),
+            OrderBy(QuizSection.orderInQuiz, Ascending), 
+            OrderBy(QuizSection.id, Ascending))
     }
 
     def quizLabel = if(AuthUtil.? && (AuthUtil.company.appType.isEsmile||AuthUtil.company.appType.isEdoctus||
