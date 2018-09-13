@@ -132,13 +132,13 @@ object EmailUtil {
         val toSend:MailBodyType =  attachment match {
           case a:FullAttachment =>  if (!company.appType.isEgrex) {
             XHTMLPlusImages(compleMail(mail,teamfooterHtml(log.id.is,
-              company.appShortName, company.name)), PlusImageHolder(a.name, a.mimeType, a.bytes))
+              company.appShortName, company.name, Company.replaceMessage (company, company.mailAppointmentSignature))), PlusImageHolder(a.name, a.mimeType, a.bytes))
           } else {
             XHTMLPlusImages(compleMail(mail,simpleFooterHtmlEgrex(log.id.is, company)), PlusImageHolder(a.name, a.mimeType, a.bytes))
           }
           case _ => if (!company.appType.isEgrex) {
               compleMail(mail,teamfooterHtml(log.id.is, 
-                company.appShortName, company.name))
+                company.appShortName, company.name, Company.replaceMessage (company, company.mailAppointmentSignature)))
             } else {
               compleMail(mail,simpleFooterHtmlEgrex(log.id.is, company))
             }
@@ -218,13 +218,13 @@ object EmailUtil {
         val toSend:companyUnit.mailer.MailBodyType =  attachment match {
           case a:FullAttachment =>  if (!company.appType.isEgrex) {
             companyUnit.mailer.XHTMLPlusImages(compleMail(mail,teamfooterHtml(log.id.is,
-              company.appShortName, company.name)), companyUnit.mailer.PlusImageHolder(a.name, a.mimeType, a.bytes))
+              company.appShortName, company.name, Company.replaceMessage (company, company.mailAppointmentSignature))), companyUnit.mailer.PlusImageHolder(a.name, a.mimeType, a.bytes))
           } else {
             companyUnit.mailer.XHTMLPlusImages(compleMail(mail,simpleFooterHtmlEgrex(log.id.is, company)), companyUnit.mailer.PlusImageHolder(a.name, a.mimeType, a.bytes))
           }
           case _ => if (!company.appType.isEgrex) {
               companyUnit.mailer.XHTMLMailBodyType(compleMail(mail,teamfooterHtml(log.id.is, 
-                company.appShortName, company.name)))
+                company.appShortName, company.name, Company.replaceMessage (company, company.mailAppointmentSignature))))
             } else {
               companyUnit.mailer.XHTMLMailBodyType(compleMail(mail,simpleFooterHtmlEgrex(log.id.is, company)))
             }
@@ -404,9 +404,14 @@ object EmailUtil {
             {"""Tenha um bom dia!<br/>
             Atenciosamente equipe"""} {companyName}
 */
-  def teamfooterHtml(id:Long, appName:String, companyName:String) = <div>
-            Tenha um bom dia!<br/>
-            Atenciosamente equipe {companyName}
+  private def signature1 (signature:String, companyName:String):String = if (signature == "") {
+    """Tenha um bom dia!<br/>
+    Atenciosamente equipe """ + companyName
+    } else {
+      signature
+    }
+  def teamfooterHtml(id:Long, appName:String, companyName:String, signature:String) = <div>
+            {scala.xml.Unparsed (signature1(signature,companyName))} 
             <br/>
             <br/>
             <a href={"http://" + appName + ".vilarika.com.br/"}><img src={"http://" + appName + ".vilarika.com.br/images/logo_fbr_name_"+ appName+".png"} style="width: 50px;"/></a>
