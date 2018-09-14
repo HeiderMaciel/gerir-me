@@ -35,7 +35,14 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 
 	def questionTypes = DomainTable.findAll(
 		By(DomainTable.domain_name,"quizQuestionType"),
-		OrderBy(DomainTable.cod, Ascending)).map(t => (t.cod.is,t.name.is))
+		OrderBy(DomainTable.cod, Ascending)).map(t => {
+			def codAux = if (AuthUtil.user.isSuperAdmin) {
+				" " + t.cod.is
+			} else {
+				""
+			}
+			(t.cod.is,t.name.is + codAux)
+			})
 /*
 	def questionTypes = (
 		("0", "Texto")::
@@ -78,7 +85,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		Nil).map(t => (t._1,t._2))
 */
 
-	def quizSection = S.param("quizSection") match {
+	def quizSection = S.param("quizSection_filter") match {
 		case Full(s) => s
 		case _ => ""
 	}	

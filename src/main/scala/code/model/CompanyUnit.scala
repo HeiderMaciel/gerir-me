@@ -151,6 +151,18 @@ class CompanyUnit
       if(User.count(By(User.unit,this.id)) > 0){
           throw new RuntimeException("Existe profissional para essa unidade! ")
       }
+      if(WorkHouer.count(By(WorkHouer.unit,this.id)) > 0){
+          throw new RuntimeException("Existe profissional com horário de trabalho para essa unidade! ")
+      }
+      if(UserCompanyUnit.count(By(UserCompanyUnit.unit,this.id)) > 0){
+          throw new RuntimeException("Existe profissional associado a essa unidade! ")
+      }
+      if(Treatment.count(By(Treatment.unit,this.id)) > 0){
+          throw new RuntimeException("Existe atendimento para essa unidade! ")
+      }
+      if(AccountPayable.count(By(AccountPayable.unit,this.id)) > 0){
+          throw new RuntimeException("Existe lançamento financeiro para essa unidade! ")
+      }
 
       // deleta o parceiro associado a unidade
       val ac = this.getPartner

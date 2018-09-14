@@ -9,7 +9,7 @@
 		<script type="text/javascript">
 			$(function(){
 				$(".name_quizquestion").val(gup("name"));
-				$("#quizSection").quizSectionField(true);
+				$("#quizSection_filter").quizSectionField(true);
 				if(gup("all")){
 					$("#all").attr("checked", "checked");
 				}				
@@ -21,7 +21,7 @@
 			    	Seção
 			    </span>
 			    <span class='select-inline'>
-			      <select size="30" id="quizSection" class='local_storage' name="quizSection">
+			      <select size="30" id="quizSection_filter" class='local_storage' name="quizSection_filter">
 			      </select>					       						    
 			    </span>
 				<input class="all" id="all" name="all" type="checkbox"/> Mostrar todos?

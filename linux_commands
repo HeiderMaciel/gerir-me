@@ -502,6 +502,9 @@ normalmente - resolve
 nginx -s stop
 a mensagem de duplicate mime type nao e problema
 
+retirei do ephysio
+return      301 http://vilarika.com.br/e-physio;
+
 service httpd stop
 
 voltar
