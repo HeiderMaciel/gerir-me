@@ -22,7 +22,11 @@
                 $("#quiz-applying-id").val(APPLYING_ID);
                 $("#quiz-title").text(" " + result.name);
                 $("#quiz-date").text(result.date);
-                $("#quiz-obs").text(result.obs);
+                if (result.obs) {
+                    $("#quiz-obs").text(result.obs);
+                } else {
+                    $("#quiz-obs").remove();
+                }
                 $("#quiz-bpname").text(result.bpName);
                 $("#quiz-bpid").val(result.bpId);
                 result.sections.map(createSection);
@@ -110,6 +114,8 @@
                 if (section.obs) {
                     template.find('p:first').text(section.obs);
                     //template.find('.help-block').text(section.obs);
+                } else {
+                    $("#obssection").remove();
                 }
 
                 section.questions.map(function(question) {
@@ -153,6 +159,7 @@
                    }
                 } else if (question.format == "3") {
                     // longo left
+                   $("#labelparagraph"+question.id).remove();
                    $("#labeltop"+question.id).remove();
                    if (question.position == "1") {
                       // inicio
@@ -165,6 +172,7 @@
                     $("#labelleft"+question.id).remove();
                 } else if (question.format == "2") {
                     // reduzido top
+                    $("#labelparagraph"+question.id).remove();
                     $("#labelleft"+question.id).remove();
                 } else if (question.format == "4") {
                     // ambos
@@ -175,6 +183,7 @@
                    }
                 } else if (question.format == "5") {
                     // nenhum
+                    $("#labelparagraph"+question.id).remove();
                     $("#labeltop"+question.id).remove();
                     $("#labelleft"+question.id).remove();
                 }
@@ -199,6 +208,8 @@
             function formatQuestion (question, template) {
                 setId(template.find('label:first'), "labelleft"+question.id);
                 setId(template.find('.label-top'), "labeltop"+question.id);
+
+                setId(template.find('.label-paragraph'), "labelparagraph"+question.id);
 
                 if (question.format == "1") {
                     // enunciado paragrafo
@@ -380,8 +391,8 @@
     </script>
     <div class='span18' id="quiz-div">
         <h1><span class="lift:CompanySnippet.thumb"> </span><span id="quiz-title">Questionário</span> - </span><span id="quiz-date">date</span> - <span id="quiz-bpname">parceiro</span></h1>
-        <span id="quiz-obs"></span>
-        <br/><br/>
+        <span id="quiz-obs">
+        <br/><br/></span>
 
         <form id="quiz-form" onsubmit="return false;">
             <input type="hidden" id="quiz-bpid" name="bpid">
@@ -398,13 +409,13 @@
         <script type="text/template" id="section-template">
             <fieldset>
                 <legend></legend>
-                <p></p>
+                <span id='obssection' class='obs-section'><p></p></span>
             </fieldset>
         </script>
 
         <script type="text/template" id="text-template">
             <div class="clearfix">
-                <p><b></b></p>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label style='color:black; font-weight: bold' id='labelleft' for="obs"></label>
                 <div class="input">
 
@@ -420,9 +431,9 @@
 
         <script type="text/template" id="texti-template">
             <div>
-                <p><b></b></p>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label id='labelleft' for="obs" style='color:black; font-weight: bold; float:left; padding-right:20px' >esq ini</label>
-                <span id="leftgap" class="left-gap" style='float:left; padding-right:145px' ><br/><br/><br/><br/>_</span>
+                <span id="leftgap" class="left-gap" style='float:left; padding-right:145px' >.</span>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
@@ -435,7 +446,7 @@
 
         <script type="text/template" id="textm-template">
             <div>
-                <p><b></b></p>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label id='labelleft' style='color:black; font-weight: bold; float:left; padding-right:20px' for="obs">esq meio</label>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
@@ -448,7 +459,7 @@
         </script>
         <script type="text/template" id="textf-template">
             <div>
-                <p><b></b></p>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label id='labelleft' style='color:black; font-weight: bold; float:left; padding-right:20px' for="obs">esq meio</label>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
@@ -465,7 +476,7 @@
 
         <script type="text/template" id="paragraph-template">
             <div id='text' class="clearfix">
-                <p><b></b></p>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label style='color:black; font-weight: bold' for="obs"></label>
 
                 <div class="input">
@@ -478,7 +489,7 @@
 
         <script type="text/template" id="list-template">
             <div class="clearfix">
-                <p><b></b></p>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label style='color:black; font-weight: bold' for="obs">esq só</label>
 
                 <div class="input">
@@ -496,9 +507,9 @@
 
         <script type="text/template" id="listi-template">
             <div>
-                <p><b></b></p>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label for="obs" style='color:black; font-weight: bold; float:left; padding-right:20px' >esq ini</label>
-                <span id="leftgap" class="left-gap" style='float:left; padding-right:145px' ><br/><br/><br/><br/>_</span>
+                <span id="leftgap" class="left-gap" style='float:left; padding-right:145px' >.</span>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">uai meio</span>
@@ -511,7 +522,7 @@
 
         <script type="text/template" id="listm-template">
             <div>
-                <p><b></b></p>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label id='labelleft' style='color:black; font-weight: bold; float:left; padding-right:20px' for="obs">esq meio</label>
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">uai meio</span>
@@ -524,7 +535,7 @@
 
         <script type="text/template" id="listf-template">
             <div>
-                <p><b></b></p>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label  style='color:black; font-weight: bold' id='labelleft' style='float:left; padding-right:20px' for="obs">esq fim</label>
                 <div class="input-prepend">
                     <span id='labeltop' class="label-top">uai fim</span>
@@ -538,7 +549,7 @@
 
         <script type="text/template" id="multiple-template">
             <div class="clearfix">
-                <p><b></b></p>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label  style='color:black; font-weight: bold' id='labelleft' for="obs"></label>
 
                 <div class="input">
@@ -558,7 +569,7 @@
 
         <script type="text/template" id="morethanone-template">
             <div class="clearfix">
-                <p><b></b></p>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label style='color:black; font-weight: bold' for="obs"></label>
 
                 <div class="input">
