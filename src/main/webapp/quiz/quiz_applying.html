@@ -151,6 +151,7 @@
                 section.append(template);
                 if (question.format == "0") {
                     // reduzido left
+                   $("#labelparagraph"+question.id).remove();
                    $("#labeltop"+question.id).remove();
                    if (question.position == "1") {
                       // inicio
@@ -467,10 +468,8 @@
                     <span style='color:black;' class="add-on"></span>
                     <input class="xlarge" id="obs" name="obs" type="text"/>
                     <span class="help-block"></span>
-                </div>
-                <br/><br/>
-                <br/><br/>
-                <br/><br/>
+                </div><br/><br/>
+                <span class="help-block">.</span>
             </div>
         </script>
 
