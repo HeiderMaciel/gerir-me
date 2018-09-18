@@ -93,18 +93,18 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
       ("obs", quiz.obs.is),
       ("bpName", bp.name.is),
       ("bpId", bp.id.is),
-      ("sections", JsArray(quiz.sections(quizApplyingId, print).map(sectionJson(_, quizApplyingId)))))
+      ("sections", JsArray(quiz.sections(quizApplyingId, print).map(sectionJson(_, quizApplyingId, bp)))))
   }
 
-  def sectionJson(section: QuizSection, quizApplyingId: Long) = {
+  def sectionJson(section: QuizSection, quizApplyingId: Long, customer:Customer) = {
     JsObj(
       ("id", section.id.is),
       ("name", section.name.is),
       ("obs", section.obs.is),
-      ("questions", JsArray(section.questions.map(questionJson(_, quizApplyingId)))))
+      ("questions", JsArray(section.questions.map(questionJson(_, quizApplyingId, customer)))))
   }
 
-  def questionJson(question: QuizQuestion, quizApplyingId: Long) = {
+  def questionJson(question: QuizQuestion, quizApplyingId: Long, customer:Customer) = {
     var size = "";
     val value = QuizAnswer.findAll(
       By(QuizAnswer.quizApplying, quizApplyingId),
@@ -125,6 +125,8 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
     } else if (question.quizQuestionSize.is == 5) {
       size = "xxlarge"
     }
+
+    var message_aux = Customer.replaceMessage (customer, question.message.is)
     
     JsObj(
     ("id", question.id.is),
@@ -133,6 +135,8 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
     ("type", question.quizQuestionType.is),
     ("format", question.quizQuestionFormat.is),
     ("addon", question.addon.is),
+    ("sufix", question.sufix.is),
+    ("message", message_aux),
     ("size", size),
     ("position", question.quizQuestionPosition.is),
     ("obs", question.obs.is),

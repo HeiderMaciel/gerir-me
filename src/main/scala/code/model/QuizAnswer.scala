@@ -21,7 +21,7 @@ class QuizAnswer extends Audited[QuizAnswer] with PerCompany with IdPK with Crea
     object obs extends MappedPoliteString(this,255)
     object quizDomainItem extends MappedLongForeignKey(this, QuizDomainItem)
     object rank extends MappedDecimal(this,MathContext.DECIMAL64,4)
-    object valueStr extends MappedPoliteString (this,2000)
+    object valueStr extends MappedPoliteString (this,40000)
     object valueNum extends MappedDecimal(this,MathContext.DECIMAL64,4)
 }
 

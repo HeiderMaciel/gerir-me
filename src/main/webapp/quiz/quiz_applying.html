@@ -212,6 +212,8 @@
 
                 setId(template.find('.label-paragraph'), "labelparagraph"+question.id);
 
+                setId(template.find('.help-inline'), "helpinline"+question.id);
+
                 if (question.format == "1") {
                     // enunciado paragrafo
                     template.find('b:first').text(question.name);
@@ -234,6 +236,15 @@
                 }
                 if (question.obs) {
                     template.find('.help-block').text(question.obs);
+                }
+                if (question.sufix) {
+                  template.find('.help-inline').text(question.sufix);
+                } else {
+                  // pode colocar o inline nos outros que aqui remove
+                  template.find('.help-inline').remove();
+                }
+                if (question.addon) {
+                    template.find('.add-on').text(question.addon);
                 }
                 if (question.addon) {
                     template.find('.add-on').text(question.addon);
@@ -440,6 +451,7 @@
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on"></span>
                     <input class="xlarge" id="obs" name="obs" type="text"/>
+                    <span class="help-inline">-</span>
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -454,6 +466,7 @@
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on"></span>
                     <input class="xlarge" id="obs" name="obs" type="text"/>
+                    <span class="help-inline">-</span>
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -467,6 +480,7 @@
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on"></span>
                     <input class="xlarge" id="obs" name="obs" type="text"/>
+                    <span class="help-inline">-</span>
                     <span class="help-block"></span>
                 </div><br/><br/>
                 <span class="help-block">.</span>

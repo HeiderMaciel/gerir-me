@@ -407,6 +407,8 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 			"name=saveIfNoAnswer" #> (SHtml.checkbox(ac.saveIfNoAnswer_?, ac.saveIfNoAnswer_?(_)))&
 			"name=printIfNoAnswer" #> (SHtml.checkbox(ac.printIfNoAnswer_?, ac.printIfNoAnswer_?(_)))&
 		    "name=addon" #> (SHtml.text(ac.addon.is, ac.addon(_)))&
+		    "name=sufix" #> (SHtml.text(ac.sufix.is, ac.sufix(_)))&
+		    "name=message" #> (SHtml.textarea(ac.message.is, ac.message(_)))&
 			"name=rank" #> (SHtml.text(ac.rank.is.toString, (v:String) =>{ if(v !=""){ac.rank(v.toDouble)};}))&
 			"name=orderinsection" #> (SHtml.text(ac.orderInSection.is.toString, (v:String) => ac.orderInSection(v.toInt)))&
 			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&			

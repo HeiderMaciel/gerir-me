@@ -76,6 +76,8 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
     }
 
     object addon extends MappedPoliteString(this,255)
+    object message extends MappedPoliteString(this,40000)
+    object sufix extends MappedPoliteString(this,255)
 
 
     def quizSectionName = quizSection.obj match {
@@ -176,6 +178,9 @@ from quizquestion where company = 398 and quizsection = 7;
     }
     if ((quizSection.isEmpty)) {
       throw new RuntimeException("Não é permitido questão sem seção")
+    }
+    if (this.message.length >= 40000) {
+      throw new RuntimeException("Texto muito grande, verifique se o conteúdo nao foi truncado! " + this.message.length + " de um máximo de 40.000 caracteres")
     }
     val r = super.save
 
