@@ -78,6 +78,11 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
     object addon extends MappedPoliteString(this,255)
     object message extends MappedPoliteString(this,40000)
     object sufix extends MappedPoliteString(this,255)
+    object printControl extends MappedInt(this)with LifecycleCallbacks { 
+        override def defaultValue = 1
+        // nunca 0
+        // sempre 1
+    }
 
 
     def quizSectionName = quizSection.obj match {

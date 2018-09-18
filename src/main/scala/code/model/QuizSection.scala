@@ -28,6 +28,11 @@ class QuizSection extends Audited[QuizSection] with PerCompany with IdPK with Cr
     object weight extends MappedDecimal(this,MathContext.DECIMAL64,4)
     object rank extends MappedDecimal(this,MathContext.DECIMAL64,4)
     object rankPercent extends MappedDecimal(this,MathContext.DECIMAL64,4)
+    object printControl extends MappedInt(this)with LifecycleCallbacks { 
+        override def defaultValue = 1
+        // nunca 0
+        // sempre 1
+    }
 
     def quizName = quiz.obj match {
         case Full(t) => t.short_name.is
