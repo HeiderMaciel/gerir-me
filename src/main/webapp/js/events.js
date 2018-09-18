@@ -189,7 +189,11 @@ var updateReportItems = function() {
       var precototal = parseFloat(eval(r)[0][1]);
       $("#totallista").val((precolista).formatMoney());
       $("#totaldesc").val((precolista-precototal).formatMoney());
-      $("#totalperc").val((100-(precototal * 100 / precolista)).formatMoney());
+      if (precolista == 0) {
+      	  $("#totalperc").val((0).formatMoney());
+      } else {
+	      $("#totalperc").val((100-(precototal * 100 / precolista)).formatMoney());
+      }
       $("#totalbudget").val((precototal).formatMoney());
       $("#totalbudget").change();
       // payment conditions

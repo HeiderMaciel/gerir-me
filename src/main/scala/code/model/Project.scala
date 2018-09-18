@@ -38,7 +38,8 @@ class Project1 extends Audited[Project1] with KeyedMapper[Long, Project1] with B
     }
 
     object projectOpt extends MappedInt(this) {// projeto evento, grupo orçamento...
-        override def defaultValue = 
+        override def defaultValue = 0
+/*
         if (AuthUtil.company.appType.isEsmile) {
             5 // budget
         } else if (AuthUtil.company.appType.isEgrex) {
@@ -47,10 +48,10 @@ class Project1 extends Audited[Project1] with KeyedMapper[Long, Project1] with B
             5 // budget
             //2 // event
         }
+*/
     }
 
     def prjOpt (opt : String) : Int = {
-println ("vaiiiii ======================= no project opt " + opt)
         if (opt == "budget" || opt == "5") {
             Project1.OPT_BUDGET
         } else if (opt == "event" || opt == "2") {
@@ -211,6 +212,7 @@ object Project1 extends Project1 with LongKeyedMapperPerCompany[Project1] with O
   val OPT_PROJECT = 1
   val OPT_EVENT = 2
   val OPT_GROUP = 3
+  //val opportunity = 4 deal
   val OPT_BUDGET = 5
 
     

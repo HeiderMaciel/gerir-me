@@ -50,8 +50,20 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
 
 	def list(xhtml: NodeSeq): NodeSeq = {
 			def opt : String = S.param ("opt") match {
-					case Full(p) => p
-					case _ => ""
+					case Full(p) => {
+						p
+					}
+					case _ => {
+						if (S.uri.contains ("budget")) {
+							"budget"
+						} else if (S.uri.contains ("group")) {
+							"group"
+						} else if (S.uri.contains ("event")) {
+							"event"
+						} else {
+							"project"
+						}
+					}
 				}			
 			var id:String = ""
 		 	def delete(): Unit ={
@@ -274,24 +286,31 @@ class  ProjectSnippet extends BootstrapPaginatorSnippet[Project1] {
   	}
 
 	def maintain () = {
-println ("vaiiiiiii ================ attr " + S.attr("projectOpt"));
-		def opt : String = S.param ("projectOpt") match {
+		def opt : String = S.param ("opt") match {
 				case Full(p) => p
-				case _ => ""
+				case _ => {
+					if (S.uri.contains ("budget")) {
+						"budget"
+					} else if (S.uri.contains ("group")) {
+						"group"
+					} else if (S.uri.contains ("event")) {
+						"event"
+					} else {
+						"project"
+					}
+				}
 			}			
 
 		try{
 			var ac:Project1 = getProject
 			def process(): JsCmd = {
 				try {
-println ("vaiiiii =============== tipo user " + S.params ("projectOpt"))
 					ac.company(AuthUtil.company)
-					ac.projectOpt (ac.prjOpt (opt))
+					if (ac.projectOpt == 0) {
+						ac.projectOpt (ac.prjOpt (opt))
+					}
 					ac.save
-println ("vaiiiiii ========= opt " + opt )
-
-// rigel 02/11/2017 - retirar o apptype qdo o parm funcionar
-				   	if (opt == "budget" || AuthUtil.company.appType.isEsmile) {
+				   	if (opt == "budget") {
 					   	S.notice("Orçamento salvo com sucesso!")
 				   		S.redirectTo("/budget/budget?id="+ac.id.is+"&opt=budget")
 				   	} else if (opt == "event") {
@@ -302,7 +321,7 @@ println ("vaiiiiii ========= opt " + opt )
 			   			S.redirectTo("/project_group/group?id="+ac.id.is+"&opt=group")
 			   		} else {
 					   	S.notice("Orçamento salvo com sucesso!")
-				   		S.redirectTo("/budget/budget?id="+ac.id.is+"&opt=budget")
+				   		S.redirectTo("/project/project?id="+ac.id.is+"&opt=project")
 //					   	S.notice("Projeto salvo com sucesso!")
 //			   			S.redirectTo("/project/event?id="+ac.id.is+"&opt=project")
 			   		}
