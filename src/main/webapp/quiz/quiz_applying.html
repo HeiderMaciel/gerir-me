@@ -20,7 +20,11 @@
             $.get(URL_GET, function(data) {
                 eval("var result = " + data);
                 $("#quiz-applying-id").val(APPLYING_ID);
-                $("#quiz-title").text(" " + result.name);
+                var applyobsaux = "";
+                if (result.applyobs) {
+                    applyobsaux = " - " + result.applyobs
+                }
+                $("#quiz-title").text(" " + result.name + applyobsaux);
                 $("#quiz-date").text(result.date);
                 if (result.obs) {
                     $("#quiz-obs").text(result.obs);

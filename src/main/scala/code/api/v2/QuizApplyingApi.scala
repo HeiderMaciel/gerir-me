@@ -3,6 +3,10 @@ package api
 
 import code.model._
 import code.util._
+//import code.service._
+
+import net.liftweb._
+import http.js._
 import net.liftweb.common.Full
 import net.liftweb.http.S
 import net.liftweb.http.js.JE._
@@ -14,7 +18,7 @@ import net.liftweb.mapper._
 //implicit val formats = DefaultFormats // Brings in default date formats etc.
 
 
-object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
+object QuizApplyingApi extends RestHelper with ReportRest with net.liftweb.common.Logger {
   serve {
     case "api" :: "v2" :: "quiz_applying" :: id :: print :: Nil JsonGet _ => {
       quizJson(id.toLong, print.toBoolean)
@@ -46,6 +50,24 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
           )
         }))
     }
+
+// tá para testar com o jose bento  no atlas
+// a seção tb tá fixa
+// passar os parms na url
+    case "api" :: "v2" :: "sectionCross" :: Nil Post _ =>{
+
+        val SQL = """
+select qa.applydate, qq.short_name,  qr.valuestr from quizapplying qa
+left join quizsection qs on qs.quiz = qa.quiz and qs.id = 125 /* secao 2*/
+left join quizquestion qq on qq.quizsection = qs.id
+left join quizanswer qr on qr.quizapplying = qa.id and qr.quizquestion = qq.id
+where qa.company = ? and qa.business_pattern = 485290 and qa.quiz = 115
+order by qa.applydate, qq.orderinsection
+        """
+        toResponse(SQL,
+          List(AuthUtil.company.id.is))
+    } 
+
   }
 
   def saveAnswer(applyingId: Long, questionId: String)= {
@@ -91,6 +113,7 @@ object QuizApplyingApi extends RestHelper with net.liftweb.common.Logger {
       ("name", quiz.name.is),
       ("date", Project.dateToStr(qa.get.applyDate.is)),
       ("obs", quiz.obs.is),
+      ("applyobs", qa.get.obs.is),
       ("bpName", bp.name.is),
       ("bpId", bp.id.is),
       ("sections", JsArray(quiz.sections(quizApplyingId, print).map(sectionJson(_, quizApplyingId, bp)))))

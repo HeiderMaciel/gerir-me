@@ -117,7 +117,7 @@ object CustomerReportApi extends RestHelper with ReportRest {
 					    %s)
 					--order by bp.id, qa.applydate desc
 					%s
-				) as data1 order by 1 desc, 6 asc
+				) as data1 order by 1 desc, 6 desc
 				"""
 				if (AuthUtil.company.isMedical) {
 					toResponse(sql_quiz.format(issuperadm, sql_treat),List(AuthUtil.company.id.is, customer, 
