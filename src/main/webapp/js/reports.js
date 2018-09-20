@@ -1,5 +1,12 @@
 // rigel
 
+var auditDecode = function (value) {
+  var ret = "";
+  return "<a title='" + value + "' href='#' ><img width='24px' src='/images/audit.png'/></a>";
+}
+
+
+
 var trStatus = 0;
 var trStatus2 = 0;
 var trStatusdecode = function(name, row, showhint){
@@ -223,6 +230,8 @@ function renderReport(url, fields, filter, grid_selector, callback_report, isCro
       return textNullDecode(value);
     case "approved":
       return approvedDecode(value);
+    case "audit":
+      return auditDecode(value);
     default:
       if (type && (type instanceof Object)) {
         if (type.type == "select") {

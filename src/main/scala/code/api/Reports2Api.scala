@@ -364,7 +364,10 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 			case "report" :: "customers" :: Nil Post _ => {
 				// customers_report.html
 				val sql = """
-					select id, short_name, trim (mobile_phone || ' ' || phone || ' ' || email_alternative), email, birthday, createdat,id 
+					select id, short_name, 
+					trim (mobile_phone || ' ' || phone || ' ' || email_alternative), 
+					email, birthday, createdat,id,
+					fu_auditstr (createdby, createdat, updatedby, updatedat) 
 					from 
 					business_pattern
 					where company=? and (%s) and (%s) and (%s) and (%s) and (%s) and (%s) and (%s) and (%s)

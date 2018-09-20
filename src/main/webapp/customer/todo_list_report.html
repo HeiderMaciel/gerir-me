@@ -56,27 +56,27 @@
         // para envio de email deve aparecer em um decode
         // tem exemplos de receber um id como parm ai usa push(id) como no birhtdays
         customers.push(row[0]); 
-        return "<a href='/customer/edit?id=" + row[0] + "' target='_customer_maste'>" + name + "</a>";
+        return "<a style='line-height: 105%' href='/customer/edit?id=" + row[0] + "' target='_customer_maste'>" + name + "</a>";
       }
     }
     fields[7] = { // motivo
       type : "format",
       decode: function(name, row) {
-        return "<p style='line-height: 120%'>" + 
+        return "<p style='line-height: 105%'>" + 
             row[7] + "<p/>"
       }
     }
     fields[8] = { // obs
       type : "format",
       decode: function(name, row) {
-        return "<p style='line-height: 120%'>" + 
+        return "<p style='line-height: 105%'>" + 
             row[8] + "<p/>"
       }
     }
     fields[9] = { // telefone e email
       type : "format",
       decode: function(name, row) {
-        return "<p style='line-height: 120%'>" + 
+        return "<p style='line-height: 105%'>" + 
             row[9] + "<p/>"
       }
     }

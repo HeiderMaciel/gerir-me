@@ -10,9 +10,9 @@
       type: "format",
       decode: function(name, row) {
         if (row[12] == "0") {
-          return "<a href='/activity/edit?id=" + row[11] + "' target='_activity_maste'>" + name + "</a>";
+          return "<a style='line-height: 105%' href='/activity/edit?id=" + row[11] + "' target='_activity_maste'>" + name + "</a>";
         } else {
-          return "<a href='/product_admin/edit?id=" + row[11] + "' target='_product_maste'>" + name + "</a>";
+          return "<a style='line-height: 105%' href='/product_admin/edit?id=" + row[11] + "' target='_product_maste'>" + name + "</a>";
         }
       }
     }
@@ -40,12 +40,14 @@
     fields[9] = {
       type: "format",
       decode: function(name, row) {
-        return "<a href='/user/edit?id=" + row[10] + "' target='_user_maste'>" + name + "</a>";
+        return "<a style='line-height: 105%' href='/user/edit?id=" + row[10] + "' target='_user_maste'>" + name + "</a>";
       }
     }
     fields[10] = "none";
     fields[11] = "none";
     fields[12] = "none";
+    fields[13] = "audit";
+
     var url = "/report/prof_services";
     var request = function(){
       renderReport(url,fields,$("#form_report").serializeObject());
@@ -151,7 +153,8 @@
         <th>C Prof</th>
         <th>Com Abs</th>
         <th>C A Prof</th>
-        <th><span data-i18n='Profissional'></span></th>             
+        <th><span data-i18n='Profissional'></span></th>
+        <th><a title='Auditoria' href='#' ><img width='24px' src='/images/audit.png'/></a></th>
       </thead>
       <tbody>
       </tbody>

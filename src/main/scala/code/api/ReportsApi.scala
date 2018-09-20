@@ -123,7 +123,8 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 						pr.saleprice , ua.price, 
 						pr.commission, ua.commission, 
 						pr.commissionAbs, ua.commissionAbs, 
-						bp.short_name Profissional, bp.id, pr.id, pr.productclass
+						bp.short_name Profissional, bp.id, pr.id, pr.productclass,
+						fu_auditstr (ua.createdby, ua.createdat, ua.updatedby, ua.updatedat)
 						from product pr
 						inner join useractivity ua on ua.activity = pr.id
 						inner join business_pattern bp on bp.id = ua.user_c and bp.userstatus = 1 and bp.is_employee = true

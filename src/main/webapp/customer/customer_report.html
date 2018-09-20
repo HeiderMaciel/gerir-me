@@ -40,18 +40,28 @@
     fields[1] = {
       type: "format",
       decode: function(name, row) {
-        return "<a href='/customer/edit?id=" + row[0] + "' target='_customer_maste'>" + name + "</a>";
+        return "<a style='line-height: 105%' href='/customer/edit?id=" + row[0] + "' target='_customer_maste'>" + name + "</a>";
+      }
+    }
+    fields[2] = { // fone
+      type : "format",
+      decode: function(name, row) {
+        return "<p style='line-height: 105%'>" + 
+            row[2] + "<p/>"
+      }
+    }
+    fields[3] = { // email
+      type : "format",
+      decode: function(name, row) {
+        return "<p style='line-height: 105%'>" + 
+            row[3] + "<p/>"
       }
     }
     fields[4] = "date";
     fields[5] = "date";
-    fields[6] = {
-      type : "format",
-      decode : function(id){
-        customers.push(id);
-        return "<a class='btn' href='/customer/edit?id="+id+"' target='_customer_maste'>Ir</a>"
-      }
-    };
+    fields[6] = "none";
+    fields[7] = "audit";
+
     var url = "/report/customers";
     var request = function(){
       total = 0.00;
@@ -236,7 +246,7 @@
         <th>E-mail</th>
         <th>Nascimento</th>
         <th>Dt Criado</th>
-        <th>Cad</th>
+        <th><a title='Auditoria' href='#' ><img width='24px' src='/images/audit.png'/></a></th>
       </thead>
       <tbody>
       </tbody>
