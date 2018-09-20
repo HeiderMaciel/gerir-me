@@ -106,6 +106,7 @@ class Customer extends BusinessPattern[Customer]{
             message_aux = message_aux.replaceAll ("##end_bairro##", ac.district)
             message_aux = message_aux.replaceAll ("##end_ref##", ac.pointofreference)
             message_aux = message_aux.replaceAll ("##end_uf##", ac.stateShortName)
+            message_aux = message_aux.replaceAll ("##end_completo##", ac.full_address)
         }
         message_aux
     }

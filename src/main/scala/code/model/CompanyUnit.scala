@@ -202,6 +202,7 @@ class CompanyUnit
       message_aux = message_aux.replaceAll ("##unid_end_bairro##", ac.getPartner.district)
       message_aux = message_aux.replaceAll ("##unid_end_ref##", ac.getPartner.pointofreference)
       message_aux = message_aux.replaceAll ("##unid_end_uf##", ac.getPartner.stateShortName)
+      message_aux = message_aux.replaceAll ("##unid_end_completo##", ac.getPartner.full_address)
       message_aux
   }
 

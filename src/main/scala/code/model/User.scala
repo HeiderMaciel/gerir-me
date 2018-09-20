@@ -419,6 +419,7 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         message_aux = message_aux.replaceAll ("##prof_end_bairro##", ac.district)
         message_aux = message_aux.replaceAll ("##prof_end_ref##", ac.pointofreference)
         message_aux = message_aux.replaceAll ("##prof_end_uf##", ac.stateShortName)
+        message_aux = message_aux.replaceAll ("##prof_end_completo##", ac.full_address)
         message_aux
     }
 
