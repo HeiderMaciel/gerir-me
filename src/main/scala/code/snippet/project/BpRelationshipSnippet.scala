@@ -203,7 +203,9 @@ class  BpRelationshipSnippet extends BootstrapPaginatorSnippet[BpRelationship] {
 			}
 			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 			"name=business_pattern" #> (SHtml.text(ac.business_pattern.is.toString, (p:String) => ac.business_pattern(p.toLong)))&
+			"name=business_patternname" #> (SHtml.text(ac.bpName, (a:String) => {}))&
 			"name=bp_related" #> (SHtml.text(ac.bp_related.is.toString, (p:String) => ac.bp_related(p.toLong)))&
+			"name=bp_relatedname" #> (SHtml.text(ac.relatedName, (a:String) => {}))&
 			"name=startat" #> (SHtml.text(getDateAsString(ac.startAt.is),
 						(date:String) => {
 							ac.startAt(Project.strOnlyDateToDate(date))
