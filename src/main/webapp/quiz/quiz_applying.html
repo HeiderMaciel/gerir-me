@@ -11,9 +11,17 @@
             var FORM = $("#quiz-form")
             var QUESTIONS_CONTAINER = FORM.find('.questions-container');
             if (PRINT == true || PRINT =='true') {
+                $('.send_email_customer').show();
+                $('.save_quiz').hide();
+                $('.print_version').hide();
+                $('.print_really').show();
                 // para não mostrar secões vazias
                 URL_GET += "/true"
             } else {
+                $('.send_email_customer').hide();
+                $('.save_quiz').show();
+                $('.print_version').show();
+                $('.print_really').hide();
                 URL_GET += "/false"
             }
 
@@ -395,6 +403,61 @@
                 }});
               } 
             }
+            $(".print_really").click(function(){
+                var message_print = $("#quiz-div").html();
+                var header = "";
+                if ($('.has-pet-system').length > 0) {
+                  header = "ebellepet"
+                } else if ($('.has-edoctus-system').length > 0) {
+                  header = "edoctus"
+                } else if ($('.has-ephysio-system').length > 0) {
+                  header = "ephysio"
+                } else if ($('.has-gerirme-system').length > 0) {
+                  header = "gerirme"
+                } else {
+                  header = "ebelle"
+                }
+
+                var logo = "";
+                if ($('.has-pet-system').length > 0) {
+                  logo = "ebellepet"
+                } else if ($('.has-edoctus-system').length > 0) {
+                  logo = "edoctus"
+                } else if ($('.has-ephysio-system').length > 0) {
+                  logo = "ephysio"
+                } else if ($('.has-gerirme-system').length > 0) {
+                  logo = "gerirme"
+                } else {
+                  logo = "ebelle"
+                }
+
+                // um trailer gerar 
+                //header = '<img width="70px" style="padding-right: 10px" src="/images/logo_'+logo+'.png"/>' + header + " Gestão Integrada <br></p>"
+                header = "<head> " + 
+    '<link href="/css/bootstrap.css" rel="stylesheet"/>' +
+    '<link href="/css/ebelle-responsive.css" rel="stylesheet"/>' +
+    '<link rel="stylesheet" type="text/css" href="/skins/default.css" />' +
+                  " <meta charset='utf-8'> " +
+                  " <title>" + header + "</title> " +
+                  " </head> " +
+                '<img width="35px" style="padding-right: 10px" src="/images/logo_ftr_'+logo+'.png"/>' + 
+                header + " Gestão Integrada " + 
+                '<img width="70px" style="padding-right: 10px" src="http://images.vilarika.com.br/company/'+AuthUtil.company.image+'"/>' + 
+                " <br></p>"
+                var printWindow = window.open("", "MsgPrintWindow");
+                printWindow.close();
+                // aqui abre de novo zerada
+                printWindow = window.open("", "MsgPrintWindow");
+                printWindow.document.write(header + message_print);
+                setTimeout(function(){
+                  printWindow.print();
+                }, 500);
+            });
+
+            $(".print_version").click(function(){
+              //alert (document.location.href+"&print=true");
+              window.open(document.location.href+"&print=true", "_self");
+            });
 
             $(".send_email_customer").click(function(){
               //sendReceiptEmailCustomer(idcustomer1);
@@ -415,10 +478,16 @@
             <input type="hidden" id="quiz-applying-id" name="id">
             <input type="hidden" id="quiz-questions" name="questions">
             <div class="questions-container"></div>
-            <input class="btn success" type="submit" value="Salvar">
+            <input class="btn success save_quiz" type="submit" value="Salvar">
             <input class="btn primary" id="edit_patient" type="button" value="Prontuário">
             <a type="button" class="btn primary send_email_customer">
             Notificar <span data-i18n='Cliente'></span>
+            </a>
+            <a type="button" class="btn primary print_version">
+            Impressão</span>
+            </a>
+            <a type="button" class="btn primary print_really">
+            Imprimir</span>
             </a>
         </form>
 
