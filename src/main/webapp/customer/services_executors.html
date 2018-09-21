@@ -16,9 +16,9 @@
         }
       }
     }
-    fields[3] = "real";
-    fields[4] = "real";
-    fields[5] = "real";
+    fields[3] = "realNull";
+    fields[4] = "realNull";
+    fields[5] = "realNull";
     //fields[6] = "real";
     fields[6] = {
       type : "format",
@@ -32,11 +32,11 @@
           color = "";
         }
         return "<p style='color:" + color + "'><b>" + 
-            realDecode(row[6]) + "</b><p/>"
+            realNullDecode(row[6]) + "</b><p/>"
       }
     }
-    fields[7] = "real";
-    fields[8] = "real";
+    fields[7] = "realNull";
+    fields[8] = "realNull";
     fields[9] = {
       type: "format",
       decode: function(name, row) {

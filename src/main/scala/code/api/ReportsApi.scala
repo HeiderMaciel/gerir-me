@@ -120,9 +120,9 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 				val sql = """
 						select
 						pr.name , pr.duration, ua.duration, 
-						pr.saleprice , ua.price, 
-						pr.commission, ua.commission, 
-						pr.commissionAbs, ua.commissionAbs, 
+						pr.saleprice , case when ua.use_product_price = false then ua.price else null end, 
+						pr.commission, case when ua.use_product_commission = false then ua.commission else null end, 
+						pr.commissionAbs, case when ua.use_product_commission = false then ua.commissionAbs else null end, 
 						bp.short_name Profissional, bp.id, pr.id, pr.productclass,
 						fu_auditstr (ua.createdby, ua.createdat, ua.updatedby, ua.updatedat)
 						from product pr
