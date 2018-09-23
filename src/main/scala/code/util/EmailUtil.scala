@@ -121,7 +121,19 @@ object EmailUtil {
   }
 
   def sendMailTo(email:String,mail:NodeSeq,title:String, 
-    company:Company = AuthUtil.company, attachment:Attachment = EmptyAttachment()){
+    companyParm:Company = AuthUtil.company, attachment:Attachment = EmptyAttachment()){
+
+      var company:(Company) = companyParm;
+
+      def coName = company.partner.obj match {
+          case Full(t) => t.name.is
+          case _ => ""
+      }
+
+      if (coName == "") {
+        company = Company.findByKey (1).get
+      }
+
       authDefalt
       email.split(",|;").foreach((email) => {
         val log = LogMailSend.create.
