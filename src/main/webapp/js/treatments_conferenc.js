@@ -121,6 +121,7 @@
       $('form').submit(function(){
         return false;
       });
+      $("#category_select").productTypeField(true);
       $("#product").productField(true);
       $("#godelete").click(function(){
         removeTreatments();

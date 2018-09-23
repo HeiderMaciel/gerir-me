@@ -527,10 +527,26 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 				case _ => BySql[code.model.Treatment]("1 =1",IHaveValidatedThisSQL("",""))
 			}
 
+			def producttype = S.param("category_select") match {
+				case Full(s) if(s != "") => BySql[code.model.Treatment](
+					"""id in (select distinct t.id from treatment t 
+					inner join treatmentdetail td on( td.treatment = t.id) 
+					inner join product pr on((pr.id = td.product or pr.id=td.activity)
+					and pr.typeproduct = ?) 
+					where t.company=? and dateevent between date(?) and date(?)) 
+					""",
+					IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"), 
+					s.toLong, AuthUtil.company.id.is, startDate,endDate)
+				case _ => BySql[code.model.Treatment]("1 =1",IHaveValidatedThisSQL("",""))
+			}	
+
 			// aqui testa acticity ou product pq servico no pacote é vendido como product
 			lazy val activity = S.param("activity") match {
 				case Full(s) if(s != "") => BySql[code.model.Treatment](
-					"id in (select distinct t.id from treatment t inner join treatmentdetail td on( td.treatment = t.id) where t.company=? and dateevent between date(?) and date(?) and (td.activity =? or td.product =?))",
+					"""id in (select distinct t.id from treatment t 
+					inner join treatmentdetail td on( td.treatment = t.id) 
+					where t.company=? and dateevent between date(?) and date(?) 
+					and (td.activity =? or td.product =?))""",
 					IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"), 
 					AuthUtil.company.id.is, startDate,endDate, s.toLong, s.toLong)
 				case _ => BySql[code.model.Treatment]("1 =1",IHaveValidatedThisSQL("",""))
@@ -610,7 +626,11 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 			lazy val filterStartEnd = BySql[code.model.Treatment]("dateevent between date(?) and date(?)",IHaveValidatedThisSQL("dateevent","01-01-2012 00:00:00"),startDate,endDate)
 			lazy val hasDetail = By(Treatment.hasDetail,true)
 			lazy val obsFilter = Like(Treatment.obs,"%"+(S.param("obs_search") openOr "")+"%" )
-			val params:Seq[net.liftweb.mapper.QueryParam[code.model.Treatment]] = filterStartEnd :: activity :: customer :: user :: status :: payment_type :: hasDetail :: commands :: cashiers :: product :: units :: offsales :: OrderBy(Treatment.start, Descending) :: obsFilter :: Nil
+			val params:Seq[net.liftweb.mapper.QueryParam[code.model.Treatment]] = 
+			filterStartEnd :: activity :: producttype :: customer :: 
+			user :: status :: payment_type :: hasDetail :: commands :: 
+			cashiers :: product :: units :: offsales :: 
+			OrderBy(Treatment.start, Descending) :: obsFilter :: Nil
 			val treatments = if(showDeleteds){
 				Treatment.findAllInCompanyWithDeleteds(params.toList :_*)
 			}else{
