@@ -315,14 +315,20 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					command  <- S.param("command") ?~ "command parameter missing" ~> 400
 					date_str <- S.param("date") ?~ "customer parameter missing" ~> 400
 					customer  <- S.param("customer") ?~ "customer parameter missing" ~> 400
+					prof <- S.param("prof") ?~ "prof parameter missing" ~> 400
 			}yield{
-				val sql = """
+				def beneficiario : String = if (prof=="true") {
+					"bp.name, bp.document || ' ' || bp.document_company as doc_company,"
+				} else {
+					"cu.name, bu.document || ' ' || bu.document_company as doc_company,"
+				}
+				def sql = """
 					select bc.name, trim (bc.phone || ' ' || bc.mobile_phone), 
 					bc.document || ' ' || bc.document_company as doc_customer, 
 					bc.street, bc.number_c, bc.complement, bc.district, bc.postal_code,
 					fu_extenso_real(to_number (to_char (pa.value,'999999999.99'),'999999999.99')), 
-					cu.name, bu.document || ' ' || bu.document_company as doc_company,
-					bu.street, bu.number_c, bu.complement, bu.district, bu.postal_code,
+					""" + beneficiario +
+					"""bu.street, bu.number_c, bu.complement, bu.district, bu.postal_code,
 					ci.name, st.name, to_char (pa.datepayment,'dd/mm/yyyy'),
 					pr.name, ban.name, to_number (to_char (td.price/td.amount,'9999999.99'),'9999999.99'), 
 					td.amount, td.price, to_number (to_char (pa.value,'999999999.99'),'999999999.99'),
@@ -341,6 +347,7 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					left join tdepet tdp on tdp.treatmentDetail = td.id
 					left join business_pattern ban on ban.id = tdp.animal
 					left join business_pattern bu on bu.id = cu.partner
+					left join business_pattern bp on bp.id = tr.user_c
 					left join city ci on ci.id = bu.cityref
 					left join state st on st.id = ci.state
 					left join city cic on cic.id = bc.cityref

@@ -62,7 +62,11 @@
     idcustomer1 = (gup("customerId"));
     //$("#week_day").html(i18n_days[new Date().getDay()]);
     var request = function(){
-      renderReport(url,fields,{command:gup("command"), date: date, customer: idcustomer1 },"#grid",function(data){
+      renderReport(url,fields,{
+        command:gup("command"), 
+        date: date, 
+        customer: idcustomer1, 
+        prof:gup("prof") },"#grid",function(data){
         var document_company = data[0][10];
         $("#document_company").html(document_company);
         // não é exibido usado para envio de email
@@ -95,6 +99,16 @@
         $("#uname").html(uname);
         var udoc = data[0][10];
         $("#udoc").html(udoc);
+        var ustreet = data[0][11];
+        $("#ustreet").html(ustreet);
+        var unumber = data[0][12];
+        $("#unumber").html(unumber);
+        var ucomplement = data[0][13];
+        $("#ucomplement").html(ucomplement);
+        var udistrict = data[0][14];
+        $("#udistrict").html(udistrict);
+        var upostalcode = data[0][15];
+        $("#upostalcode").html(upostalcode);
         var ucity = data[0][16];
         $("#ucity").html(ucity);
         var ustate = data[0][17];
@@ -103,7 +117,7 @@
         $("#udate").html(udate);
         var uphone = data[0][uphonecol];
         $("#uphone").html(uphone);
-        var coobs = data[0][coobscol];
+        var coobs = data[0][coobscol]; // observação na conig empresa
         $("#coobs").html(coobs);
         //window.print();
       });
@@ -114,7 +128,10 @@
     var url_pay = "/treatments/receipt_payments";
     var request_pay = function(){
       renderReport(url_pay,fields_pay,{command:gup("command"), date: date, customer: idcustomer1  },"#grid_payments",function(data){
-        window.print(); // aqui já acabou
+        //window.print(); // aqui já acabou
+        setTimeout(function(){
+          window.print();
+        }, 500);
       });
     }
     request();
@@ -228,7 +245,8 @@
             <center>
             <br/><br/><br/>
             __________________________________________________<br/><br/> 
-            Local: <span id="ucity"></span> - <span id="ustate"></span><br/><br/>
+            Local: <span id="ustreet"></span> - <span id="unumber"></span> <span id="ucomplement"></span> <span id="udistrict"></span><br/><br/>
+            <span id="ucity"></span> - <span id="ustate"></span> <span id="upostalcode"></span><br/><br/>
             Data : <span id="udate"></span><br/><br/>
             <span id="uname"></span> - <span id="udoc"></span>
             <br/>

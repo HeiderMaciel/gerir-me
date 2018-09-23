@@ -49,7 +49,10 @@
         $("#cdistrict").html(cdistrict);
         var cpostal_code = data[0][12];
         $("#cpostal_code").html(cpostal_code);
-        window.print();
+        //window.print();
+        setTimeout(function(){
+          window.print();
+        }, 500);
       });
 
     }

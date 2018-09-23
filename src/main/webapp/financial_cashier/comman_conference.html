@@ -182,7 +182,8 @@
         <th>Comissão</th>
         <th>Comanda</th>
         <th>Ticket</th>
-        <th>Recibo</th>
+        <th title="Recibo em nome do profissional">Rec P</th>
+        <th title="Recibo em nome do estabelecimento">Rec E</th>
         </tr>
       </thead>
       <!--<tr class="lift:ReportSales:reportCommandConference"> -->
@@ -233,6 +234,11 @@
         <td>
           <div class="hide_on_print">
             <f:ticket></f:ticket>
+          </div>
+        </td>
+        <td>
+          <div class="hide_on_print">
+            <f:receiptprof></f:receiptprof>
           </div>
         </td>
         <td>
