@@ -316,6 +316,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					" and 1 = 1 "
 				}
 
+/*
 				val SQL = """
 				select ban.name, bc.name as tutor, bi.name as indicou, date(ban.createdat), 
 				ban.id, bc.id, bi.id from business_pattern ban 
@@ -323,6 +324,23 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 				where business_pattern = ban.id and relationship = 27 /* é pet de */ and bpr.company = ban.company) and bc.company = ban.company
 				left join business_pattern bi on bi.id in (select bp_related from bprelationship bpr
 				where business_pattern = ban.id and relationship = 24 /* indicado por */ and bpr.company = ban.company) and bi.company = ban.company
+				where ban.company = ?
+				and ban.is_animal = true
+				and date (ban.createdat) between ? and ?
+				and lower (ban.name) like '%s'
+				%s
+				%s
+				order by ban.name, ban.id, ban.createdat desc
+				"""
+*/
+				val SQL = """
+				select ban.name, bc.name as tutor, bi.name as indicou, date(ban.createdat), 
+				ban.id, bc.id, bi.id 
+				from business_pattern ban 
+				left join bprelationship bpr on bpr.business_pattern = ban.id and bpr.relationship = 27
+				left join business_pattern bc on bc.id = bpr.bp_related
+				left join bprelationship bpr1 on bpr1.business_pattern = ban.id and bpr1.relationship = 24
+				left join business_pattern bi on bi.id = bpr1.bp_related
 				where ban.company = ?
 				and ban.is_animal = true
 				and date (ban.createdat) between ? and ?

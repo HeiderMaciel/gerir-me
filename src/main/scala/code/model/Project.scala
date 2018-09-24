@@ -249,10 +249,14 @@ class ProjectClass extends Audited[ProjectClass] with PerCompany with IdPK
         // list 1
     }
     object headerStyle extends MappedPoliteString(this,255) {
+        override def defaultValue = " class='withnoborder' style='border:0'";
+    }
+    object bodyStyle extends MappedPoliteString(this,255) {
         override def defaultValue = "style='border:0'";
     }
-    object bodyStyle extends MappedPoliteString(this,255)
-    object contentStyle extends MappedPoliteString(this,255)
+    object contentStyle extends MappedPoliteString(this,255) {
+        override def defaultValue = "style='border:0'";
+    }
     object columns extends MappedPoliteString(this,255)
 
     def projectTypeName = projectType.obj match {

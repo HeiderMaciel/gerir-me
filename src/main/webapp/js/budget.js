@@ -150,7 +150,7 @@ var extract_table = function(a, asTable, headerStyle,
     for (b = 0; b < l.cells.length; b++) {
       k = l.cells[b];
       var c = c + (b ? cellEnd : ""),
-        m = k.textContent.trim();
+        m = "<span style='line-height: 105%'>" + k.textContent.trim() + "</span>";
       k = m;
       var t = -1 !== m.indexOf(cellEnd) || -1 !== m.indexOf("\r") || -1 !== m.indexOf("\n");
       (m = -1 !== m.indexOf('"')) && (k = k.replace(/"/g, '""'));
