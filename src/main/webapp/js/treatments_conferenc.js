@@ -74,12 +74,14 @@
         $.post("/treatments/getTreatmentsByFilter",$("#form_report").serialize(),function(t){
           var treatments = [];
           var total = 0.0;
+          var minutes = 0.0;
           eval("treatments = "+t);
           var ret = "";
           treatments_del = treatments
           for (var i = treatments.length - 1; i >= 0; i--) {
             obj = treatments[i];
             total += obj.total;
+            minutes += obj.minutes;
             var iniAux = "";
             if (isMobile.any) {
               iniAux = getHourBr(FactoryDate.byTime(obj.date))
@@ -114,6 +116,9 @@
           $("#grid tbody").html(ret);
           $("#count").val(treatments.length);
           $("#total").val(total.formatMoney());
+          var hours = "";
+          hours = (Math.trunc(minutes/60)).toString() + ":" + (minutes % 60).toString()
+          $("#hours").val(hours);
           $("#grid").tablesorter();
         })
   };  

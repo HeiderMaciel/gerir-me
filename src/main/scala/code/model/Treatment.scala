@@ -397,18 +397,19 @@ with WithCustomer with net.liftweb.common.Logger{
         }
     }
 
+    def minutesToAdd = details match { 
+        case (dl) if(dl.size >0 ) => { 
+            dl map(_.duration) map (_ split(":") map(_.toInt) reduceLeft(_*60+_)) reduceLeft(_+_)
+        }
+        case _ => 0
+    }
+
     def resetEndDate() = {
         start.is match {
             case st:Date if(st != null) =>{
-                var miutesToAdd = details match { 
-                    case (dl) if(dl.size >0 ) => { 
-                        dl map(_.duration) map (_ split(":") map(_.toInt) reduceLeft(_*60+_)) reduceLeft(_+_)
-                    }
-                    case _ => 0
-                }
                 var cal = Calendar.getInstance
                 cal.setTime(start)
-                cal.add(Calendar.MINUTE, miutesToAdd)
+                cal.add(Calendar.MINUTE, minutesToAdd)
                 end(cal.getTime)                
             }
             case _ => {

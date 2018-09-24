@@ -647,6 +647,7 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					("status",t.status.toString),
 					("total",t.totalValue(0).toDouble),
 					("details",t.descritionDetails),
+					("minutes",t.minutesToAdd),
 					("payments",t.paymentDescription),
 					("command",t.command.is),
 					("cashier",t.cashier),
