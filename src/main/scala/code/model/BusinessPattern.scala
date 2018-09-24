@@ -759,6 +759,24 @@ with PerCity{
         case _ => ""
     }
 
+    def originShortName : (String) = {
+      if ((bp_origin != 0 && bp_origin != null)) {
+        val ac = Customer.findByKey (bp_origin).get
+        return (ac.short_name);
+      } else {
+        ""
+      }
+    }
+
+    def indicateByName : (String) = {
+      if ((bp_indicatedby != 0 && bp_indicatedby != null)) {
+        val ac = Customer.findByKey (bp_origin).get
+        return (ac.name);
+      } else {
+        ""
+      }
+    }
+
     def councilShortName: String = {
         if (council != 0 && council != null) {
           DomainTable.findAll(

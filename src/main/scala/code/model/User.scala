@@ -399,6 +399,9 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         message_aux = message_aux.replaceAll ("##prof_telefone##", ac.phone)
         message_aux = message_aux.replaceAll ("##prof_celular##", ac.mobilePhone)
         message_aux = message_aux.replaceAll ("##prof_telefone2##", ac.email_alternative)
+
+        message_aux = message_aux.replaceAll ("##prof_telefones##", ac.allPhones)
+
         message_aux = message_aux.replaceAll ("##prof_email##", ac.email)
         message_aux = message_aux.replaceAll ("##prof_doc##", ac.document + ac.document_company)
         message_aux = message_aux.replaceAll ("##prof_doc_rg##", ac.document_identity)

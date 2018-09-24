@@ -72,9 +72,13 @@ class Customer extends BusinessPattern[Customer]{
             message_aux = message_aux.replaceAll ("##nome##", ac.name.is)
             message_aux = message_aux.replaceAll ("##apelido##", ac.short_name.is)
             message_aux = message_aux.replaceAll ("##prinome##", ac.firstName)
+            message_aux = message_aux.replaceAll ("##prontuario##", ac.barcode.is)
             message_aux = message_aux.replaceAll ("##telefone##", ac.phone)
             message_aux = message_aux.replaceAll ("##celular##", ac.mobilePhone)
             message_aux = message_aux.replaceAll ("##telefone2##", ac.email_alternative)
+
+            message_aux = message_aux.replaceAll ("##telefones##", ac.allPhones)
+
             message_aux = message_aux.replaceAll ("##email##", ac.email)
             message_aux = message_aux.replaceAll ("##doc##", ac.document + ac.document_company)
             message_aux = message_aux.replaceAll ("##doc_rg##", ac.document_identity)
@@ -97,6 +101,9 @@ class Customer extends BusinessPattern[Customer]{
 
             message_aux = message_aux.replaceAll ("##convenio##", ac.offSaleShortName)
             message_aux = message_aux.replaceAll ("##profissao##", ac.occupationShortName)
+
+            message_aux = message_aux.replaceAll ("##origem##", ac.originShortName)
+            message_aux = message_aux.replaceAll ("##indicado_por##", ac.indicateByName)
 
             message_aux = message_aux.replaceAll ("##end_rua##", ac.street)
             message_aux = message_aux.replaceAll ("##end_nro##", ac.number)
