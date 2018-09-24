@@ -116,18 +116,18 @@ order by qa.applydate, qq.orderinsection
       ("applyobs", qa.get.obs.is),
       ("bpName", bp.name.is),
       ("bpId", bp.id.is),
-      ("sections", JsArray(quiz.sections(quizApplyingId, print).map(sectionJson(_, quizApplyingId, bp)))))
+      ("sections", JsArray(quiz.sections(quizApplyingId, print).map(sectionJson(_, quizApplyingId, bp, print)))))
   }
 
-  def sectionJson(section: QuizSection, quizApplyingId: Long, customer:Customer) = {
+  def sectionJson(section: QuizSection, quizApplyingId: Long, customer:Customer, print:Boolean) = {
     JsObj(
       ("id", section.id.is),
       ("name", section.name.is),
       ("obs", section.obs.is),
-      ("questions", JsArray(section.questions.map(questionJson(_, quizApplyingId, customer)))))
+      ("questions", JsArray(section.questions.map(questionJson(_, quizApplyingId, customer, print)))))
   }
 
-  def questionJson(question: QuizQuestion, quizApplyingId: Long, customer:Customer) = {
+  def questionJson(question: QuizQuestion, quizApplyingId: Long, customer:Customer, print:Boolean) = {
     var size = "";
     val value = QuizAnswer.findAll(
       By(QuizAnswer.quizApplying, quizApplyingId),

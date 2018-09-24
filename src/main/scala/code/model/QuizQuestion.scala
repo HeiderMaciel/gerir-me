@@ -140,7 +140,10 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
     }
 
     def domain: List[QuizDomainItem] = quizDomain.obj match {
-        case Full(d) => QuizDomainItem.findAll(By(QuizDomainItem.quizDomain, quizDomain.is), OrderBy(QuizDomainItem.orderInDomain, Ascending))
+        case Full(d) => QuizDomainItem.findAll(
+            By(QuizDomainItem.quizDomain, quizDomain.is), 
+            By(QuizDomainItem.status, 1), 
+            OrderBy(QuizDomainItem.orderInDomain, Ascending))
         case _ => Nil
     }
 

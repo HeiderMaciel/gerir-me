@@ -46,6 +46,7 @@ class Quiz extends Audited[Quiz] with PerCompany with IdPK with CreatedUpdated w
         }
         QuizSection.findAll(
             By(QuizSection.quiz, this.id.is), 
+            By(QuizSection.status, 1), 
             BySql (sql, IHaveValidatedThisSQL("",""), quizapplying),
             OrderBy(QuizSection.orderInQuiz, Ascending), 
             OrderBy(QuizSection.id, Ascending))
