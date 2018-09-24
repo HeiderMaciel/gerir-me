@@ -64,15 +64,16 @@ $(function() {
     };
     fields[7] = "real";
     fields[12] = "none";
-    //fields[13] = "none";
-    fields[14] = "none";
+    //fields[13] = "none"; id do treatment
+    fields[14] = "none"; // fim end_c
     fields [15] = {
       type : "format",
       decode: function(name, row) {
         return "<a title='" + row[15] + "' href='#' ><img width='24px' src='/images/audit.png'/></a>";
       }
     };
-    fields[16] = "none";
+    fields[16] = "none"; // status2
+    fields[17] = "none"; // duração em minutos
 
     renderReport("/treatments/getTreatmentsByFilter", fields, filter, "#grid_history");
   }

@@ -449,7 +449,7 @@ class ProjectSection extends Audited[ProjectSection] with KeyedMapper[Long, Proj
 
     object project extends MappedLongForeignKey(this, Project1)
     object orderInReport extends MappedLong(this) {
-        override def defaultValue = 10
+        override def defaultValue = 1000
     }
 /* depois para cronograma
     object startAt extends EbMappedDateTime(this) {
@@ -481,6 +481,25 @@ class ProjectSection extends Audited[ProjectSection] with KeyedMapper[Long, Proj
         }
         super.delete_!;
     }
+    val SQL_UPDATE_ORDER_10_10 = """
+    update projectsection set orderInReport = 
+    ((select count (*) from projectsection t1 where t1.company = projectsection.company 
+        and t1.project = projectsection.project 
+        and (t1.orderInReport < projectsection.orderInReport or (t1.orderInReport = projectsection.orderInReport and t1.id < projectsection.id)))+1) * 10
+    where company = ? and project = ?;
+    """
+    override def save() = {
+        val r = super.save
+
+        if ((project.isEmpty)) {
+          throw new RuntimeException("Não é permitido seção sem projeto/orçamento")
+        }
+
+        DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.project.is :: Nil)
+
+        r
+    }
+
 }
 
 object ProjectSection extends ProjectSection 

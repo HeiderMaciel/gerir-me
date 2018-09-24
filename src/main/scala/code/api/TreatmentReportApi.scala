@@ -647,7 +647,6 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					("status",t.status.toString),
 					("total",t.totalValue(0).toDouble),
 					("details",t.descritionDetails),
-					("minutes",t.minutesToAdd),
 					("payments",t.paymentDescription),
 					("command",t.command.is),
 					("cashier",t.cashier),
@@ -655,7 +654,10 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					("id",t.id.is),
 					("end", Project.dateToStrJs(t.end.is)),
 					("auditstr",t.auditStr),
-					("status2",t.status2.toString)
+					("status2",t.status2.toString),
+					("minutes",t.minutesToAdd)
+					// acrescentar sempre no final ou então 
+					// rever o histórico no cad cliente - customer crud
 				)
 			})
 			)
