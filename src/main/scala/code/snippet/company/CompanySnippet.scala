@@ -72,17 +72,20 @@ object CompanySnippet{
 			    }else if (S.hostName.contains ("esmile")) {
 					ac.appType(3)
 					ac.calendarInterval(36)
+					ac.bpIdForCompany(2)
 			      " e-smile "
 			    }else if (S.hostName.contains ("edoctus")) {
 					ac.appType(4)
 					ac.calendarInterval(30)
 					ac.historyInterval(36)
+					ac.bpIdForCompany(2)
 			      " e-doctus "
 			    }else if (S.hostName.contains ("efisio") || S.hostName.contains ("ephysio")) {
 			    	ac.calendarStart(7)
 			    	ac.calendarEnd(21)
 					ac.appType(6)
 					ac.calendarInterval(60)
+					ac.bpIdForCompany(2)
 			      " e-physio "
 			    }else if (S.hostName.contains ("ebellepet")) {
 			    	ac.calendarStart(8)
