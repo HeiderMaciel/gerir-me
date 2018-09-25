@@ -595,7 +595,7 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
       By(CompanyUnit.showInCalendar_?, true))(0)
   }
 
-  def calPubCompany (company:String) = {
+  def calPubCompany (company:String):Long = {
     if (company == "") {
       1l
     } else {

@@ -176,6 +176,27 @@ class CompanyUnit
       " (id = %s or (id in (select uu.unit from usercompanyunit uu where uu.user_c = %s and uu.company = %s))) ".format(AuthUtil.user.unit, AuthUtil.user.id, AuthUtil.user.company)
   }
 
+  def calPubUnit (company:Long, unit:String) : Long = {
+    val compDef = Company.findByKey (company).get
+    if (unit == "") {
+      compDef.mainUnit.id.is
+    } else {
+      if (BusinessRulesUtil.isNumeric(unit)) {
+        unit.toLong
+      } else {
+        val clist = CompanyUnit.findAll(
+          By (CompanyUnit.company, company),
+          By (CompanyUnit.status, 1),
+          By (CompanyUnit.calendarUrl,unit))   
+        if (clist.length > 0) {
+          clist (0).id.is
+        } else {
+          compDef.mainUnit.id.is
+        }
+      }
+    }
+  }
+
   def replaceMessage (ac:CompanyUnit, message:String) = {
       var message_aux = message;
       //val extenso = WrittenForm (123.999.467.89)
