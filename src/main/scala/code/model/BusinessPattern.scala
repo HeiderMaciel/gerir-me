@@ -770,7 +770,7 @@ with PerCity{
 
     def indicateByName : (String) = {
       if ((bp_indicatedby != 0 && bp_indicatedby != null)) {
-        val ac = Customer.findByKey (bp_origin).get
+        val ac = Customer.findByKey (bp_indicatedby).get
         return (ac.name);
       } else {
         ""

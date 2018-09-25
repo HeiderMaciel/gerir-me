@@ -3,6 +3,8 @@ src/main/scala/code/api/TreatmentApi.scala
 src/main/scala/code/model/BusyEvent.scala
 src/main/scala/code/model/WorkHouer.scala
 
+ 00:52:43.198 INFO  - Service request (GET) /robots.txt returned 404, took 14 Milliseconds
+
 /* limpar cache angular
 $rootScope.$on('$viewContentLoaded', function() { $templateCache.removeAll(); });
 */
