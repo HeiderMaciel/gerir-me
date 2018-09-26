@@ -104,7 +104,15 @@ class CompanyUnit
      def isEphysioU = appTypeU.is == Company.SYSTEM_EPHYSIO
      def isEbellepetU = appTypeU.is == Company.SYSTEM_EBELLEPET
   }
-  object calendarUrl extends MappedPoliteString(this, 100)
+  object calendarUrl extends MappedPoliteString(this, 100) with LifecycleCallbacks {
+    override def beforeSave() {
+      super.beforeSave;
+      if(this.get.trim != ""){
+        this.set(this.get.toLowerCase.trim)
+      }
+    }
+  }
+
 
   override def updateShortName = false
   def getSingleton = CompanyUnit

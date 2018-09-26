@@ -264,7 +264,15 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
   object hoursToConfirmPub extends MappedInt(this){
       override def defaultValue = 0
   }    
-  object calendarUrl extends MappedPoliteString(this, 100)
+  
+  object calendarUrl extends MappedPoliteString(this, 100) with LifecycleCallbacks {
+    override def beforeSave() {
+      super.beforeSave;
+      if(this.get.trim != ""){
+        this.set(this.get.toLowerCase.trim)
+      }
+    }
+  }
 
 // tá lá em baixo
 //  val BEFORE1DAY8PM = 1
