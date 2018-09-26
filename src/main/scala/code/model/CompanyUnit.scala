@@ -187,7 +187,7 @@ class CompanyUnit
         val clist = CompanyUnit.findAll(
           By (CompanyUnit.company, company),
           By (CompanyUnit.status, 1),
-          By (CompanyUnit.calendarUrl,unit))   
+          By (CompanyUnit.calendarUrl,unit.toLowerCase()))   
         if (clist.length > 0) {
           clist (0).id.is
         } else {

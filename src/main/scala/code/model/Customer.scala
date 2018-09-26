@@ -437,7 +437,7 @@ where tr.status = 9 and tr.customer = ?)""",
 
 object Customer extends Customer with BusinessPatternMeta[Customer]{
 
-    def login(email:String, password:String, company:String):Customer = {
+    def login(email:String, password:String, company:String, unit: String):Customer = {
         val pwdMd5 = Project.md5(password)
         val customers = if (company == "") {
             findAll(By(Customer.email, email.trim.toLowerCase), 
@@ -456,6 +456,10 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
         customers match {
             case customer::tail => {
                 LogActor ! "Login email customer company " + customer.company.is.toString + " " + customer.name.is + " " +new Date().toString
+                if (unit != "") {
+                    AuthUtil << CompanyUnit.findByKey(
+                    CompanyUnit.calPubUnit(Company.calPubCompany (company),unit)).get
+                }
                 customer.lastLogin(new Date()).insecureSave
                 customer
             }
