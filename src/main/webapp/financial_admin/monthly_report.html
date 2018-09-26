@@ -16,7 +16,7 @@
     $("#unit").unitField(true,false);
     $("#accounts").categoryAccountField(true, false, true, true);
     $("#start").val(getDateBr(new Date().getAYearAgo()));
-    $("#end").val(getDateBr(new Date()));
+    $("#end").val(getDateBr(new Date().getEndOfMonth()));
     var fields = [];
     var url = "/report/monthly_cross";
     var request = function(){

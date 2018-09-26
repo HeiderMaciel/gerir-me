@@ -34,6 +34,8 @@ object CnabUtil extends net.liftweb.common.Logger {
 
 
   def execute(file:File):String = {
+    var total = 0.0;
+    var count = 0;
     var strAux = "";
     var str1 = "";
     val lines = fromFile(file).getLines.toList
@@ -64,7 +66,9 @@ object CnabUtil extends net.liftweb.common.Logger {
                   .obs(obsAux)
                   .paid(true) 
                   .save
-            str1 = "Boleto " + d.monthlyId + " pagamento confirmado " + co.name + " " + d.paidValue;
+            str1 = "Boleto " + d.monthlyId + " " + co.name + " " + d.paidValue;
+            total += d.paidValue;
+            count += 1;
             LogObj.wLogObj(AuthUtil.company.id, str1, "importação Cnab 240")
           } else {
             str1 = "Boleto " + d.monthlyId + " " + co.name + " JÁ ESTAVA MARCADO como pago " + d.paidValue;
@@ -78,7 +82,7 @@ object CnabUtil extends net.liftweb.common.Logger {
       }
       strAux = strAux + str1 + "\n\r"
     })
-    strAux
+    strAux + " ....................... Qtde Boletos " + count + " Total " + total
   }
   def factory(i:Int, lines:List[String]):Detail ={
     val dataLine = i+1
