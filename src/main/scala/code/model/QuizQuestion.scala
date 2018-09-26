@@ -80,8 +80,9 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
     object sufix extends MappedPoliteString(this,255)
     object printControl extends MappedInt(this)with LifecycleCallbacks { 
         override def defaultValue = 1
-        // nunca 0
-        // sempre 1
+        // nunca 0 prontuári confidencial do médico
+        // se preenchido 1
+        // sempre 3
     }
 
 

@@ -101,7 +101,7 @@ println ("vaiiiii ========================== AQUI NAO DEVE" )
 			JsObj(
 				("id", section.id.is),
 				("name", section.name.is), 
-				("questions", JsArray(section.questions.map(questionJson(_)))))
+				("questions", JsArray(section.questions(-1,false).map(questionJson(_)))))
 		}
 
 		def questionJson(question: QuizQuestion) = {

@@ -37,10 +37,13 @@ class Quiz extends Audited[Quiz] with PerCompany with IdPK with CreatedUpdated w
 
     def sections (quizapplying:Long, print:Boolean)= {
         def sql = if (print) {
-            """ id in (select qq.quizsection from quizanswer 
+            """ (id in (select qq.quizsection from quizanswer 
             inner join quizquestion qq on
             qq.id = quizquestion
-            where quizapplying = ?) """
+            where quizapplying = ?) 
+            or printcontrol = 2 /* sempre imprime */)
+            and printcontrol <> 0 /* nunca imprime */
+            """
         } else {
             " ( 1 = 1 or ? > -2 )"
         }

@@ -124,7 +124,7 @@ order by qa.applydate, qq.orderinsection
       ("id", section.id.is),
       ("name", section.name.is),
       ("obs", section.obs.is),
-      ("questions", JsArray(section.questions.map(questionJson(_, quizApplyingId, customer, print)))))
+      ("questions", JsArray(section.questions(quizApplyingId, print).map(questionJson(_, quizApplyingId, customer, print)))))
   }
 
   def questionJson(question: QuizQuestion, quizApplyingId: Long, customer:Customer, print:Boolean) = {

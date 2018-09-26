@@ -30,8 +30,9 @@ class QuizSection extends Audited[QuizSection] with PerCompany with IdPK with Cr
     object rankPercent extends MappedDecimal(this,MathContext.DECIMAL64,4)
     object printControl extends MappedInt(this)with LifecycleCallbacks { 
         override def defaultValue = 1
-        // nunca 0
-        // sempre 1
+        // nunca 0 prontuário confidencial do médico
+        // se preenchido 1
+        // sempre 3
     }
 
     def quizName = quiz.obj match {
@@ -39,10 +40,20 @@ class QuizSection extends Audited[QuizSection] with PerCompany with IdPK with Cr
         case _ => ""
     }
 
-    def questions = {
+    def questions (quizapplying:Long, print:Boolean) = {
+        def sql = if (print) {
+            """ (id in (select quizquestion from quizanswer 
+            where quizapplying = ?) 
+            or quizQuestionPosition <> 0
+            or printcontrol = 2 /* sempre imprime */)
+            and printcontrol <> 0 /* nunca imprime */"""
+        } else {
+            " ( 1 = 1 or ? > -2 )"
+        }
         QuizQuestion.findAll(
             By(QuizQuestion.quizSection, this.id.is), 
             By(QuizQuestion.status, 1), 
+            BySql (sql, IHaveValidatedThisSQL("",""), quizapplying),
             OrderBy(QuizQuestion.orderInSection, Ascending), 
             OrderBy(QuizQuestion.id, Ascending))
     }
