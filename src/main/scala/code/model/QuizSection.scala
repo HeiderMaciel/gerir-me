@@ -34,6 +34,10 @@ class QuizSection extends Audited[QuizSection] with PerCompany with IdPK with Cr
         // se preenchido 1
         // sempre 3
     }
+    object quizSectionFormat extends MappedInt(this)with LifecycleCallbacks { // em função do número de dias
+        override def defaultValue = 1
+        // 5 nenhum
+    }
 
     def quizName = quiz.obj match {
         case Full(t) => t.short_name.is

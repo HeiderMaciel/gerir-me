@@ -123,6 +123,7 @@ order by qa.applydate, qq.orderinsection
     JsObj(
       ("id", section.id.is),
       ("name", section.name.is),
+      ("format", section.quizSectionFormat.is),
       ("obs", section.obs.is),
       ("questions", JsArray(section.questions(quizApplyingId, print).map(questionJson(_, quizApplyingId, customer, print)))))
   }
@@ -180,7 +181,7 @@ order by qa.applydate, qq.orderinsection
         question.quizQuestionPosition != 3 /* fim */) {
         JsArray(question.domain(-1, -1, print).map(domainJson(_)))
       } else {
-        JsArray(question.domain(question.id.is, quizApplyingId, print).map(domainJson(_)))
+        JsArray(question.domain(question.id.is, quizApplyingId, false).map(domainJson(_)))
       }  
     } else {
       JsArray(question.domain(question.id.is, quizApplyingId, print).map(domainJson(_)))

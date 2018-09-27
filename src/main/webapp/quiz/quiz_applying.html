@@ -121,6 +121,12 @@
             function createSection(section) {
                 var template = $($("#section-template").html());
                 template.find('legend').text(section.name);
+                if (section.format == 5) {
+                    template.find(".label-section").remove();
+                } else {
+                    // falta tratar como label e não como legend, mas o default é longo no topo
+                }
+
                 QUESTIONS_CONTAINER.append(template);
 
                 if (section.obs) {
@@ -502,7 +508,7 @@
 
         <script type="text/template" id="section-template">
             <fieldset>
-                <legend></legend>
+                <legend id='labelsection' class='label-section' ></legend>
                 <span id='obssection' class='obs-section'><p></p></span>
             </fieldset>
         </script>

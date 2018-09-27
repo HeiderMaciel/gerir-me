@@ -78,15 +78,36 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 
 	def questionSizes = DomainTable.findAll(
 		By(DomainTable.domain_name,"quizQuestionSize"),
-		OrderBy(DomainTable.cod, Ascending)).map(t => (t.cod.is,t.name.is))
+		OrderBy(DomainTable.cod, Ascending)).map(t => {
+			def codAux = if (AuthUtil.user.isSuperAdmin) {
+				" " + t.cod.is
+			} else {
+				""
+			}
+			(t.cod.is,t.name.is + codAux)
+			})
 
 	def questionPositions = DomainTable.findAll(
 		By(DomainTable.domain_name,"quizQuestionPosition"),
-		OrderBy(DomainTable.cod, Ascending)).map(t => (t.cod.is,t.name.is))
+		OrderBy(DomainTable.cod, Ascending)).map(t => {
+			def codAux = if (AuthUtil.user.isSuperAdmin) {
+				" " + t.cod.is
+			} else {
+				""
+			}
+			(t.cod.is,t.name.is + codAux)
+			})
 
 	def questionFormats = DomainTable.findAll(
 		By(DomainTable.domain_name,"quizQuestionFormat"),
-		OrderBy(DomainTable.name, Ascending)).map(t => (t.cod.is,t.name.is))
+		OrderBy(DomainTable.cod, Ascending)).map(t => {
+			def codAux = if (AuthUtil.user.isSuperAdmin) {
+				" " + t.cod.is
+			} else {
+				""
+			}
+			(t.cod.is,t.name.is + codAux)
+			})
 /*
 	def questionFormats = (
 		("0", "Reduzido - Esquerda")::
@@ -373,6 +394,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=quiz" #> (SHtml.select(quizs,Full(ac.quiz.is.toString),(s:String) => ac.quiz( s.toLong)))&
 		    "name=printControl" #> (SHtml.select(printControls,Full(ac.printControl.is.toString),(v:String) => ac.printControl(v.toInt)))&
+		    "name=quizSectionFormat" #> (SHtml.select(questionFormats,Full(ac.quizSectionFormat.is.toString),(v:String) => ac.quizSectionFormat(v.toInt)))&
 			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&			
 			"name=weight" #> (SHtml.text(ac.weight.is.toString, (v:String) =>{ if(v !=""){ac.weight(v.toDouble)};}))&
 			"name=rank" #> (SHtml.text(ac.rank.is.toString, (v:String) =>{ if(v !=""){ac.rank(v.toDouble)};}))&
