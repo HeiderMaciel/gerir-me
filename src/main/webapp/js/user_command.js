@@ -236,7 +236,7 @@
             "<a class='btn primary' onclick='Manager.new_detail(" + 
             row[13] +',"' +row[0]+ '"' + ")'" + 
             " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir novo</a> " +
-            "<a class='btn primary' onclick='Manager.edit_detail(" + 
+            "<a class='btn' onclick='Manager.edit_detail(" + 
             row[14] + ',' + //td.id
             '"' +row[2]+ '",' + // customer name 
             '"' +row[0] + '",' + // start 
