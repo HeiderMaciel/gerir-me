@@ -47,6 +47,13 @@ class QuizApplying extends Audited[QuizApplying] with PerCompany with IdPK with 
                 throw new RuntimeException("Não é permitido excluir prontuário em data posterior à sua criação")
             }
         }
+        // se vai deletar QuizApplying deleta antes 
+        val ac = QuizAnswer.findAll (
+            By (QuizAnswer.quizApplying, this.id))
+        ac.foreach((qr)=>{
+            qr.delete_!
+        });
+
         val result = super.delete_!
         result
     }

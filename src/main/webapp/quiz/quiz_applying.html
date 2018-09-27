@@ -118,6 +118,10 @@
                 //$("#quiz-questions").val(questions.join(","));
             }
 
+            function setFor(element, name) {
+                element.attr('for', name);
+            }
+
             function createSection(section) {
                 var template = $($("#section-template").html());
                 template.find('legend').text(section.name);
@@ -225,6 +229,8 @@
                 return template
             }    
             function formatQuestion (question, template) {
+                setFor(template.find('label:first'), question.id);
+                
                 setId(template.find('label:first'), "labelleft"+question.id);
                 setId(template.find('.label-top'), "labeltop"+question.id);
 
@@ -578,7 +584,7 @@
         <script type="text/template" id="paragraph-template">
             <div id='text' class="clearfix">
                 <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
-                <label style='color:black; font-weight: bold' for="obs"></label>
+                <label style='color:black; font-weight: bold' for=""></label>
 
                 <div class="input">
                     <span id='labeltop' class="label-top">paragraph</span>
