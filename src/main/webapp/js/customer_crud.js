@@ -190,9 +190,9 @@ $(function() {
           var questions = "";
           var text = "";
           if (row[11] > "0") {
-            questions = '<span style="margin-right:4px"><a class="btn" target="_quiz_maste"  href="/quiz/quiz_applying?applying_id='+row[5]+'">Questões</a></span>'
+            questions = '<span style="margin-right:4px"><a style="width:58px; text-align:center;" class="btn" target="_quiz_maste"  href="/quiz/quiz_applying?applying_id='+row[5]+'">Questões</a></span>'
           } else {
-            text = '<span style="margin-right:4px"><a class="btn" target="_quiz_maste"  href="/quiz/quizapply?id='+row[5]+'">Texto</a></span>'
+            text = '<span style="margin-right:4px"><a style="width:58px; text-align:center;" class="btn" target="_quiz_maste"  href="/quiz/quizapply?id='+row[5]+'">Texto</a></span>'
           }
           return text + questions +
                 '<input data-id="' + row[5] + '" type="button" class="btn danger quiz_remove" value="Excluir">';
@@ -204,6 +204,7 @@ $(function() {
       fields[9] = "none"
       fields[10] = "none" // bp name
       fields[11] = "none" // count questions
+      fields[12] = "audit";
       var message_total = "";
       var bindEvent = function() {
         $(".quiz_remove").click(function() {
