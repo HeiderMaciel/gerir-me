@@ -138,7 +138,16 @@ order by qa.applydate, qq.orderinsection
     if (question.quizQuestionSize.is == 0) {
       size = "mini"
     } else if (question.quizQuestionSize.is == 1) {
-      size = "small"
+      if (print) {
+        if (question.quizQuestionType.is == 2 /*lista*/ &&
+          question.quizQuestionPosition != 3 /* fim */) {
+          size = "mini" // reduz
+        } else {
+          size = "small" 
+        }
+      } else {
+        size = "small"
+      }
     } else if (question.quizQuestionSize.is == 2) {
       size = "medium"
     } else if (question.quizQuestionSize.is == 3) {
@@ -151,11 +160,55 @@ order by qa.applydate, qq.orderinsection
 
     var message_aux = Customer.replaceMessage (customer, question.message.is)
     
+    val typeAux = if (print) {
+      if (question.quizQuestionType.is == 2 /*lista*/ &&
+        question.quizQuestionPosition != 3 /* fim */) {
+        // era lista
+        0 // printa texto 
+        // marretado para não fazer texto no fim pq puxa alinha de baixo
+        // qdo não tá no final da tela, talvez contar, mas tem que ver se é mini small
+        // etc
+      } else {
+        question.quizQuestionType.is
+      }
+    } else {
+      question.quizQuestionType.is
+    }
+
+    val domainAux = if (print) {
+      if (question.quizQuestionType.is == 2 /*lista*/ &&
+        question.quizQuestionPosition != 3 /* fim */) {
+        JsArray(question.domain(-1, -1, print).map(domainJson(_)))
+      } else {
+        JsArray(question.domain(question.id.is, quizApplyingId, print).map(domainJson(_)))
+      }  
+    } else {
+      JsArray(question.domain(question.id.is, quizApplyingId, print).map(domainJson(_)))
+    }    
+    val valueAux = if (print) {
+      if (question.quizQuestionType.is == 2 /*lista*/ &&
+        question.quizQuestionPosition != 3 /* fim */ &&
+        value != "") {
+        val ac = QuizDomainItem.findAll (
+          By(QuizDomainItem.quizDomain,question.quizDomain),
+          By(QuizDomainItem.id,value.toLong)
+          )
+        if (ac.length > 0) {
+          ac(0).valueStr.get
+        } else {
+          ""
+        }
+      } else {
+        value
+      }  
+    } else {
+      value
+    }
     JsObj(
     ("id", question.id.is),
     ("name", question.name.is),
     ("short_name", question.short_name.is),
-    ("type", question.quizQuestionType.is),
+    ("type", typeAux),
     ("format", question.quizQuestionFormat.is),
     ("addon", question.addon.is),
     ("sufix", question.sufix.is),
@@ -163,8 +216,8 @@ order by qa.applydate, qq.orderinsection
     ("size", size),
     ("position", question.quizQuestionPosition.is),
     ("obs", question.obs.is),
-    ("domain", JsArray(question.domain.map(domainJson(_)))),
-    ("value", value))
+    ("domain", domainAux),
+    ("value", valueAux))
   }
 
   def domainJson(domain: QuizDomainItem) = {

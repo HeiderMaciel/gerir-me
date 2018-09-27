@@ -140,11 +140,21 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
         }
     }
 
-    def domain: List[QuizDomainItem] = quizDomain.obj match {
-        case Full(d) => QuizDomainItem.findAll(
+    def domain (question: Long, quizApplyingId: Long, print:Boolean): List[QuizDomainItem] = quizDomain.obj match {
+        case Full(d) => {
+            def sql = if (print) {
+                """ (id in (select  to_number (qa.valuestr,'999999') from quizanswer qa
+                where qa.quizapplying = ? and qa.quizquestion = ?)) 
+                """
+            } else {
+                " ( 1 = 1 or ? > -2 or ? > -2)"
+            }
+            QuizDomainItem.findAll(
             By(QuizDomainItem.quizDomain, quizDomain.is), 
             By(QuizDomainItem.status, 1), 
+            BySql (sql, IHaveValidatedThisSQL("",""), quizApplyingId, question),
             OrderBy(QuizDomainItem.orderInDomain, Ascending))
+        }
         case _ => Nil
     }
 

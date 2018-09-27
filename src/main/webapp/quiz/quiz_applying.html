@@ -222,6 +222,8 @@
                 setId(template.find('label:first'), "labelleft"+question.id);
                 setId(template.find('.label-top'), "labeltop"+question.id);
 
+                setId(template.find('.print-question'), "printquestion"+question.id);
+
                 setId(template.find('.label-paragraph'), "labelparagraph"+question.id);
 
                 setId(template.find('.help-inline'), "helpinline"+question.id);
@@ -284,10 +286,15 @@
             function createParagraph(question) {
                 var template = $($("#paragraph-template").html());
                 formatQuestion (question, template)
-                var textarea = template.find('textarea');
-                textarea.val(question.value);
-                setName(textarea, question.id);
-                setClass(textarea, question.size);
+                if (PRINT == 'true') {
+                    template.find('.print-question').text(question.value);
+                    template.find(".txa").remove();
+                } else {
+                    var textarea = template.find('textarea');
+                    textarea.val(question.value);
+                    setName(textarea, question.id);
+                    setClass(textarea, question.size);
+                }
 
                 return template;
             }
@@ -434,9 +441,11 @@
                 // um trailer gerar 
                 //header = '<img width="70px" style="padding-right: 10px" src="/images/logo_'+logo+'.png"/>' + header + " Gestão Integrada <br></p>"
                 header = "<head> " + 
+
     '<link href="/css/bootstrap.css" rel="stylesheet"/>' +
     '<link href="/css/ebelle-responsive.css" rel="stylesheet"/>' +
     '<link rel="stylesheet" type="text/css" href="/skins/default.css" />' +
+
                   " <meta charset='utf-8'> " +
                   " <title>" + header + "</title> " +
                   " </head> " +
@@ -518,7 +527,7 @@
             <div>
                 <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
                 <label id='labelleft' for="obs" style='color:black; font-weight: bold; float:left; padding-right:20px' >esq ini</label>
-                <span id="leftgap" class="left-gap" style='float:left; padding-right:145px' >.</span>
+                <span id="leftgap" class="left-gap hide_on_print" style='float:left; padding-right:145px' >.</span>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
@@ -567,8 +576,11 @@
 
                 <div class="input">
                     <span id='labeltop' class="label-top">paragraph</span>
-                    <textarea class="xlarge" name="" id="" rows="3"></textarea>
+                    <textarea class="txa xlarge" name="" id="" rows="3"></textarea>
                     <span class="help-block"></span>
+                    <div class="span8">
+                    <span id='printquestion' class='print-question'></span>
+                    </div>
                 </div>
             </div>
         </script>

@@ -110,7 +110,7 @@ println ("vaiiiii ========================== AQUI NAO DEVE" )
 				("name", question.name.is), 
 				("type", question.quizQuestionType.is),
 				("obs", question.obs.is),
-				("domain", JsArray(question.domain.map(domainJson(_)))))
+				("domain", JsArray(question.domain(-1,-1,false).map(domainJson(_)))))
 		}
 
 		def domainJson(domain: QuizDomainItem) = {
