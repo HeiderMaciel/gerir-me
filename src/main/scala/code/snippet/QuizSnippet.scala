@@ -33,6 +33,17 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 	def groups = ("0", "Selecione um Grupo") :: UserGroup.
 		findAllInCompany(OrderBy(UserGroup.name, Ascending)).map(t => (t.id.is.toString, t.name.is))
 
+	def printControls = DomainTable.findAll(
+		By(DomainTable.domain_name,"quizPrintControl"),
+		OrderBy(DomainTable.cod, Ascending)).map(t => {
+			def codAux = if (AuthUtil.user.isSuperAdmin) {
+				" " + t.cod.is
+			} else {
+				""
+			}
+			(t.cod.is,t.name.is + codAux)
+			})
+
 	def questionTypes = DomainTable.findAll(
 		By(DomainTable.domain_name,"quizQuestionType"),
 		OrderBy(DomainTable.cod, Ascending)).map(t => {
@@ -361,6 +372,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		    "name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=quiz" #> (SHtml.select(quizs,Full(ac.quiz.is.toString),(s:String) => ac.quiz( s.toLong)))&
+		    "name=printControl" #> (SHtml.select(printControls,Full(ac.printControl.is.toString),(v:String) => ac.printControl(v.toInt)))&
 			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&			
 			"name=weight" #> (SHtml.text(ac.weight.is.toString, (v:String) =>{ if(v !=""){ac.weight(v.toDouble)};}))&
 			"name=rank" #> (SHtml.text(ac.rank.is.toString, (v:String) =>{ if(v !=""){ac.rank(v.toDouble)};}))&
@@ -397,8 +409,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=quizSection" #> (SHtml.select(sections,Full(ac.quizSection.is.toString),(s:String) => ac.quizSection( s.toLong)))&
 		    "name=quizDomain" #> (SHtml.select(domains,Full(ac.quizDomain.is.toString),(s:String) => ac.quizDomain( s.toLong)))&
-		    //"name=gender" #>         (SHtml.select(genders,      Full(ac.gender.is.toString),(v:String) => ac.gender(v)))&
-		    //"name=quizQuestionTypeStr" #> (SHtml.select(questionTypes,Full(ac.quizQuestionTypeStr.is.toString),(v:String) => ac.quizQuestionTypeStr(v)))&
+		    "name=printControl" #> (SHtml.select(printControls,Full(ac.printControl.is.toString),(v:String) => ac.printControl(v.toInt)))&
 		    "name=quizQuestionType" #> (SHtml.select(questionTypes,Full(ac.quizQuestionType.is.toString),(v:String) => ac.quizQuestionType(v.toInt)))&
 		    "name=quizQuestionFormat" #> (SHtml.select(questionFormats,Full(ac.quizQuestionFormat.is.toString),(v:String) => ac.quizQuestionFormat(v.toInt)))&
 		    "name=quizQuestionSize" #> (SHtml.select(questionSizes,Full(ac.quizQuestionSize.is.toString),(v:String) => ac.quizQuestionSize(v.toInt)))&
