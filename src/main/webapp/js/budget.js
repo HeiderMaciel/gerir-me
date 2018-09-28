@@ -144,18 +144,33 @@ var extract_table = function(a, asTable, headerStyle,
     c = "<span " + headerStyle + ">";
   }
 
+  var cols = [];
+  if (columns != "") {
+    cols = columns.split (",");
+  } else {
+    l = a.rows[0];
+    for (b = 0; b < l.cells.length; b++) {
+      cols [b] = b;
+    }
+  }
+  //alert (cols)
   var l, k;
   for (d = 0; d < a.rows.length; d++) {
     l = a.rows[d];
-    for (b = 0; b < l.cells.length; b++) {
-      k = l.cells[b];
-      var c = c + (b ? cellEnd : ""),
-        m = "<span style='line-height: 105%'>" + k.textContent.trim() + "</span>";
-      k = m;
-      var t = -1 !== m.indexOf(cellEnd) || -1 !== m.indexOf("\r") || -1 !== m.indexOf("\n");
-      (m = -1 !== m.indexOf('"')) && (k = k.replace(/"/g, '""'));
-      if (t || m) k = '"' + k + '"';
-      c += k
+    //alert ("linha " + d + " colunas " + l.cells.length)
+    //for (b = 0; b < l.cells.length; b++) { antigo tabela toda
+    for (b = 0; (b < cols.length && b < l.cells.length); b ++) {
+      //k = l.cells[b]; antigo tabela toda
+      if (l.cells.length > cols[b]) {
+        k = l.cells[cols[b]];
+        var c = c + (b ? cellEnd : ""),
+          m = "<span style='line-height: 105%'>" + k.textContent.trim() + "</span>";
+        k = m;
+        var t = -1 !== m.indexOf(cellEnd) || -1 !== m.indexOf("\r") || -1 !== m.indexOf("\n");
+        (m = -1 !== m.indexOf('"')) && (k = k.replace(/"/g, '""'));
+        if (t || m) k = '"' + k + '"';
+        c += k
+      }
     }
     if (d+1 == a.rows.length) {
       c += listEnd
