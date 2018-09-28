@@ -521,6 +521,12 @@ class User extends  BusinessPattern[User] with UserIdAsString{
     }
 
     override def save() = {
+        if (this.password != "" && this.password.length < 6) {
+            throw new RuntimeException ("Senha não pode ter menos de 6 caracteres");
+        } else if (this.password != "" && this.password.length >= 6 
+            && ("01234567890").indexOf (this.password) != -1) {
+            throw new RuntimeException ("Senha não pode ser uma sequencia simples de números");
+        }
         if (this.parent_percent != 0.0 && this.parent.isEmpty) {
             throw new RuntimeException ("Um profissional superior precisa ser informado, caso o percentual de comissão para o superior seja diferente de zero")
         }
