@@ -275,6 +275,78 @@ object Reports3 extends RestHelper with ReportRest with net.liftweb.common.Logge
 				toResponse(SQL.format(basecustomer, radius, unit, sex, status, civilstatus, mapicon, projectclass, noprojectclass, project, noproject, offsale),
 					List(start_value, end_value, AuthUtil.company.id.is))
 			}
+
+			case "report" :: "quiz_history" :: Nil Post _ =>{
+				def user = S.param("user") match {
+					case Full(p) if(p != "")=> " and bp.id in(%s)".format(p)
+					case _ => S.param("user[]") match {
+						case Full(p) if(p != "") => " and bp.id in(%s)".format(S.params("user[]").foldLeft("0")(_+","+_))
+						case _ => " and 1=1 " 
+					}
+				}			
+				def unit:String = S.param("unit") match {
+					case Full(p) if(p != "") => " and tr.unit =%S".format(p) 
+					case _ => " and " + Treatment.unitsToShowSql
+				}			
+/*
+				def producttype:String = S.param("category_select") match {
+					case Full(s) => s
+					case _ => S.params("category_select[]").filter( _!= "").reduceLeft(_+" , "+_)		
+				}
+*/
+				def producttype = S.param("category_select") match {
+					case Full(p) if(p != "")=> " and pr.typeproduct in(%s)".format(p)
+					case _ => S.param("category_select[]") match {
+						case Full(p) if(p != "") => " and pr.typeproduct in(%s)".format(S.params("category_select[]").foldLeft("0")(_+","+_))
+						case _ => " and 1=1 " 
+					}
+				}	
+				def prod = 	 S.param("product") match {
+					case Full(p) if(p != "")=> " and pr.id in(%s)".format(p)
+					case _ => S.param("product[]") match {
+						case Full(p) if(p != "") => " and pr.id in(%s)".format(S.params("product[]").foldLeft("0")(_+","+_))
+						case _ => " and 1=1 " 
+					}
+				}
+				def classes:String = S.param("productclass") match {
+					case Full(p) => p
+					case _ => "0,1";
+				} 
+
+				def start:Date = S.param("start") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+				def end:Date = S.param("end") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+				val valueOrQuantity:String = S.param("quantity") match {
+					case Full(p) if(p != "")=> "count (td.amount)"
+					case _ => "sum (td.price)"
+				}			
+				val userbreak:String = S.param("userbreak") match {
+					case Full(p) if(p != "")=> "coalesce (bp.short_name,'') || ' - ' ||"
+					case _ => ""
+				}			
+
+				val SQL = """
+select to_char (qa.applydate, 'DD/MM/YYYY') || ' ' || qa.obs, 
+qq.short_name,  
+case when qq.quizquestiontype in (2,3,4,7) then fu_quizdomain (qr.valuestr) else qr.valuestr end
+from quizapplying qa
+inner join business_pattern bp on bp.id = qa.business_pattern
+left join quizsection qs on qs.quiz = qa.quiz and qs.id = 125 /* secao 2*/
+left join quizquestion qq on qq.quizsection = qs.id
+left join quizanswer qr on qr.quizapplying = qa.id and qr.quizquestion = qq.id
+where qa.company = ? and qa.quiz = 115
+				%s
+order by qa.applydate, qa.id, qq.orderinsection
+				"""
+				toResponse(SQL.format(customer) //userbreak, valueOrQuantity, user,prod,unit,producttype, classes, userbreak, userbreak
+					,
+					List(AuthUtil.company.id.is)) 
+			} 
 		}
 }
 

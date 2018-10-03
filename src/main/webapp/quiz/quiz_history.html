@@ -1,0 +1,167 @@
+<div id="main" class="lift:surround?with=calendar;at=content">
+  <link rel="stylesheet" type="text/css" href="/select2/select2.css" />
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+  </script>
+  <script src="/select2/select2.js"></script><script src="/select2/select2_locale_pt-BR.js"></script>
+  <script src="/js/reports.js"></script>
+  <script src="/js/jquery.tablesorter.pager.js"></script>
+  <script type="text/javascript" src="/js/product_line.js"></script>
+  <script type="text/javascript" src="/js/product_control_panel.js"></script>
+  <script>
+    // testa se está on-line para não quebrar executando local sem internet
+    // por causa do gráfico google
+    // trocar a imagem por uma fixa, pois essa da company pode ser trocada e 
+    // excluída - usar por exemplo a de cliente
+    // falta refinar - rigel 22/05/2017
+    function doConnectFunction() {
+      //alert ("online")
+    }
+    function doNotConnectFunction() {
+      alert ("offline")
+    }
+
+    var i = new Image();
+    i.onload = doConnectFunction;
+    i.onerror = doNotConnectFunction;
+    // CHANGE IMAGE URL TO ANY IMAGE YOU KNOW IS LIVE
+    i.src = 'http://images.vilarika.com.br/company/thumb_F1068126063644CD1WLM.png.png?d=' + escape(Date());
+    // escape(Date()) is necessary to override possibility of image coming from cache
+  </script>
+  <script type="text/javascript">
+  $(function(){
+    $("#unit").unitField(true,false);
+    $("#start").val(getDateBr(new Date().getAYearAgo()));
+    $("#end").val(getDateBr(new Date()));
+    var fields = [];
+    var url = "/report/quiz_history";
+    var request = function(){
+      renderReport(url,fields,$("#form_report").serializeObject(),"#grid",function(){},true,"","Questões",true);
+    }
+    $("#send").click(request);
+    DataManager.getUsers(function(userObj){
+      user_str = "";
+      for(var i in userObj){
+            user_str += "<option value='"+userObj[i].id+"'>"+userObj[i].name+"</option>";
+        }
+        $("#user").html(user_str);     
+    });
+    DataManager.getActivities(function(userObj){
+      user_str = "";
+      for(var i in userObj){
+            user_str += "<option value='"+userObj[i].id+"'>"+userObj[i].name+"</option>";
+        }
+        $("#product").html(user_str);     
+    });    
+  });  
+  </script>
+  <form id="form_report" class="well form-search" method='get'>
+    <h1>
+      <span class="lift:CompanySnippet.thumb"> </span>
+      <input class="report_title local_storage" id="title_quiz_history_report" name="title_quiz_history_report" size="30" type="text" value="Relatório Histórico de Avaliações"/>
+    </h1>
+    <span class='row'>
+      <span class='span8'>
+            <div class="clearfix">
+              <label for="customer">
+                <span data-i18n='Clientes'></span> 
+              </label>
+              <div class="input">
+                <div class="inline-inputs">
+                <span>
+                  <input name="customer" class="mini id_customer_search" type="number"/> 
+                  <input placeholder="Nome" type="text" size="30" name="name_customer" class="name_customer_search normal_name"/>
+                </span>  
+                <span class="help-block"><span data-i18n='Clientes'></span></span>
+                </div>
+              </div>
+            </div>
+        <div class="clearfix">
+          <label for="total">Intervalo</label>
+          <div class="input">
+            <div class="inline-inputs">
+              <div class="input-prepend" style="float:left; padding-right:10px">
+                <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
+                <input type="text" class="input-small date" id='start' name="start" placeholder="Início"/>
+              </div>
+              <div class="input-prepend" style="float:left; padding-right:10px">
+                <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
+                <input type="text" class="input-small date" id='end' name="end" placeholder="Fim"/><br/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix">
+            <label for="user"><span data-i18n='Profissionais'></span></label>
+            <div class="input">
+            <select multiple="multiple"  id='user' name="user">
+            </select>
+          </div>
+        </div>
+        <div class="clearfix lift:SecuritySnippet.hasUnitModule">
+          <label for="unit">Unidade </label>
+            <div class="input">
+              <div class="inline-inputs">
+                <select id="unit" name="unit"></select>
+                <span class="help-block">Unidade do atendimento, mesmo que o <span data-i18n='Profissional'></span> tenha outra unidade no cadastro
+                </span>
+              </div>
+            </div>
+        </div>
+      </span>
+      <span class='span8'>
+        <div class="clearfix">
+          <label for="quantity">Qtde / <span data-i18n='Profissional'></span>
+          </label>
+            <div class="input">
+              <div class="inline-inputs">
+                <input class="url_parameter" name="quantity" id='quantity' type='checkbox' /> Mostra qtde
+                <input class="url_parameter" name="userbreak" id='userbreak' type='checkbox' /> Exibir <span data-i18n='Profissional'></span>
+                <span class="help-block">Mostrar número de vendas ao invés de valor / Exibir ou não o <span data-i18n='Profissional'></span></span>
+              </div>
+            </div>
+        </div>
+        <div class="clearfix">
+          <label for="productclass">Classe</label>
+            <div class="input">
+              <div class="inline-inputs">
+                  <select class="local_storage" name="productclass" id="productclass">
+                      <option value='1,0'>Todos</option>
+                      <option value='1'>Produtos</option>
+                      <option value='0'>Serviços</option>
+                   </select>
+              </div>
+            </div>
+        </div>
+        <div class="clearfix">
+          <label for="category_select">Tipos</label>
+          <div class="input">
+            <select multiple="multiple" id="category_select" class="category_select url_parameter" name="category_select"></select>
+          </div>
+        </div>
+        <div class="clearfix">
+            <label for="product"><span data-i18n='Serviços'></span></label>
+            <div class="input">
+                <select multiple="multiple"  id='product' name="product">
+                </select>
+            </div>
+        </div>
+      </span>
+    </span>
+    <div class="clearfix">
+      <label for="buscar"></label>
+      <div class="input">
+        <button type="button" id="send" class="btn success">Buscar</button>
+      </div>
+    </div>
+  </form>
+  <table id="grid" class="bordered-table zebra-striped">
+      <thead>
+      </thead>
+      <tbody>
+      </tbody>
+  </table>
+  <div id="chart_div" width="400px">
+  </div>
+ </div>
