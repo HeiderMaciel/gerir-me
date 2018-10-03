@@ -142,7 +142,7 @@
 
                 section.questions.map(function(question) {
                     createQuestion(question, template)
-                    if (question.type == 8) {
+                    if (question.type == 8 /* rich text */) {
                         $('#'+question.id).jqte();
                     }
                 })
@@ -305,7 +305,11 @@
                 var template = $($("#paragraph-template").html());
                 formatQuestion (question, template)
                 if (PRINT == 'true') {
-                    template.find('.print-question').text(question.value);
+                    if (question.type == 8 /* rich text */) {
+                       template.find('.print-question').html(question.value);
+                    } else {
+                       template.find('.print-question').text(question.value);
+                    }
                     template.find(".txa").remove();
                 } else {
                     var textarea = template.find('textarea');
@@ -313,7 +317,6 @@
                     setName(textarea, question.id);
                     setClass(textarea, question.size);
                 }
-//                $('#'+question.id).jqte();
 
                 return template;
             }
@@ -597,7 +600,7 @@
                     <span id='labeltop' class="label-top">paragraph</span>
                     <textarea class="txa xlarge" name="" id="" rows="3"></textarea>
                     <span class="help-block"></span>
-                    <div class="span8">
+                    <div class="span12">
                     <span id='printquestion' class='print-question'></span>
                     </div>
                 </div>
