@@ -6,20 +6,43 @@
   <script type="text/javascript">
   $(function () {
     $("#send").click(function(){
-      $.post('/migration/process_start', {start:$('#start').val(), end:$('#end').val()}, function(){
-        alert('Processo iniciado com sucesso. Este processamento pode demorar alguns minutos!');
-      });
+      var isSuperAdmin = $('.is-super-admin').length > 0;
+
+      if (brToUsDate($("#start").val()) > brToUsDate($("#end").val())) {
+        alert ("Data inicial não pode ser maior que data final!")
+        return;
+      }
+
+      var diff = Math.abs((brToUsDate($("#start").val())
+    - new Date())/(24*60*60*1000));
+      if (diff > 50 && !isSuperAdmin) {
+        alert ("A data de início não pode ser anterior a 50 dias!")
+        return 
+      }
+      var days = Math.abs((brToUsDate($("#start").val())
+        - brToUsDate($("#end").val()))/(24*60*60*1000))+1;
+      if (confirm('Este processamento pode demorar alguns minutos, serão reprocessados ' + days + ' dias!')) {
+        $.post('/migration/process_start', {start:$('#start').val(), end:$('#end').val()}, function(){
+          alert('Processo terminado com sucesso');
+        });
+      }
     });
   });
   </script>
-<div class="page-header">
+    <div class="page-header">
           <h1>
             <span class="lift:CompanySnippet.thumb"> </span>Reprocessar Comissões
           </h1>
         </div>  
     <div>
+        <div class="span12">        
+      <h2>
+          Este processo recalcula as comissões no período.<br/> Fique atento caso algum acerto com profissionais, relativo a este intervalo já tenha sido feito. <br/>Por questões de segurança a data de início só pode ser retrocedida 50 dias.<br/>
+      </h2>
+      </div>
       <form id="form_report" class="well  form-search" method='get'>
         <div class="span8">        
+          <input type="hidden" class="is-super-admin lift:SecuritySnippet.isSuperAdmin" value="1">
           <div class="clearfix">
             <label for="start">Intervalo</label>
               <div class="input">
