@@ -504,6 +504,11 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         override def dbColumnName = "caneditcalendarevents"
         override def defaultValue = true
     }
+    object canBusyEvents_? extends MappedBoolean(this){
+        override def dbColumnName = "canbusyevents"
+        override def defaultValue = true
+    }
+
     lazy val userGroupName:String = {
         group.obj match {
             case Full(c)=> c.short_name.is
