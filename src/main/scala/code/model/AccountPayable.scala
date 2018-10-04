@@ -50,8 +50,11 @@ with CanCloneThis[AccountPayable] {
         // comissão no final do dia e arredonda, e lança com venc hj o 
         // arredondado com competencia amanhã para descontar amanhã
         //
-        if(this.get > toDate){
-         this.set(dueDate.is)
+        // out/2018 rigel
+        // feita outra alteracao liberando data de competencia para frente
+        // para o que for associado ao profissional
+        if(this.get > toDate && !categoryUserAssociated){
+          this.set(dueDate.is)
         }
     } 
   }
@@ -260,6 +263,14 @@ with CanCloneThis[AccountPayable] {
   }
 
   lazy val categoryBox = this.category.obj
+
+  lazy val categoryUserAssociated:Boolean = {
+      categoryBox match {
+          case Full(c)=> c.userAssociated.is
+          case _ => false
+      }
+  }
+
   lazy val categoryShortName:String = {
       categoryBox match {
           case Full(c)=> c.short_name.is
