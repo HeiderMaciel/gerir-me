@@ -77,6 +77,19 @@ trait ProductMapper[OwnerType <: ProductMapper[OwnerType]] extends Audited[Owner
         override def defaultValue = false
         override def dbColumnName = "is_discount"
     }
+    object timesOfUse extends MappedInt(this) {
+        // to reduce inventory out in discount
+        override def defaultValue = 1
+    }
+    object totalTime extends MappedPoliteString(this,10){
+        // to divide price considering srvice duration in dicount 
+        override def defaultValue = ""
+    }
+    def totalTimeMin:Long = {
+        val h = totalTime.is.slice(0,2).toLong * 60
+        val m = totalTime.is.slice(3,5).toLong
+        return (h+m)
+    }
 
     // qdo o cliente agenda ele proprio on line
     object showInCalendarPub_? extends MappedBoolean(this){

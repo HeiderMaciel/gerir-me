@@ -124,6 +124,11 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         override def dbColumnName = "discountToCommission"
         override def defaultValue = true
     }
+    object commissionAtSight_? extends MappedBoolean(this){//Avista
+        override def defaultValue = false // respeita a forma pagto
+        override def dbColumnName = "commissionAtSight"
+    }
+
     object deletePayment_? extends MappedBoolean(this){
         override def dbColumnName = "deletePayment"
         override def defaultValue = true;
