@@ -81,6 +81,13 @@ trait ProductMapper[OwnerType <: ProductMapper[OwnerType]] extends Audited[Owner
         // to reduce inventory out in discount
         override def defaultValue = 1
     }
+    object duration extends MappedPoliteString(this,10){
+        override def defaultValue = if (AuthUtil.company.appType.isEphysio) {
+            "00:60"
+        } else {
+            "00:30"
+        }
+    }
     object totalTime extends MappedPoliteString(this,10){
         // to divide price considering srvice duration in dicount 
         override def defaultValue = ""
@@ -126,6 +133,14 @@ trait ProductMapper[OwnerType <: ProductMapper[OwnerType]] extends Audited[Owner
         override def defaultValue = 1;
     }
 
+    // usado para agenda publica na verificação de outros agendamentos 
+    // em horarios pra fernte do desejado
+    def durationMin:Long = {
+        val h = duration.is.slice(0,2).toLong * 60
+        val m = duration.is.slice(3,5).toLong
+        return (h+m)
+    }
+
     def products_bom = if(this.is_bom_?.is) {
         ProductBOM.findAll(By(ProductBOM.product,this.id.is)).filter(_.product_bom.is != this.id.is)
     }else{
@@ -137,8 +152,20 @@ trait ProductMapper[OwnerType <: ProductMapper[OwnerType]] extends Audited[Owner
     }else{
         Nil
     }
-    def discountsTotal = {
-        discounts.map((p)=>p.product_bom.obj.get.salePrice.toDouble).foldLeft(0.0)(_+_)
+    def discountsTotal :Double = {
+        
+        // val before = discounts.map((p)=>p.product_bom.obj.get.salePrice.toDouble).foldLeft(0.0)(_+_)
+        var after = 0.0;
+        discounts.foreach ((p)=>{
+            val discountPrice = if (p.product_bom.obj.get.totalTime != "") {
+                p.product_bom.obj.get.salePrice.toDouble * 
+                this.durationMin / p.product_bom.obj.get.totalTimeMin;
+            } else { 
+                p.product_bom.obj.get.salePrice.toDouble;
+            }
+            after += discountPrice;
+        })            
+        after
     }
     def lines = ProductLineTag.findAll(By(ProductLineTag.product,this.id.is))
 

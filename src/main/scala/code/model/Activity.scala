@@ -14,14 +14,6 @@ class Activity extends ProductMapper[Activity] with Ordered[Activity] {
     def getSingleton = Activity 
     override def updateShortName = false
     
-    object duration extends MappedPoliteString(this,10){
-        override def defaultValue = if (AuthUtil.company.appType.isEphysio) {
-            "00:60"
-        } else {
-            "00:30"
-        }
-    }
-
     object allowSimultaneos_? extends MappedBoolean(this){
         override def defaultValue = false
         override def dbColumnName = "allowSimultaneos"
@@ -82,14 +74,6 @@ class Activity extends ProductMapper[Activity] with Ordered[Activity] {
     object discountPrice extends MappedCurrency(this) // valor absoluto de desconto no preço para calcular comissão
     object discountPercent extends MappedDecimal(this,MathContext.DECIMAL64,4) // desconto percentul mo preço pra calcular comissão
     object discountPercLimit extends MappedDecimal(this,MathContext.DECIMAL64,4) // percentual de desconto no caixa
-
-    // usado para agenda publica na verificação de outros agendamentos 
-    // em horarios pra fernte do desejado
-    def durationMin:Long = {
-        val h = duration.is.slice(0,2).toLong * 60
-        val m = duration.is.slice(3,5).toLong
-        return (h+m)
-    }
 
 /*
     def auxiliarCommissionValue = if(auxPrice.is.toDouble != 0) {

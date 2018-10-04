@@ -410,19 +410,19 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
     }
 
     def auxiliarHouseCommissionValue = activity.obj match {
-            case Full(t) => if(hasAuxiliar) {
-                    //t.auxiliarHouseCommissionValue
-                    (commissionAbsActivityAuxiliarHouse +
-                    (commissionActivityAuxiliarHouse * priceToCommission / 100)).toDouble              
-                }else{
-                    0.0
-                }
-            case _ => 0.00
+        case Full(t) => if(hasAuxiliar) {
+                //t.auxiliarHouseCommissionValue
+                (commissionAbsActivityAuxiliarHouse +
+                (commissionActivityAuxiliarHouse * priceToCommission / 100)).toDouble              
+            }else{
+                0.0
+            }
+        case _ => 0.00
     }
 
     def priceToCommission = activity.obj match {
-            case Full(t) => price.is - t.discountsTotal - (price.is / 100.0 * t.discountPercent) - t.discountPrice.is.toDouble
-            case _ => price.is
+        case Full(t) => price.is - t.discountsTotal - (price.is / 100.0 * t.discountPercent) - t.discountPrice.is.toDouble
+        case _ => price.is
     }
 
     lazy val hasPointsOnBuy = pointsOnBuy > 0
