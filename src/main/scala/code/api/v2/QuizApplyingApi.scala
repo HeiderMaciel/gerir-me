@@ -29,6 +29,7 @@ object QuizApplyingApi extends RestHelper with ReportRest with net.liftweb.commo
         id <- S.param("id")
         questions <- S.param("questions")
       } yield {
+println ("vaiiiii ============================= questions " + questions(0))
         questions.split(",").map(saveAnswer(id.toLong, _))
       }
       JBool(true)
@@ -130,95 +131,123 @@ order by qa.applydate, qq.orderinsection
 
   def questionJson(question: QuizQuestion, quizApplyingId: Long, customer:Customer, print:Boolean) = {
     var size = "";
-    val value = QuizAnswer.findAll(
+
+/*
+    val answers = QuizAnswer.findAll(
       By(QuizAnswer.quizApplying, quizApplyingId),
-      By(QuizAnswer.quizQuestion, question.id.is)) match {
-      case (l: List[QuizAnswer]) if (!l.isEmpty) => l(0).valueStr.get
-      case _ => ""
-    }
-    if (question.quizQuestionSize.is == 0) {
-      size = "mini"
-    } else if (question.quizQuestionSize.is == 1) {
-      if (print) {
+      By(QuizAnswer.quizQuestion, question.id.is)).map( (u) => {
+*/
+
+    val sql = """
+      select qr.id, qr.valuestr from quizquestion qq
+      left join quizanswer qr on  qr.quizapplying = ? and qr.quizquestion = qq.id
+      where qq.id = ?;
+    """
+    val r = DB.performQuery(sql,
+      quizApplyingId::question.id.is::Nil)
+
+    val answers = r._2.map( (p) => {
+
+      val answerid = p(0).asInstanceOf[Long]
+      val sqlId = if (answerid > 0) {
+        " id = %s ".format (answerid);
+      } else {
+        " 1 = 1 "
+      }
+
+      val value = QuizAnswer.findAll(
+        BySql (sqlId, IHaveValidatedThisSQL("","")),
+        By(QuizAnswer.quizApplying, quizApplyingId),
+        By(QuizAnswer.quizQuestion, question.id.is)) match {
+        case (l: List[QuizAnswer]) if (!l.isEmpty) => l(0).valueStr.get
+        case _ => ""
+      }
+      if (question.quizQuestionSize.is == 0) {
+        size = "mini"
+      } else if (question.quizQuestionSize.is == 1) {
+        if (print) {
+          if (question.quizQuestionType.is == 2 /*lista*/ &&
+            question.quizQuestionPosition != 3 /* fim */) {
+            size = "mini" // reduz
+          } else {
+            size = "small" 
+          }
+        } else {
+          size = "small"
+        }
+      } else if (question.quizQuestionSize.is == 2) {
+        size = "medium"
+      } else if (question.quizQuestionSize.is == 3) {
+        size = "large"
+      } else if (question.quizQuestionSize.is == 4) {
+        size = "xlarge"
+      } else if (question.quizQuestionSize.is == 5) {
+        size = "xxlarge"
+      }
+
+      var message_aux = Customer.replaceMessage (customer, question.message.is)
+      
+      val typeAux = if (print) {
         if (question.quizQuestionType.is == 2 /*lista*/ &&
           question.quizQuestionPosition != 3 /* fim */) {
-          size = "mini" // reduz
+          // era lista
+          0 // printa texto 
+          // marretado para não fazer texto no fim pq puxa alinha de baixo
+          // qdo não tá no final da tela, talvez contar, mas tem que ver se é mini small
+          // etc
         } else {
-          size = "small" 
+          question.quizQuestionType.is
         }
-      } else {
-        size = "small"
-      }
-    } else if (question.quizQuestionSize.is == 2) {
-      size = "medium"
-    } else if (question.quizQuestionSize.is == 3) {
-      size = "large"
-    } else if (question.quizQuestionSize.is == 4) {
-      size = "xlarge"
-    } else if (question.quizQuestionSize.is == 5) {
-      size = "xxlarge"
-    }
-
-    var message_aux = Customer.replaceMessage (customer, question.message.is)
-    
-    val typeAux = if (print) {
-      if (question.quizQuestionType.is == 2 /*lista*/ &&
-        question.quizQuestionPosition != 3 /* fim */) {
-        // era lista
-        0 // printa texto 
-        // marretado para não fazer texto no fim pq puxa alinha de baixo
-        // qdo não tá no final da tela, talvez contar, mas tem que ver se é mini small
-        // etc
       } else {
         question.quizQuestionType.is
       }
-    } else {
-      question.quizQuestionType.is
-    }
 
-    val domainAux = if (print) {
-      if (question.quizQuestionType.is == 2 /*lista*/ &&
-        question.quizQuestionPosition != 3 /* fim */) {
-        JsArray(question.domain(-1, -1, print).map(domainJson(_)))
-      } else {
-        JsArray(question.domain(question.id.is, quizApplyingId, false).map(domainJson(_)))
-      }  
-    } else {
-      JsArray(question.domain(question.id.is, quizApplyingId, print).map(domainJson(_)))
-    }    
-    val valueAux = if (print) {
-      if (question.quizQuestionType.is == 2 /*lista*/ &&
-        question.quizQuestionPosition != 3 /* fim */ &&
-        value != "") {
-        val ac = QuizDomainItem.findAll (
-          By(QuizDomainItem.quizDomain,question.quizDomain),
-          By(QuizDomainItem.id,value.toLong)
-          )
-        if (ac.length > 0) {
-          ac(0).valueStr.get
+      val domainAux = if (print) {
+        if (question.quizQuestionType.is == 2 /*lista*/ &&
+          question.quizQuestionPosition != 3 /* fim */) {
+          JsArray(question.domain(-1, -1, print).map(domainJson(_)))
         } else {
-          ""
-        }
+          JsArray(question.domain(question.id.is, quizApplyingId, false).map(domainJson(_)))
+        }  
+      } else {
+        JsArray(question.domain(question.id.is, quizApplyingId, print).map(domainJson(_)))
+      }    
+      val valueAux = if (print) {
+        if (question.quizQuestionType.is == 2 /*lista*/ &&
+          question.quizQuestionPosition != 3 /* fim */ &&
+          value != "") {
+          val ac = QuizDomainItem.findAll (
+            By(QuizDomainItem.quizDomain,question.quizDomain),
+            By(QuizDomainItem.id,value.toLong)
+            )
+          if (ac.length > 0) {
+            ac(0).valueStr.get
+          } else {
+            ""
+          }
+        } else {
+          value
+        }  
       } else {
         value
-      }  
-    } else {
-      value
-    }
-    JsObj(
-    ("id", question.id.is),
-    ("name", question.name.is),
-    ("short_name", question.short_name.is),
-    ("type", typeAux),
-    ("format", question.quizQuestionFormat.is),
-    ("addon", question.addon.is),
-    ("sufix", question.sufix.is),
-    ("message", message_aux),
-    ("size", size),
-    ("position", question.quizQuestionPosition.is),
-    ("obs", question.obs.is),
-    ("domain", domainAux),
-    ("value", valueAux))
+      }
+      JsObj(
+      ("id", question.id.is),
+      ("name", question.name.is),
+      ("short_name", question.short_name.is),
+      ("type", typeAux),
+      ("format", question.quizQuestionFormat.is),
+      ("addon", question.addon.is),
+      ("sufix", question.sufix.is),
+      ("message", message_aux),
+      ("size", size),
+      ("position", question.quizQuestionPosition.is),
+      ("obs", question.obs.is),
+      ("domain", domainAux),
+      ("value", valueAux),
+      ("answerid", answerid))
+    });
+    JsArray(answers)
   }
 
   def domainJson(domain: QuizDomainItem) = {

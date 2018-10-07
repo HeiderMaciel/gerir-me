@@ -66,6 +66,7 @@
             });
 
             FORM.on('submit', function() {
+                //alert (FORM.serialize())
                 $.ajax( {
                     type: "POST",
                     url: URL_POST,
@@ -94,6 +95,10 @@
                 element.attr('id', name);
                 questions.push(name);
                 $("#quiz-questions").val(questions.join(","));
+            }
+
+            function setAnswerId(element, name) {
+                element.attr('data-answerid', name);
             }
 
             function setClass(element, name) {
@@ -139,11 +144,18 @@
                 } else {
                     $("#obssection").remove();
                 }
+                console.log( section.questions );
+                section.questions.map(function(q1) {
+                    for (_i = 0, _len = q1.length; _i < _len; _i++) {
+                        var question = q1[_i]
 
-                section.questions.map(function(question) {
-                    createQuestion(question, template)
-                    if (question.type == 8 /* rich text */) {
-                        $('#'+question.id).jqte();
+                        // falta setra valor e tá dando erro na api
+                        //createAnswer (question, template);
+
+                        createQuestion(question, template)
+                        if (question.type == 8 /* rich text */) {
+                            $('#'+question.id).jqte();
+                        }
                     }
                 })
             }
@@ -284,6 +296,15 @@
 //                $("#labelleft"+question.id).remove();
             }
 
+            function createAnswer(question, section) {
+                var template = $($("#answer-template").html());
+                var input = template.find('input');
+                setName(input, "answer" + question.id);
+
+                section.append(template);
+                $("#answer" + question.id).val(question.answerid);
+            }
+
             function createText(question) {
                 var template = templateQuestion (question, "text");
 
@@ -295,6 +316,7 @@
                 } else if (question.type == 6 /* valor */) {
                     setClass(input, "input-small date");
                 }
+                setAnswerId (input, question.answerid);
                 setName(input, question.id);
                 setClass(input, question.size);
 
@@ -314,6 +336,7 @@
                 } else {
                     var textarea = template.find('textarea');
                     textarea.val(question.value);
+                    setAnswerId (textarea, question.answerid);
                     setName(textarea, question.id);
                     setClass(textarea, question.size);
                 }
@@ -328,6 +351,7 @@
 
                 var select = template.find('select');
                 setClass(select, question.size);
+                setAnswerId (select, question.answerid);
                 if (morethanone) {
                     setName(select, question.id + 'L');
                     setMultiple(select, '');
@@ -529,6 +553,10 @@
             </fieldset>
         </script>
 
+        <script type="text/template" id="answer-template">
+            <input type="hidden" id="obs" name="obs">
+        </script>
+
         <script type="text/template" id="text-template">
             <div class="clearfix">
                 <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
@@ -538,7 +566,7 @@
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on"></span>
-                    <input class="xlarge" id="obs" name="obs" type="text"/>
+                    <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
                     <span class="help-block"></span>
                 </div>
                 </div>
@@ -554,7 +582,7 @@
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on"></span>
-                    <input class="xlarge" id="obs" name="obs" type="text"/>
+                    <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
                     <span class="help-inline">-</span>
                     <span class="help-block"></span>
                 </div>
@@ -569,7 +597,7 @@
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on"></span>
-                    <input class="xlarge" id="obs" name="obs" type="text"/>
+                    <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
                     <span class="help-inline">-</span>
                     <span class="help-block"></span>
                 </div>
@@ -583,7 +611,7 @@
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on"></span>
-                    <input class="xlarge" id="obs" name="obs" type="text"/>
+                    <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
                     <span class="help-inline">-</span>
                     <span class="help-block"></span>
                 </div><br/><br/>
@@ -598,7 +626,7 @@
 
                 <div class="input">
                     <span id='labeltop' class="label-top">paragraph</span>
-                    <textarea class="txa xlarge" name="" id="" rows="3"></textarea>
+                    <textarea class="txa xlarge" name="" id="" rows="3" data-answerid='0'></textarea>
                     <span class="help-block"></span>
                     <div class="span12">
                     <span id='printquestion' class='print-question'></span>
@@ -617,7 +645,7 @@
                         <div class="input-prepend" style='float:left; padding-right:10px'>
                             <span id='labeltop' class="label-top">uai só</span>
                             <span style='color:black;' class="add-on"></span> 
-                            <select class="xlarge"></select>
+                            <select class="xlarge" data-answerid='0'></select>
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -634,7 +662,7 @@
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">uai meio</span>
                     <span style='color:black;' class="add-on"></span>
-                    <select class="xlarge"  ></select>
+                    <select class="xlarge" data-answerid='0'  ></select>
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -647,7 +675,7 @@
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">uai meio</span>
                     <span style='color:black;' class="add-on"></span>
-                    <select class="xlarge" ></select>
+                    <select class="xlarge" data-answerid='0' ></select>
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -660,7 +688,7 @@
                 <div class="input-prepend">
                     <span id='labeltop' class="label-top">uai fim</span>
                     <span style='color:black;' class="add-on"></span>
-                    <select class="xlarge"></select>
+                    <select class="xlarge" data-answerid='0'></select>
                     <span class="help-block"></span>
                 </div>
                 <br/><br/>
@@ -676,7 +704,7 @@
                     <ul class="inputs-list">
                         <li>
                             <label>
-                                <input type="radio" name="optionsCheckboxes" value="option1">
+                                <input type="radio" name="optionsCheckboxes" value="option1" data-answerid='0'>
                                 <span>Option one is this and that—be sure to include why it’s great</span>
                                 <!--label style="background-color:#2b72d0">Option one is this and that—be sure to include why it’s great</label-->
                             </label>
@@ -696,7 +724,7 @@
                     <ul class="inputs-list">
                         <li>
                             <label>
-                                <input type="checkbox" name="optionsCheckboxes" value="option1">
+                                <input type="checkbox" name="optionsCheckboxes" value="option1" data-answerid='0'>
                                 <span>Option one is this and that—be sure to include why it’s great</span>
                             </label>
                         </li>
