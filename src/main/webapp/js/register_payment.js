@@ -1730,7 +1730,11 @@
         getTreatmentbyCommand();
         $("#command").addClass("disabled");
         $("#command").attr("disabled", true);
-      }, 500);
+        // Rigel 07/10/2018
+        // era 500 mas não estava trazendo o cliente e os serviços
+        // qdo company com muitos caixas abertos - agora + de 50 dá msg
+        // testar qtde unidades ativas pode ter um caix por unidade
+      }, 1000);
       $("#command").val(gup("command"));
     } else {
       setTimeout(function() {

@@ -196,6 +196,12 @@ jQuery.fn.cashierField = function(allow_null, type, callback, useLocalStorage) {
 			if (allow_null) {
 				html = "<option value='' selected='true'> Selecione um caixa</option>";
 			}
+			if ((type == 'open') && items.length > 50){
+		        // Rigel 07/10/2018
+		        // testar qtde unidades ativas pode ter um caix por unidade
+		        // provoca erro no caixa não traz cliente e serviços
+				alert ("Não é razoável ter tantos caixas abertos (" + items.length + "), verifique!")
+			}
 			for (var i = 0; i < items.length; i++) {
 				var dateAsInt = window.parseInt(items[i].openerDate);
 				var dateAsDate = new Date(dateAsInt);
