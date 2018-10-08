@@ -65,7 +65,6 @@ class Account extends Audited[Account]
   }
 
   def  getAccountUnit (unit : CompanyUnit): AccountCompanyUnit = {
-    println ("vaiii save INICIO ====================================== " + AuthUtil.unit.id.is)
     if (AccountCompanyUnit.count (
         By(AccountCompanyUnit.unit, unit),
         By(AccountCompanyUnit.account, this)) > 0) {
@@ -84,7 +83,6 @@ class Account extends Audited[Account]
         account (this).obs ("criado auto")
         aau
     } else {
-    println ("vaiii AQUI save ====================================== " + AuthUtil.unit)
         // se nao existe esta conta para nenhuma unit 
         // cria com o saldo que tá na conta
         // isso só tem sentido para clientes que tinham saldo antes
