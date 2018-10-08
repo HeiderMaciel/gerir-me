@@ -262,7 +262,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
   }
 
 
-    def toRemessa240 (start:Date, end:Date) {
+    def toRemessa240 (start:Date, end:Date, account:Account) {
         val now  = new Date()
         //val nowTime  = now.getTime()
        val  convenio = ("00" + "2863040" + "0126" + "       ") // novo - 2550720 antigo
@@ -343,7 +343,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           "c:\\vilarika\\"
         }
        scala.tools.nsc.io.File(filePath + "remessa_" + AuthUtil.company.id.toString + "_" 
-        + bank + "_" + Project.dtformat(now, "yyyyMMddHHmm") + ".txt").writeAll(strXml)
+        + bank + "_" + Project.dtformat(now, "yyyyMMdd_HHmm") + ".txt").writeAll(strXml)
     }
 
 }

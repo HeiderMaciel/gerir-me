@@ -33,12 +33,15 @@ object MonthlyApi extends RestHelper  with net.liftweb.common.Logger  {
 			for {
 				dateStart <- S.param("start") ?~ "start parameter missing" ~> 400
 				dateEnd <- S.param("end") ?~ "end parameter missing" ~> 400
+				account <- S.param("account") ?~ "account parameter missing" ~> 400
 			} yield {				
 				var start = Project.strToDateOrToday(dateStart)
 				var end = Project.strToDateOrToday(dateEnd)
-		        val  bank = "001";
+				var ac = Account.findByKey (account.toLong).get
+		        //val  bank = "001";
+		        val bank = BusinessRulesUtil.zerosLimit (ac.bank.toString, 3)
 		        val now  = new Date()
-				Monthly.toRemessa240(start, end)
+				Monthly.toRemessa240(start, end, ac)
 		        val filePath = if(Project.isLinuxServer){
 		          (Props.get("remessa.urlbase") openOr "/tmp/")
 		        }else{
@@ -46,7 +49,7 @@ object MonthlyApi extends RestHelper  with net.liftweb.common.Logger  {
 		        }
 				JsObj(("status","success"),
 					  ("url",filePath + "remessa_" + AuthUtil.company.id.toString + "_" 
-		        + bank + "_" + Project.dtformat(now, "yyyyMMddHHmm") + ".txt"))
+		        + bank + "_" + Project.dtformat(now, "yyyyMMdd_HHmm") + ".txt"))
 				//JInt(1)
 			}			
 		}

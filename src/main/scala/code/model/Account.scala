@@ -65,6 +65,7 @@ class Account extends Audited[Account]
   }
 
   def  getAccountUnit (unit : CompanyUnit): AccountCompanyUnit = {
+    println ("vaiii save INICIO ====================================== " + AuthUtil.unit.id.is)
     if (AccountCompanyUnit.count (
         By(AccountCompanyUnit.unit, unit),
         By(AccountCompanyUnit.account, this)) > 0) {
@@ -83,6 +84,7 @@ class Account extends Audited[Account]
         account (this).obs ("criado auto")
         aau
     } else {
+    println ("vaiii AQUI save ====================================== " + AuthUtil.unit)
         // se nao existe esta conta para nenhuma unit 
         // cria com o saldo que tá na conta
         // isso só tem sentido para clientes que tinham saldo antes
@@ -175,6 +177,14 @@ class Account extends Audited[Account]
 //    _register(accountP, accountP.value, "Lançamento")
   }
 */
+
+  override def save() = {
+    if(AuthUtil.?) {
+      val ac = getAccountUnit (AuthUtil.unit)
+      ac.save;
+    }
+    super.save
+  }
 
   override def delete_! = {
       if(AccountPayable.count(By(AccountPayable.account,this.id)) > 0){

@@ -17,7 +17,8 @@ import net.liftweb.mapper.{StartAt, MaxRows}
 
 
 class  AccountSnippet  extends BootstrapPaginatorSnippet[Account] {
-	val banksSelect = ("0" ,"Nenhum") :: Bank.findAll.map(a =>(a.id.is.toString,a.name.is))
+	val banksSelect = ("0" ,"Nenhum") :: Bank.findAll.map(a =>(
+		a.id.is.toString,a.name.is + " " + a.banknumber.is))
 	/**
 	* Pagination Methods
 	*/
