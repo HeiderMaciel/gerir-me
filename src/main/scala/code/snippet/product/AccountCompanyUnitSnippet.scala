@@ -17,7 +17,8 @@ import net.liftweb.mapper.{StartAt, MaxRows}
 
 
 class  AccountCompanyUnitSnippet  extends BootstrapPaginatorSnippet[AccountCompanyUnit] {
-	val banksSelect = ("0" ,"Nenhum") :: Bank.findAll.map(a =>(a.id.is.toString,a.name.is))
+	val banksSelect = ("0" ,"Nenhum") :: Bank.findAll.map(a =>(
+		a.id.is.toString,a.name.is + " " + a.banknumber.is))
 	/**
 	* Pagination Methods
 	*/
@@ -87,6 +88,7 @@ class  AccountCompanyUnitSnippet  extends BootstrapPaginatorSnippet[AccountCompa
 		    "name=bank" #> (SHtml.select(banksSelect,Full(ac.bank.is.toString),(s:String) => ac.bank(s.toLong)))&
 		    "name=accountstr" #> (SHtml.text(ac.accountStr.is, ac.accountStr(_)))&
 		    "name=agency" #> (SHtml.text(ac.agency.is, ac.agency(_)))&
+		    "name=agreement" #> (SHtml.text(ac.agreement.is, ac.agreement(_)))&
 		    "name=unit" #> (SHtml.select(units,Full(ac.unit.is.toString),(v:String) => ac.unit(v.toLong)))&
 //			"name=value" #> (SHtml.text(ac.value.is.toString, (v:String) => { if(v !="")ac.value(v.toDouble)} ))&
 			"name=value" #> (SHtml.text(ac.value.is.toString, 
