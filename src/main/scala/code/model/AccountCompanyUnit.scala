@@ -21,7 +21,13 @@ class AccountCompanyUnit extends Audited[AccountCompanyUnit] with PerCompany wit
     object accountStr extends MappedPoliteString(this,255) {
       override def defaultValue = ""
     }
+    object accountVd extends MappedPoliteString(this,2) {
+      override def defaultValue = ""
+    }
     object agency extends MappedPoliteString(this,255) {
+      override def defaultValue = ""
+    }
+    object agencyVd extends MappedPoliteString(this,255) {
       override def defaultValue = ""
     }
     object agreement extends MappedPoliteString(this,255) {
@@ -47,6 +53,9 @@ class AccountCompanyUnit extends Audited[AccountCompanyUnit] with PerCompany wit
         }
     }
     object bank extends MappedLong(this);
+    object document extends MappedPoliteString(this,20)
+    object document_company extends MappedPoliteString(this,20)
+
     def balanceControl_? : Boolean = {
         account.obj match {
             case Full(t) => t.balanceControl_?

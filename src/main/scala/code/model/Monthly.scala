@@ -145,14 +145,14 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
     barCode2
   }
 
-  def toRemessa (sequencial:Int) = {
+  def toRemessa (sequencial:Int, banknumber: String, cotpinsc:String, coinsc:String) = {
      // val  bank = "001";
      val  valor = BusinessRulesUtil.clearString (("%.2f".format (value.toFloat)));
-     var strXml:String = bank + "0001" + // lote
+     var strXml:String = banknumber + "0001" + // lote
      "3" + // tipo registro
      BusinessRulesUtil.zerosLimit (sequencial.toString,5) + 
      "J" + "0" + "00" + 
-     bank + "9" + barCodeDv + 
+     banknumber + "9" + barCodeDv + 
      BusinessRulesUtil.zerosLimit(valor,14) + barCode3 + 
      BusinessRulesUtil.limitSpaces (AuthUtil.company.search_name.toUpperCase,30) +
      Project.dtformat(dateExpiration, "ddMMyyyy") + 
@@ -169,7 +169,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
       strXml
   }
 
-  def toRemessaJ52 (sequencial:Int) = {
+  def toRemessaJ52 (sequencial:Int, banknumber:String, cotpinsc:String, coinsc:String) = {
      // val  bank = "001";
      val bc = Customer.findByKey (this.business_pattern.obj.get.id).get
      val  tpinsc = if (bc.document_company != "") {
@@ -185,7 +185,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
           // cpf rigel 
           "00055118593620"        
       }
-     var strXml:String = bank + "0001" + // lote
+     var strXml:String = banknumber + "0001" + // lote
      "3" + // tipo registro
      BusinessRulesUtil.zerosLimit (sequencial.toString,5) + 
      "J" + " " + "00" + // inclusao
@@ -200,19 +200,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      strXml
   }
 
-  def  bu = Customer.findByKey (AuthUtil.unit.partner).get
-  def  bank = "001";
-  def  cotpinsc = if (bu.document_company != "") {
-      "2" // cnpj
-  } else {
-      "1" // cpf
-  }
-  def  coinsc = if (bu.document_company != "") {
-      BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bu.document_company),14); // cnpj 
-  } else {
-      BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bu.document),14); // cpf
-  }
-
+  //def  bank = "001";
 }
 
 object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with OnlyCurrentCompany[Monthly] with OnlyActive[Monthly] {
@@ -263,29 +251,69 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
 
 
     def toRemessa240 (start:Date, end:Date, account:Account) {
-        val now  = new Date()
+       val ac = AccountCompanyUnit.findAll (
+        By (AccountCompanyUnit.account, account),
+        By (AccountCompanyUnit.unit, AuthUtil.unit)) (0)
+
+       def  bu = Customer.findByKey (AuthUtil.unit.partner).get
+ 
+       val now  = new Date()
         //val nowTime  = now.getTime()
-       val  convenio = ("00" + "2863040" + "0126" + "       ") // novo - 2550720 antigo
-       val  agencia = BusinessRulesUtil.zerosLimit ("0591",5);
-       val  dvagencia = "6"
-       val  conta = BusinessRulesUtil.zerosLimit ("17355",12)
-       val  dvconta = "X"
-       val  bankname = BusinessRulesUtil.limitSpaces ("BANCO DO BRASIL",30)
-       val  layout = "04000000" // + densidade
+
+       def  cotpinsc = if (ac.document_company != "") {
+          "2" // cnpj
+       } else {
+          "1" // cpf
+       }
+       def  coinsc = if (ac.document_company != "") {
+          BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(ac.document_company),14); // cnpj 
+       } else {
+          BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(ac.document),14); // cpf
+       }
+
+       //val  convenio = ("00" + "2863040" + "0126" + "       ") // novo - 2550720 antigo
+       val  convenio = ("00" + BusinessRulesUtil.zerosLimit (
+        BusinessRulesUtil.clearString(ac.agreement),7) + "0126" + "       ")
+       //val  agencia = BusinessRulesUtil.zerosLimit ("0591",5);
+       val  agencia = BusinessRulesUtil.zerosLimit (
+        BusinessRulesUtil.clearString(ac.agency),5);
+       //val  dvagencia = "6"
+       val  dvagencia = BusinessRulesUtil.zerosLimit (ac.agencyVd,1);
+       //val  conta = BusinessRulesUtil.zerosLimit ("17355",12)
+       //val  dvconta = "X"
+       val  conta = BusinessRulesUtil.zerosLimit (
+        BusinessRulesUtil.clearString(ac.accountStr),12);
+       val  dvconta = BusinessRulesUtil.zerosLimit (ac.accountVd,1);
+       val  bk = Bank.findByKey (ac.bank).get;
+       val  banknumber = bk.banknumber;
+       val  bankname = BusinessRulesUtil.limitSpaces (bk.name,30);
+       val  layout = if (ac.bank == 1) {
+          "040" // bb
+        } else {
+          "081" //sicoob
+        }
+       val  densidade = "00000"
        val  msg = BusinessRulesUtil.limitSpaces ("mensagem",40) // novo
 
        var strXml =
           // header de arquivo
-          """""" + bank + """0000""" + "0" + """         """ + 
+          """""" + banknumber + 
+          """0000""" + // lote 
+          "0" + // registro 
+          """         """ + // uso febraban
           cotpinsc + coinsc + convenio + agencia + dvagencia + conta + dvconta + "0" +
           BusinessRulesUtil.limitSpaces (AuthUtil.company.search_name.toUpperCase,30) + bankname + 
           "          " + "1" +
           Project.dtformat(now, "ddMMyyyy") + 
-          Project.dtformat(now, "HHmmss") + "000001" + layout + "                    " +
-          BusinessRulesUtil.limitSpaces ("menssalidade vilarika",20) + 
+          Project.dtformat(now, "HHmmss") + 
+          "000001" + 
+          layout + 
+          densidade + 
+          "                    " + // uso febraban
+          BusinessRulesUtil.limitSpaces ("mensalidade vilarika",20) + 
           "           " + "   " + "000" + "00" + "0000000000\n" +
           // header de lote
-          bank + "0001" + "1" + "C" + // minha documentacao estava R o suporte mandou por C para crédito 
+          banknumber + "0001" + "1" + "C" + // minha documentacao estava R o suporte mandou por C para crédito 
           "98" + "30" + "030" + " " + 
           cotpinsc + coinsc + convenio + agencia + dvagencia + conta + dvconta + "0" +
           BusinessRulesUtil.limitSpaces (AuthUtil.company.search_name.toUpperCase,30) + 
@@ -307,11 +335,11 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
         OrderBy(id, Ascending)).foreach ((mo) => {
        println ("vaiii ========= boleto " + mo.description + " ==== " + mo.barCode2 + " ==== " + mo.company.toString);
             sequencial += 1;
-            strXml += mo.toRemessa (sequencial);
+            strXml += mo.toRemessa (sequencial, banknumber, cotpinsc, coinsc);
             somatoria += mo.value
             sequencial += 1;
             // identifica o sacado cliente
-            strXml += mo.toRemessaJ52 (sequencial);
+            strXml += mo.toRemessaJ52 (sequencial, banknumber, cotpinsc, coinsc);
            if (mo.barCode == "") {
             mo.barCode.set("*")
             mo.save
@@ -321,7 +349,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
         val  valSum = BusinessRulesUtil.clearString (("%.2f".format (somatoria.toFloat)));
         val  qtdeLote = (sequencial+2).toString;
         //trailer de lote
-        strXml += bank + "0001" + "5" + "         " + 
+        strXml += banknumber + "0001" + "5" + "         " + 
         BusinessRulesUtil.zerosLimit(qtdeLote,6) + 
         //BusinessRulesUtil.zerosLimit(valSum,18) + minha documentacao mandava por o total
         BusinessRulesUtil.zerosLimit("",18) + //suporte mandou por zeros 
@@ -330,7 +358,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
         "0000000000" +
         "\n";
         //trailer de arquivo
-        strXml += bank + "9999" + "9" + "         " + 
+        strXml += banknumber + "9999" + "9" + "         " + 
         BusinessRulesUtil.zerosLimit("1",6) + // um lote só
         BusinessRulesUtil.zerosLimit((sequencial + 4).toString,6) + 
         "000000" + 
@@ -343,7 +371,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           "c:\\vilarika\\"
         }
        scala.tools.nsc.io.File(filePath + "remessa_" + AuthUtil.company.id.toString + "_" 
-        + bank + "_" + Project.dtformat(now, "yyyyMMdd_HHmm") + ".txt").writeAll(strXml)
+        + banknumber + "_" + Project.dtformat(now, "yyyyMMdd_HHmm") + ".txt").writeAll(strXml)
     }
 
 }

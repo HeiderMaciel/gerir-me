@@ -87,7 +87,11 @@ class  AccountCompanyUnitSnippet  extends BootstrapPaginatorSnippet[AccountCompa
 		    //"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt)))&
 		    "name=bank" #> (SHtml.select(banksSelect,Full(ac.bank.is.toString),(s:String) => ac.bank(s.toLong)))&
 		    "name=accountstr" #> (SHtml.text(ac.accountStr.is, ac.accountStr(_)))&
+		    "name=accountVd" #> (SHtml.text(ac.accountVd.is, ac.accountVd(_)))&
 		    "name=agency" #> (SHtml.text(ac.agency.is, ac.agency(_)))&
+		    "name=agencyVd" #> (SHtml.text(ac.agencyVd.is, ac.agencyVd(_)))&
+			"name=document" #> (SHtml.text(ac.document.is, ac.document(_)))&
+			"name=document_company" #> (SHtml.text(ac.document_company.is, ac.document_company(_)))&
 		    "name=agreement" #> (SHtml.text(ac.agreement.is, ac.agreement(_)))&
 		    "name=unit" #> (SHtml.select(units,Full(ac.unit.is.toString),(v:String) => ac.unit(v.toLong)))&
 //			"name=value" #> (SHtml.text(ac.value.is.toString, (v:String) => { if(v !="")ac.value(v.toDouble)} ))&

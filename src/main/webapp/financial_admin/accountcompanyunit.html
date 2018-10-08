@@ -18,7 +18,7 @@
                   <div class="input-prepend">
                     <input class="medium" id="short_name" name="short_name" size="30" type="text"/>
                     <a data-original-title="Informação" data-content="clique para abrir a documentação" data-help-url='/docs/name.html' rel="popover" class="_popover_basic _help">
-                      <img src="/images/info.gif" width="20">
+                      <img src="/images/info.gif" width="16">
                     </a>
                   </div>
                   <span class="help-block">Nome completo e nome reduzido, este último usado e em alguns relatórios</span>
@@ -51,10 +51,16 @@
                   <input class="medium" id="agency" name="agency" type="text"/>
                 </div>
                 <div class="input-prepend" style='float:left; padding-right:10px'>
+                  <input class="mini" id="agencyVd" name="agencyVd" type="text"/>
+                </div>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
                   <span class='label-inline'>
                       Conta
                   </span>
                   <input class="medium" id="accountstr" name="accountstr" type="text"/>
+                </div>
+                <div class="input-prepend" style='float:left; padding-right:10px'>
+                  <input class="mini" id="accountVd" name="accountVd" type="text"/>
                 </div>
              </div>
             </div>
@@ -66,6 +72,21 @@
                   <input class="medium" id="agreement" name="agreement" type="text"/>
                 </div>
              </div>
+          </div>
+          <div class="clearfix">
+              <label for="document">CPF / RG</label>
+              <div class="input">
+                  <div class='inline-inputs'>
+                      <div class="input-prepend" style='float:left; padding-right:10px'>
+                          <input class="medium cpf" id="document" name="document" size="30" type="text"/>
+                          <span class="help-block">CPF</span>
+                      </div>
+                      <div class="input-prepend" style='float:left; padding-right:10px'>
+                          <input class="medium cnpj" id="document_company" name="document_company" size="30" type="text"/>
+                          <span class="help-block">CNPJ</span>
+                      </div>
+                  </div>
+              </div>
           </div>
           <div class="clearfix">
             <label for="value">Saldo</label>
