@@ -1331,7 +1331,9 @@
       var total = window.parseFloat($('#payment_type_value').val());
       var chequenum = 0;
       for (var i = 0; i < installments; i++) {
-        var date = new Date();
+        // vaiiii aqui
+        //var date = new Date();
+        var date = new Date($("#cashiers_select")[0].cashiers_map[$("#cashiers_select").val()].openerDate);
         // 08/2016 - rigel antes não projetava os dias para o parcelado e nao projetava 
         // o cartão sem a opção nextmonth que vem antes do tratamento parcelado
         date.setDate (date.getDate () + paymentType.numDaysForReceive);
@@ -1361,7 +1363,8 @@
       if (paymentType.accept_installment) {
         // 08/2016 - rigel antes não projetava os dias para o parcelado e nao projetava 
         // o cartão sem a opção nextmonth que vem antes do tratamento parcelado
-        var date = new Date();
+        // var date = new Date();
+        var date = new Date($("#cashiers_select")[0].cashiers_map[$("#cashiers_select").val()].openerDate);
         date.setDate (date.getDate () + paymentType.numDaysForReceive);
         paymentDetailAdd(total, window.parseInt(paymentType.id), false, chequeInfo, date)
       } else {
@@ -1734,7 +1737,7 @@
         // era 500 mas não estava trazendo o cliente e os serviços
         // qdo company com muitos caixas abertos - agora + de 50 dá msg
         // testar qtde unidades ativas pode ter um caix por unidade
-      }, 1000);
+      }, 800);
       $("#command").val(gup("command"));
     } else {
       setTimeout(function() {

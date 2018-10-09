@@ -141,7 +141,7 @@ object CommissionService extends net.liftweb.common.Logger  {
     if (paymentType.bpmonthly_?.is){
       MonthlyCommissionCalculator
     } else if (paymentType.comissionAtSight_? ||
-      userAux.commissionAtSight_?){
+      (userAux.commissionAtSight_? && paymentType.generateCommision_?)){
       // rigel 09/10/2018 - parm no user
       DefaultCommissionCalculator
     } else if (!paymentType.generateCommision_?.is) {
