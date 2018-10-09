@@ -720,6 +720,7 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
                     "update stakeholder set business_pattern=? where business_pattern=?;"::
                     "update treatment set customer=? where customer=?;"::
                     "update treatment set user_c=? where user_c=?;"::
+                    "update cashier set createdby=? where createdby=?;"::
                     "update workhouer set user_c=? where user_c=?;"::
                     "update treatmentDetail set auxiliar=? where auxiliar=?;"::
                     "update useractivity set user_c=? where user_c=?;"::
