@@ -148,11 +148,14 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
   def toRemessa (sequencial:Int, banknumber: String, cotpinsc:String, coinsc:String) = {
      // val  bank = "001";
      val  valor = BusinessRulesUtil.clearString (("%.2f".format (value.toFloat)));
-     var strXml:String = banknumber + "0001" + // lote
+     var strXml:String = "" +
+     banknumber + 
+     "0001" + // lote
      "3" + // tipo registro
      BusinessRulesUtil.zerosLimit (sequencial.toString,5) + 
      "J" + "0" + "00" + 
-     banknumber + "9" + barCodeDv + 
+     banknumber + "9" + 
+     barCodeDv + 
      BusinessRulesUtil.zerosLimit(valor,14) + barCode3 + 
      BusinessRulesUtil.limitSpaces (AuthUtil.company.search_name.toUpperCase,30) +
      Project.dtformat(dateExpiration, "ddMMyyyy") + 
@@ -301,7 +304,10 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           """0000""" + // lote 
           "0" + // registro 
           """         """ + // uso febraban
-          cotpinsc + coinsc + convenio + agencia + dvagencia + conta + dvconta + "0" +
+          cotpinsc + coinsc + 
+          // BB convenio + 
+          BusinessRulesUtil.limitSpaces(" ",20) + 
+          agencia + dvagencia + conta + dvconta + "0" +
           BusinessRulesUtil.limitSpaces (AuthUtil.company.search_name.toUpperCase,30) + bankname + 
           "          " + "1" +
           Project.dtformat(now, "ddMMyyyy") + 
@@ -312,12 +318,33 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           "                    " + // uso febraban
           BusinessRulesUtil.limitSpaces ("mensalidade vilarika",20) + 
           "           " + "   " + "000" + "00" + "0000000000\n" +
+          //
+          // ******************************************************
           // header de lote
-          banknumber + "0001" + "1" + "C" + // minha documentacao estava R o suporte mandou por C para crédito 
-          "98" + "30" + "030" + " " + 
-          cotpinsc + coinsc + convenio + agencia + dvagencia + conta + dvconta + "0" +
+          // ******************************************************
+          //
+          banknumber + 
+          "0001" + // lote
+          "1" + // tipo registro
+          //"C" + // minha documentacao estava R o suporte BB mandou por C para crédito 
+          "R" +
+          // bb "98" + "30" + "030" + " " + 
+          "01" + // tipo serviço
+          "  " + // febraban
+          "040" + // layout lote
+          " " + 
+          cotpinsc + 
+          "0" + // no sicoob o nro é com 15 neste reg
+          coinsc + 
+          // BB convenio + 
+          BusinessRulesUtil.limitSpaces(" ",20) + 
+          agencia + dvagencia + conta + dvconta + 
+          // BB "0" +
+          " " + //dv agencia conta 
           BusinessRulesUtil.limitSpaces (AuthUtil.company.search_name.toUpperCase,30) + 
-          msg + 
+          msg + // de 40 pos
+          BusinessRulesUtil.limitSpaces(" ",40) + // mensagem 2
+          /* BB
           BusinessRulesUtil.limitSpaces(bu.street.toString,30) + 
           BusinessRulesUtil.zerosLimit(bu.number.toString,5) +  
           BusinessRulesUtil.limitSpaces(bu.complement.toString,15) + 
@@ -325,6 +352,11 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           BusinessRulesUtil.zerosLimit(bu.postal_code.toString,8) + 
           BusinessRulesUtil.limitSpaces(bu.stateShortName.toString,2) + 
           "        " + "0000000000\n"
+          */
+          BusinessRulesUtil.limitSpaces(" ",8) + // remessa
+          BusinessRulesUtil.limitSpaces(" ",8) + // data gravacao
+          BusinessRulesUtil.zerosLimit("0",8) + // data crédito
+          BusinessRulesUtil.limitSpaces(" ",33) + "\n"
 
        var sequencial = 0;
        var somatoria = 0.0;   
