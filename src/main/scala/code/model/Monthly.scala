@@ -204,6 +204,102 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
   }
 
   //def  bank = "001";
+ def toRemessaP (sequencial:Int, banknumber: String, cotpinsc:String, 
+      coinsc:String, agencia:String , dvagencia:String , 
+      conta:String , dvconta:String) = {
+     // val  bank = "001";
+     val bc = Customer.findByKey (this.business_pattern.obj.get.id).get
+
+     val  valor = BusinessRulesUtil.clearString (("%.2f".format (value.toFloat)));
+     var strXml:String = "" +
+     banknumber + 
+     "0001" + // lote
+     "3" + // tipo registro
+     BusinessRulesUtil.zerosLimit (sequencial.toString,5) + 
+     "P" + 
+     " " + 
+     "01" + // entrada de título
+     agencia + dvagencia + conta + dvconta + " " +
+     BusinessRulesUtil.zerosLimit(idForCompany.toString,10) +
+     "01" + // parcela
+     "01" + // odalidade
+     "4" + // a4 sem envelopamento
+     "     " +
+     "1" + // carteira
+     "0" + // forma cadastro
+     " " + // tipo documento 
+     "2" + // beneficiario emite
+     "2" + // beneficiario distribui
+     BusinessRulesUtil.zerosLimit(idForCompany.toString,15) +
+     Project.dtformat(dateExpiration, "ddMMyyyy") + 
+     BusinessRulesUtil.zerosLimit(valor,15) +
+     "00000" + // agencia cobrança
+     " " + // dv agencia
+     "04" + // duplicata de serviço
+     "A" + // Aceite 
+     Project.dtformat(createdAt, "ddMMyyyy") + // emissão
+     "2" + // juros taxa mensal
+     Project.dtformat(dateExpiration, "ddMMyyyy") + 
+     "000000000000200" + // 2% ao mês
+     "0" + // sem desconto
+     Project.dtformat(dateExpiration, "ddMMyyyy") + // data desconto
+     "000000000000000" + // % desconto
+     "000000000000000" + // iof 
+     "000000000000000" + // abatemento 
+     // 25 posicoes ideinfica titulo na empresa
+     BusinessRulesUtil.zerosLimit(idForCompany.toString,6) + 
+     " " +
+     BusinessRulesUtil.limitSpaces (bc.search_name.toUpperCase,18) + 
+     "3" + // nao protestar
+     "00" + // prazo protesto
+     "0" + // código baixa
+     "   " + // prazo baixa 
+     "09" + // real 
+     BusinessRulesUtil.zerosLimit("0",10) + // contrato
+     " \n" 
+     strXml
+  }
+
+  def toRemessaQ (sequencial:Int, banknumber:String, cotpinsc:String, coinsc:String) = {
+     // val  bank = "001";
+     val bc = Customer.findByKey (this.business_pattern.obj.get.id).get
+     val  tpinsc = if (bc.document_company != "") {
+          "2" // cnpj
+      } else {
+          "1" // cpf
+      }
+     val  insc = if (bc.document_company != "") {
+          BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bc.document_company),14); // cnpj 
+      } else if (bc.document != "") {
+          BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bc.document),14); // cpf
+      } else {
+          // cpf rigel 
+          "00055118593620"        
+      }
+     var strXml:String = "" + 
+     banknumber + 
+     "0001" + // lote
+     "3" + // tipo registro
+     BusinessRulesUtil.zerosLimit (sequencial.toString,5) + 
+     "Q" + 
+     " " + 
+     "01" + // entrada de título
+     tpinsc + "0" + insc + // cliente
+     BusinessRulesUtil.limitSpaces (bc.search_name.toUpperCase,40) + 
+     BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bc.street).toUpperCase,40) + 
+     BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bc.district).toUpperCase,15) + 
+     BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString (bc.postal_code).toUpperCase,8) + 
+     BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bc.cityName).toUpperCase,15) + 
+     BusinessRulesUtil.limitSpaces (bc.stateShortName.toUpperCase,2) + 
+     tpinsc + "0" + insc + // cliente
+     BusinessRulesUtil.limitSpaces (bc.search_name.toUpperCase,40) + 
+     "000" +
+     BusinessRulesUtil.limitSpaces (" ",20) + 
+     "        \n";
+     strXml
+  }
+
+
 }
 
 object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with OnlyCurrentCompany[Monthly] with OnlyActive[Monthly] {
@@ -275,8 +371,9 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
        }
 
        //val  convenio = ("00" + "2863040" + "0126" + "       ") // novo - 2550720 antigo
-       val  convenio = ("00" + BusinessRulesUtil.zerosLimit (
-        BusinessRulesUtil.clearString(ac.agreement),7) + "0126" + "       ")
+       //val  convenio = ("00" + BusinessRulesUtil.zerosLimit (
+       // BusinessRulesUtil.clearString(ac.agreement),7) + "0126" + "       ")
+       val convenio = BusinessRulesUtil.limitSpaces (" ",20);
        //val  agencia = BusinessRulesUtil.zerosLimit ("0591",5);
        val  agencia = BusinessRulesUtil.zerosLimit (
         BusinessRulesUtil.clearString(ac.agency),5);
@@ -289,7 +386,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
        val  dvconta = BusinessRulesUtil.zerosLimit (ac.accountVd,1);
        val  bk = Bank.findByKey (ac.bank).get;
        val  banknumber = bk.banknumber;
-       val  bankname = BusinessRulesUtil.limitSpaces (bk.name,30);
+       val  bankname = BusinessRulesUtil.limitSpaces (bk.short_name.toUpperCase,30);
        val  layout = if (ac.bank == 1) {
           "040" // bb
         } else {
@@ -360,36 +457,70 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
 
        var sequencial = 0;
        var somatoria = 0.0;   
+       var titulos = 0;
        Monthly.findAll(
         BySql("(dateExpiration between ? and ?)", IHaveValidatedThisSQL("",""), start, end),
         By(Monthly.status, 1),
         By(Monthly.paid, false),
         OrderBy(id, Ascending)).foreach ((mo) => {
-       println ("vaiii ========= boleto " + mo.description + " ==== " + mo.barCode2 + " ==== " + mo.company.toString);
+          if (Project.isLocalHost && sequencial < 6) {
+            println ("vaiii ========= boleto " + mo.description + " ==== " + mo.barCode2 + " ==== " + mo.company.toString);
             sequencial += 1;
-            strXml += mo.toRemessa (sequencial, banknumber, cotpinsc, coinsc);
+            titulos += 1;
+            if (ac.bank == 1 /* bb */) {
+              strXml += mo.toRemessa (sequencial, banknumber, cotpinsc, coinsc);
+            } else {  
+              strXml += mo.toRemessaP (sequencial, banknumber, cotpinsc, coinsc, agencia , dvagencia , conta , dvconta);
+            }
             somatoria += mo.value
             sequencial += 1;
             // identifica o sacado cliente
-            strXml += mo.toRemessaJ52 (sequencial, banknumber, cotpinsc, coinsc);
+            if (ac.bank == 1 /* bb */) {
+              strXml += mo.toRemessaJ52 (sequencial, banknumber, cotpinsc, coinsc);
+            } else {
+              strXml += mo.toRemessaQ (sequencial, banknumber, cotpinsc, coinsc);
+            }
            if (mo.barCode == "") {
             mo.barCode.set("*")
             mo.save
            }
+          }
        })
 
         val  valSum = BusinessRulesUtil.clearString (("%.2f".format (somatoria.toFloat)));
         val  qtdeLote = (sequencial+2).toString;
         //trailer de lote
-        strXml += banknumber + "0001" + "5" + "         " + 
-        BusinessRulesUtil.zerosLimit(qtdeLote,6) + 
-        //BusinessRulesUtil.zerosLimit(valSum,18) + minha documentacao mandava por o total
-        BusinessRulesUtil.zerosLimit("",18) + //suporte mandou por zeros 
-        "000000000000000000" + "000000" + 
-        BusinessRulesUtil.limitSpaces("",165) +
-        "0000000000" +
-        "\n";
+        strXml += "" + 
+        banknumber + 
+        "0001" + 
+        "5" + "         " + 
+        BusinessRulesUtil.zerosLimit(qtdeLote,6)
+        if (ac.bank == 1 /* bb */) {
+          //BusinessRulesUtil.zerosLimit(valSum,18) + minha documentacao mandava por o total
+          strXml += "" +
+          BusinessRulesUtil.zerosLimit("",18) + //suporte mandou por zeros 
+          "000000000000000000" + "000000" + 
+          BusinessRulesUtil.limitSpaces("",165) +
+          "0000000000" + "\n";
+        } else {
+          strXml += "" +
+          BusinessRulesUtil.zerosLimit(titulos.toString,6) +
+          BusinessRulesUtil.zerosLimit(valSum,17) + 
+          BusinessRulesUtil.zerosLimit("0",6) + // vinculada
+          BusinessRulesUtil.zerosLimit("0",17) + 
+          BusinessRulesUtil.zerosLimit("0",6) + // caucionada
+          BusinessRulesUtil.zerosLimit("0",17) + 
+          BusinessRulesUtil.zerosLimit("0",6) + // descontada
+          BusinessRulesUtil.zerosLimit("0",17) + 
+          BusinessRulesUtil.limitSpaces(" ",8) +
+          BusinessRulesUtil.limitSpaces(" ",117) +
+          "\n";
+        }
+        //
+        // ******************************************
         //trailer de arquivo
+        // ******************************************
+        //
         strXml += banknumber + "9999" + "9" + "         " + 
         BusinessRulesUtil.zerosLimit("1",6) + // um lote só
         BusinessRulesUtil.zerosLimit((sequencial + 4).toString,6) + 
