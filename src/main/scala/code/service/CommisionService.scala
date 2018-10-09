@@ -136,9 +136,13 @@ object CommissionService extends net.liftweb.common.Logger  {
   def $(paymentdetail: PaymentDetail) = {
     import CommissionGenerationStrategy._
     val paymentType = paymentdetail.typePaymentObj.get
+    val userAux = User.findByKey (paymentdetail.user.get).get;
+
     if (paymentType.bpmonthly_?.is){
       MonthlyCommissionCalculator
-    } else if (paymentType.comissionAtSight_?){
+    } else if (paymentType.comissionAtSight_? ||
+      userAux.commissionAtSight_?){
+      // rigel 09/10/2018 - parm no user
       DefaultCommissionCalculator
     } else if (!paymentType.generateCommision_?.is) {
       NotCommissionCalculator

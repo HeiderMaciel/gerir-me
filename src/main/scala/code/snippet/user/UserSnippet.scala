@@ -237,6 +237,7 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 			"name=showInCommand" #> (SHtml.checkbox(ac.showInCommand_?, ac.showInCommand_?(_)))&
 			"name=showInCashier" #> (SHtml.checkbox(ac.showInCashier_?, ac.showInCashier_?(_)))&
 			"name=discountToCommission" #> (SHtml.checkbox(ac.discountToCommission_?, ac.discountToCommission_?(_)))&
+			"name=commissionAtSight" #> (SHtml.checkbox(ac.commissionAtSight_?, ac.commissionAtSight_?(_)))&
 			"name=deletePayment" #> (SHtml.checkbox(ac.deletePayment_?, ac.deletePayment_?(_)))&
 			"name=is_auxiliar" #> (SHtml.checkbox(ac.is_auxiliar_?, ac.is_auxiliar_?(_)))&
 			"name=groupPermission_text" #> (SHtml.text(ac.groupPermission, (a:String) => {}))&
@@ -251,6 +252,7 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 			"name=candeletecalendarevents" #> (SHtml.checkbox(ac.canDeleteCalendarEvents_?, ac.canDeleteCalendarEvents_?(_)))&
 			"name=canmovecalendarevents" #> (SHtml.checkbox(ac.canMoveCalendarEvents_?, ac.canMoveCalendarEvents_?(_)))&
 			"name=caneditcalendarevents" #> (SHtml.checkbox(ac.canEditCalendarEvents_?, ac.canEditCalendarEvents_?(_)))&
+			"name=canbusyevents" #> (SHtml.checkbox(ac.canBusyEvents_?, ac.canBusyEvents_?(_)))&
 		    "name=email" #> (SHtml.text(ac.email.is, ac.email(_)))&
 			"name=name" #> (SHtml.text(ac.name.is, ac.name(_)))&
 			"name=process" #> (SHtml.hidden(process))
