@@ -155,7 +155,7 @@ order by qa.applydate, qq.orderinsection
         " 1 = 1 "
       }
 
-      val value = QuizAnswer.findAll(
+      var value = QuizAnswer.findAll(
         BySql (sqlId, IHaveValidatedThisSQL("","")),
         By(QuizAnswer.quizApplying, quizApplyingId),
         By(QuizAnswer.quizQuestion, question.id.is)) match {
@@ -186,6 +186,11 @@ order by qa.applydate, qq.orderinsection
       }
 
       var message_aux = Customer.replaceMessage (customer, question.message.is)
+
+      if (question.quizQuestionType == 8 /* texto rico */
+        && value == "") {
+        value = message_aux;
+      }   
       
       val typeAux = if (print) {
         if (question.quizQuestionType.is == 2 /*lista*/ &&
