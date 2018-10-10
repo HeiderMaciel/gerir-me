@@ -103,6 +103,7 @@ class CompanyUnit
      def isEgrexU = appTypeU.is == Company.SYSTEM_EGREX
      def isEphysioU = appTypeU.is == Company.SYSTEM_EPHYSIO
      def isEbellepetU = appTypeU.is == Company.SYSTEM_EBELLEPET
+     def isEbarberU = appTypeU.is == Company.SYSTEM_EBARBER
   }
   object calendarUrl extends MappedPoliteString(this, 100) with LifecycleCallbacks {
     override def beforeSave() {

@@ -67,6 +67,7 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
      def isEgrex = appType.is == Company.SYSTEM_EGREX
      def isEphysio = appType.is == Company.SYSTEM_EPHYSIO
      def isEbellepet = appType.is == Company.SYSTEM_EBELLEPET
+     def isEbarber = appType.is == Company.SYSTEM_EBARBER
   }
 
   def isMedical =
@@ -91,6 +92,8 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
         "ephysio"
       } else if (appType == Company.SYSTEM_EBELLEPET) {
         "ebellepet"
+      } else if (appType == Company.SYSTEM_EBARBER) {
+        "ebarber"
       } else {
         "vilarika"
       }
@@ -111,6 +114,8 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
           "Paciente"
         } else if (appType == Company.SYSTEM_EBELLEPET) {
           "Cliente"
+        } else if (appType == Company.SYSTEM_EBARBER) {
+          "Cliente"
         } else {
           "Cliente"
         }
@@ -128,6 +133,8 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
         } else if (appType == Company.SYSTEM_EPHYSIO) {
           "Pacientes"
         } else if (appType == Company.SYSTEM_EBELLEPET) {
+          "Clientes"
+        } else if (appType == Company.SYSTEM_EBARBER) {
           "Clientes"
         } else {
           "Clientes"
@@ -691,6 +698,7 @@ object Company extends Company with LongKeyedMapperPerCompany[Company] with Site
   val SYSTEM_EGREX = 5
   val SYSTEM_EPHYSIO = 6
   val SYSTEM_EBELLEPET = 7
+  val SYSTEM_EBARBER = 8
 
   val PLAN_FREE = 1
   val PLAN_SOLO = 2

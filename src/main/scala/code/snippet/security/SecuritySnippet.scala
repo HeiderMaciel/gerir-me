@@ -234,6 +234,12 @@ object SecuritySnippet {
         else
         NodeSeq.Empty
       }
+      def isEbarberSystem(in:NodeSeq):NodeSeq ={
+        if (AuthUtil.company.appType.isEbarber)
+        in
+        else
+        NodeSeq.Empty
+      }
 
       // Específicos de controle
       def isDeleteCalendar(in:NodeSeq):NodeSeq ={

@@ -42,6 +42,8 @@ object EmailUtil {
       " e-physio "
     }else if (S.hostName.contains ("ebellepet")) {
       " e-bellepet "
+    }else if (S.hostName.contains ("ebarber")) {
+      " e-barber "
     }else{
       " e-belle "
     }
@@ -58,6 +60,8 @@ object EmailUtil {
       "ephysio" // trocar quando link pronto
     }else if (S.hostName.contains ("ebellepet")) {
       "ebellepet"
+    }else if (S.hostName.contains ("ebarber")) {
+      "ebarber"
     }else{
       "ebelle"
     }

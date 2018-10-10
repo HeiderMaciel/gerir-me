@@ -88,6 +88,7 @@ object UserCreateActors extends LiftActor {
       activityName = "Procedimento";
       PermissionModule.setModule (company, "RELATION");
       PermissionModule.setModule (company, "QUIZ");
+    } else if (company.appType == Company.SYSTEM_EBARBER) {
     } else {
       //"vilarika"
     }

@@ -75,6 +75,9 @@ var Languages = {
 		"Questionários" : "Prontuários",
 		"Questionário" : "Prontuário"
 	},
+	ebarber : {
+
+	},
 	gerirme : {
 
 	}	

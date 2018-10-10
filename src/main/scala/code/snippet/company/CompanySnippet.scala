@@ -22,7 +22,8 @@ object CompanySnippet{
       "4" -> "edoctus",
       "5" -> "egrex",
       "6" -> "ephysio",
-      "7" -> "ebellepet"
+      "7" -> "ebellepet",
+      "8" -> "ebarber"
 		)
 	}
 
@@ -91,6 +92,12 @@ object CompanySnippet{
 			    	ac.calendarStart(8)
 			    	ac.calendarEnd(19)
 					ac.appType(7)
+					ac.calendarInterval(30)
+			      " e-bellepet "
+			    }else if (S.hostName.contains ("ebarber")) {
+			    	ac.calendarStart(8)
+			    	ac.calendarEnd(19)
+					ac.appType(8)
 					ac.calendarInterval(30)
 			      " e-bellepet "
 			    }else{

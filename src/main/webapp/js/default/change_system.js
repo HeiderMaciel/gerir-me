@@ -84,6 +84,17 @@ var toEbellepet = function() {
 	$("img[src='/images/favicon.ico']").attr('src', '/images/logo_ftr_ebellepet.ico');
 	$('.body').css('background-image', 'url("/images/capa_ebellepet.jpg")');
 };
+var toEbarber = function() {
+	I18nManager.changeLang("ebarber");
+	$('title').html('e-barber ' + $('title').html());
+	$('.system-name').html('e-barber');
+	$('.brand img').attr('width', '16');
+	$("a[href='/pricing']").attr('href', '/pricing');
+	$("img[src='/images/logo.png']").attr('src', '/images/logo_ftr_ebarber.png');
+	$("img[src='/images/web.jpg']").attr('src', '/images/logo_ftr_ebarber.png');
+	$("img[src='/images/favicon.ico']").attr('src', '/images/logo_ftr_ebarber.ico');
+	$('.body').css('background-image', 'url("/images/capa_ebarber.jpg")');
+};
 var toEbelle = function() {
 	I18nManager.changeLang("ebelle");
 	$('title').html('e-belle ' + $('title').html());
@@ -111,6 +122,8 @@ var changeSystem = function() {
 		toEphysio();
 	} else if (document.location.href.indexOf("ebellepet") != -1) {
 		toEbellepet();
+	} else if (document.location.href.indexOf("ebarber") != -1) {
+		toEbarber();
 	} else if (document.location.href.indexOf("ebelle") != -1) {
 		toEbelle();
 	} else if (document.location.href.indexOf("gerir") != -1) {

@@ -215,6 +215,8 @@ $(function() {
 		toEphysio();
 	} else if (document.location.href.indexOf("ebellepet") != -1) {
 		toEbellepet();
+	} else if (document.location.href.indexOf("ebarber") != -1) {
+		toEbarber();
 	} else if (document.location.href.indexOf("ebelle") != -1) {
 		toEbelle();
 	} else if (document.location.href.indexOf("gerir") != -1) {

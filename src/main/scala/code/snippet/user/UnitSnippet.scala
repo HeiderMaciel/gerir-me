@@ -43,7 +43,8 @@ object  UnitSnippet extends BootstrapPaginatorSnippet[CompanyUnit] with SnippetU
       "4" -> "edoctus",
       "5" -> "egrex",
       "6" -> "ephysio",
-      "7" -> "ebellepet"
+      "7" -> "ebellepet",
+      "8" -> "ebarber"
 		)
 	}
 

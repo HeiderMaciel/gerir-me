@@ -60,6 +60,9 @@ alert (" na var function click aqui não chega NUNCA !!!!!! ")
         if ($('.has-pet-system').length > 0) {
           logo = "ebellepet"
           header = "ebellepet"
+        } else if ($('.has-pet-system').length > 0) {
+          logo = "ebarber"
+          header = "ebarber"
         } else if ($('.has-edoctus-system').length > 0) {
           logo = "edoctus"
           header = "edoctus"

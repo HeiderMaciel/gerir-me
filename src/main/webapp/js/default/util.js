@@ -2435,6 +2435,17 @@ var toEbellepet = function() {
 	$('.body').css('background-image', 'url("/images/capa_ebellepet.jpg")');
 	$("a[href='/pricing']").attr('href', '/pricing_ephysio');
 };
+var toEbarber = function() {
+	I18nManager.changeLang("ebarber");
+	$('title').html('e-barber ' + $('title').html());
+	$('.system-name').html('e-barber');
+	$('.brand img').attr('width', '16');
+	$("img[src='/images/logo.png']").attr('src', '/images/logo_ftr_ebarber.png');
+	$("img[src='/images/web.jpg']").attr('src', '/images/logo_ftr_ebarber.png');
+	$("img[src='/images/favicon.ico']").attr('src', '/images/logo_ftr_ebarber.ico');
+	$('.body').css('background-image', 'url("/images/capa_ebarber.jpg")');
+	$("a[href='/pricing']").attr('href', '/pricing');
+};
 var toEbelle = function() {
 	// parace que os trechos desse tipo repetidos no change-system.js não são
 	// mais executados - rigel 08/03/2018

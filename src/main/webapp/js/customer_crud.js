@@ -471,6 +471,8 @@ $(function() {
         var header = "";
         if ($('.has-pet-system').length > 0) {
           header = "ebellepet"
+        } else if ($('.has-ebarber-system').length > 0) {
+          header = "ebarber"
         } else if ($('.has-edoctus-system').length > 0) {
           header = "edoctus"
         } else if ($('.has-ephysio-system').length > 0) {
@@ -484,6 +486,8 @@ $(function() {
         var logo = "";
         if ($('.has-pet-system').length > 0) {
           logo = "ebellepet"
+        } else if ($('.has-ebarber-system').length > 0) {
+          logo = "ebarber"
         } else if ($('.has-edoctus-system').length > 0) {
           logo = "edoctus"
         } else if ($('.has-ephysio-system').length > 0) {
