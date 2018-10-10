@@ -29,7 +29,6 @@ object QuizApplyingApi extends RestHelper with ReportRest with net.liftweb.commo
         id <- S.param("id")
         questions <- S.param("questions")
       } yield {
-println ("vaiiiii ============================= questions " + questions(0))
         questions.split(",").map(saveAnswer(id.toLong, _))
       }
       JBool(true)
@@ -155,6 +154,17 @@ order by qa.applydate, qq.orderinsection
         " 1 = 1 "
       }
 
+      var defaultValue = QuizAnswer.findAll(
+        BySql (""" 
+          quizApplying in (select id from quizapplying 
+          where business_pattern = ? and id <> ?)
+          """, IHaveValidatedThisSQL("",""), customer.id, quizApplyingId),
+        By(QuizAnswer.quizQuestion, question.defaultQuestion),
+        OrderBy(QuizAnswer.id, Descending)) match {
+        case (l: List[QuizAnswer]) if (!l.isEmpty) => l(0).valueStr.get
+        case _ => ""
+      }
+
       var value = QuizAnswer.findAll(
         BySql (sqlId, IHaveValidatedThisSQL("","")),
         By(QuizAnswer.quizApplying, quizApplyingId),
@@ -187,6 +197,9 @@ order by qa.applydate, qq.orderinsection
 
       var message_aux = Customer.replaceMessage (customer, question.message.is)
 
+      if (question.defaultQuestion != 0 && value == "") {
+        value = defaultValue;
+      }
       if (question.quizQuestionType == 8 /* texto rico */
         && value == "") {
         value = message_aux;

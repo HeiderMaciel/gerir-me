@@ -436,6 +436,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		    "name=quizQuestionFormat" #> (SHtml.select(questionFormats,Full(ac.quizQuestionFormat.is.toString),(v:String) => ac.quizQuestionFormat(v.toInt)))&
 		    "name=quizQuestionSize" #> (SHtml.select(questionSizes,Full(ac.quizQuestionSize.is.toString),(v:String) => ac.quizQuestionSize(v.toInt)))&
 		    "name=quizQuestionPosition" #> (SHtml.select(questionPositions,Full(ac.quizQuestionPosition.is.toString),(v:String) => ac.quizQuestionPosition(v.toInt)))&
+		    "name=defaultQuestion" #> (SHtml.select(questions,Full(ac.defaultQuestion.is.toString),(v:String) => ac.defaultQuestion(v.toInt)))&
 			"name=history" #> (SHtml.checkbox(ac.history_?, ac.history_?(_)))&
 			"name=saveIfNoAnswer" #> (SHtml.checkbox(ac.saveIfNoAnswer_?, ac.saveIfNoAnswer_?(_)))&
 			"name=printIfNoAnswer" #> (SHtml.checkbox(ac.printIfNoAnswer_?, ac.printIfNoAnswer_?(_)))&

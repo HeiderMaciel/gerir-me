@@ -84,6 +84,10 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
         // se preenchido 1
         // sempre 3
     }
+    // é um auto relacionamento não transformar em FK
+    object defaultQuestion extends MappedLong(this) {
+        override def defaultValue = 0
+    }
 
 
     def quizSectionName = quizSection.obj match {
