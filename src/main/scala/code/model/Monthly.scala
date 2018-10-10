@@ -167,7 +167,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      "000000000000000" + //quantidade da moeda
      BusinessRulesUtil.limitSpaces (description,20) + //descricao
      BusinessRulesUtil.limitSpaces ("",20) + //doc atrib banco
-     "09" + "      " + "0000000000" + "\n" // + 
+     "09" + "      " + "0000000000" + "\r\n" // + 
      // _barCode + "\n" + _editableLine + " " + company + "\n" 
       strXml
   }
@@ -199,7 +199,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      BusinessRulesUtil.limitSpaces (AuthUtil.company.search_name.toUpperCase,40) +
      tpinsc + "0" + insc + // cliente
      BusinessRulesUtil.limitSpaces (bc.search_name.toUpperCase,40) + 
-     BusinessRulesUtil.limitSpaces ("",53) + "\n" // 
+     BusinessRulesUtil.limitSpaces ("",53) + "\r\n" // 
      strXml
   }
 
@@ -256,7 +256,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      "   " + // prazo baixa 
      "09" + // real 
      BusinessRulesUtil.zerosLimit("0",10) + // contrato
-     " \n" 
+     " \r\n" 
      strXml
   }
 
@@ -295,7 +295,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      BusinessRulesUtil.limitSpaces (bc.search_name.toUpperCase,40) + 
      "000" +
      BusinessRulesUtil.limitSpaces (" ",20) + 
-     "        \n";
+     "        \r\n";
      strXml
   }
 
@@ -414,7 +414,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           densidade + 
           "                    " + // uso febraban
           BusinessRulesUtil.limitSpaces ("mensalidade vilarika",20) + 
-          "           " + "   " + "000" + "00" + "0000000000\n" +
+          "           " + "   " + "000" + "00" + "0000000000\r\n" +
           //
           // ******************************************************
           // header de lote
@@ -453,7 +453,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           BusinessRulesUtil.limitSpaces(" ",8) + // remessa
           BusinessRulesUtil.limitSpaces(" ",8) + // data gravacao
           BusinessRulesUtil.zerosLimit("0",8) + // data crédito
-          BusinessRulesUtil.limitSpaces(" ",33) + "\n"
+          BusinessRulesUtil.limitSpaces(" ",33) + "\r\n"
 
        var sequencial = 0;
        var somatoria = 0.0;   
@@ -501,7 +501,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           BusinessRulesUtil.zerosLimit("",18) + //suporte mandou por zeros 
           "000000000000000000" + "000000" + 
           BusinessRulesUtil.limitSpaces("",165) +
-          "0000000000" + "\n";
+          "0000000000" + "\r\n";
         } else {
           strXml += "" +
           BusinessRulesUtil.zerosLimit(titulos.toString,6) +
@@ -514,7 +514,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           BusinessRulesUtil.zerosLimit("0",17) + 
           BusinessRulesUtil.limitSpaces(" ",8) +
           BusinessRulesUtil.limitSpaces(" ",117) +
-          "\n";
+          "\r\n";
         }
         //
         // ******************************************
@@ -526,7 +526,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
         BusinessRulesUtil.zerosLimit((sequencial + 4).toString,6) + 
         "000000" + 
         BusinessRulesUtil.limitSpaces("",205) +
-        "\n";
+        "\r\n";
 
         val filePath = if(Project.isLinuxServer){
           (Props.get("remessa.path") openOr "/tmp/")
