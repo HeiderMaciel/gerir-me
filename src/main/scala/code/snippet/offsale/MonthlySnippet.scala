@@ -179,6 +179,7 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 							ac.efetiveDate(Project.strOnlyDateToDate(date))
 						}))&
 		    "name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&
+		    "name=numberVd" #> (SHtml.text(ac.numberVd.is, ac.numberVd(_)))&
 		    "name=barCode" #> (SHtml.text(ac.barCode.is, ac.barCode(_)))&
 		    "name=editableLine" #> (SHtml.text(ac.editableLine.is, ac.editableLine(_)))&
 			"name=value" #> (SHtml.text(ac.value.is.toString, (v:String) => { if(v !="") ac.value(v.toDouble)} ))&

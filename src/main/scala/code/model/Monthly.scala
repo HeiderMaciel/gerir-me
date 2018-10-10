@@ -50,6 +50,12 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
           }
       } 
     } 
+  object numberVd extends MappedString(this, 2) with LifecycleCallbacks { 
+      override def beforeSave() {
+          super.beforeSave;
+          this.set(nossonumerosicoob(idForCompany.toLong))
+      } 
+  }
   object value extends MappedCurrency(this)
   object paidValue extends MappedCurrency(this)
   object increseValue extends MappedCurrency(this)
@@ -63,6 +69,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
           }
       } 
   }
+
   object editableLine extends MappedString(this, 100) with LifecycleCallbacks { 
       override def beforeSave() {
           super.beforeSave;
@@ -71,6 +78,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
           }
       } 
   }
+
   override def delete_! = {
     super.delete_!
   }
@@ -101,7 +109,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
     val   seconddate = new DateTime(Project.dtformat(dateExpiration,"yyyy-MM-dd") + "T03:00:00").toDateMidnight() 
     val   factor = Days.daysBetween(firstdate, seconddate).getDays();
     val   valor = BusinessRulesUtil.clearString (("%.2f".format (value.toFloat)))  
-    
+
     if (factor > 9999) {
         // após 9999 o fator volta para 1000      
         // 9999 21/02/2025
@@ -112,6 +120,24 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
         factor.toString + BusinessRulesUtil.zerosLimit(valor,10)
       }
   }
+
+  def nossonumerosicoob (number:Long) : String = {
+              // coop    nro cliente/convenio
+    val part = "3089" + "0000337315" + BusinessRulesUtil.zerosLimit(number.toString,7)
+    val const = "319731973197319731973197"
+    var result = 0.0;
+    for (i <- 1 to part.length) {
+       val p1 = part.slice (i-1,i) 
+       val c1 = const.slice (i-1,i)
+       result += (p1.toLong * c1.toLong)
+    }
+    var resultnew = if ((result % 11) == 0 || (result % 11) == 1) {
+      0
+    } else {
+      11 - (result % 11)
+    }
+    resultnew.toLong.toString;
+  }    
 
   def barCode3 = {
     val lenconvenio = 7;
@@ -309,7 +335,8 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
      mo.originaldate, 
      mo.dateexpiration, mo.value, 
      mo.paid, mo.paymentdate, mo.id, co.name,
-     mo.obs 
+     mo.obs, 
+     mo.numberVd
      FROM monthly mo
      inner join company co on co.id = mo.company_customer
      where mo.company_customer=? and mo.status = 1 order by mo.dateexpiration desc, mo.id desc
@@ -353,7 +380,6 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
        val ac = AccountCompanyUnit.findAll (
         By (AccountCompanyUnit.account, account),
         By (AccountCompanyUnit.unit, AuthUtil.unit)) (0)
-
        def  bu = Customer.findByKey (AuthUtil.unit.partner).get
  
        val now  = new Date()
@@ -472,6 +498,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
             } else {  
               strXml += mo.toRemessaP (sequencial, banknumber, cotpinsc, coinsc, agencia , dvagencia , conta , dvconta);
             }
+println ("vaiiii =================== " + nossonumerosicoob(mo.idForCompany.toLong));
             somatoria += mo.value
             sequencial += 1;
             // identifica o sacado cliente
@@ -482,6 +509,10 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
             }
            if (mo.barCode == "") {
             mo.barCode.set("*")
+            mo.save
+           }
+           if (mo.numberVd == "") {
+            mo.numberVd ("*")
             mo.save
            }
           }

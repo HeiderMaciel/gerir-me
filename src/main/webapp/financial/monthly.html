@@ -47,13 +47,14 @@
 			    decode : function(id,row){
 			    	// local mostra mesmo que pago
 		        	return "<a target='_blank' href='http://localhost:8000/boleto.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/banco_brasil.jpeg'/>" + " <br/> " + row[9]
-		        	+ "<a target='_blank' href='http://localhost:8000/boleto_bancoob.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/banco_sicoob.jpeg'/>" + " <br/> " + row[9]
+		        	+ "<a target='_blank' href='http://localhost:8000/boleto_bancoob.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+row[11]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/banco_sicoob.jpeg'/>" + " <br/> " + row[9]
 			    }
 			};
 		}
 	    if (!isSuperAdmin) {
 	    	fields[10] = "none";
 		}
+     	fields[11] = "none";
 	    var request = function(){
 	      renderReport("/report/monthly", fields,{});
 	    }
