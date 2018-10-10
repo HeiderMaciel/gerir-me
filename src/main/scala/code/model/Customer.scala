@@ -99,6 +99,8 @@ class Customer extends BusinessPattern[Customer]{
             message_aux = message_aux.replaceAll ("##imc_num##", ac.BMI.substring(0,scala.math.min(ac.BMI.length, 5)))
             message_aux = message_aux.replaceAll ("##imc_classe##", ac.BMI)
 
+            message_aux = message_aux.replaceAll ("##detalhes##", ac.obsComplement)
+
             message_aux = message_aux.replaceAll ("##convenio##", ac.offSaleShortName)
             message_aux = message_aux.replaceAll ("##profissao##", ac.occupationShortName)
 

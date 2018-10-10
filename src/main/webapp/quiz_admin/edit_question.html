@@ -112,6 +112,12 @@
               <span class="help-block">Ordem na seção</span>
             </div>
           </div>
+          <div>
+            <label for="name">Texto</label>
+             <div class="input editor-medium">
+                <textarea class="medium" id="message" name="message" size="30"></textarea>
+             </div>
+          </div>
           <div class="clearfix">
             <label for="rank" >Pontos</label>
             <div class="input">
@@ -151,4 +157,16 @@
         <a class="btn primary" href="/quiz_admin/edit_question">Inserir novo</a>
       </div>
     </form>
+    <script>
+    $(function(){
+      $('#message').jqte();
+    });
+    $("#print_message").click(function(){
+        var message = $('#message').val();
+        var header = "" //<p>" + + " Gestão Integrada <br></p>"
+        var printWindow = window.open("", "MsgPrintWindow");
+        printWindow.document.write(header + message);
+        printWindow.print();
+    });
+    </script>
 </div>
