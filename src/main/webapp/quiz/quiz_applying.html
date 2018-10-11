@@ -309,16 +309,25 @@
                 var template = templateQuestion (question, "text");
 
                 formatQuestion (question, template)
-                var input = template.find('input');
-                input.val(question.value);
-                if (question.type == 5 /* valor */) {
-                    setClass(input, "input-small currency");
-                } else if (question.type == 6 /* valor */) {
-                    setClass(input, "input-small date");
+                if (PRINT == 'true1') {
+                    if (question.type == 8 /* rich text */) {
+                       template.find('.print-question').html(question.value);
+                    } else {
+                       template.find('.print-question').text(question.value);
+                    }
+                    template.find(".txa").remove();
+                } else {
+                    var input = template.find('input');
+                    input.val(question.value);
+                    if (question.type == 5 /* valor */) {
+                        setClass(input, "input-small currency");
+                    } else if (question.type == 6 /* valor */) {
+                        setClass(input, "input-small date");
+                    }
+                    setAnswerId (input, question.answerid);
+                    setName(input, question.id);
+                    setClass(input, question.size);
                 }
-                setAnswerId (input, question.answerid);
-                setName(input, question.id);
-                setClass(input, question.size);
 
                 return template;
             }
@@ -569,9 +578,10 @@
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
-                    <span style='color:black;' class="add-on"></span>
-                    <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
+                    <span style='color:black;' class="tx1a add-on"></span>
+                    <input class="tx1a xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
                     <span class="help-block"></span>
+                    <span id='printquestion' class='print-question'></span>
                 </div>
                 </div>
             </div>
