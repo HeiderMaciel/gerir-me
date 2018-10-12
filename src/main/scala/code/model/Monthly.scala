@@ -246,7 +246,8 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      " " + 
      "01" + // entrada de título
      agencia + dvagencia + conta + dvconta + " " +
-     BusinessRulesUtil.zerosLimit(idForCompany.toString,10) +
+     BusinessRulesUtil.zerosLimit(
+      idForCompany.toString+numberVd,10) +
      "01" + // parcela
      "01" + // odalidade
      "4" + // a4 sem envelopamento
@@ -268,7 +269,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      Project.dtformat(dateExpiration, "ddMMyyyy") + 
      "000000000000200" + // 2% ao mês
      "0" + // sem desconto
-     Project.dtformat(dateExpiration, "ddMMyyyy") + // data desconto
+     "00000000" + // data desconto
      "000000000000000" + // % desconto
      "000000000000000" + // iof 
      "000000000000000" + // abatemento 
@@ -317,8 +318,9 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString (bc.postal_code).toUpperCase,8) + 
      BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bc.cityName).toUpperCase,15) + 
      BusinessRulesUtil.limitSpaces (bc.stateShortName.toUpperCase,2) + 
-     tpinsc + "0" + insc + // cliente
-     BusinessRulesUtil.limitSpaces (bc.search_name.toUpperCase,40) + 
+     "0" + // sem avalista
+     BusinessRulesUtil.zerosLimit ("0",15) + // insc avalista
+     BusinessRulesUtil.limitSpaces ("0",40) + // nome avalista
      "000" +
      BusinessRulesUtil.limitSpaces (" ",20) + 
      "        \r\n";
@@ -438,9 +440,10 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           "000001" + 
           layout + 
           densidade + 
-          "                    " + // uso febraban
-          BusinessRulesUtil.limitSpaces ("mensalidade vilarika",20) + 
-          "           " + "   " + "000" + "00" + "0000000000\r\n" +
+          BusinessRulesUtil.limitSpaces (" ",20) + // uso febraban
+          BusinessRulesUtil.limitSpaces (" ",20) + // uso empresa
+          BusinessRulesUtil.limitSpaces (" ",29) + // uso febraban cnab
+          "\r\n" +
           //
           // ******************************************************
           // header de lote
@@ -477,7 +480,8 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           "        " + "0000000000\n"
           */
           BusinessRulesUtil.limitSpaces(" ",8) + // remessa
-          BusinessRulesUtil.limitSpaces(" ",8) + // data gravacao
+          Project.dtformat(now, "ddMMyyyy") + // data gravação 
+          //BusinessRulesUtil.limitSpaces(" ",8) + // data gravacao
           BusinessRulesUtil.zerosLimit("0",8) + // data crédito
           BusinessRulesUtil.limitSpaces(" ",33) + "\r\n"
 
@@ -498,7 +502,6 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
             } else {  
               strXml += mo.toRemessaP (sequencial, banknumber, cotpinsc, coinsc, agencia , dvagencia , conta , dvconta);
             }
-println ("vaiiii =================== " + nossonumerosicoob(mo.idForCompany.toLong));
             somatoria += mo.value
             sequencial += 1;
             // identifica o sacado cliente
