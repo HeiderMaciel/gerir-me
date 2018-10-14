@@ -1,5 +1,10 @@
 var TreatmentManger = {
 	updateTreatmentData: function(id, user, startDate, endDate, status, validate) {
+		if ((status == "event" || status == "not_work") && 
+			(!CalendarManager.calendarPermitions.newBusyEvent)) {
+		    $('#calendar').weekCalendar("refresh");
+			return alert ("Suas permissões não permitem alterar bloqueio");
+		}
 		if (CalendarManager.calendarPermitions.editEvent) {
 			if (validate === undefined) {
 				validate = true;
@@ -125,6 +130,10 @@ var TreatmentManger = {
 		});
 	},
 	removeDetail: function(detailId) {
+		if ((status == "event" || status == "not_work") && 
+			(!CalendarManager.calendarPermitions.newBusyEvent)) {
+			return alert ("Suas permissões não permitem excluir bloqueio");
+		}
 		if (CalendarManager.calendarPermitions.deleteEvent) {
 			if (confirm("Tem certeza que deseja excluir este serviço?")) {
 				var url = "/treatment/detail/" + detailId;

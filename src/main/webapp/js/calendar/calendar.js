@@ -109,7 +109,10 @@ var buildCalendar = function(users,treatments,interval,intervalAlt,startCalendar
 							nextWeek : "&nbsp;&gt;&nbsp;"
 						},
 						eventDelete: function(calEvent, element, dayFreeBusyManager,calendar, clickEvent) {
-
+							if ((calEvent.status == "event" || calEvent.status == "not_work") && 
+								(!CalendarManager.calendarPermitions.newBusyEvent)) {
+								return alert ("Suas permissões não permitem excluir bloqueio");
+							}
 							if(calEvent.unitId == unit){
 								if(CalendarManager.calendarPermitions.deleteEvent){
 									var message = "";
@@ -549,23 +552,27 @@ $(function(){
 		}
 	});
 	$("#start_block").click(function() {
-		if(confirm("Tem certeza que deseja bloquear o horário de "+$("#hour_treatment").val()+" até "+$("#hour_treatment_end").val())){
-			var start = $("#date_treatment").val()+" "+$("#hour_treatment").val();
-			var end = $("#date_treatment").val()+" "+$("#hour_treatment_end").val();
-			var user = $("#user_treatment").val();
-			var obs = $("#obs_treatment").val();
-			EventBusyController.save(new EventBussy(start, end, user, obs), function(sucess, error){
-				if(sucess){
-					alert("Bloqueio salvo com sucesso!");
-					// 09/10/2017 - rigel para mostrar bloqueio 
-					// fora do dia corrente
-					// antes tinha que dar setinha pra frente e voltar
-					$('#calendar').weekCalendar("refresh");
-				}else{
-					alert(eval(error));
-					CalendarManager.closeTreatmentPopUp();
-				}
-			});
+		if (CalendarManager.calendarPermitions.newBusyEvent) {
+			if(confirm("Tem certeza que deseja bloquear o horário de "+$("#hour_treatment").val()+" até "+$("#hour_treatment_end").val())){
+				var start = $("#date_treatment").val()+" "+$("#hour_treatment").val();
+				var end = $("#date_treatment").val()+" "+$("#hour_treatment_end").val();
+				var user = $("#user_treatment").val();
+				var obs = $("#obs_treatment").val();
+				EventBusyController.save(new EventBussy(start, end, user, obs), function(sucess, error){
+					if(sucess){
+						alert("Bloqueio salvo com sucesso!");
+						// 09/10/2017 - rigel para mostrar bloqueio 
+						// fora do dia corrente
+						// antes tinha que dar setinha pra frente e voltar
+						$('#calendar').weekCalendar("refresh");
+					}else{
+						alert(eval(error));
+						CalendarManager.closeTreatmentPopUp();
+					}
+				});
+			}
+		} else {
+			alert ("Suas permissões não permitem criar bloqueio")
 		}
 	});
 });

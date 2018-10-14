@@ -329,7 +329,8 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 										("newEvent", AuthUtil.user.canCreateCalendarEvents_?.is),
 										("deleteEvent", AuthUtil.user.canDeleteCalendarEvents_?.is),
 										("moveEvent", AuthUtil.user.canMoveCalendarEvents_?.is),
-										("editEvent", AuthUtil.user.canEditCalendarEvents_?.is)
+										("editEvent", AuthUtil.user.canEditCalendarEvents_?.is),
+										("newBusyEvent", AuthUtil.user.canBusyEvents_?.is)
 									),
 									JsObj(
 										("useTreatmentClass", AuthUtil.company.useTreatmentAsAClass_?.is)
