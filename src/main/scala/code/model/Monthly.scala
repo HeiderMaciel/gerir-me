@@ -82,6 +82,9 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
       override def defaultValue = 0
   }
   object sendDate extends EbMappedDate(this)
+  object notifications extends MappedInt(this) {
+      override def defaultValue = 0
+  }
 
   override def delete_! = {
     super.delete_!
@@ -514,6 +517,8 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
             } else {
               strXml += mo.toRemessaQ (sequencial, banknumber, cotpinsc, coinsc);
             }
+            mo.sendDate.set (now)
+            mo.save
            if (mo.barCode == "") {
             mo.barCode.set("*")
             mo.save

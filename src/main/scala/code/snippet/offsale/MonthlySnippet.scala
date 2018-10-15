@@ -69,6 +69,8 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
         " 1 = 1 "
     }
 
+	def accounts = ("0" -> "Selecione uma conta")::Account.findAllInCompany(OrderBy(Account.name, Ascending)).map(t => (t.id.is.toString,t.name.is))
+
 	def list(xhtml: NodeSeq): NodeSeq = {
 		    val today = Project.date_format_db.parse(Project.date_format_db.format(new Date()));
 			def thumbSN(field:Boolean, expDate: Date) = if (field) {
@@ -166,6 +168,10 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 						(date:String) => {
 							ac.paymentDate(Project.strOnlyDateToDate(date))
 						}))&
+		    "name=sendDate" #> (SHtml.text(getDateAsString(ac.sendDate.is),
+						(date:String) => {
+							ac.sendDate(Project.strOnlyDateToDate(date))
+						}))&
 			"name=dateExpiration" #> (SHtml.text(getDateAsString(ac.dateExpiration.is),
 						(date:String) => {
 							ac.dateExpiration(Project.strOnlyDateToDate(date))
@@ -178,6 +184,7 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 						(date:String) => {
 							ac.efetiveDate(Project.strOnlyDateToDate(date))
 						}))&
+		    "name=account" #> (SHtml.select(accounts,Full(ac.account.is.toString),(s:String) => ac.account( s.toLong)))&
 		    "name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&
 		    "name=numberVd" #> (SHtml.text(ac.numberVd.is, ac.numberVd(_)))&
 		    "name=barCode" #> (SHtml.text(ac.barCode.is, ac.barCode(_)))&

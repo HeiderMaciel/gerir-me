@@ -29,7 +29,7 @@
 		    		// rigel 2018 agosto
 		    		// troquei o (new Date(row[4]).getDateBr())
 		    		// para o dateDecode para funcionar no I.E
-		        	return "<a target='_blank' href='http://boleto.vilarika.com.br/boleto/boleto.php?data="+dateDecode(row[4])+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/bar_code.png'/>"
+		        	return "<a target='_boletobb' href='http://boleto.vilarika.com.br/boleto/boleto.php?data="+dateDecode(row[4])+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/bar_code.png'/>"
 /*
 		        	return "<a target='_blank' href='/docs/notice.html'><img width='32' src='/images/bar_code.png'/>"
 */
@@ -46,8 +46,8 @@
 			    type : "format",
 			    decode : function(id,row){
 			    	// local mostra mesmo que pago
-		        	return "<a target='_blank' href='http://localhost:8000/boleto.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/banco_brasil.jpeg'/>" + " <br/> " + row[9]
-		        	+ "<a target='_blank' href='http://localhost:8000/boleto_bancoob.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+row[11]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/banco_sicoob.jpeg'/>" + " <br/> " + row[9]
+		        	return "<a target='_boletobb' href='http://localhost:8000/boleto.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/banco_brasil.jpeg'/>" + " <br/> " + row[9]
+		        	+ "<a target='_boletobbSicoob' href='http://localhost:8000/boleto_bancoob.php?data="+(new Date(row[4]).getDateBr())+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+row[11]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/banco_sicoob.jpeg'/>" + " <br/> " + row[9]
 			    }
 			};
 		}
