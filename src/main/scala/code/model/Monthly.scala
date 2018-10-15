@@ -78,6 +78,10 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
           }
       } 
   }
+  object account extends MappedLong(this) {
+      override def defaultValue = 0
+  }
+  object sendDate extends EbMappedDate(this)
 
   override def delete_! = {
     super.delete_!
