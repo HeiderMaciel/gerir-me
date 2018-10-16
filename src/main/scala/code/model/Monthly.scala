@@ -449,7 +449,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           "          " + "1" +
           Project.dtformat(now, "ddMMyyyy") + 
           Project.dtformat(now, "HHmmss") + 
-          "000001" + 
+          Project.dtformat(now, "yyyyMM") + // remessa
           layout + 
           densidade + 
           BusinessRulesUtil.limitSpaces (" ",20) + // uso febraban
@@ -491,7 +491,8 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           BusinessRulesUtil.limitSpaces(bu.stateShortName.toString,2) + 
           "        " + "0000000000\n"
           */
-          BusinessRulesUtil.limitSpaces(" ",8) + // remessa
+          BusinessRulesUtil.limitSpaces("00",2) + // remessa
+          Project.dtformat(now, "yyyyMM") + // remessa
           Project.dtformat(now, "ddMMyyyy") + // data gravação 
           //BusinessRulesUtil.limitSpaces(" ",8) + // data gravacao
           BusinessRulesUtil.zerosLimit("0",8) + // data crédito
