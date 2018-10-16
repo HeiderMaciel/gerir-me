@@ -64,6 +64,15 @@ class Account extends Audited[Account]
     override def dbColumnName = "creditCard"
   }
 
+  object receive_? extends MappedBoolean(this){
+    // quando false não entra na DRE 
+    // para vale profissional por exemplo qdo a máquina é do 
+    // profissional e ele vai devolver a parte da empresa
+    // gera vale do total, mas não pode aparecer esta saída na DRE
+    override def defaultValue = true
+    override def dbColumnName = "receive"
+  }
+
   def  getAccountUnit (unit : CompanyUnit): AccountCompanyUnit = {
     if (AccountCompanyUnit.count (
         By(AccountCompanyUnit.unit, unit),
