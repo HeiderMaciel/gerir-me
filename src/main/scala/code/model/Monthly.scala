@@ -101,7 +101,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
   }
 
   def barCode1 = {
-    val  bank = "001";
+    val  bank = "756" sicoob ; // "001" bb;
     var  strAux = bank + "9"
     strAux
   }
@@ -148,7 +148,8 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
 
   def barCode3 = {
     val lenconvenio = 7;
-    val  convenio = BusinessRulesUtil.limitSpaces ("2863040",7) // novo - 2550720 antigo
+    //val  convenio = BusinessRulesUtil.limitSpaces ("2863040",7) // novo - 2550720 antigo
+    val  convenio = BusinessRulesUtil.limitSpaces ("0337315",7) // novo - 2550720 antigo
     val   complemento = if (lenconvenio == 7) {
       "000000"
     } else {
