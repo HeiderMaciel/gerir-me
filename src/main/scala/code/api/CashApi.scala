@@ -475,6 +475,9 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 		
 		case "cash" :: "removePayment" :: command :: customer :: date :: Nil JsonGet _ =>{
 			try{
+				if (!AuthUtil.user.deletePayment_?) {
+			      throw new RuntimeException("Você não tem permissão para excluir pagamento!")
+				}
 				def dateValue = date match {
 					case (s:String) if(s != "" && s != "0") => Project.strOnlyDateToDate(date)
 					case _ => new Date()
@@ -490,6 +493,10 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 				}		
 				case e:HaveDeliveriesUsed =>{
 					JString("Essa comanda não pode ser excluída porque é de um pacote que já foi utilizado! Exclua a(s) comanda(s) (%s)".format(e.deliveriesUsed.map(_.command).reduceLeft(_+", "+_)))
+				}
+				case e:RuntimeException => {
+					e.printStackTrace
+					JString(e.getMessage)
 				}
 				case e:Exception => {
 					e.printStackTrace

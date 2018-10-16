@@ -923,6 +923,10 @@
       $(this).data("value_in", $(this).val());
     })
     $("#command_remove_from_server").click(function() {
+      if (AuthUtil.user.deletePayment_$qmark != "true" && 
+        AuthUtil.user.deletePayment_$qmark != true) {
+        return alert ("Você não tem permissão para excluir pagamento!")
+      }
       // rigel 11/06/2014
       if (confirm("Tem certeza que deseja excluir o pagamento?")) {
         removeTreatmentbyCommand();
