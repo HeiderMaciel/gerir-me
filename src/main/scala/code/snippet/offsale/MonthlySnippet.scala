@@ -190,6 +190,8 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 		    "name=barCode" #> (SHtml.text(ac.barCode.is, ac.barCode(_)))&
 		    "name=editableLine" #> (SHtml.text(ac.editableLine.is, ac.editableLine(_)))&
 			"name=value" #> (SHtml.text(ac.value.is.toString, (v:String) => { if(v !="") ac.value(v.toDouble)} ))&
+			"name=notifications" #> (SHtml.text(ac.notifications.is.toString, 
+				(f:String) => ac.notifications(BusinessRulesUtil.snippetToInt(f))))&
 			"name=liquidValue" #> (SHtml.text(ac.liquidValue.is.toString, (v:String) => { if(v !="") ac.liquidValue(v.toDouble)} ))&
 		    "name=paid" #> (SHtml.checkbox(ac.paid.is, ac.paid(_)))&
 			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt))++SHtml.hidden(process))			//notification

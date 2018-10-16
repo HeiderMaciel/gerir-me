@@ -22,7 +22,7 @@ object MonthlyService {
 			By(Treatment.customer, customer),
 			NotBy(Treatment.status, Treatment.Paid),
 			NotBy(Treatment.status, Treatment.Deleted),
-			BySql("dateEvent >=? and dateEvent < (date(?)+12)",IHaveValidatedThisSQL("",""),date, date),
+			BySql("dateEvent >=? and dateEvent < (date(?)+17)",IHaveValidatedThisSQL("",""),date, date),
 			BySql("id not in(select treatment from monthly where company_customer=? and treatment is not null)",IHaveValidatedThisSQL("",""),company.id.is),
 			BySql(""" id in(
 							select td.treatment
@@ -57,6 +57,7 @@ object MonthlyService {
 					.business_pattern(company.partner)
 					.idObj(treatmentMonthly.id.is)
 					.save
+					/*
 					usersToNotify.map((user:User)=>{
 						val users = user.id.is:: Nil
 						val message = """Olá %s,
@@ -81,6 +82,7 @@ object MonthlyService {
 							scala.xml.Unparsed(message.replace("/financial/monthly","http://" + company.appShortName + ".vilarika.com.br/financial/monthly")), 
 							monthlyDescription, company)
 					})
+					*/
 				}
 			}
 		}

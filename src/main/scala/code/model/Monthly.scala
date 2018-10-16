@@ -375,6 +375,11 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
         and (dateexpiration between date(now())-2 and date(now())))""",
         IHaveValidatedThisSQL("1 = 1","")))
 
+  def findAllNotifyAvailability = findAll(By(Monthly.paid, false), 
+      By(Monthly.status, Monthly.STATUS_OK), 
+      BySql("""notifications = 0 and senddate is not null""",
+        IHaveValidatedThisSQL("1 = 1","")))
+
 
   def usersToNotify(company:Company) = {
       User.findAll(By(User.company, company),
@@ -500,7 +505,8 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
         By(Monthly.status, 1),
         By(Monthly.paid, false),
         OrderBy(id, Ascending)).foreach ((mo) => {
-          if (Project.isLocalHost && sequencial < 6) {
+          if ((!Project.isLocalHost) || 
+              (Project.isLocalHost && sequencial < 6)) {
             println ("vaiii ========= boleto " + mo.description + " ==== " + mo.barCode2 + " ==== " + mo.company.toString);
             sequencial += 1;
             titulos += 1;

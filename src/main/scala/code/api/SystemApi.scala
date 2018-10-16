@@ -82,6 +82,7 @@ object SystemApi extends RestHelper {
 		}		
 		case "system" :: "sendDailyMonthly"  :: Nil JsonGet _ => {
 			code.daily.DailyReport.sendAllTodayMonthlyMail
+			code.daily.DailyReport.sendAllAvailabilityMonthlyMail
 			JInt(1)
 		}		
 		case "system" :: "sendTomorrowTreatmentsReport"  :: Nil JsonGet _ => {

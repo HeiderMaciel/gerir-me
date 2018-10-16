@@ -64,8 +64,43 @@ object DailyReport{
 			usersToNotify.map((user:User)=>{
 		        val mail = DailyReport.monthlyHtml(company_customer,monthly,user)
 				val users = user.id.is:: Nil
-				val message = ("Olá %s, informamos que vence hoje a %s, clique <a href='/financial/monthly'>aqui</a> para gerar o boleto!" +
-				"</br>Caso o pagamento já tenha sido efetuado, favor desconsiderar a mensagem. ").format(user.name.is, monthly.description)
+				val message = """Olá %s, 
+				informamos que vence hoje a %s, clique <a href='/financial/monthly'>aqui</a> para gerar o boleto!
+				</br>Caso o pagamento já tenha sido efetuado, favor desconsiderar a mensagem. 
+				""".format(user.name.is, monthly.description)
+				val calendar = Calendar.getInstance()
+				calendar.set(Calendar.YEAR,2029);
+				val expirationdate = calendar.getTime()
+				UserMessage.build(monthly.description, 
+					message.replace("/financial/monthly","http://" + company_customer.appShortName + ".vilarika.com.br/financial/monthly"), 
+					of, 0, users, company_customer, UserMessage.SYSTEM, expirationdate)
+				//EmailUtil.sendMailTo(user.email.is, 
+	            EmailUtil.sendMailTo(user.email.is,mail, company_customer.name.is + " boleto vencendo hoje")			
+	        });
+	    })
+
+	def sendAllAvailabilityMonthlyMail = Monthly.findAllNotifyAvailability.foreach( monthly => {
+	        val company_customer = Company.findByKey (monthly.company_customer.is).get
+			val usersToNotify = Monthly.usersToNotify(company_customer)
+
+			val of = User.findByKey(1).get				
+			usersToNotify.map((user:User)=>{
+		        val mail = DailyReport.monthlyHtml(company_customer,monthly,user)
+				val users = user.id.is:: Nil
+				val message = """Olá %s,
+							<br><br> informamos que já encontra-se disponível para pagamento a %s 
+							<br>de <b>%s</b>, no valor de <b>%.2f</b> 
+							<br><br>Para o dia: <b>%s</b>
+							<br><br>Linha digitável: <b>%s</b>
+							<br><br>faça seu login e posteriormente clique <a href='/financial/monthly'>aqui</a> para gerar o boleto!<br><br/>
+							Ou já logado, acesse menu superior, seu usuário, mensalidade
+							<br/>
+							<br/>
+							<img src="http://ebelle.vilarika.com.br/images/mensal_menu1.png" style="width: 400px;"/>
+							<br/>
+							<br/>
+							<img src="http://ebelle.vilarika.com.br/images/mensal_print1.png" style="width: 600px;"/>
+							""".format(user.name.is, monthly.description, company_customer.name, monthly.value.is, Project.dateToStr(monthly.dateExpiration), monthly.editableLine.is)
 				val calendar = Calendar.getInstance()
 				calendar.set(Calendar.YEAR,2029);
 				val expirationdate = calendar.getTime()

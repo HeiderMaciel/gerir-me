@@ -7,6 +7,9 @@
   $(function () {
     $("#account240").accountField(true);
     $("#send").click(function(){
+      if (!$('#account240').val()) {
+        return alert ("Selecione uma conta")
+      }
       // create and download the remessa file
       $.post('/monthly/transfer', {start:$('#start').val(), end:$('#end').val(), account:$('#account240').val()}, function(invoicedata){
           eval ("var invoice = " + invoicedata)

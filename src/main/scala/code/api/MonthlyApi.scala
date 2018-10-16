@@ -42,8 +42,12 @@ object MonthlyApi extends RestHelper  with net.liftweb.common.Logger  {
 		        val bank = BusinessRulesUtil.zerosLimit (ac.bank.toString, 3)
 		        val now  = new Date()
 				Monthly.toRemessa240(start, end, ac)
-		        val filePath = if(Project.isLinuxServer){
-		          (Props.get("remessa.urlbase") openOr "/tmp/")
+				val filePath = if(Project.isLinuxServer){
+		          if (Project.isLocalHost) {
+					"file:///var/www/html/remessa/"
+		          } else {
+		          	(Props.get("remessa.urlbase") openOr "/tmp/")
+		          }
 		        }else{
 		          "c:\\vilarika\\"
 		        }
