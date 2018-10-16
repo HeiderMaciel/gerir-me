@@ -196,6 +196,7 @@ order by qa.applydate, qq.orderinsection
       }
 
       var message_aux = Customer.replaceMessage (customer, question.message.is)
+      message_aux = User.replaceMessage (AuthUtil.user, message_aux)
 
       if (question.defaultQuestion != 0 && value == "") {
         value = defaultValue;
