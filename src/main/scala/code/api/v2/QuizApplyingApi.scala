@@ -101,7 +101,16 @@ order by qa.applydate, qq.orderinsection
         .quizQuestion(questionIdLong)
         .valueStr(value)
         .save
-    }  
+    } else {
+      // verifica se já existia e exclui
+      val quizAnswer =
+        QuizAnswer.findAll(
+          By(QuizAnswer.quizApplying, applyingId),
+          By(QuizAnswer.quizQuestion, questionIdLong))
+      if (quizAnswer.length > 0) {
+        quizAnswer(0).delete_!
+      }
+    } 
   }
 
   def quizJson(quizApplyingId: Long, print:Boolean) = {
