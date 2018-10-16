@@ -101,7 +101,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
   }
 
   def barCode1 = {
-    val  bank = "756" sicoob ; // "001" bb;
+    val  bank = "756" /*sicoob*/ ; // "001" bb;
     var  strAux = bank + "9"
     strAux
   }
