@@ -328,7 +328,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      BusinessRulesUtil.limitSpaces (bc.stateShortName.toUpperCase,2) + 
      "0" + // sem avalista
      BusinessRulesUtil.zerosLimit ("0",15) + // insc avalista
-     BusinessRulesUtil.limitSpaces ("0",40) + // nome avalista
+     BusinessRulesUtil.limitSpaces (" ",40) + // nome avalista
      "000" +
      BusinessRulesUtil.limitSpaces (" ",20) + 
      "        \r\n";
