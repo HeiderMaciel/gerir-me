@@ -202,35 +202,11 @@ println ("vaiiiii ===== remember customer company " + remember.company)
           JsObj(("error", true), ("message", "Usuário inativo, se necessário entre em contato com o administrador!"));
         } else {
           AuthUtil << users(0)
-          def goTo = if (AuthUtil.company.appType.isEgrex) {
-            if (AuthUtil.user.isCustomer) {
-              "/customer/list"
-            } else {
-              "/financial/account_register"
-            }
-          } else if (PermissionModule.treatment_? && 
-             (AuthUtil.user.isSimpleUserCalendar || AuthUtil.user.isCalendarUser ||
-              AuthUtil.user.isSimpleUserCalendarView)) {
-            "/calendar"
-          } else if (PermissionModule.command_? && (AuthUtil.user.isCommandUser || AuthUtil.user.isCommandPwd)) {
-            "/command_full/user_command_full"
-          } else if (PermissionModule.command_? && (AuthUtil.user.isSimpleUserCommand)) {
-            "/command/user_command"
-          } else if (AuthUtil.user.isSimpleUserCommission) {
-            "/commission_conference_user"
-          } else if (PermissionModule.inventory_?) {
-            "/product/control_panel"
-          } else if (PermissionModule.financial_?) {
-            "/financial/account_register"
-          } else if (PermissionModule.peopleManager_?) {
-            "/user/list"
-          } else {
-            "/customer/list"
-          }
+          User.beginning;
           val companys = users.map((u) => {
             JsObj(("name", u.company.obj.get.name.is), ("logo", u.company.obj.get.thumb_web), ("id", u.company.is))
           })
-          JsObj(("success", true), ("goTo", goTo), ("companys", JsArray(companys)));
+          JsObj(("success", true), ("goTo", User.goTo), ("companys", JsArray(companys)));
         }
       } else {
         JsObj(("error", true), ("message", "Usuário ou senha inválida!"));
@@ -246,41 +222,11 @@ println ("vaiiiii ===== remember customer company " + remember.company)
       }
       if (loginStatus.status) {
         AuthUtil << loginStatus.user
-        def goTo = if (AuthUtil.company.appType.isEgrex) {
-          if (AuthUtil.user.isCustomer) {
-            "/customer/list"
-          } else {
-            "/financial/account_register"
-          }
-        } else if (PermissionModule.treatment_? && 
-          (AuthUtil.user.isSimpleUserCalendar || AuthUtil.user.isCalendarUser ||
-           AuthUtil.user.isSimpleUserCalendarView)) {
-            if (S.hostName.contains ("local")) {
-              "/calendar"
-            } else {
-              "/calendar"
-              //"http://45.33.99.152:7171/calendar"
-            }
-        } else if (PermissionModule.command_? && (AuthUtil.user.isCommandUser || AuthUtil.user.isCommandPwd)) {
-          "/command_full/user_command_full"
-        } else if (PermissionModule.command_? && (AuthUtil.user.isSimpleUserCommand)) {
-          "/command/user_command"
-        } else if (AuthUtil.user.isSimpleUserCommission) {
-          //"/commission/commission_report_redirect"
-          "/commission_conference_user"
-        } else if (PermissionModule.inventory_?) {
-          "/product/control_panel"
-        } else if (PermissionModule.financial_?) {
-          "/financial/account_register"
-        } else if (PermissionModule.peopleManager_?) {
-          "/user/list"
-        } else {
-          "/customer/list"
-        }
+        User.beginning;
         val companys = loginStatus.users.map((u) => {
           JsObj(("name", u.company.obj.get.name.is), ("logo", u.company.obj.get.thumb_web), ("id", u.company.is))
         })
-        JsObj(("success", true), ("goTo", goTo), ("companys", JsArray(companys)));
+        JsObj(("success", true), ("goTo", User.goTo), ("companys", JsArray(companys)));
       } else {
         if (loginStatus.msg != "") {
             JsObj(("error", true), ("message", loginStatus.msg));

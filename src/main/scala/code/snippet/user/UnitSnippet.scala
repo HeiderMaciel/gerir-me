@@ -115,6 +115,7 @@ object  UnitSnippet extends BootstrapPaginatorSnippet[CompanyUnit] with SnippetU
 		    "name=short_name" #> (SHtml.text(ac.short_name.is, ac.short_name(_)))&
 		    "name=statusPartner" #> (SHtml.select(status,Full(ac.getPartner.status.is.toString),(v:String) => ac.getPartner.status(v.toInt)))&
 		    "name=document_company" #> (SHtml.text(ac.getPartner.document_company.is, ac.getPartner.document_company(_))) &
+		    "name=document" #> (SHtml.text(ac.getPartner.document.is, ac.getPartner.document(_))) &
 		    "name=company_name" #> (SHtml.text(ac.getPartner.company_name.is, ac.getPartner.company_name(_))) &
 		    "name=calendarUrl" #> (SHtml.text(ac.calendarUrl.is,ac.calendarUrl(_)))&
 		    "name=phone" #> (SHtml.text(ac.getPartner.phone.is, ac.getPartner.phone(_))) &

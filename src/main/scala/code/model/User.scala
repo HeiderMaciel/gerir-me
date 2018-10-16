@@ -13,6 +13,7 @@ import net.liftweb.util._
 
 
 import java.util.Date;
+import java.util.Calendar
 
 class User extends  BusinessPattern[User] with UserIdAsString{ 
 
@@ -227,6 +228,71 @@ class User extends  BusinessPattern[User] with UserIdAsString{
             LoginStatus(false, "Email inválido!")
         }
     }    
+
+    def beginning = {
+        if (AuthUtil.user.isFinancialManager) {
+          val of = User.findByKey(AuthUtil.user.id.is).get        
+          val users = AuthUtil.user.id.is:: Nil
+          val calendar = Calendar.getInstance()
+          calendar.set(Calendar.YEAR,2029);
+          val expirationdate = calendar.getTime()
+          if (AuthUtil.unit.getPartner.street == "" ||
+             AuthUtil.unit.getPartner.district == "" ||
+             AuthUtil.unit.getPartner.postal_code == "" ||
+             (AuthUtil.unit.getPartner.document == "" && 
+              AuthUtil.unit.getPartner.document_company == "")) {
+            val message = """Olá %s, <br/>
+            Por determinação da Febraban deverão ser registrados todos os boletos<br/>
+            a partir de 13/10/2018 > 100,00<br/>
+            a partir de 27/10/2018 > 0,01<br/><br/>
+
+            Por favor, atualize os dados de sua empresa <br>É preciso informar um CPF ou CNPJ válido.<br/>
+            É preciso também informar o endereço completo<br/>
+            <br/>
+            Acesse o <b>cadastro de unidades</b>, no menu superior direito, seu usuário, unidades, ou use o atalho ( ALT U )
+            <br/>
+            <br/>
+            <img src="http://ebelle.vilarika.com.br/images/mensal_menu1.png" style="width: 400px;"/>
+            <br/>
+            <br/>
+            """.format (AuthUtil.user.name)
+            UserMessage.build("Atualize os dados de sua empresa", message, of, 0, users, AuthUtil.company, UserMessage.SYSTEM, expirationdate)
+          }
+        }
+    }
+
+    def goTo = if (AuthUtil.company.appType.isEgrex) {
+      if (AuthUtil.user.isCustomer) {
+        "/customer/list"
+      } else {
+        "/financial/account_register"
+      }
+    } else if (PermissionModule.treatment_? && 
+      (AuthUtil.user.isSimpleUserCalendar || AuthUtil.user.isCalendarUser ||
+       AuthUtil.user.isSimpleUserCalendarView)) {
+        // if (S.hostName.contains ("local")) {
+        if (Project.isLocalHost) {
+          "/calendar"
+        } else {
+          "/calendar"
+          //"http://45.33.99.152:7171/calendar"
+        }
+    } else if (PermissionModule.command_? && (AuthUtil.user.isCommandUser || AuthUtil.user.isCommandPwd)) {
+      "/command_full/user_command_full"
+    } else if (PermissionModule.command_? && (AuthUtil.user.isSimpleUserCommand)) {
+      "/command/user_command"
+    } else if (AuthUtil.user.isSimpleUserCommission) {
+      //"/commission/commission_report_redirect"
+      "/commission_conference_user"
+    } else if (PermissionModule.inventory_?) {
+      "/product/control_panel"
+    } else if (PermissionModule.financial_?) {
+      "/financial/account_register"
+    } else if (PermissionModule.peopleManager_?) {
+      "/user/list"
+    } else {
+      "/customer/list"
+    }
 
     def loginCommand(userId:Long, passWord:String):Boolean = {
         
