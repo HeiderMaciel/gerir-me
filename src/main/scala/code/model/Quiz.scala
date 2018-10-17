@@ -29,6 +29,12 @@ class Quiz extends Audited[Quiz] with PerCompany with IdPK with CreatedUpdated w
         override def defaultValue = false
         override def dbColumnName = "showinrecords"
     }
+    object quizHeaderFormat extends MappedInt(this)with LifecycleCallbacks { // em função do número de dias
+        override def defaultValue = 1 
+        // 1 mostra
+        // 2 esconde - fica o espaço
+        // 3 suprime
+    }
 
     def userGroupName = userGroup.obj match {
         case Full(t) => t.short_name.is

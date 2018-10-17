@@ -54,6 +54,13 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 			}
 			(t.cod.is,t.name.is + codAux)
 			})
+
+	def quizHeaderFormats = (
+		("1", "Mostra") ::
+		("2", "Esconde") ::
+		("3", "Suprime") ::
+		Nil).map(t => (t._1,t._2));
+	
 /*
 	def questionTypes = (
 		("0", "Texto")::
@@ -582,6 +589,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		    "name=showInRecords" #> (SHtml.checkbox(ac.showInRecords_?.is, ac.showInRecords_?(_)))&
 			"name=rank" #> (SHtml.text(ac.rank.is.toString, (v:String) =>{ if(v !=""){ac.rank(v.toDouble)};}))&
 			"name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_)))&
+		    "name=quizHeaderFormat" #> (SHtml.select(quizHeaderFormats,Full(ac.quizHeaderFormat.is.toString),(v:String) => ac.quizHeaderFormat(v.toInt)))&
 		    "name=message" #> (SHtml.textarea(ac.message.is, ac.message(_)))&
 			"name=status" #> (SHtml.select(status,Full(ac.status.is.toString),(v:String) => ac.status(v.toInt))++SHtml.hidden(process))			
 		}catch {

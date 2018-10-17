@@ -32,12 +32,20 @@
                 if (result.applyobs) {
                     applyobsaux = " - " + result.applyobs
                 }
+
+                $("#image1").attr('src',result.coLogo);
+
                 $("#quiz-title").text(" " + result.name + applyobsaux);
                 $("#quiz-date").text(result.date);
                 if (result.obs) {
                     $("#quiz-obs").text(result.obs);
                 } else {
                     $("#quiz-obs").remove();
+                }
+                if (result.header == 3) {
+                    $("#title1").attr('style','display:none');
+                } else if (result.header == 2) {
+                    $("#title1").attr('style','visibility:hidden');
                 }
                 $("#quiz-bpname").text(result.bpName);
                 $("#quiz-bpid").val(result.bpId);
@@ -537,7 +545,7 @@
         })
     </script>
     <div class='span18' id="quiz-div">
-        <h1><span class="lift:CompanySnippet.thumb"> </span><span id="quiz-title">Questionário</span> - </span><span id="quiz-date">date</span> - <span id="quiz-bpname">parceiro</span></h1>
+        <h1 id="title1"><span><img id="image1" width='100px' src='/images/logo_ftr_vilarika.png'/> </span><span id="quiz-title">Questionário</span> - </span><span id="quiz-date">date</span> - <span id="quiz-bpname">parceiro</span></h1>
         <span id="quiz-obs">
         <br/><br/></span>
 

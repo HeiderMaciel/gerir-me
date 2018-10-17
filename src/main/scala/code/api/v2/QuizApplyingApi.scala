@@ -122,8 +122,10 @@ order by qa.applydate, qq.orderinsection
       ("name", quiz.name.is),
       ("date", Project.dateToStr(qa.get.applyDate.is)),
       ("obs", quiz.obs.is),
+      ("header", quiz.quizHeaderFormat.is),
       ("applyobs", qa.get.obs.is),
       ("bpName", bp.name.is),
+      ("coLogo", AuthUtil.company.thumb_web),
       ("bpId", bp.id.is),
       ("sections", JsArray(quiz.sections(quizApplyingId, print).map(sectionJson(_, quizApplyingId, bp, print)))))
   }
