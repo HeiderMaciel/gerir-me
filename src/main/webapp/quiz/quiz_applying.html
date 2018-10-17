@@ -163,7 +163,11 @@
                         createQuestion(question, template)
                         if (question.type == 8 /* rich text */) {
                             $('#'+question.id).jqte();
+                        } else if (question.type == 0 /* text */) {
+                            // não funcionouo negativo mas é um caminho para váriass coisas
+                            // $('#'+question.id).mask_input("-9.99",{reverse:true});
                         }
+
                     }
                 })
             }
