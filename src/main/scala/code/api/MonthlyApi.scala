@@ -34,6 +34,7 @@ object MonthlyApi extends RestHelper  with net.liftweb.common.Logger  {
 				dateStart <- S.param("start") ?~ "start parameter missing" ~> 400
 				dateEnd <- S.param("end") ?~ "end parameter missing" ~> 400
 				account <- S.param("account") ?~ "account parameter missing" ~> 400
+				limit <- S.param("limit") ?~ "limit parameter missing" ~> 400
 			} yield {				
 				var start = Project.strToDateOrToday(dateStart)
 				var end = Project.strToDateOrToday(dateEnd)
@@ -41,7 +42,7 @@ object MonthlyApi extends RestHelper  with net.liftweb.common.Logger  {
 		        //val  bank = "001";
 		        val bank = BusinessRulesUtil.zerosLimit (ac.bank.toString, 3)
 		        val now  = new Date()
-				Monthly.toRemessa240(start, end, ac)
+				Monthly.toRemessa240(start, end, ac, limit.toLong)
 				val filePath = if(Project.isLinuxServer){
 		          if (Project.isLocalHost) {
 					"file:///var/www/html/remessa/"

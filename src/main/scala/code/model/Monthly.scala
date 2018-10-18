@@ -100,8 +100,21 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
       case _ => ""
   }
 
+  def monthlyBank = if (account > 0) {
+    val ac = Account.findByKey (account).get
+    if (ac.bank > 0) {
+      val bk = Bank.findByKey (ac.bank).get
+      bk.banknumber
+    } else {
+      "000"
+    }
+  } else {
+    "000"
+  }
+
   def barCode1 = {
-    val  bank = "756" /*sicoob*/ ; // "001" bb;
+    //val  bank = "756" /*sicoob*/ ; // "001" bb;
+    val  bank = monthlyBank
     var  strAux = bank + "9"
     strAux
   }
@@ -298,15 +311,90 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
   def toRemessaQ (sequencial:Int, banknumber:String, cotpinsc:String, coinsc:String) = {
      // val  bank = "001";
      val bc = Customer.findByKey (this.business_pattern.obj.get.id).get
-     val  tpinsc = if (bc.document_company != "") {
+     val bu = if (this.company == 1) {
+      val sql = """select cu.partner from company co 
+        inner join companyunit cu on cu.company = co.id and cu.status = 1
+        where co.id = ?
+        order by cu.id desc
+      """
+      val r = DB.performQuery(sql,
+        company_customer.obj.get.id.is::Nil)
+
+      var cid = 0l;
+      val ac = r._2.map( (p) => {
+        cid = p(0).asInstanceOf[Long]
+      });
+
+      if (cid > 0) {
+        Customer.findByKey (cid).get
+      } else {
+        println ("vaiiiii ====================== Company sem unit partnet " + company_customer)
+        throw new RuntimeException("Company sem unit partnet " + company_customer)
+      }
+     } else {
+       bc
+     }
+     val street = if (BusinessRulesUtil.clearString(bc.street) != "") {
+       BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bc.street).toUpperCase,40)
+     } else if (BusinessRulesUtil.clearString(bu.street) != "") {
+       BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bu.street).toUpperCase,40)
+     } else {
+       BusinessRulesUtil.limitSpaces ("RUA INVALIDA", 40)
+     }  
+     val district = if (BusinessRulesUtil.clearString(bc.district) != "") {
+       BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bc.district).toUpperCase,15)
+     } else if (BusinessRulesUtil.clearString(bu.district) != "") {
+       BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bu.district).toUpperCase,15) 
+     } else {
+       BusinessRulesUtil.limitSpaces ("BAIRRO INAVLIDO",15)
+     }
+     val postal_code = if (BusinessRulesUtil.clearString (bc.postal_code) !=  "") {
+       BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString (bc.postal_code).toUpperCase,8)
+      } else if (BusinessRulesUtil.clearString (bu.postal_code) !=  "") {
+       BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString (bu.postal_code).toUpperCase,8)
+      } else {
+       BusinessRulesUtil.limitSpaces ("11111111",8) 
+      }
+     val city = if (BusinessRulesUtil.clearString(bc.cityName) !=  "") { 
+      BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bc.cityName).toUpperCase,15) 
+     } else if (BusinessRulesUtil.clearString(bu.cityName) !=  "") { 
+      BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bu.cityName).toUpperCase,15) 
+     } else {
+      BusinessRulesUtil.limitSpaces ("CIDADE INVALIDA",15) 
+     }
+     val state = if (bc.stateShortName != "") {
+       BusinessRulesUtil.limitSpaces (bc.stateShortName.toUpperCase,2)
+      } else if (bu.stateShortName != "") {
+       BusinessRulesUtil.limitSpaces (bu.stateShortName.toUpperCase,2)
+      } else {
+        "MG"
+      }
+
+     val cnpj = if (BusinessRulesUtil.clearString(bc.document_company) != "") {
+        BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bc.document_company),14);      
+      } else if (BusinessRulesUtil.clearString(bu.document_company) != "") {
+        BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bu.document_company),14);
+     } else {
+       ""
+     }
+
+     val cpf = if (BusinessRulesUtil.clearString(bc.document) != "") {
+        BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bc.document),11);      
+      } else if (BusinessRulesUtil.clearString(bu.document) != "") {
+        BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bu.document),11);
+     } else {
+       ""
+     }
+
+     val  tpinsc = if (cnpj != "") {
           "2" // cnpj
       } else {
           "1" // cpf
       }
-     val  insc = if (bc.document_company != "") {
-          BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bc.document_company),14); // cnpj 
-      } else if (bc.document != "") {
-          BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bc.document),14); // cpf
+     val  insc = if (cnpj != "") {
+          cnpj
+      } else if (cpf != "") {
+          cpf
       } else {
           // cpf rigel 
           "00055118593620"        
@@ -321,11 +409,11 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      "01" + // entrada de título
      tpinsc + "0" + insc + // cliente
      BusinessRulesUtil.limitSpaces (bc.search_name.toUpperCase,40) + 
-     BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bc.street).toUpperCase,40) + 
-     BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bc.district).toUpperCase,15) + 
-     BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString (bc.postal_code).toUpperCase,8) + 
-     BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bc.cityName).toUpperCase,15) + 
-     BusinessRulesUtil.limitSpaces (bc.stateShortName.toUpperCase,2) + 
+     street + 
+     district + 
+     postal_code + 
+     city + 
+     state + 
      "0" + // sem avalista
      BusinessRulesUtil.zerosLimit ("0",15) + // insc avalista
      BusinessRulesUtil.limitSpaces (" ",40) + // nome avalista
@@ -391,7 +479,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
   }
 
 
-    def toRemessa240 (start:Date, end:Date, account:Account) {
+    def toRemessa240 (start:Date, end:Date, account:Account, limit:Long) {
        val ac = AccountCompanyUnit.findAll (
         By (AccountCompanyUnit.account, account),
         By (AccountCompanyUnit.unit, AuthUtil.unit)) (0)
@@ -506,9 +594,9 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
         BySql("(dateExpiration between ? and ?)", IHaveValidatedThisSQL("",""), start, end),
         By(Monthly.status, 1),
         By(Monthly.paid, false),
+        OrderBy(dateExpiration, Ascending),
         OrderBy(id, Ascending)).foreach ((mo) => {
-          if ((!Project.isLocalHost) || 
-              (Project.isLocalHost && sequencial < 6)) {
+          if (titulos < limit) {
             println ("vaiii ========= boleto " + mo.description + " ==== " + mo.barCode2 + " ==== " + mo.company.toString);
             sequencial += 1;
             titulos += 1;
