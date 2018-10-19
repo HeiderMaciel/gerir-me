@@ -288,7 +288,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      Project.dtformat(createdAt, "ddMMyyyy") + // emissão
      "2" + // juros taxa mensal
      Project.dtformat(dateExpiration, "ddMMyyyy") + 
-     "000000000000200" + // 2% ao mês
+     "000000000000100" + // 1% ao mês
      "0" + // sem desconto
      "00000000" + // data desconto
      "000000000000000" + // % desconto
@@ -423,6 +423,68 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      strXml
   }
 
+  def toRemessaR (sequencial:Int, banknumber: String) = {
+     // val  bank = "001";
+     val bc = Customer.findByKey (this.business_pattern.obj.get.id).get
+
+     val  valor = BusinessRulesUtil.clearString (("%.2f".format (value.toFloat)));
+     var strXml:String = "" +
+     banknumber + 
+     "0001" + // lote
+     "3" + // tipo registro
+     BusinessRulesUtil.zerosLimit (sequencial.toString,5) + 
+     "R" + 
+     " " + 
+     "01" + // entrada de título
+     "0" + // sem desconto 2
+     "00000000" + // data desconto 2
+     "000000000000000" + // % desconto 2
+     "0" + // sem desconto 3
+     "00000000" + // data desconto 3
+     "000000000000000" + // % desconto 3
+     "2" + // multa percentual
+     Project.dtformat(dateExpiration, "ddMMyyyy") + 
+     "000000000000200" + // 2% ao mês
+     BusinessRulesUtil.limitSpaces (" ",10) + // info pagador
+     BusinessRulesUtil.limitSpaces ("Mensagem 3  ",40) + // mensagem 3
+     BusinessRulesUtil.limitSpaces ("Mensagem 4  ",40) + // mensagem 4
+     BusinessRulesUtil.limitSpaces (" ",20) + // CNAB
+     "00000000" + // cod pagador
+     "000" + // banco pagador
+     "00000" + // agencia 
+     " " + // dv agencia
+     "000000000000" + // cc 
+     " " + // dv conta
+     " " + // dv ag e conta
+     "0" + // aviso débito automático
+     "         " + // 9 FEBRABAN CNAB
+     "\r\n" 
+     strXml
+  }
+
+  def toRemessaS (sequencial:Int, banknumber: String) = {
+     // val  bank = "001";
+     val bc = Customer.findByKey (this.business_pattern.obj.get.id).get
+
+     val  valor = BusinessRulesUtil.clearString (("%.2f".format (value.toFloat)));
+     var strXml:String = "" +
+     banknumber + 
+     "0001" + // lote
+     "3" + // tipo registro
+     BusinessRulesUtil.zerosLimit (sequencial.toString,5) + 
+     "S" + 
+     " " + 
+     "01" + // entrada de título
+     "3" + // tipo impressão
+     BusinessRulesUtil.limitSpaces ("Mensagem 5",40) + // mensagem
+     BusinessRulesUtil.limitSpaces ("Mensagem 6",40) + // mensagem
+     BusinessRulesUtil.limitSpaces ("Mensagem 7",40) + // mensagem
+     BusinessRulesUtil.limitSpaces ("Mensagem 8",40) + // mensagem
+     BusinessRulesUtil.limitSpaces ("Mensagem 9",40) + // mensagem
+     BusinessRulesUtil.limitSpaces (" ",22) + // CNAB
+     "\r\n" 
+     strXml
+  }
 
 }
 
@@ -612,6 +674,10 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
               strXml += mo.toRemessaJ52 (sequencial, banknumber, cotpinsc, coinsc);
             } else {
               strXml += mo.toRemessaQ (sequencial, banknumber, cotpinsc, coinsc);
+              sequencial += 1;
+              strXml += mo.toRemessaR (sequencial, banknumber);
+              sequencial += 1;
+              strXml += mo.toRemessaS (sequencial, banknumber);
             }
             mo.sendDate.set (now)
             mo.save
