@@ -379,9 +379,9 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      }
 
      val cpf = if (BusinessRulesUtil.clearString(bc.document) != "") {
-        BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bc.document),11);      
+        BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bc.document),14);      
       } else if (BusinessRulesUtil.clearString(bu.document) != "") {
-        BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bu.document),11);
+        BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bu.document),14);
      } else {
        ""
      }
