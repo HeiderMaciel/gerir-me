@@ -2147,6 +2147,11 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case _ => " and 1 = 1 " 
 				}
 
+				def type_select_filter:String = S.param("type_select_filter") match {
+					case Full(p) => p
+					case _ => "0,1";
+				}
+
 				def account_fin:String = S.param("account_fin") match {
 					case Full(s) if(s != "") => " and ap1.account = %s ".format (s)
 					case _ => " and 1 = 1 " 
@@ -2233,6 +2238,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					and ap.duedate between date(?) and date (?)
 					and ap.toconciliation = true
 					and ap.unit = ?
+					and ap.typemovement in (%s)
 					%s
 					%s
 					%s
@@ -2241,6 +2247,7 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					ap.duedate, ap.id, ap1.duedate, (ap1.value = ap.value)
 					"""
 				toResponse(SQL_REPORT.format(verunit, account_fin, show_conciliated, 
+					type_select_filter,
 					account_ofx,payment_type, 
 					obsFilterofx, obsFilterfin),
 					List(days, days, margin, margin, 

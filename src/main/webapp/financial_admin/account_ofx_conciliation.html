@@ -560,21 +560,27 @@
                 <div class="inline-inputs">
                   <div style="float:left; padding-right:10px" class="input-prepend">
                     <input type="text" class="input-mini local_storage" id='days' name="days" placeholder="dias" value="2"/>
-                    <span class="help-block">Intervalo de dias para verificar lançamentos</span>
+                    <span class='label-inline'>
+                        Margem
+                    </span>
                   </div>
+                  <div style="float:left; padding-right:10px" class="input-prepend">
+                    <span class="add-on">%</span>
+                    <input type="text" class="input-mini currency local_storage" id='margin' name="margin" placeholder="margem" value="1"/>
+                  </div>
+                  <a href="" class="_popover_basic" rel="popover" data-content="Intervalo de dias para verificar lançamentos. Margem para valor de lançamentos agregados" data-original-title="Informação">
+                    <img width='20' src="/images/info.gif"/>
+                  </a>
                 </div>
               </div>
           </div>
           <div class="clearfix">
-            <label for="margin">Margem</label>
+              <label for="type_select_filter">Tipos</label>
               <div class="input">
-                <div class="inline-inputs">
-                  <div style="float:left; padding-right:10px" class="input-prepend">
-                    <span class="add-on">%</span>
-                    <input type="text" class="input-mini currency local_storage" id='margin' name="margin" placeholder="margem" value="1"/>
-                    <span class="help-block">Margem para valor de lançamentos agregados</span>
-                  </div>
-                </div>
+                <select id='type_select_filter' multiple="multiple" name='type_select_filter'>
+                    <option selected="selected" value='0'>Entrada</option>
+                    <option selected="selected" value='1'>Saída</option>
+                </select>
               </div>
           </div>
           <div class="clearfix">
