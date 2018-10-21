@@ -83,6 +83,9 @@ object DailyReport{
 	        val company_customer = Company.findByKey (monthly.company_customer.is).get
 			val usersToNotify = Monthly.usersToNotify(company_customer)
 
+			monthly.notifications(1);
+			monthly.save
+			
 			val of = User.findByKey(1).get				
 			usersToNotify.map((user:User)=>{
 //		        val mail = DailyReport.monthlyHtml(company_customer,monthly,user)
