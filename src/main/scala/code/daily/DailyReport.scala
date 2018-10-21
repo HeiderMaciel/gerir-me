@@ -85,7 +85,8 @@ object DailyReport{
 
 			val of = User.findByKey(1).get				
 			usersToNotify.map((user:User)=>{
-		        val mail = DailyReport.monthlyHtml(company_customer,monthly,user)
+//		        val mail = DailyReport.monthlyHtml(company_customer,monthly,user)
+				val monthlyDescription = "Mensalidade %s".format(monthly.description.is)
 				val users = user.id.is:: Nil
 				val message = """Olá %s,
 							<br><br> informamos que já encontra-se disponível para pagamento a %s 
@@ -108,7 +109,13 @@ object DailyReport{
 					message.replace("/financial/monthly","http://" + company_customer.appShortName + ".vilarika.com.br/financial/monthly"), 
 					of, 0, users, company_customer, UserMessage.SYSTEM, expirationdate)
 				//EmailUtil.sendMailTo(user.email.is, 
-	            EmailUtil.sendMailTo(user.email.is,mail, company_customer.name.is + " boleto vencendo hoje")			
+/*	            EmailUtil.sendMailTo(user.email.is,
+	            	mail, 
+	            	company_customer.name.is + " boleto vencendo hoje")			
+*/
+				EmailUtil.sendMailTo(user.email.is, 
+					scala.xml.Unparsed(message.replace("/financial/monthly","http://" + company_customer.appShortName + ".vilarika.com.br/financial/monthly")), 
+					monthlyDescription, company_customer)
 	        });
 	    })
     
