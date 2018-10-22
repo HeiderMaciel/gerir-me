@@ -652,10 +652,12 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
        var sequencial = 0;
        var somatoria = 0.0;   
        var titulos = 0;
+       println ("vaiiii antes " + start + "  fim  " + end )
        Monthly.findAll(
         BySql("(dateExpiration between ? and ?)", IHaveValidatedThisSQL("",""), start, end),
         By(Monthly.status, 1),
         By(Monthly.paid, false),
+        By(Monthly.account, account.id.is),
         OrderBy(dateExpiration, Ascending),
         OrderBy(id, Ascending)).foreach ((mo) => {
           if (titulos < limit) {

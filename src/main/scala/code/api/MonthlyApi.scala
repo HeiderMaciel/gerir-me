@@ -36,7 +36,7 @@ object MonthlyApi extends RestHelper  with net.liftweb.common.Logger  {
 				account <- S.param("account") ?~ "account parameter missing" ~> 400
 				limit <- S.param("limit") ?~ "limit parameter missing" ~> 400
 			} yield {				
-				var start = Project.strToDateOrToday(dateStart)
+				var start = Project.strToDate(dateStart+" 00:00")
 				var end = Project.strToDateOrToday(dateEnd)
 				var ac = Account.findByKey (account.toLong).get
 		        //val  bank = "001";
