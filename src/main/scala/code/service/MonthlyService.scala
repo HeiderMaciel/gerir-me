@@ -25,13 +25,13 @@ object MonthlyService {
 	}
 
 
-	private def findMonthlyNotPaid(customer:Customer, company:Company, date:Date) = {
+	private def findMonthlyNotPaid(customer:Customer, company:Company, date:Date, days:Int) = {
 		Treatment.findAll(
 			By(Treatment.company, 1),
 			By(Treatment.customer, customer),
 			NotBy(Treatment.status, Treatment.Paid),
 			NotBy(Treatment.status, Treatment.Deleted),
-			BySql("dateEvent >=? and dateEvent < (date(?)+17)",IHaveValidatedThisSQL("",""),date, date),
+			BySql("dateEvent >=? and dateEvent < (date(?)+?)",IHaveValidatedThisSQL("",""),date, date, days),
 			BySql("id not in(select treatment from monthly where company_customer=? and treatment is not null)",IHaveValidatedThisSQL("",""),company.id.is),
 			BySql(""" id in(
 							select td.treatment
@@ -48,8 +48,8 @@ object MonthlyService {
 	private def hasDelivery(customer:Customer, productId:Long) = {
 		customer.deliveryDetailNotUsed(productId).size > 0
 	}
-	def generateMonthly(customer:Customer, company:Company, date:Date) = {
-		val monthlyNotPaid = findMonthlyNotPaid(customer, company, date)
+	def generateMonthly(customer:Customer, company:Company, date:Date, days:Int) = {
+		val monthlyNotPaid = findMonthlyNotPaid(customer, company, date, days)
 		if(!monthlyNotPaid.isEmpty){
 			val treatmentMonthly = monthlyNotPaid(0)
 			if(!hasDelivery(customer, treatmentMonthly.details(0).activity.is)){
@@ -106,7 +106,7 @@ object MonthlyService {
 			OrderBy (Company.id, Ascending)).map((company:Company)=>{
 			company.partner.obj match {
 				case Full(customer)=>{
-					generateMonthly(customer, company, date)
+					generateMonthly(customer, company, date, 17)
 				}
 				case _ => 
 			}
@@ -117,7 +117,7 @@ object MonthlyService {
 		val ac = Company.findByKey (company.toLong).get
 		ac.partner.obj match {
 			case Full(customer)=>{
-				generateMonthly(customer, ac, Project.futureDays(30));
+				generateMonthly(customer, ac, new Date(), 30);
 			}
 			case _ => 
 		}

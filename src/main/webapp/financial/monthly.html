@@ -4,7 +4,22 @@
 	  <script src="/js/reports.js"></script>
 	  <script src="/js/jquery.tablesorter.pager.js"></script>
 	  <script type="text/javascript">
+		var generateTicket = function () {
+	        if(confirm("Tem certeza que deseja gerar o boleto?")){
+	          return $.get("/system/createMonthlysOneCompany/" + AuthUtil.company.id, function(results) {
+	            if(results === 1 || results == "1"){
+	              alert("Boleto gerado com sucesso");
+	            }else{
+	              alert(eval(results));
+	            }
+	          });
+	        }
+
+		};
+	  </script>
+	  <script type="text/javascript">
 	  $(function(){
+
 	    var isSuperAdmin = $('.is-super-admin').length > 0;
 	    var fields = [];
 	    fields[3] = "date";
@@ -76,6 +91,7 @@
 			<div class="input-prepend">
 			  <a class="btn primary" href="/security/useCompany?id=1" title="Selecionar VilarikA - Só para super Admin">VilarikA
 			  </a>
+              <a class="btn primary" href="#" title="Gera boleto se tiver programado para os próximos 30 dias - Só para super Admin" onclick="generateTicket()">Gerar Boleto</a>
 			</div>
 		</div>
 	</div>
