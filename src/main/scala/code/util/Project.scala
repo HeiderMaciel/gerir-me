@@ -810,7 +810,11 @@ class WrittenForm(val val1: Double) {
       // tive que fazer um slice aqui pq o substring 2 não estava resolvendo
       // problema de perda de precisao que gerava parte frarcionaria
       // muito grande - Rigel - 19/03/2018
-      var valorCentavos = strCent.slice(0,2).toInt
+      var valorCentavos = if (BusinessRulesUtil.isNumeric (strCent.slice(0,2))) {
+        strCent.slice(0,2).toInt
+      } else {
+        0
+      }
       if(valorCentavos <  10){
         valorCentavos *= 10
       }
