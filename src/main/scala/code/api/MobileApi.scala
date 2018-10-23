@@ -229,6 +229,9 @@ order by date_c
           By(User.company, customer.company),
           By(User.id, user.toLong))(0)
 
+        // gera possiveis bloqueios de horario de trabalho na data  
+        FreeBusyActor ! FreeBusyRequest(Project.dateToStr(date1), Project.dateToStr(date1), CompanyUnit.calPubUnit(Company.calPubCompany (company),unit), company.toLong)
+
         val hoptions = AgHM.findAll(
         BySql(""" 
           agh between ? and (?-?)
