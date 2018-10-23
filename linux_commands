@@ -1,3 +1,9 @@
+
+Chave pessoa: 966488d7-adac-4ea9-866c-30a4b144f278
+
+Token acesso: CX0fV+oSgF35PMkmqrIxo5AkIJmEwB2zSbP88Ssace7zoT00KEY1BFAMZIsyCea1VOeB37+dlqoDu4T8fz/z+w==
+
+ 
 src/main/scala/code/actors/FreeBusyActor.scala
 src/main/scala/code/api/TreatmentApi.scala
 src/main/scala/code/model/BusyEvent.scala

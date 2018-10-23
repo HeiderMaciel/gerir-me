@@ -118,6 +118,44 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
     "000"
   }
 
+  def monthlyAgency = if (account > 0) {
+     val ac = AccountCompanyUnit.findAll (
+      By (AccountCompanyUnit.account, account),
+      By (AccountCompanyUnit.unit, AuthUtil.unit)) (0)
+     ac.agency
+  } else {
+    "0000"
+  }
+
+  def monthlyAgreement = if (account > 0) {
+     val ac = AccountCompanyUnit.findAll (
+      By (AccountCompanyUnit.account, account),
+      By (AccountCompanyUnit.unit, AuthUtil.unit)) (0)
+     BusinessRulesUtil.zerosLimit(BusinessRulesUtil.clearString (ac.agreement),7)
+  } else {
+    "0000000"
+  }
+
+  def nossonumerosicoob (number:Long) : String = {
+              // coop    nro cliente/convenio
+    //val part = "3089" + "0000337315" + BusinessRulesUtil.zerosLimit(number.toString,7)
+    val part = monthlyAgency + "000" + monthlyAgreement + 
+       BusinessRulesUtil.zerosLimit(number.toString,7)
+    val const = "319731973197319731973197"
+    var result = 0.0;
+    for (i <- 1 to part.length) {
+       val p1 = part.slice (i-1,i) 
+       val c1 = const.slice (i-1,i)
+       result += (p1.toLong * c1.toLong)
+    }
+    var resultnew = if ((result % 11) == 0 || (result % 11) == 1) {
+      0
+    } else {
+      11 - (result % 11)
+    }
+    resultnew.toLong.toString;
+  }    
+
   def barCode1 = {
     //val  bank = "756" /*sicoob*/ ; // "001" bb;
     val  bank = monthlyBank
@@ -147,34 +185,33 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
       }
   }
 
-  def nossonumerosicoob (number:Long) : String = {
-              // coop    nro cliente/convenio
-    val part = "3089" + "0000337315" + BusinessRulesUtil.zerosLimit(number.toString,7)
-    val const = "319731973197319731973197"
-    var result = 0.0;
-    for (i <- 1 to part.length) {
-       val p1 = part.slice (i-1,i) 
-       val c1 = const.slice (i-1,i)
-       result += (p1.toLong * c1.toLong)
-    }
-    var resultnew = if ((result % 11) == 0 || (result % 11) == 1) {
-      0
-    } else {
-      11 - (result % 11)
-    }
-    resultnew.toLong.toString;
-  }    
+/*
+75691.30896 01033.731504 00142.870013 1 76850000006990
+75691.30896 01033.731504 00142.870013 1 76850000006990
+75691.30896 01033.731504 00000.142810 2 76850000006990
+75691.30896 00033.731506 00000.142810 6 76850000006990
+75690.30898 00033.731506 00000.142810 8 76850000006990
+75690.00008 00337.315006 00001.428176 7 76850000006990
+*/
 
   def barCode3 = {
     val lenconvenio = 7;
     //val  convenio = BusinessRulesUtil.limitSpaces ("2863040",7) // novo - 2550720 antigo
-    val  convenio = BusinessRulesUtil.limitSpaces ("0337315",7) // novo - 2550720 antigo
-    val   complemento = if (lenconvenio == 7) {
+    val  convenio = monthlyAgreement // novo - 2550720 antigo
+    val  complemento = if (monthlyBank == "001") {
+      if (lenconvenio == 7) {
       "000000"
-    } else {
+      } else {
       ""
+      }
+    } else {
+      "1" + monthlyAgency + "01"
     }
-    complemento + convenio + BusinessRulesUtil.zerosLimit(idForCompany.toString,10) + "17" // carteira nova
+    if (monthlyBank == "001") {
+      complemento + convenio + BusinessRulesUtil.zerosLimit(idForCompany.toString,10) + "17" // carteira nova
+    } else {
+      complemento + convenio + BusinessRulesUtil.zerosLimit(idForCompany.toString+numberVd,8) + "001"       
+    }  
   }
 
   def _barCode = {
