@@ -41,11 +41,15 @@ object Project{
 
   def today = Project.date_format_db.parse(Project.date_format_db.format(new Date()));
   
-  def tomorrow = {
+  def futureDays (days:Int) = {
     val cal = Calendar.getInstance()
     cal.setTime(new Date()); 
-    cal.add(java.util.Calendar.DATE, 1);
+    cal.add(java.util.Calendar.DATE, days);
     cal.getTime()
+  }
+
+  def tomorrow = {
+    futureDays (1);
   }
 
   def nextMonth (date:Date) : Date = {

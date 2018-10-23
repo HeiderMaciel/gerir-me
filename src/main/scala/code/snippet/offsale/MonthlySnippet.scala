@@ -108,6 +108,7 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 							"company_customer" -> Text(ac.company_customer.toString),
 							"companyname" -> Text(ac.company_customerName),
 							"bpname" -> Text(ac.bpName),
+							"accountshortname" -> Text(ac.accountShortName),
 							"value" -> Text(ac.value.is.toString),
 							"paidvalue" -> Text(ac.paidValue.is.toString),
 							"obs" -> Text(ac.obs.is),

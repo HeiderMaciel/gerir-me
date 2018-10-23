@@ -95,6 +95,12 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
       case _ => ""
   }
 
+  def accountShortName : String = if (account != 0) {
+    Account.findByKey (account).get.short_name.is;
+  } else {
+    ""
+  }
+
   def bpName = business_pattern.obj match {
       case Full(t) => t.name.is
       case _ => ""
@@ -496,7 +502,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
      mo.dateexpiration, mo.value, 
      mo.paid, mo.paymentdate, mo.id, co.name,
      mo.obs, 
-     mo.numberVd
+     mo.numberVd, mo.senddate, mo.editableline
      FROM monthly mo
      inner join company co on co.id = mo.company_customer
      where mo.company_customer=? and mo.status = 1 order by mo.dateexpiration desc, mo.id desc

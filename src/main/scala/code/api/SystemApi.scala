@@ -80,6 +80,10 @@ object SystemApi extends RestHelper {
 			MonthlyService.generateMonthlyAllCompanies(new Date())
 			JInt(1)  
 		}		
+		case "system" :: "createMonthlysOneCompany" :: company :: Nil JsonGet _ => {
+			MonthlyService.generateMonthlyOneCompany(company)
+			JInt(1)  
+		}		
 		case "system" :: "sendDailyMonthly"  :: Nil JsonGet _ => {
 			code.daily.DailyReport.sendAllTodayMonthlyMail
 			code.daily.DailyReport.sendAllAvailabilityMonthlyMail

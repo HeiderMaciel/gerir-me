@@ -29,7 +29,14 @@
 		    		// rigel 2018 agosto
 		    		// troquei o (new Date(row[4]).getDateBr())
 		    		// para o dateDecode para funcionar no I.E
-		        	return "<a target='_boletobb' href='http://boleto.vilarika.com.br/boleto/boleto.php?data="+dateDecode(row[4])+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/bar_code.png'/>"
+		    		//alert (row[13].substring (0,3) + "  " + "001") 
+		    		if (row[13].substring (0,3) == "000") {
+		    		return ""
+		    		} else if (row[13].substring (0,3) == "001") {
+		        	return "<a target='_boleto' href='http://boleto.vilarika.com.br/boleto/boleto.php?data="+dateDecode(row[4])+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/bar_code.png'/>"
+		        	} else {
+		        	return "<a target='_boleto' href='http://boleto.vilarika.com.br/boleto/boleto_bancoob.php?data="+dateDecode(row[4])+"&valor="+parseFloat(row[5]).formatMoney().replace('.','')+"&nosso_numero="+row[1]+row[11]+"&documento="+row[1]+"&nome="+row[9]+"'><img width='32' src='/images/bar_code.png'/>"
+		        	}
 /*
 		        	return "<a target='_blank' href='/docs/notice.html'><img width='32' src='/images/bar_code.png'/>"
 */
@@ -54,7 +61,9 @@
 	    if (!isSuperAdmin) {
 	    	fields[10] = "none";
 		}
-     	fields[11] = "none";
+     	fields[11] = "none"; // numberVd
+     	// fields[12] = "none"; // senddate remessa
+     	// fields[13] = "none"; // editableline
 	    var request = function(){
 	      renderReport("/report/monthly", fields,{});
 	    }

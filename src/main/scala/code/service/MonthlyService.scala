@@ -16,6 +16,15 @@ import java.util.Calendar
 
 object MonthlyService {
 	val MONTHLY_ACTIVITY_TYPE = 983
+	private def findMonthlyBefore(customer:Customer, company:Company, id:Long) = {
+		Monthly.findAll (
+			By(Monthly.company, 1),
+			By(Monthly.business_pattern, company.partner),
+			NotBy(Monthly.id, id),
+			OrderBy (Monthly.id, Descending))
+	}
+
+
 	private def findMonthlyNotPaid(customer:Customer, company:Company, date:Date) = {
 		Treatment.findAll(
 			By(Treatment.company, 1),
@@ -57,6 +66,10 @@ object MonthlyService {
 					.business_pattern(company.partner)
 					.idObj(treatmentMonthly.id.is)
 					.save
+					val monthlyBefore = findMonthlyBefore(customer, company, monthly.id);
+					if (!monthlyBefore.isEmpty) {
+						monthly.account (monthlyBefore(0).account).save
+					}
 					/*
 					usersToNotify.map((user:User)=>{
 						val users = user.id.is:: Nil
@@ -98,6 +111,16 @@ object MonthlyService {
 				case _ => 
 			}
 		})
+	}
+
+	def generateMonthlyOneCompany(company:String) = {
+		val ac = Company.findByKey (company.toLong).get
+		ac.partner.obj match {
+			case Full(customer)=>{
+				generateMonthly(customer, ac, Project.futureDays(30));
+			}
+			case _ => 
+		}
 	}
 
 }
