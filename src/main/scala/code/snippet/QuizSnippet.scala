@@ -22,16 +22,25 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 
 	def quizs = ("0", "Selecione um " + Quiz.quizLabel) :: Quiz.
 		findAllInCompany(OrderBy(Quiz.name, Ascending)).map(t => (t.id.is.toString,t.name.is))
-	def sections = ("0", "Selecione uma Seção") :: QuizSection.
-		findAllInCompany(OrderBy(QuizSection.name, Ascending)).map(t => (t.id.is.toString,t.name.is))
-	def questions = ("0", "Selecione uma Questão") :: QuizQuestion.
-		findAllInCompany(OrderBy(QuizQuestion.name, Ascending)).map(t => (t.id.is.toString,t.name.is))
 	def domains = ("0", "Selecione um Domínio") :: QuizDomain.
 		findAllInCompanyOrDefaultCompany(OrderBy(QuizDomain.name, Ascending)).map(t => (t.id.is.toString,t.name.is))
 	def domainitems = ("0", "Selecione um Item de Domínio") :: QuizDomainItem.
 		findAllInCompanyOrDefaultCompany(OrderBy(QuizDomainItem.name, Ascending)).map(t => (t.id.is.toString,t.name.is))
 	def groups = ("0", "Selecione um Grupo") :: UserGroup.
 		findAllInCompany(OrderBy(UserGroup.name, Ascending)).map(t => (t.id.is.toString, t.name.is))
+
+	def sections = ("0", "Selecione uma Seção") :: QuizSection.
+		findAllInCompany(OrderBy(QuizSection.name, Ascending)).map(t => (t.id.is.toString,t.name.is + " - " + t.quizName))
+
+	def questions = ("0", "Selecione uma Questão") :: QuizQuestion.
+		findAllInCompany(OrderBy(QuizQuestion.name, Ascending)).map(t => 
+			{
+			def codAux = if (AuthUtil.user.isSuperAdmin) {
+				" " + t.id.is
+			} else {
+				""
+			}
+			(t.id.is.toString,t.name.is + codAux)})
 
 	def printControls = DomainTable.findAll(
 		By(DomainTable.domain_name,"quizPrintControl"),
