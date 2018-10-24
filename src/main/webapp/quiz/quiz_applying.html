@@ -105,6 +105,17 @@
                 $("#quiz-questions").val(questions.join(","));
             }
 
+            function isAdmin () {
+              if (AuthUtil.user.groupPermission.indexOf ("1000")) {
+                    return true
+              }
+              if ((AuthUtil.user.groupPermission == "1") || 
+                  (AuthUtil.user.groupPermission == ",1")) {
+                    return true
+              }
+              return false
+            }
+
             function setAnswerId(element, name) {
                 element.attr('data-answerid', name);
             }
@@ -117,6 +128,10 @@
 
             function setStyle(element, name) {
                 element.attr('style', name);
+            }
+
+            function setTitle(element, name) {
+                element.attr('title', name);
             }
 
             function setMultiple(element, name) {
@@ -331,6 +346,9 @@
                 } else {
                     var input = template.find('input');
                     input.val(question.value);
+                    if (isAdmin()) {
+                        setTitle(input, question.id);
+                    }
                     if (question.type == 5 /* valor */) {
                         setClass(input, "input-small currency");
                     } else if (question.type == 6 /* valor */) {
@@ -357,6 +375,9 @@
                 } else {
                     var textarea = template.find('textarea');
                     textarea.val(question.value);
+                    if (isAdmin()) {
+                        setTitle(textarea, question.id);
+                    }
                     setAnswerId (textarea, question.answerid);
                     setName(textarea, question.id);
                     setClass(textarea, question.size);
@@ -371,6 +392,9 @@
                 formatQuestion (question, template)
 
                 var select = template.find('select');
+                if (isAdmin()) {
+                    setTitle(select, question.id);
+                }
                 setClass(select, question.size);
                 setAnswerId (select, question.answerid);
                 if (morethanone) {
@@ -591,7 +615,7 @@
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="tx1a add-on"></span>
-                    <input class="tx1a xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
+                    <input title="" class="tx1a xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
                     <span class="help-block"></span>
                     <span id='printquestion' class='print-question'></span>
                 </div>
