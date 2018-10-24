@@ -246,6 +246,8 @@ object CompanySnippet{
 //			"name=autoIncrementCommand" #> (SHtml.checkbox(ac.autoIncrementCommand_?, ac.autoIncrementCommand_?(_)))&
 		    "name=commandControl" #> (SHtml.select(cmdControl,Full(ac.commandControl.is.toString),(v:String) => ac.commandControl(v.toInt)))&
 		    "name=calendarPub" #> (SHtml.select(cPubControl,Full(ac.calendarPub.is.toString),(v:String) => ac.calendarPub(v.toInt)))&
+			"name=hoursInAdvancePub" #> (SHtml.text(ac.hoursInAdvancePub.is.toString, 
+				(f:String) => ac.hoursInAdvancePub(BusinessRulesUtil.snippetToInt(f))))&
 			"name=hoursToCancelPub" #> (SHtml.text(ac.hoursToCancelPub.is.toString, 
 				(f:String) => ac.hoursToCancelPub(BusinessRulesUtil.snippetToInt(f))))&
 			"name=hoursToConfirmPub" #> (SHtml.text(ac.hoursToConfirmPub.is.toString, 
