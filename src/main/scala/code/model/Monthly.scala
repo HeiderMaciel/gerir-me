@@ -90,6 +90,13 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
     super.delete_!
   }
 
+  override def save() = {
+    if (this.paid && this.status != 1) {
+        throw new RuntimeException ("Não é possível inativar registro pago, ou marcar como pago registro inativo!")
+    }
+    super.save
+  }
+
   def company_customerName = company_customer.obj match {
       case Full(t) => t.name.is
       case _ => ""

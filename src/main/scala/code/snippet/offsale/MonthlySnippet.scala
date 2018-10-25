@@ -142,10 +142,19 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 		try{
 			var ac:Monthly = getMonthly
 			def process(): JsCmd= {
-				ac.company(AuthUtil.company)
-				ac.save
-			   	S.notice("Mensalidade salva com sucesso!")
-				S.redirectTo("/monthly/edit_monthly?id="+ac.id.is)
+				try{
+					ac.company(AuthUtil.company)
+					ac.save
+				   	S.notice("Mensalidade salva com sucesso!")
+					S.redirectTo("/monthly/edit_monthly?id="+ac.id.is)
+		   		}catch{
+					case (e:net.liftweb.http.ResponseShortcutException) =>{
+						throw e
+					}
+					case (e:Exception) => {
+						S.error(e.getMessage)
+					}
+				}
 			}
 			"name=auditstr" #> (SHtml.textarea(ac.auditStr, (a:String) => {}))&
 			"name=id" #> (SHtml.text(ac.id.is.toString, (f:String) => { 
