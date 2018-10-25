@@ -485,6 +485,9 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         message_aux = message_aux.replaceAll ("##prof_nasc_anos##", Project.dateToYears(ac.birthday))
         message_aux = message_aux.replaceAll ("##prof_nasc_ext##", Project.dateToExt(ac.birthday))
 
+        message_aux = message_aux.replaceAll ("##prof_adm_data##", Project.dateToStr(ac.hireDate))
+        message_aux = message_aux.replaceAll ("##prof_adm_idade##", Project.dateToAge(ac.hireDate))
+
         message_aux = message_aux.replaceAll ("##prof_end_rua##", ac.street)
         message_aux = message_aux.replaceAll ("##prof_end_nro##", ac.number)
         message_aux = message_aux.replaceAll ("##prof_end_compl##", ac.complement)

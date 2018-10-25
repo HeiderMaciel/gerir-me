@@ -371,7 +371,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
       if (cid > 0) {
         Customer.findByKey (cid).get
       } else {
-        println ("vaiiiii ====================== Company sem unit partnet " + company_customer)
+        println ("vaiiiii ====================== Company sem unit partner " + company_customer)
         throw new RuntimeException("Company sem unit partnet " + company_customer)
       }
      } else {
