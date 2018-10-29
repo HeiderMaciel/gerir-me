@@ -5,16 +5,11 @@
   <script src="/js/jquery.tablesorter.pager.js"></script>
   <script type="text/javascript">
   $(function () {
-    $("#account240").accountField(true);
     $("#send").click(function(){
-      if (!$('#account240').val()) {
-        return alert ("Selecione uma conta")
-      }
       // create and download the remessa file
-      $.post('/monthly/transfer', {
+      $.post('/monthly/salesIntegration', {
         start:$('#start').val(), 
         end:$('#end').val(), 
-        account:$('#account240').val(),
         limit:$('#limit').val()}, function(invoicedata){
           eval ("var invoice = " + invoicedata)
           if (invoice.status == "error" || invoice.status != "success") {
@@ -29,7 +24,7 @@
   <div class="page-header">
     <h1>
       <span class="lift:CompanySnippet.thumb"> </span>
-      <input class="report_title local_storage" id="title_transfer240_report" name="title_transfer240_report" size="30" type="text" value="Remessa Boletos"/>
+      <input class="report_title local_storage" id="title_salesIntegration_report" name="title_salesIntegration_report" size="30" type="text" value="Exportar Vendas"/>
     </h1>
   </div>  
     <div>
@@ -51,12 +46,6 @@
               </div>
           </div>
         </div>      
-        <div class="clearfix">
-            <label for="account240">Conta</label>
-            <div class="input">
-                <select class="local_storage" name='account240' id="account240"></select>
-            </div>
-        </div>            
         <div class="clearfix">
           <label for="limit">Limite Boletos</label>
             <div class="input">

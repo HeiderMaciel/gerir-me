@@ -99,6 +99,18 @@ class Customer extends BusinessPattern[Customer]{
             message_aux = message_aux.replaceAll ("##imc_num##", ac.BMI.substring(0,scala.math.min(ac.BMI.length, 5)))
             message_aux = message_aux.replaceAll ("##imc_classe##", ac.BMI)
 
+            val parteInteira : Int = ac.shoeSize.toInt
+            val parteFracionaria : BigDecimal = if (parteInteira > 0) {
+              ac.shoeSize.remainder(parteInteira)
+            } else {
+              ac.shoeSize.is
+            }
+            if (parteFracionaria > 0.0) {
+                message_aux = message_aux.replaceAll ("##sapato##", ac.shoeSize.toString)
+            } else {
+                message_aux = message_aux.replaceAll ("##sapato##", parteInteira.toString)
+            }
+
             message_aux = message_aux.replaceAll ("##detalhes##", ac.obsComplement)
 
             message_aux = message_aux.replaceAll ("##convenio##", ac.offSaleShortName)
