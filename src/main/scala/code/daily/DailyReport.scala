@@ -281,41 +281,44 @@ object DailyReport{
 		}else{
 			"Cliente"
 		}
+		val customerInfoDisplay = if (user.isCustomer) {
+			"visible"
+		} else {
+			"none"
+		}
 
 		val description = extDay (date);
-		val xml = <div>
-					<img width="100px" src={company.thumb_web}/>
-					<br/>
-					Olá {user.name.is}, <br/><br/>{description} você tem {num} atendimento(s) marcado(s), abaixo detalhes:
-					{
-						treatments.map(
-							a => {
-							val colornow = "background-color:" + a.colorByDetails + ";"
-							(
-								<div>
-									<br/>
-										<b>{persontype}</b> : {a.customerName}
-									<br/>
-										<b>Telefone</b> : {a.customer.obj.get.phone.is + ' ' + a.customer.obj.get.mobilePhone.is + ' ' + a.customer.obj.get.email_alternative.is}
-									<br/>
-										<b>Email</b> : {a.customer.obj.get.email.is}
-									<br/>
-										<b>Horário</b> : de {Project.dateToHours(a.start.is)} até {Project.dateToHours(a.end.is)}
-									<br/>
-									<span style={colornow}>
-										<b>Atendimentos</b></span> : {a.descritionDetails}
-									<br/>
-										<b>Obs</b> : {a.obs}
-									<br/>
-										{a.whereIs}
-									<br/>
-										<b>Local</b> : {company.name.is} - Unidade {a.unit.obj.get.name}
-									<hr/>
-								</div>
-							)}
-						)
-					}
-				  </div>
+		val xml = 
+		<div>
+			<img width="100px" src={company.thumb_web}/>
+			<br/>
+			Olá {user.name.is}, <br/><br/>{description} você tem {num} atendimento(s) marcado(s), abaixo detalhes:
+			{
+				treatments.map(a => {
+					val colornow = "background-color:" + a.colorByDetails + ";"
+					(
+						<div>
+							<br/>
+								<b>{persontype}</b> : {a.customerName}
+							<br/>
+								<span style={"display:"+ customerInfoDisplay +""}><b>Telefone</b> : {a.customer.obj.get.phone.is + ' ' + a.customer.obj.get.mobilePhone.is + ' ' + a.customer.obj.get.email_alternative.is}<br/></span>
+								<span style={"display:"+ customerInfoDisplay +""}><b>Email</b> : {a.customer.obj.get.email.is}<br/></span>
+								<b>Horário</b> : de {Project.dateToHours(a.start.is)} até {Project.dateToHours(a.end.is)}
+							<br/>
+							<span style={colornow}>
+								<b>Atendimentos</b></span> : {a.descritionDetails}
+							<br/>
+								<b>Obs</b> : {a.obs}
+							<br/>
+								{a.whereIs}
+							<br/>
+								<b>Local</b> : {company.name.is} - Unidade {a.unit.obj.get.name}
+							<hr/>
+						</div>
+					)}
+				)
+			}
+		</div>
 		xml		
 	}
 
