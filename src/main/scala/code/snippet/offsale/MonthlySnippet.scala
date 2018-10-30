@@ -115,6 +115,7 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 							"obs" -> Text(ac.obs.is),
 							"idforcompany" -> Text(ac.idForCompany.toString),
 							"dateexpiration" -> Text(Project.dateToStrOrEmpty(ac.dateExpiration.is)),
+							"senddate" -> Text(Project.dateToStrOrEmpty(ac.sendDate.is)),
 							"createdat" -> Text(Project.dateTimeToStr(ac.createdAt.is)),
 							"paymentdate" -> Text(Project.dateToStrOrEmpty(ac.paymentDate.is)),
 							//"paid" -> Text(if(ac.paid.is){ "Sim" }else{ "Não" }),

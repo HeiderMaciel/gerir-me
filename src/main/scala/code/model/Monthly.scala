@@ -283,7 +283,9 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
           BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(bc.document),14); // cpf
       } else {
           // cpf rigel 
-          "00055118593620"        
+          //"00055118593620"        
+          // cpf karina
+          "00003476101703"
       }
      var strXml:String = banknumber + "0001" + // lote
      "3" + // tipo registro
@@ -447,7 +449,9 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
           cpf
       } else {
           // cpf rigel 
-          "00055118593620"        
+          //"00055118593620"        
+          // cpf karina
+          "00003476101703"
       }
      var strXml:String = "" + 
      banknumber + 
