@@ -599,6 +599,16 @@ class User extends  BusinessPattern[User] with UserIdAsString{
         }
     }
 
+    val SQL_UPDATE_ORDER_10_10 = """
+       update business_pattern set orderincalendar = 
+       ((select count (*) from business_pattern t1 where t1.company = business_pattern.company 
+           and is_employee = true and orderincalendar <> 0
+           and t1.unit = business_pattern.unit 
+           and (t1.orderincalendar < business_pattern.orderincalendar or (t1.orderincalendar = business_pattern.orderincalendar and t1.id < business_pattern.id)))+1) * 10
+       where company = ? and unit = ? and orderincalendar <> 0
+       and is_employee = true;
+    """
+
     override def save() = {
         if (this.password != "" && this.password.length < 6) {
             throw new RuntimeException ("Senha não pode ter menos de 6 caracteres");
@@ -648,7 +658,12 @@ class User extends  BusinessPattern[User] with UserIdAsString{
             this.lng.set ("");
         }
 */
-        super.save
+        val r = super.save;
+
+        DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.unit.is :: Nil)
+
+        r;
+
     }
 
     def toXmlTissSolicitante (offsale:Long) = {
