@@ -660,7 +660,7 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 */
         val r = super.save;
 
-        DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.unit.is :: Nil)
+//        DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.unit.is :: Nil)
 
         r;
 
