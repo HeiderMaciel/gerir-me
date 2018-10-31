@@ -1,6 +1,24 @@
 https://alvinalexander.com/scala/scalaj-http-examples-get-post-redirects-forms
 
 
+https://stackoverflow.com/questions/7100294/json-post-with-customized-httpheader-field
+
+$.ajax({
+    url: 'https://url.com',
+    type: 'post',
+    data: {
+        access_token: 'XXXXXXXXXXXXXXXXXXX'
+    },
+    headers: {
+        Header_Name_One: 'Header Value One',   //If your header name has spaces or any other char not appropriate
+        "Header Name Two": 'Header Value Two'  //for object property name, use quoted notation shown in second
+    },
+    dataType: 'json',
+    success: function (data) {
+        console.info(data);
+    }
+});
+
 Chave pessoa: 966488d7-adac-4ea9-866c-30a4b144f278
 
 Token acesso: CX0fV+oSgF35PMkmqrIxo5AkIJmEwB2zSbP88Ssace7zoT00KEY1BFAMZIsyCea1VOeB37+dlqoDu4T8fz/z+w==

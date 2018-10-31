@@ -6,7 +6,34 @@
   <script type="text/javascript">
   $(function () {
     $("#send").click(function(){
+      $.ajax({
+          url: 'https://app.contself.com.br/ApiMobileV2/IntegracaoProcessamento_OrdemServico',
+          type: 'post',
+          data: {
+        ChavePessoa : "966488d7-adac-4ea9-866c-30a4b144f278",
+        DataOS : "31/10/2018",
+        CodigoOS : "1",
+        Convenio : "Particular",
+        ConvenioParticular : "1",
+        CodigoPaciente : "3",
+        IdentificadorPaciente : "55118593620",
+        CodigoResponsavelFinanceiro :  "",
+        IdentificadorResponsavelFinanceiro : "",
+        ValorOS : "100",
+        DataEnvioRegistro : "31/10/2018"
+                  },
+          headers: {
+              Authorization: "CX0fV+oSgF35PMkmqrIxo5AkIJmEwB2zSbP88Ssace7zoT00KEY1BFAMZIsyCea1VOeB37+dlqoDu4T8fz/z+w=="
+          },
+          dataType: 'json',
+          success: function (data) {
+            alert (data)
+              console.info(data);
+          }
+      });
+
       // create and download the remessa file
+      /*
       $.post('/monthly/salesIntegration', {
         start:$('#start').val(), 
         end:$('#end').val(), 
@@ -18,6 +45,7 @@
             window.open (invoice.url)
           }
       });
+      */
     });
   });
   </script>
