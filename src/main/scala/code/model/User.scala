@@ -606,7 +606,7 @@ class User extends  BusinessPattern[User] with UserIdAsString{
            and t1.unit = business_pattern.unit 
            and (t1.orderincalendar < business_pattern.orderincalendar or (t1.orderincalendar = business_pattern.orderincalendar and t1.id < business_pattern.id)))+1) * 10
        where company = ? and unit = ? and orderincalendar <> 0
-       and is_employee = true;
+       and is_employee = true and userstatus = 1 and showincalendar = true;
     """
 
     override def save() = {
@@ -660,7 +660,7 @@ class User extends  BusinessPattern[User] with UserIdAsString{
 */
         val r = super.save;
 
-//        DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.unit.is :: Nil)
+        DB.runUpdate(SQL_UPDATE_ORDER_10_10, this.company.obj.get.id.is :: this.unit.is :: Nil)
 
         r;
 
