@@ -60,12 +60,36 @@ object MonthlyApi extends RestHelper  with net.liftweb.common.Logger  {
 		}
 		case "monthly" :: "salesIntegration" :: Nil Post _ =>{
 			for {
+				company <- S.param("company") ?~ "company parameter missing" ~> 400
 				dateStart <- S.param("start") ?~ "start parameter missing" ~> 400
 				dateEnd <- S.param("end") ?~ "end parameter missing" ~> 400
 			} yield {				
 				var start = Project.strToDate(dateStart+" 00:00")
 				var end = Project.strToDateOrToday(dateEnd)
-				ContSelfUtil.createOS("",new Date())
+			    Payment.findAll(
+			    	By(Payment.company, company.toLong), 
+					BySql("date(datepayment) between ? and ?",IHaveValidatedThisSQL("payment_date","01-01-2012 00:00:00"),start, end),
+					OrderBy (Payment.id, Ascending)
+			    	).foreach((p) => {
+println ("vaiii ==========================  payment ")			    		
+//						ContSelfUtil.createOS("",new Date());
+						Treatment.findAll(By(Treatment.customer,p.customer.is),
+							By(Treatment.company,company.toLong),
+							By(Treatment.hasDetail,true),
+							By(Treatment.status,4), // paid
+							By(Treatment.payment,p.id.is),
+							OrderBy(Treatment.start,Ascending)
+					    	).foreach((tr) => {
+println ("vaiii ==============================  treatment ")			    		
+					    	tr.details.foreach((td) => {
+println ("vaiii ===================================  detail " + td.productBase.name.is)
+					    	});
+					    });
+
+				    	p.details.foreach((pd) => {
+println ("vaiii ==============================  paymentdetail " + pd.typePaymentName)
+				    	});
+			    	});
 				JInt(1)
 			}			
 		}

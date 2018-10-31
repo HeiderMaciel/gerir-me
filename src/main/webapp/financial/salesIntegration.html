@@ -6,6 +6,7 @@
   <script type="text/javascript">
   $(function () {
     $("#send").click(function(){
+/*
       $.ajax({
           url: 'https://app.contself.com.br/ApiMobileV2/IntegracaoProcessamento_OrdemServico',
           type: 'post',
@@ -31,21 +32,22 @@
               console.info(data);
           }
       });
-
+*/
       // create and download the remessa file
-      /*
+      /**/
       $.post('/monthly/salesIntegration', {
+        company:AuthUtil.company.id,
         start:$('#start').val(), 
         end:$('#end').val(), 
         limit:$('#limit').val()}, function(invoicedata){
           eval ("var invoice = " + invoicedata)
           if (invoice.status == "error" || invoice.status != "success") {
-            alert (invoice.message)
+            alert (AuthUtil.company.id + " < company " + invoice.message)
           } else {
             window.open (invoice.url)
           }
       });
-      */
+      /**/
     });
   });
   </script>
