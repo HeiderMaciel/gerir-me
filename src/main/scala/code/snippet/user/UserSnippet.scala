@@ -242,7 +242,9 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 			"name=is_auxiliar" #> (SHtml.checkbox(ac.is_auxiliar_?, ac.is_auxiliar_?(_)))&
 			"name=groupPermission_text" #> (SHtml.text(ac.groupPermission, (a:String) => {}))&
 			"#img_thumb" #> ac.thumb&
-			"name=orderInCalendar" #> (SHtml.text(ac.orderInCalendar.is.toString, (s:String) => ac.orderInCalendar(s.toInt)))&
+			//"name=orderInCalendar" #> (SHtml.text(ac.orderInCalendar.is.toString, (s:String) => ac.orderInCalendar(s.toInt)))&
+			"name=orderInCalendar" #> (SHtml.text(ac.orderInCalendar.is.toString, 
+				(f:String) => ac.orderInCalendar(BusinessRulesUtil.snippetToInt(f))))&			
 			"name=parent" #> (SHtml.text(ac.parent.is.toString, 
 				(f:String) => ac.parent(BusinessRulesUtil.snippetToLong(f))))&
 //			"name=parent_percent" #> (SHtml.text(ac.parent_percent.is.toString, (v:String) =>{ if(v !=""){user.parent_percent(BusinessRulesUtil.snippetToDouble(v))};}))&
