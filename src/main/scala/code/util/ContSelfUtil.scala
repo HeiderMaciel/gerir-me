@@ -20,12 +20,22 @@ object ContSelfUtil extends net.liftweb.common.Logger  {
 	lazy val apiv2 = :/(host)
 
 	def createOS(access_token1:String,paymentDate:Date) = {
+
 		val http = new Http
 		val request = ContSelfUtil.apiv2/"ApiMobileV2/IntegracaoProcessamento_OrdemServico"
 		val ret = http(request.secure <<? authParams(access_token) << mapParams(access_token,formatDate(paymentDate)) as_str)
-println ("vaiiiii ================ " + ret)
-		info(ret)
-		val json = parse(ret)
+
+
+/*
+val ret = Http(
+   "https://app.contself.com.br/ApiMobileV2/IntegracaoProcessamento_OrdemServico").postData(mapParams(access_token,formatDate(paymentDate)))
+  .header("Content-Type", "application/json")
+  .header("Authorization", "CX0fV+oSgF35PMkmqrIxo5AkIJmEwB2zSbP88Ssace7zoT00KEY1BFAMZIsyCea1VOeB37+dlqoDu4T8fz/z+w==")
+  .option(HttpOptions.readTimeout(10000)).asString
+*/
+println ("vaiiiii ================ " + ret + " =========================== ")
+		//info(ret)
+		//val json = parse(ret)
 	/*	val faceEvent = (json.extract[FacebookEventReturn])
 		
 		faceEvent
@@ -33,7 +43,8 @@ println ("vaiiiii ================ " + ret)
 	}
 
 	def authParams (token:String) = {
-		Map("Authorization"->token)
+		Map("Authorization"-> token,
+            "Content-Type" -> "application/json")
 	}
 
 	def mapParams(token:String,paymentDate:String) = 

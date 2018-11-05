@@ -128,8 +128,12 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
   def monthlyAgency = if (account > 0) {
      val ac = AccountCompanyUnit.findAll (
       By (AccountCompanyUnit.account, account),
-      By (AccountCompanyUnit.unit, AuthUtil.unit)) (0)
-     ac.agency
+      By (AccountCompanyUnit.unit, AuthUtil.unit))
+     if (ac.length > 0) {
+       ac(0).agency
+     } else {
+       "0000"
+     }
   } else {
     "0000"
   }

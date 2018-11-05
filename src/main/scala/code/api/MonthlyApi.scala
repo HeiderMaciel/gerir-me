@@ -66,6 +66,7 @@ object MonthlyApi extends RestHelper  with net.liftweb.common.Logger  {
 			} yield {				
 				var start = Project.strToDate(dateStart+" 00:00")
 				var end = Project.strToDateOrToday(dateEnd)
+				ContSelfUtil.createOS("",new Date());
 			    Payment.findAll(
 			    	By(Payment.company, company.toLong), 
 					BySql("date(datepayment) between ? and ?",IHaveValidatedThisSQL("payment_date","01-01-2012 00:00:00"),start, end),

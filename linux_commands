@@ -7,10 +7,21 @@ sudo mkswap /swapfile
 --Make swapon again
 sudo swapon /swapfile
 
+<form action="/action_page.php" autocomplete="on">
+  First name:<input type="text" name="fname"><br>
+  Last name: <input type="text" name="lname"><br>
+  E-mail: <input type="email" name="email" autocomplete="off"><br>
+  <input type="submit">
+</form>
+
 https://alvinalexander.com/scala/scalaj-http-examples-get-post-redirects-forms
 
-
 https://stackoverflow.com/questions/7100294/json-post-with-customized-httpheader-field
+
+val result = Http("http://example.com/url").postData("""{"id":"12","json":"data"}""")
+  .header("Content-Type", "application/json")
+  .header("Charset", "UTF-8")
+  .option(HttpOptions.readTimeout(10000)).asString
 
 $.ajax({
     url: 'https://url.com',
@@ -589,7 +600,13 @@ date -s "19 APR 2012 11:14:00"
 
 http://pm2.keymetrics.io/docs/usage/quick-start/
 diretorio de logs 
+
 cd /root/.pm2/logs
+cat gerir-me-PRD-error-0.log > erro.txt
+cat gerir-me-PRD-out-0.log > log.txt
+rm gerir-me-PRD-error-0.log
+rm gerir-me-PRD-out-0.log
+
 cd /var/lib/jenkins/app/gerir-me
 git reset --hard HEAD
 git pull
