@@ -26,6 +26,8 @@ object LoginSnippet extends net.liftweb.common.Logger {
     // pra ver se é cliente simples de agenda online
     // não é profissional
     val userTrue = AuthUtil.user.is_employee_?;
+    val appShortName = AuthUtil.company.appShortName;
+    val calendarUrl = AuthUtil.company.calendarUrl
     AuthUtil >>;
 
 /*  voltar quando estabilizar o login por e-mail
@@ -39,6 +41,7 @@ object LoginSnippet extends net.liftweb.common.Logger {
     "http://www.gerirme.com.br"::
     Nil
       // para diferenciar ebelle e gerirme
+    if (userTrue) {
       if (!isegrex) {
         // se local ou meu usuario rigel - volta pro login
         // se não for user true é cliente, ai vai no random mesmo
@@ -53,6 +56,9 @@ object LoginSnippet extends net.liftweb.common.Logger {
       } else {
         S.redirectTo(website)
       }
+    } else {
+      S.redirectTo("http://"+appShortName+".com.br/agenda.html?id="+calendarUrl);
+    }
 //       AuthUtil >>;
     in
   }

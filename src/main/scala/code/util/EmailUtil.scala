@@ -325,7 +325,8 @@ object EmailUtil {
                  </div>
                  <br/>
                  <div>
-                    <span>Para acessar o {product}</span> <a href={"http://"+lnkproduct+".vilarika.com.br"}>{lnkproduct}.vilarika.com.br</a>
+                    <span>Para acessar o {product}</span> 
+                    <a href={"http://"+lnkproduct+".com.br/agenda.html?id="+company.calendarUrl}>{lnkproduct}.com.br/agenda.html?id={company.calendarUrl}</a>
                  </div> 
                  <br/>
                  <span>Caso não tenha sido você a solicitar esse reenvio, por favor, desconsidere a mensagem </span>
