@@ -327,6 +327,10 @@
                     template.find('.add-on').text(question.addon);
                 }
 //                $("#labelleft"+question.id).remove();
+                if (question.position == 4) { 
+                  // fim curto retira um break <br/>
+                  template.find('.break-1').remove();
+                }
             }
 
             function createAnswer(question, section) {
@@ -671,7 +675,7 @@
                     <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text" autocomplete="off"/>
                     <span class="help-inline">-</span>
                     <span class="help-block"></span>
-                </div><br/><br/>
+                </div><br/><span id='break1' class='break-1'><br/></span>
                 <span class="help-block">.</span>
             </div>
         </script>
