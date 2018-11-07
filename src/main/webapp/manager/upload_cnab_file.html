@@ -1,8 +1,19 @@
 <div id="main" class="lift:surround?with=bootstrap;at=content">
+  <script type="text/javascript">
+  $(function () {
+    $("#account240").accountField(true);
+  });
+  </script>
 <h3>
 	<center>Cnab 240 Boletos Pagos</center>
 </h3>
 <form class="lift:UploadCnab?form=post;multipart=true">
+  <div class="clearfix">
+      <label for="account240">Conta</label>
+      <div class="input">
+          <select class="local_storage" name='account240' id="account240"></select>
+      </div>
+  </div>            
   <div class="clearfix">
     <label for="name">Arquivo</label>
     <div class="input">

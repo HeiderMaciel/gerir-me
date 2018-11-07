@@ -21,6 +21,11 @@ import scala.io.{Source, Codec}
 
 class UploadCnab extends Logger {
 
+  def account = S.param("account240") match {
+    case Full(s) => s
+    case _ => ""
+  } 
+
   object imageFile extends RequestVar[Box[FileParamHolder]](Empty)
   object fileName extends RequestVar[Box[String]](Full(Helpers.nextFuncName))
   private def prepareOfxFile(file:File){
@@ -46,7 +51,7 @@ class UploadCnab extends Logger {
         output.close()
         prepareOfxFile(oFile)
         info("File uploaded!")
-        S.notice (CnabUtil.execute(oFile));
+        S.notice (CnabUtil.execute(oFile, account));
         //S.notice("Arquivo importado com sucesso!")
       }
     }

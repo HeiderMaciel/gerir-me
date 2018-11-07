@@ -73,6 +73,19 @@ class Account extends Audited[Account]
     override def dbColumnName = "receive"
   }
 
+  def bankNum (account:Long) = if (account > 0) {
+    val ac = Account.findByKey (account).get
+    if (ac.bank > 0) {
+      val bk = Bank.findByKey (ac.bank).get
+      bk.banknumber
+    } else {
+      "000"
+    }
+  } else {
+    "000"
+  }
+
+
   def  getAccountUnit (unit : CompanyUnit): AccountCompanyUnit = {
     if (AccountCompanyUnit.count (
         By(AccountCompanyUnit.unit, unit),

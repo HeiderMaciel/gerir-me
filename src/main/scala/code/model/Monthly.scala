@@ -113,6 +113,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
       case _ => ""
   }
 
+/*
   def monthlyBank = if (account > 0) {
     val ac = Account.findByKey (account).get
     if (ac.bank > 0) {
@@ -124,6 +125,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
   } else {
     "000"
   }
+*/
 
   def monthlyAgency = if (account > 0) {
      val ac = AccountCompanyUnit.findAll (
@@ -173,7 +175,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
 
   def barCode1 = {
     //val  bank = "756" /*sicoob*/ ; // "001" bb;
-    val  bank = monthlyBank
+    val  bank = Account.bankNum (account)
     var  strAux = bank + "9"
     strAux
   }
@@ -213,7 +215,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
     val lenconvenio = 7;
     //val  convenio = BusinessRulesUtil.limitSpaces ("2863040",7) // novo - 2550720 antigo
     val  convenio = monthlyAgreement // novo - 2550720 antigo
-    val  complemento = if (monthlyBank == "001") {
+    val  complemento = if ((account) == "001") {
       if (lenconvenio == 7) {
       "000000"
       } else {
@@ -222,7 +224,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
     } else {
       "1" + monthlyAgency + "01"
     }
-    if (monthlyBank == "001") {
+    if (Account.bankNum(account) == "001") {
       complemento + convenio + BusinessRulesUtil.zerosLimit(idForCompany.toString,10) + "17" // carteira nova
     } else {
       complemento + convenio + BusinessRulesUtil.zerosLimit(idForCompany.toString+numberVd,8) + "001"       
