@@ -126,6 +126,12 @@
                 //$("#quiz-questions").val(questions.join(","));
             }
 
+            function setAutoComplete(element, name) {
+                element.attr('autocomplete', name);
+                //questions.push(name);
+                //$("#quiz-questions").val(questions.join(","));
+            }
+
             function setStyle(element, name) {
                 element.attr('style', name);
             }
@@ -357,6 +363,7 @@
                     setAnswerId (input, question.answerid);
                     setName(input, question.id);
                     setClass(input, question.size);
+                    setAutoComplete(input, question.autoComplete);
                 }
 
                 return template;
@@ -615,7 +622,7 @@
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="tx1a add-on"></span>
-                    <input title="" class="tx1a xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
+                    <input title="" class="tx1a xlarge" id="obs" name="obs" data-answerid='0' type="text" autocomplete="off"/>
                     <span class="help-block"></span>
                     <span id='printquestion' class='print-question'></span>
                 </div>
@@ -632,7 +639,7 @@
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on"></span>
-                    <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
+                    <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text" autocomplete="off"/>
                     <span class="help-inline">-</span>
                     <span class="help-block"></span>
                 </div>
@@ -647,7 +654,7 @@
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on"></span>
-                    <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
+                    <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text" autocomplete="off"/>
                     <span class="help-inline">-</span>
                     <span class="help-block"></span>
                 </div>
@@ -661,7 +668,7 @@
                 <div class="input-prepend" style='float:left; padding-right:10px'>
                     <span id='labeltop' class="label-top">.</span>
                     <span style='color:black;' class="add-on"></span>
-                    <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text"/>
+                    <input class="xlarge" id="obs" name="obs" data-answerid='0' type="text" autocomplete="off"/>
                     <span class="help-inline">-</span>
                     <span class="help-block"></span>
                 </div><br/><br/>

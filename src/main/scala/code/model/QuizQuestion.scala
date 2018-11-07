@@ -37,6 +37,10 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
         override def defaultValue = false
         override def dbColumnName = "printifnoanswer"
     }    
+    object autoComplete_? extends MappedBoolean(this){
+        override def defaultValue = true
+        override def dbColumnName = "autoComplete"
+    }    
     object rank extends MappedDecimal(this,MathContext.DECIMAL64,4)
     object quizDomain extends MappedLongForeignKey(this, QuizDomain) // opcional
     object quizDomainItemRight extends MappedLongForeignKey(this, QuizDomainItem) // opcional

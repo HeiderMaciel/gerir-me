@@ -106,6 +106,15 @@
             </div>
           </div>                
           <div class="clearfix">
+            <label for="autoComplete">Auto Completar?</label>
+            <div class="input">
+              <div class='inline-inputs'>
+                <input name='autoComplete'/>
+                <span class="help-block">Válido para campos texto</span>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix">
             <label for="orderinsection">Ordem</label>
             <div class="input">
               <input class="mini" id="orderinsection" name="orderinsection" size="5 " value = "10" type="text"/>
@@ -131,9 +140,10 @@
               </div>
           </div>
           <div>
-            <label for="name">Texto</label>
+            <label for="name">Texto/Default</label>
              <div class="input editor-medium">
                 <textarea class="medium" id="message" name="message" size="30"></textarea>
+                <span class="help-block">Texto rico para ser expandido ou <i>default</i> de resposta</span><br/>
              </div>
           </div>
           <div class="clearfix">

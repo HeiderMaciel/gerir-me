@@ -141,7 +141,7 @@ order by qa.applydate, qq.orderinsection
 
   def questionJson(question: QuizQuestion, quizApplyingId: Long, customer:Customer, print:Boolean) = {
     var size = "";
-
+    var autoComplete = "";
 /*
     val answers = QuizAnswer.findAll(
       By(QuizAnswer.quizApplying, quizApplyingId),
@@ -205,6 +205,11 @@ order by qa.applydate, qq.orderinsection
       } else if (question.quizQuestionSize.is == 5) {
         size = "xxlarge"
       }
+      if (question.autoComplete_?.is) {
+        autoComplete = "on"
+      } else {
+        autoComplete = "off"
+      }
 
       var message_aux = Customer.replaceMessage (customer, question.message.is)
       message_aux = User.replaceMessage (AuthUtil.user, message_aux)
@@ -212,8 +217,9 @@ order by qa.applydate, qq.orderinsection
       if (question.defaultQuestion != 0 && value == "") {
         value = defaultValue;
       }
-      if (question.quizQuestionType == 8 /* texto rico */
-        && value == "") {
+      // antes era só para texto rico agora e default se preenchido
+      //question.quizQuestionType == 8 /* texto rico */ && 
+      if (value == "") {
         value = message_aux;
       }   
       
@@ -274,6 +280,7 @@ order by qa.applydate, qq.orderinsection
       ("position", question.quizQuestionPosition.is),
       ("obs", question.obs.is),
       ("domain", domainAux),
+      ("autoComplete", autoComplete),
       ("value", valueAux),
       ("answerid", answerid))
     });
