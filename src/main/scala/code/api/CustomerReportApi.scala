@@ -103,7 +103,7 @@ object CustomerReportApi extends RestHelper with ReportRest {
 				// atendido 3 pago 4
 				val sql_quiz = """
 				select * from (
-				select qa.applydate, age(date(now()), applydate), qu.name, qa.obs, ug.short_name, qa.id, qa.id,
+				select qa.applydate, age(date(now()), applydate), qu.name, trim (qa.obs || ' ' || bu.short_name), ug.short_name, qa.id, qa.id,
 					(qu.message <> ''), qa.message, qu.showinrecords, bp.name, 
 					(select count(1) from quizquestion qq
 					inner join quizsection qs on qs.id = qq.quizsection and qs.quiz = qu.id and qs.status = 1
@@ -111,6 +111,7 @@ object CustomerReportApi extends RestHelper with ReportRest {
 		            fu_auditstr (qa.createdby, qa.createdat, qa.updatedby, qa.updatedat)
 				    from quizapplying qa 
 					inner join business_pattern bp on bp.id = qa.business_pattern
+					left join business_pattern bu on bu.id = qa.createdby
 					left join quiz qu on qu.id = qa.quiz
 					left join usergroup ug on ug.id = qu.usergroup
 					where qa.company = ? and bp.id = ?
