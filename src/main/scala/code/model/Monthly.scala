@@ -359,7 +359,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      // 25 posicoes ideinfica titulo na empresa
      BusinessRulesUtil.zerosLimit(idForCompany.toString,6) + 
      " " +
-     BusinessRulesUtil.limitSpaces (bc.search_name.toUpperCase,18) + 
+     BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString (bc.search_name).toUpperCase,18) + 
      "3" + // nao protestar
      "00" + // prazo protesto
      "0" + // código baixa
@@ -472,7 +472,7 @@ class Monthly extends Audited[Monthly] with LongKeyedMapper[Monthly]
      " " + 
      "01" + // entrada de título
      tpinsc + "0" + insc + // cliente
-     BusinessRulesUtil.limitSpaces (bc.search_name.toUpperCase,40) + 
+     BusinessRulesUtil.limitSpaces (BusinessRulesUtil.clearString(bc.search_name).toUpperCase,40) + 
      street + 
      district + 
      postal_code + 
@@ -605,7 +605,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
   }
 
 
-    def toRemessa240 (start:Date, end:Date, account:Account, limit:Long) {
+    def toRemessa240 (customer:Long, start:Date, end:Date, account:Account, limit:Long) {
        val ac = AccountCompanyUnit.findAll (
         By (AccountCompanyUnit.account, account),
         By (AccountCompanyUnit.unit, AuthUtil.unit)) (0)
@@ -717,7 +717,13 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
        var somatoria = 0.0;   
        var titulos = 0;
        println ("vaiiii antes " + start + "  fim  " + end )
+       val sqlCustomer = if (customer != 0) {
+          " business_pattern = " + customer + " "
+        } else {
+          " 1 = 1 "
+        }
        Monthly.findAll(
+        BySql(sqlCustomer, IHaveValidatedThisSQL("","")),
         BySql("(dateExpiration between ? and ?)", IHaveValidatedThisSQL("",""), start, end),
         By(Monthly.status, 1),
         By(Monthly.paid, false),
