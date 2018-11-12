@@ -57,6 +57,7 @@ object CommissionService extends net.liftweb.common.Logger  {
             .foreach(_.save)
           }catch{
             case e:Exception => {
+              e.printStackTrace
               LogActor ! "Erro ao processar comissão do payment [ "+payment.payment.id.is+" ] -> "+e.getMessage
             }
             case _ =>
@@ -136,12 +137,17 @@ object CommissionService extends net.liftweb.common.Logger  {
   def $(paymentdetail: PaymentDetail) = {
     import CommissionGenerationStrategy._
     val paymentType = paymentdetail.typePaymentObj.get
-    val userAux = User.findByKey (paymentdetail.user.get).get;
+    def userAuxCommissionAtSight_? : Boolean = if 
+    (User.count (By(User.id, paymentdetail.user.get)) > 0) {
+      User.findByKey (paymentdetail.user.get).get.commissionAtSight_?
+    } else {
+      false
+    }
 
     if (paymentType.bpmonthly_?.is){
       MonthlyCommissionCalculator
     } else if (paymentType.comissionAtSight_? ||
-      (userAux.commissionAtSight_? && paymentType.generateCommision_?)){
+      (userAuxCommissionAtSight_? && paymentType.generateCommision_?)){
       // rigel 09/10/2018 - parm no user
       DefaultCommissionCalculator
     } else if (!paymentType.generateCommision_?.is) {
