@@ -222,10 +222,13 @@ object EmailUtil {
       })
   }
 
+  def isValid(email : String): Boolean = if("""^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$""".r.findFirstIn(email) == None)false else true
+
   def sendMailCustomer(companyUnit:CompanyUnit,company:Company,email:String,
     mail:NodeSeq,title:String,bp:Long,attachment:Attachment = EmptyAttachment()){
       //authDefaltUnit(companyUnit)
       email.split(",|;").foreach((email) => {
+      if (isValid (email)) {
         val log = LogMailSend.create.message(mail.toString).
         to(prefix + email).from(from).subject(title).
         business_pattern(bp).company(company.id)
@@ -284,7 +287,10 @@ object EmailUtil {
           }
           case _ =>
         }
-      })
+      } else {
+println ("vaiii =================================== INVALIDO " + email) 
+      }
+    })
   }
 
 
