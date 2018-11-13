@@ -12,15 +12,15 @@
     fields[1] = {
       type: "format",
       decode: function(name, row) {
-        return "<a href='/customer/edit?id=" + row[7] + "' target='_customer_maste'>" + name + "</a>";
+        return "<a href='/customer/edit?id=" + row[8] + "' target='_customer_maste'>" + name + "</a>";
       }
     }
-    fields[3] = "dateTime";
     fields[4] = "dateTime";
-    fields[5] = "boolean";
-    fields[7] = "none";
+    fields[5] = "dateTime";
+    fields[6] = "boolean";
+    fields[8] = "none";
     if (document.location.href.indexOf("localhost") == -1){
-      fields[8] = "none";
+      fields[9] = "none";
     } else {
       // mostra a mensagem em ambiente local
     }
@@ -118,6 +118,7 @@
         <tr>
           <th>Assunto</th>
           <th>Parceiro</th>
+          <th>Telefones</th>
           <th>Para</th>
           <th>Enviado em</th>
           <th>Ult Atualização</th>
