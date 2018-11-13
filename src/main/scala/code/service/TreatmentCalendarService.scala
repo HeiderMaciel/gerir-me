@@ -21,28 +21,31 @@ import JE._
 
 
 object TreatmentCalendarService {
-    def  treatmentsForCalendarAsJson(company:Company, cUnit:CompanyUnit,start:Date, end:Date) = {
+    def  treatmentsForCalendarAsJson(isCustomer:Boolean, company:Company, cUnit:CompanyUnit,start:Date, end:Date) = {
 //        val where = " tr.user_c in ( select id from business_pattern u where u.unit = ? ) "
         val where = " (tr.user_c in ( select id from business_pattern u where u.unit = ? ) " +
                    "or tr.user_c in (select user_c from usercompanyunit where unit = ?)) "
-        treatmentsForCalendarQueryToJson(where,company.id.is::cUnit.id.is::cUnit.id.is::cUnit.id.is::start::end::Nil)
+        treatmentsForCalendarQueryToJson(false, where,
+          company.id.is::cUnit.id.is::cUnit.id.is::cUnit.id.is::start::end::Nil)
     }
 
-    def treatmentsForCalendarAsJson(company:Company, cUnit:CompanyUnit, customer:Customer,start:Date, end:Date) = {
+    def treatmentsForCalendarAsJson(company:Company, customer:Customer,start:Date, end:Date) = {
         val where = " tr.customer=? "
-        treatmentsForCalendarQueryToJson(where,company.id.is::cUnit.id.is::customer.id.is::start::end::Nil)
+        treatmentsForCalendarQueryToJson(true, where,
+          company.id.is::customer.id.is::start::end::Nil)
     }    
 
-    def treatmentsForCalendarAsJson(company:Company, cUnit:CompanyUnit, user:User,start:Date, end:Date) = {
+    def treatmentsForCalendarAsJson(isCustomer:Boolean, company:Company, cUnit:CompanyUnit, user:User,start:Date, end:Date) = {
         val where = " tr.user_c=? "
-        treatmentsForCalendarQueryToJson(where,company.id.is::cUnit.id.is::user.id.is::start::end::Nil)
+        treatmentsForCalendarQueryToJson(false, where,
+          company.id.is::cUnit.id.is::user.id.is::start::end::Nil)
     }
 
-    def treatmentsForCalendarAsJson(company:Company, cUnit:CompanyUnit, group:UserGroup,start:Date, end:Date) = {
+    def treatmentsForCalendarAsJson(isCustomer:Boolean, company:Company, cUnit:CompanyUnit, group:UserGroup,start:Date, end:Date) = {
 //        val where = " tr.user_c in (select id from business_pattern u where u.group_c = ?) "
         val where = " (tr.user_c in ( select id from business_pattern u where u.group_c = ? ) " +
                    "or tr.user_c in (select user_c from userusergroup where group_c = ?)) "
-        treatmentsForCalendarQueryToJson(where,company.id.is::cUnit.id.is::group.id.is::group.id.is::start::end::Nil)
+        treatmentsForCalendarQueryToJson(isCustomer, where,company.id.is::cUnit.id.is::group.id.is::group.id.is::start::end::Nil)
     }
 
 /*
@@ -51,9 +54,9 @@ object TreatmentCalendarService {
         treatmentsForCalendarQueryToJson(where,company.id.is::cUnit.id.is::group.id.is::cUnit.id.is::start::end::Nil)
     }     
 */
-    private def treatmentsForCalendarQueryToJson(where:String, params:List[Any]) = {
+    private def treatmentsForCalendarQueryToJson(isCustomer : Boolean, where:String, params:List[Any]) = {
         //info(SQL_TREATMENT_TO_CALENDAR_DATA+where+Treatment.SQL_VALID_TREATMENT)
-        val query = SQL_TREATMENT_TO_CALENDAR_DATA+where+Treatment.SQL_VALID_TREATMENT
+        val query = SQL_TREATMENT_TO_CALENDAR_DATA (isCustomer) +where+Treatment.SQL_VALID_TREATMENT
 
         var icon = "";
         val r = DB.performQuery(query, params)
@@ -120,7 +123,9 @@ object TreatmentCalendarService {
         }
       }
 
-    def str_unit:String = if (!AuthUtil.company.calendarShowDifUnit_?) {
+    def str_unit (isCustomer:Boolean):String = if (isCustomer) {
+      " AND 1 = 1 "
+      } else if (!AuthUtil.company.calendarShowDifUnit_?) {
       " AND tr.unit = ? "
       } else {
       " AND (tr.unit = ? or 1 = 1) "
@@ -140,7 +145,7 @@ object TreatmentCalendarService {
 
     // trim (substr (c.short_name,1,15)) diminuir o nome na agenda pode ser uma opção
     // no short tratar qd quebrar nome no meio e cortar na pos branca anterior
-    def SQL_TREATMENT_TO_CALENDAR_DATA = 
+    def SQL_TREATMENT_TO_CALENDAR_DATA (isCustomer:Boolean)= 
       """ SELECT """ + str_detail + """, tr.obs, start_c, end_c, user_c, 
           command, customer, trim (""" + str_cod + 
           """ || ' ' || c.short_name """ + str_resp + """ || ' ' || """ + str_phone + """), tr.id, tr.treatmentConflit, tr.status, 
@@ -158,7 +163,7 @@ object TreatmentCalendarService {
           left join product pr on pr.id = td.activity
           WHERE tr.showincalendar = TRUE
             AND tr.company = ?
-            """ + str_unit + """
+            """ + str_unit (isCustomer) + """
             AND
       """
 }

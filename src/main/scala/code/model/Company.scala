@@ -266,7 +266,7 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
       override def defaultValue = 0
   }    
   object hoursInAdvancePub extends MappedInt(this){ // horas de antecendencia para agendar
-      override def defaultValue = 0
+      override def defaultValue = 1
   }    
   object hoursToCancelPub extends MappedInt(this){
       override def defaultValue = 0

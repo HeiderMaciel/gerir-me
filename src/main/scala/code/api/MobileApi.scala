@@ -120,14 +120,17 @@ object MobileApi extends RestHelper with net.liftweb.common.Logger {
         val userObj = User.findByKey(user.toLong).get
         AuthUtil << customerAsUser
         AuthUtil << userObj.unit.obj.get
-
-        var treatment = TreatmentService.factoryTreatment("", customer.id.is.toString, user, date, hour_start, hour_start, "", "Agendamento Online","", true).get
-        TreatmentService.addDetailTreatmentWithoutValidate(treatment.id.is, 
-          activity.toLong, 0l /* auxiliar */ , 0l /* animal */, 
-          "" /* tooth*/, 0l /* offsale */, "" /* giftId */)
-        treatment.markAsPreOpen
-        treatment.save
-        JInt(1)
+        if (Project.strToDate (date + " " + hour_start) < new Date()) {
+          JString("Escolha um horário posterior à hora corrente")
+        } else {
+          var treatment = TreatmentService.factoryTreatment("", customer.id.is.toString, user, date, hour_start, hour_start, "", "Agendamento Online","", true).get
+          TreatmentService.addDetailTreatmentWithoutValidate(treatment.id.is, 
+            activity.toLong, 0l /* auxiliar */ , 0l /* animal */, 
+            "" /* tooth*/, 0l /* offsale */, "" /* giftId */)
+          treatment.markAsPreOpen
+          treatment.save
+          JInt(1)
+        }
       }
     }    
 
@@ -235,7 +238,7 @@ order by date_c
         val hoptions = AgHM.findAll(
         BySql(""" 
           agh between ? and (?-?)
-          and (agh > (to_number (to_char (now(),'hh24'),'99') + ?) or date(?) > now())
+          and (agh >= (to_number (to_char (now(),'hh24'),'99') + ?) or date(?) > now())
           and agm % ? = 0
           and 1 > (select count (1) from treatment tr where tr.user_c = ? and tr.company = ?
           and tr.status not in (5,4,8,1) 

@@ -287,7 +287,8 @@ where tr.status = 9 and tr.customer = ?)""",
     def deliveryDetailUsed(productId:Long, paymentDetailId:Long) = DeliveryDetail.findAll(By(DeliveryDetail.customer,this), By(DeliveryDetail.used_?,true), By(DeliveryDetail.product,productId), By(DeliveryDetail.paymentDetail, paymentDetailId))
 
     def history(start:Date, end:Date) = code.service.TreatmentCalendarService.treatmentsForCalendarAsJson(this.company.obj.get, 
-        this.unit.obj.get, this, start, end)
+        //this.unit.obj.get, 
+        this, start, end)
 
     def phones = mobilePhone + " " + phone;
 
