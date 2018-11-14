@@ -43,6 +43,37 @@ var TreatmentManger = {
 			    $('#calendar').weekCalendar("refresh");
 		}
 	},
+	updateTreatmentStatus: function(id, user, endDate, status) {
+		if ((status == "event" || status == "not_work") && 
+			(!CalendarManager.calendarPermitions.newBusyEvent)) {
+		    $('#calendar').weekCalendar("refresh");
+			return alert ("Suas permissões não permitem alterar bloqueio");
+		}
+		if (CalendarManager.calendarPermitions.editEvent) {
+			var url = "";
+			var end = getDateBr(endDate) + " " + getHourBr(endDate);
+			url = "/treatment/status/" + id;
+			$.post(url, {
+				"user": user,
+				"end": end,
+				"status": status
+			}, function(t) {
+				eval("t=" + t);
+				if (t != 1) {
+					if (confirm(t + "\n\n" + "Deseja salvar assim mesmo?")) {
+						TreatmentManger.updateTreatmentData(id, user, startDate, endDate, status, false);
+					} else {
+						refreshCalendarByAjax();
+					}
+				}
+			});
+		} else {
+			alert ("Suas permissões não permitem editar agendamento");
+				// o refresh aqui nao funcionou - 05/05/2017 rigel
+				//	refreshCalendarByAjax();
+			    $('#calendar').weekCalendar("refresh");
+		}
+	},
 	saveTreatment: function(force) {
 		if (force === undefined) {
 			force = false;

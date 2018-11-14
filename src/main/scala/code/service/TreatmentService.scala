@@ -478,6 +478,55 @@ object  TreatmentService extends net.liftweb.common.Logger {
 		TratmentServer ! TreatmentMessage("SaveUpdateTratment",end)		
 	}
 
+	def updateTreatmentStatus(id:String,user:Long,end:Date, 
+		status:Int = 0, validate:Boolean = true) = {
+		var treatment = Treatment.findByKey(id.toLong).get
+		if (treatment.status.is == Treatment.Paid) {
+			// evita que atendimento pago seja alterado gerava erro de comissao se o atend
+			// fosse moviedo para outro usuario
+			TratmentServer ! TreatmentMessage("SaveUpdateTratment",end)		
+  	        throw new RuntimeException("Atendimento já foi pago, não pode ser alterado!")
+		} 
+		if ((AuthUtil.user.id.is != user) && 
+			AuthUtil.user.isSimpleUserCalendarView) {
+			TratmentServer ! TreatmentMessage("SaveUpdateTratment",end)		
+  	        throw new RuntimeException("Você não tem permissão para alterar atendimentos de outros profissionais!")
+		}
+
+		if (status != treatment.status.toInt) {
+			if(status == Treatment.Arrived){
+				treatment.markAsArrived
+				if (AuthUtil.company.calendarAllAsArrived_?) {
+				 	markAsArrived (treatment.id)
+				}
+			}else if(status == Treatment.Missed){
+				treatment.markAsMissed
+			}else if(status == Treatment.ReSchedule){
+				treatment.markAsReSchedule
+			}else if(status == Treatment.Confirmed){
+				treatment.markAsConfirmed
+				if (AuthUtil.company.calendarAllAsConfirmed_?) {
+					markAsConfirmed (treatment.id)
+				}
+			}else if(status == Treatment.Ready){
+				treatment.markAsReady
+			}else if(status == Treatment.PreOpen){
+				treatment.markAsPreOpen
+			}else if(status == Treatment.Open){
+				treatment.markAsOpen
+			}else if(status == Treatment.Budget){
+				treatment.markAsBudget
+			}
+		}
+		if(validate){
+			treatment.save
+		}else{
+			treatment.saveWithoutValidate
+		}
+		
+		TratmentServer ! TreatmentMessage("SaveUpdateTratment",end)		
+	}
+
 	def updateEventHours(id:String,user:Long,start:Date,end:Date) = {
 		var busyEvent = BusyEvent.findByKey(id.toLong).get
 		busyEvent.user(user)

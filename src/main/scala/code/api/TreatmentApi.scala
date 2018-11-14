@@ -109,6 +109,45 @@ object TreatmentApi extends RestHelper with net.liftweb.common.Logger {
 				}
 			}
 		}
+		case "treatment" :: "status" :: id :: Nil Post _ =>{
+			try{
+				def user:String = S.param("user") openOr "0"
+				def end:String = S.param("end") openOr "0"
+				def status: String = S.param("status") openOr ""
+				def validate = (S.param("validate") openOr "true").toBoolean
+				def statstr:String = if (status.toLowerCase == "open") {
+					"0"
+				} else if (status.toLowerCase == "missed") {
+					"1"
+				} else if (status.toLowerCase == "arrived") {
+					"2"
+				} else if (status.toLowerCase == "ready") {
+					"3"
+				} else if (status.toLowerCase == "paid") {
+					"4"
+				} else if (status.toLowerCase == "delete") {
+					"5"
+				} else if (status.toLowerCase == "confirmed") {
+					"6"
+				} else if (status.toLowerCase == "preopen") {
+					"7"
+				} else if (status.toLowerCase == "rescheduled") {
+					"8"
+				} else if (status.toLowerCase == "budget") {
+					"9"
+				} else {
+					status
+				}
+				TreatmentService.updateTreatmentStatus(id,user.toLong,
+					Project.strToDate(end), statstr.toInt, validate)
+				JInt(1)
+			}catch{
+				case e:Exception => {
+					e.printStackTrace
+					JString(e.getMessage())
+				}
+			}
+		}
 //-------------------------------events
 		case "userEvent" :: id :: Nil Delete _ =>{
 			try{

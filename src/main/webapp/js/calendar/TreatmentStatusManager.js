@@ -13,7 +13,8 @@ var TreatmentStatusManager = {
 			if (AuthUtil.user.id == 3) {
 alert (global_calEvent.start)
 }
-		TreatmentManger.updateTreatmentData(global_calEvent.id, global_usersIds[global_calEvent.userId],global_calEvent.start,global_calEvent.end, 'preopen');
+//		TreatmentManger.updateTreatmentData(global_calEvent.id, global_usersIds[global_calEvent.userId],global_calEvent.start,global_calEvent.end, 'preopen');
+		TreatmentManger.updateTreatmentStatus(global_calEvent.id, global_usersIds[global_calEvent.userId],global_calEvent.end, 'preopen');
 		$('#treatment_add').modal('hide');
 		//$('#treatment_class').modal('hide');
 	},
