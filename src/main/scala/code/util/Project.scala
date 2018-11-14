@@ -546,6 +546,19 @@ object BusinessRulesUtil{
 
     def convertChars (name:String):String = {
         var name_aux = name;
+        name_aux = name_aux.replaceAll ("Ã³", "ó")
+        name_aux = name_aux.replaceAll ("Ã¡", "á")
+        name_aux = name_aux.replaceAll ("Ã­", "í")
+        name_aux = name_aux.replaceAll ("Ã§", "ç")
+        name_aux = name_aux.replaceAll ("ó", "o")
+        name_aux = name_aux.replaceAll ("ç", "c")
+        name_aux = name_aux.replaceAll ("á", "a")
+        name_aux = name_aux.replaceAll ("é", "e")
+        name_aux = name_aux.replaceAll ("í", "i")
+        name_aux = name_aux.replaceAll ("ã", "a")
+        name_aux = name_aux.replaceAll ("ẽ", "e")
+        name_aux = name_aux.replaceAll ("ê", "e")
+        name_aux = name_aux.replaceAll ("ô", "o")
         name_aux = name_aux.replaceAll ("ǁ", "Á")
         name_aux = name_aux.replaceAll ("Ǉǃ", "ÇÃ")
         name_aux = name_aux.replaceAll ("Ǉ", "c")

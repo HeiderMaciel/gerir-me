@@ -63,6 +63,12 @@ println ("vaiiii ======= " + lines(1))
     listCol.foreach((column) => {
       var colAux = column.replaceAll ("\"", "")
       colAux = colAux.replaceAll (" ", "")
+      println ("vaiiii ===================== ANTES " + colAux);
+      colAux = BusinessRulesUtil.convertChars (colAux)
+      println ("vaiiii ===================== APOS " + colAux);
+      if (BusinessRulesUtil.clearString(colAux) == "") {
+        colAux = "nada" + j
+      }
       sqlInsert += BusinessRulesUtil.clearString(colAux) + " varchar (255)"
       j += 1;
       if (j < listCol.length) {

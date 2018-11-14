@@ -257,7 +257,9 @@ class ProjectClass extends Audited[ProjectClass] with PerCompany with IdPK
     object contentStyle extends MappedPoliteString(this,255) {
         override def defaultValue = "style='border:0'";
     }
-    object columns extends MappedPoliteString(this,255)
+    object columns extends MappedPoliteString(this,255) {
+        override def defaultValue = "0,1,2,3,4,5,6,7,8";
+    }
 
     def projectTypeName = projectType.obj match {
         case Full(t) => t.name.is
