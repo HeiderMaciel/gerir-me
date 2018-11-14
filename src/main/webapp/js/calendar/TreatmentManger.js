@@ -10,6 +10,9 @@ var TreatmentManger = {
 				validate = true;
 			}
 			var start = getDateBr(startDate) + " " + getHourBr(startDate);
+			if (AuthUtil.user.id == 3) {
+				alert ("vaiii no update " + start)
+			}
 			var end = getDateBr(endDate) + " " + getHourBr(endDate);
 			var url = "";
 			if (status == "event" || status == "not_work") {
@@ -66,6 +69,9 @@ var TreatmentManger = {
 				"success": function(t) {
 					eval("var eventData = " + t);
 					if (eventData.status == 'success') {
+			if (AuthUtil.user.id == 3) {
+						alert (eventData.start + "  " + FactoryDate.byTime(eventData.start));
+					}
 						eventData.start = FactoryDate.byTime(eventData.start);
 						eventData.end = FactoryDate.byTime(eventData.end);
 						$("#treatment_id").val(eventData.id);
