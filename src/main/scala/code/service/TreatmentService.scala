@@ -478,6 +478,12 @@ object  TreatmentService extends net.liftweb.common.Logger {
 		TratmentServer ! TreatmentMessage("SaveUpdateTratment",end)		
 	}
 
+	// rigel 2018 novembro - antes era updateTreatmentData
+	// criei o updatestatus pq no horario de verão qdo alterava 
+	// a obs e logo depois o status a data vinha melada e deslocava 
+	// uma hora pra frente
+	// o updatestatus não seta a hora só o status
+	//TreatmentManger.updateTreatmentData(global_calEvent.id, global_usersIds[global_calEvent.userId],global_calEvent.start,global_calEvent.end, 'arrived');
 	def updateTreatmentStatus(id:String,user:Long,end:Date, 
 		status:Int = 0, validate:Boolean = true) = {
 		var treatment = Treatment.findByKey(id.toLong).get

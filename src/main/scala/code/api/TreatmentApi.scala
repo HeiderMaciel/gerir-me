@@ -109,6 +109,11 @@ object TreatmentApi extends RestHelper with net.liftweb.common.Logger {
 				}
 			}
 		}
+		// rigel 2018 novembro - antes era updateTreatmentData
+		// criei o updatestatus pq no horario de verão qdo alterava 
+		// a obs e logo depois o status a data vinha melada e deslocava 
+		// uma hora pra frente
+		// o updatestatus não seta a hora só o status
 		case "treatment" :: "status" :: id :: Nil Post _ =>{
 			try{
 				def user:String = S.param("user") openOr "0"
