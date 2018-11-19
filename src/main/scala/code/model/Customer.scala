@@ -60,15 +60,6 @@ class Customer extends BusinessPattern[Customer]{
         if (ac.name.is != "") {
             //println ("vai =================== dentro ")
 
-/*
-            message_aux = message_aux.replaceAll("##hoje##", Project.dateToExt(new Date()));
-            message_aux = message_aux.replaceAll("##mescorrente##", Project.monthToExt(new Date()));
-            message_aux = message_aux.replaceAll("##messeguinte##", Project.monthToExt(Project.nextMonth (new Date())));
-            message_aux = message_aux.replaceAll("##mesanterior##", Project.monthToExt(Project.prevMonth (new Date())));
-
-            message_aux = message_aux.replaceAll("##logo##", "<img width='100px' src='" + AuthUtil.company.thumb_web + "'/>");
-*/
-
             message_aux = message_aux.replaceAll ("##nome##", ac.name.is)
             message_aux = message_aux.replaceAll ("##apelido##", ac.short_name.is)
             message_aux = message_aux.replaceAll ("##prinome##", ac.firstName)
@@ -112,6 +103,7 @@ class Customer extends BusinessPattern[Customer]{
             }
 
             message_aux = message_aux.replaceAll ("##detalhes##", ac.obsComplement)
+            message_aux = message_aux.replaceAll ("##obs##", ac.obs)
 
             message_aux = message_aux.replaceAll ("##convenio##", ac.offSaleShortName)
             message_aux = message_aux.replaceAll ("##profissao##", ac.occupationShortName)
