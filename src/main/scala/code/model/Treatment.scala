@@ -920,24 +920,28 @@ object Treatment extends Treatment with LongKeyedMapperPerCompany[Treatment] wit
             val r = if (company.commandControl == Company.CmdDaily) {
                 DB.performQuery("""select max(CAST(nullif(command,'') AS integer)) 
                 from treatment where company = ? and unit = ? 
-                and dateevent = date(?) and hasDetail=true and status<>5""", 
+                and dateevent = date(?) and hasDetail=true and status<>5 
+                and command is not null and trim (command) <> ''""", 
                 List(company.id.is, unit.id.is, date))
             } else if (company.commandControl == Company.CmdEver) {
                 // sem o dia - otimizar depois
                 DB.performQuery("""select max(CAST(nullif(command,'') AS integer)) 
                 from treatment where company = ? and unit = ? 
-                and hasDetail=true and status<>5""", 
+                and hasDetail=true and status<>5 
+                and command is not null and trim (command) <> ''""", 
                 List(company.id.is, unit.id.is))
             } else if (company.commandControl == Company.CmdDailyCompany) {
                 DB.performQuery("""select max(CAST(nullif(command,'') AS integer)) 
                 from treatment where company = ? 
-                and dateevent = date(?) and hasDetail=true and status<>5""", 
+                and dateevent = date(?) and hasDetail=true and status<>5 
+                and command is not null and trim (command) <> ''""", 
                 List(company.id.is, date))
             } else if (company.commandControl == Company.CmdEverCompany) {
                 // sem o dia - otimizar depois
                 DB.performQuery("""select max(CAST(nullif(command,'') AS integer)) 
                 from treatment where company = ? 
-                and hasDetail=true and status<>5""", 
+                and hasDetail=true and status<>5 
+                and command is not null and trim (command) <> ''""", 
                 List(company.id.is))
             } else {
                 throw new RuntimeException("Gerando comanda - Ctrl Inválido " + company.commandControl)
@@ -956,28 +960,28 @@ object Treatment extends Treatment with LongKeyedMapperPerCompany[Treatment] wit
                             from treatment where company = ? and unit = ?
                             and dateevent = date(?) 
                             and hasDetail=true and status<>5 
-                            and command is not null and command <> ''""", 
+                            and command is not null and trim (command) <> ''""", 
                             List(company.id.is, unit.id.is, date))
                     } else if (company.commandControl == Company.CmdEver) {
                         // sem o dia - otimizar depois
                         DB.performQuery("""select max(command) 
                             from treatment where company = ? and unit = ?
                             and hasDetail=true and status<>5 
-                            and command is not null and command <> ''""", 
+                            and command is not null and trim (command) <> ''""", 
                             List(company.id.is, unit.id.is))
                     } else if (company.commandControl == Company.CmdDailyCompany) {
                         DB.performQuery("""select max(command) 
                             from treatment where company = ? 
                             and dateevent = date(?) 
                             and hasDetail=true and status<>5 
-                            and command is not null and command <> ''""", 
+                            and command is not null and trim (command) <> ''""", 
                             List(company.id.is, date))
                     } else if (company.commandControl == Company.CmdEverCompany) {
                         // sem o dia - otimizar depois
                         DB.performQuery("""select max(command) 
                             from treatment where company = ? 
                             and hasDetail=true and status<>5 
-                            and command is not null and command <> ''""", 
+                            and command is not null and trim (command) <> ''""", 
                             List(company.id.is))
                     } else {
                         throw new RuntimeException("Gerando comanda sem o cast - Ctrl Inválido " + company.commandControl)
