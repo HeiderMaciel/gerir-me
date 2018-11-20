@@ -636,6 +636,8 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
       var message_aux = message;
       if (ac.name.is != "") {
           message_aux = message_aux.replaceAll ("##hoje##", Project.dateToExt(new Date()));
+          message_aux = message_aux.replaceAll ("##hoje_ext##", Project.dateToExt(new Date()));
+          message_aux = message_aux.replaceAll ("##hoje_data##", Project.dateToStr(new Date()));
           message_aux = message_aux.replaceAll ("##mescorrente##", Project.monthToExt(new Date()));
           message_aux = message_aux.replaceAll ("##messeguinte##", Project.monthToExt(Project.nextMonth (new Date())));
           message_aux = message_aux.replaceAll ("##mesanterior##", Project.monthToExt(Project.prevMonth (new Date())));
