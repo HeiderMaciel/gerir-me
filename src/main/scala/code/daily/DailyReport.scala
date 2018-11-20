@@ -3,7 +3,7 @@ package code.daily
 import net.liftweb._
 import http._
 import mapper._ 
-import code.model.{Company, CompanyUnit, Customer, User, Monthly, UserMessage, Treatment, InventoryMovement, AccountPayable}
+import code.model.{Company, CompanyUnit, Customer, User, Monthly, UserMessage, Treatment, InventoryMovement, AccountPayable, PermissionModule}
 import code.service.TreatmentService
 import code.util.{Project, EmailUtil}
 import java.util.Date
@@ -216,6 +216,11 @@ object DailyReport{
 		} else {
 			"none"
 		}
+		val unitDisplay = if (PermissionModule.unit_?) {
+			"visible"
+		} else {
+			"none"
+		}
 
 		def url (company:Company) = if (Project.isLocalHost) {
            "localhost:7171/"
@@ -229,7 +234,12 @@ object DailyReport{
 					Olá {customer.name.is}, <br/><br/>{description} você tem {num} atendimento(s) marcado(s), abaixo detalhes:
 					{
 						treatments.map(
-							a =>
+							a => {
+								val phoneAux = if (a.unit.obj.get.getPartner.allPhones == "") {
+									company.phone.is
+								} else {
+									a.unit.obj.get.getPartner.allPhones
+								}
 							(
 								<div>
 									<br/>
@@ -238,11 +248,11 @@ object DailyReport{
 									<br/>
 										<b>Atendimentos</b> : {a.descritionDetails}
 									<br/>
-										<b>Local</b> : {company.name.is} - Unidade {a.unit.obj.get.name}
-									<br/>
-										<b>Telefone</b> : {company.phone.is}
+										<b>Local</b> : {company.name.is} <span style={"display:"+ unitDisplay +""}>- Unidade {a.unit.obj.get.name}</span>
 									<br/>
 										<b>Endereço</b> : {a.unit.obj.get.getPartner.full_address}
+									<br/>
+										<b>Telefone</b> : {phoneAux}
 									<br/>
 									<hr/>
 								</div>
@@ -264,7 +274,7 @@ object DailyReport{
 									",8"}>clique aqui</a>.
 									</b></p>
 								</div>
-							)
+							)}
 						)
 					}
 					<p>
@@ -286,6 +296,11 @@ object DailyReport{
 		} else {
 			"none"
 		}
+		val unitDisplay = if (PermissionModule.unit_?) {
+			"visible"
+		} else {
+			"none"
+		}
 
 		val description = extDay (date);
 		val xml = 
@@ -296,12 +311,17 @@ object DailyReport{
 			{
 				treatments.map(a => {
 					val colornow = "background-color:" + a.colorByDetails + ";"
+					var whereIsDisplay = if (a.whereIs != "") {
+						"visible"
+					} else {
+						"none"
+					}
 					(
 						<div>
 							<br/>
 								<b>{persontype}</b> : {a.customerName}
 							<br/>
-								<span style={"display:"+ customerInfoDisplay +""}><b>Telefone</b> : {a.customer.obj.get.phone.is + ' ' + a.customer.obj.get.mobilePhone.is + ' ' + a.customer.obj.get.email_alternative.is}<br/></span>
+								<span style={"display:"+ customerInfoDisplay +""}><b>Telefone</b> : {a.customer.obj.get.allPhones}<br/></span>
 								<span style={"display:"+ customerInfoDisplay +""}><b>Email</b> : {a.customer.obj.get.email.is}<br/></span>
 								<b>Horário</b> : de {Project.dateToHours(a.start.is)} até {Project.dateToHours(a.end.is)}
 							<br/>
@@ -310,9 +330,8 @@ object DailyReport{
 							<br/>
 								<b>Obs</b> : {a.obs}
 							<br/>
-								{a.whereIs}
-							<br/>
-								<b>Local</b> : {company.name.is} - Unidade {a.unit.obj.get.name}
+								<span style={"display:"+ whereIsDisplay +""}>{a.whereIs}<br/></span>
+								<b>Local</b> : {company.name.is} <span style={"display:"+ unitDisplay +""}>- Unidade {a.unit.obj.get.name}</span>
 							<hr/>
 						</div>
 					)}
