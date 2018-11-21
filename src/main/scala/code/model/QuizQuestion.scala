@@ -86,7 +86,8 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
         override def defaultValue = 1
         // nunca 0 prontuári confidencial do médico
         // se preenchido 1
-        // sempre 3
+        // sempre 2
+        // sem borda 3
     }
     // é um auto relacionamento não transformar em FK
     object defaultQuestion extends MappedLong(this) {

@@ -278,6 +278,7 @@ order by qa.applydate, qq.orderinsection
       ("message", message_aux),
       ("size", size),
       ("position", question.quizQuestionPosition.is),
+      ("printControl", question.printControl.is),
       ("obs", question.obs.is),
       ("domain", domainAux),
       ("autoComplete", autoComplete),
