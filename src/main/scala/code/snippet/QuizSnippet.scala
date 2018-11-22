@@ -459,6 +459,7 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		    "name=addon" #> (SHtml.text(ac.addon.is, ac.addon(_)))&
 		    "name=sufix" #> (SHtml.text(ac.sufix.is, ac.sufix(_)))&
 		    "name=autoComplete" #> (SHtml.checkbox(ac.autoComplete_?, ac.autoComplete_?(_)))&
+		    "name=quizQuestionStyle" #> (SHtml.textarea(ac.quizQuestionStyle.is, ac.quizQuestionStyle(_)))&
 		    "name=message" #> (SHtml.textarea(ac.message.is, ac.message(_)))&
 			"name=rank" #> (SHtml.text(ac.rank.is.toString, (v:String) =>{ if(v !=""){ac.rank(v.toDouble)};}))&
 			"name=orderinsection" #> (SHtml.text(ac.orderInSection.is.toString, (v:String) => ac.orderInSection(v.toInt)))&
