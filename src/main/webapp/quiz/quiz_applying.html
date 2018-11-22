@@ -14,13 +14,17 @@
                 $('.send_email_customer').show();
                 $('.save_quiz').hide();
                 $('.print_version').hide();
-                $('.print_really').show();
+                $('.edit_version').show();
+                // imprimir está hide nas duas situações pq
+                // o ctrl P está melhor
+                $('.print_really').hide();
                 // para não mostrar secões vazias
                 URL_GET += "/true"
             } else {
                 $('.send_email_customer').hide();
                 $('.save_quiz').show();
                 $('.print_version').show();
+                $('.edit_version').hide();
                 $('.print_really').hide();
                 URL_GET += "/false"
             }
@@ -159,6 +163,9 @@
             function createSection(section) {
                 var template = $($("#section-template").html());
                 template.find('legend').text(section.name);
+                if (isAdmin()) {
+                    setTitle (template.find(".label-section"), "seção " + section.id);
+                }
                 if (section.format == 5) {
                     template.find(".label-section").remove();
                 } else {
@@ -283,6 +290,10 @@
                 setFor(template.find('label:first'), question.id);
                 
                 setId(template.find('label:first'), "labelleft"+question.id);
+                if (isAdmin()) {
+                    setTitle(template.find('label:first'), "Questão " + question.id);
+                    setTitle(template.find('.label-top'), "Questão " + question.id);
+                }
                 setId(template.find('.label-top'), "labeltop"+question.id);
 
                 setId(template.find('.print-question'), "printquestion"+question.id);
@@ -346,18 +357,21 @@
                 var template = templateQuestion (question, "text");
 
                 formatQuestion (question, template)
-                if (PRINT == 'true1') {
-                    if (question.type == 8 /* rich text */) {
-                       template.find('.print-question').html(question.value);
-                    } else {
-                       template.find('.print-question').text(question.addon + " " + question.value);
+                if (PRINT == 'true') {
+                    // template.find(".tx1a").remove();
+                    if (question.printControl == 3) {
+                        // imprime sem borda
+                        var addon = template.find('.add-on');
+                        //alert (add)
+                        setStyle(addon, 'color:black;border:0');
+                        var input = template.find('input');
+                        setStyle(input, 'border:0');
                     }
-                    template.find(".tx1a").remove();
-                } else {
+                } //else {
                     var input = template.find('input');
                     input.val(question.value);
                     if (isAdmin()) {
-                        setTitle(input, question.id);
+                        setTitle(input, "Questão " + question.id);
                     }
                     if (question.type == 5 /* valor */) {
                         setClass(input, "input-small currency");
@@ -368,13 +382,14 @@
                     setName(input, question.id);
                     setClass(input, question.size);
                     setAutoComplete(input, question.autoComplete);
-                }
+                //}
 
                 return template;
             }
 
             function createParagraph(question, rich) {
-                var template = $($("#paragraph-template").html());
+                //var template = $($("#paragraph-template").html());
+                var template = templateQuestion (question, "paragraph");
                 formatQuestion (question, template)
                 if (PRINT == 'true') {
                     if (question.type == 8 /* rich text */) {
@@ -387,7 +402,7 @@
                     var textarea = template.find('textarea');
                     textarea.val(question.value);
                     if (isAdmin()) {
-                        setTitle(textarea, question.id);
+                        setTitle(textarea, "Questão " + question.id);
                     }
                     setAnswerId (textarea, question.answerid);
                     setName(textarea, question.id);
@@ -404,7 +419,8 @@
 
                 var select = template.find('select');
                 if (isAdmin()) {
-                    setTitle(select, question.id);
+                    // nao está funcionando no select2
+                    setTitle(select, "Questão " + question.id);
                 }
                 setClass(select, question.size);
                 setAnswerId (select, question.answerid);
@@ -570,12 +586,14 @@
             });
 
             $(".print_version").click(function(){
-              //alert (document.location.href+"&print=true");
               window.open(document.location.href+"&print=true", "_self");
             });
 
+            $(".edit_version").click(function(){
+              window.open(document.location.href.substring (0,document.location.href.indexOf("print")-1), "_self");
+            });
+
             $(".send_email_customer").click(function(){
-              //sendReceiptEmailCustomer(idcustomer1);
               sendReceiptEmailCustomer($("#quiz-bpid").val());
             });
             $('#edit_patient').click(function (){
@@ -600,6 +618,9 @@
             </a>
             <a type="button" class="btn primary print_version">
             Impressão</span>
+            </a>
+            <a type="button" class="btn primary edit_version">
+            Editar</span>
             </a>
             <a type="button" class="btn primary print_really">
             Imprimir</span>
@@ -699,6 +720,22 @@
             </div>
         </script>
 
+        <script type="text/template" id="paragraphi-template">
+            <div id='text'>
+                <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
+                <label style='color:black; font-weight: bold' for=""></label>
+
+                <div class="input">
+                    <span id='labeltop' class="label-top">paragraph</span>
+                    <textarea class="txa xlarge" name="" id="" rows="3" data-answerid='0'></textarea>
+                    <span class="help-block"></span>
+                    <div class="span12">
+                    <span id='printquestion' class='print-question'></span>
+                    </div>
+                </div>
+            </div>
+        </script>
+
         <script type="text/template" id="list-template">
             <div class="clearfix">
                 <span id='labelparagraph' class='label-paragraph'><p><b></b></p></span>
@@ -724,7 +761,7 @@
                 <span id="leftgap" class="left-gap hide_on_print" style='float:left; padding-right:145px' >.</span>
 
                 <div class="input-prepend" style='float:left; padding-right:10px'>
-                    <span id='labeltop' class="label-top">uai meio</span>
+                    <span title="teste label title" id='labeltop' class="label-top">uai meio</span>
                     <span style='color:black;' class="add-on"></span>
                     <select class="xlarge" data-answerid='0'  ></select>
                     <span class="help-block"></span>
