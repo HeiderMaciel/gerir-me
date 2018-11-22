@@ -58,7 +58,7 @@ object CustomerReportApi extends RestHelper with ReportRest {
 			}
 			case "customer_report" :: "quizsections" :: Nil Get _ =>{
 				JsArray(QuizSection.findAllInCompanyOrDefaultCompany(OrderBy(QuizSection.name, Ascending)).map((section)=>{
-					JsObj(("name",section.name.is), ("id",section.id.is))
+					JsObj(("name",section.name.is + " - " + section.quizName), ("id",section.id.is))
 				}
 				))
 			}
