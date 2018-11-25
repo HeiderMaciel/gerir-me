@@ -111,6 +111,7 @@ class Account extends Audited[Account]
         // de separa por unit
         // 01/08/2017
         val aau = AccountCompanyUnit.createInCompany.
+        name (this.name + " " + unit.name.is).
         unit (unit).
 //        value (this.value).
 //        lastValue (this.lastValue).
