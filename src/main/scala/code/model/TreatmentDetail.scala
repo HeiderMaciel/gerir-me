@@ -549,10 +549,20 @@ class TreatmentDetail extends Audited[TreatmentDetail] with IdPK with CreatedUpd
     }
 
     def unit_price = (this.price.is / this.amount.is).toDouble
-    def user = treatment.obj.get.user.obj.get
+
     def hasUser = treatment.obj.get.user.obj match {
         case Full(u) => true
         case _ => false
+    }
+
+    def user = if (hasUser) {
+        treatment.obj.get.user.obj.get
+    } else if (AuthUtil.?) {
+        User.findByKey (AuthUtil.unit.partner).get
+    } else {
+        val ac = Company.findByKey (company).get
+        val ac1 = CompanyUnit.findByKey (ac.id.is).get
+        User.findByKey (ac1.partner).get
     }
 
     def commissionActivity:BigDecimal = {
