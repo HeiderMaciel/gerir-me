@@ -23,7 +23,8 @@ object ContSelfUtil extends net.liftweb.common.Logger  {
 
 		val http = new Http
 		val request = ContSelfUtil.apiv2/"ApiMobileV2/IntegracaoProcessamento_OrdemServico"
-		val ret = http(request.secure <<? authParams(access_token) << mapParams(access_token,formatDate(paymentDate)) as_str)
+//		val ret = http(request.secure <<? authParams(access_token) << mapParams(access_token,formatDate(paymentDate)) as_str)
+        val ret = http(request.secure << mapParams(access_token,formatDate(paymentDate)) <:< authParams(access_token) as_str)
 
 
 /*
@@ -33,9 +34,10 @@ val ret = Http(
   .header("Authorization", "CX0fV+oSgF35PMkmqrIxo5AkIJmEwB2zSbP88Ssace7zoT00KEY1BFAMZIsyCea1VOeB37+dlqoDu4T8fz/z+w==")
   .option(HttpOptions.readTimeout(10000)).asString
 */
-println ("vaiiiii ================ " + ret + " =========================== ")
+//println ("vaiiiii ================ " + ret + " =========================== ")
+//println ("vaiiiii ================ " + mapParams(access_token,formatDate(paymentDate)) + " =========================== ")
 		//info(ret)
-		//val json = parse(ret)
+		val json = parse(ret)
 	/*	val faceEvent = (json.extract[FacebookEventReturn])
 		
 		faceEvent
