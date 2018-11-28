@@ -67,6 +67,7 @@ object MonthlyApi extends RestHelper  with net.liftweb.common.Logger  {
 			} yield {				
 				var start = Project.strToDate(dateStart+" 00:00")
 				var end = Project.strToDateOrToday(dateEnd)
+				//NfeUtil.createOS("",new Date());
 				ContSelfUtil.createOS("",new Date());
 			    Payment.findAll(
 			    	By(Payment.company, company.toLong), 

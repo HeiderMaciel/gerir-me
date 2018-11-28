@@ -1,3 +1,9 @@
+
+https://www.4devs.com.br/gerador_de_cnpj
+
+
+https://stackoverflow.com/questions/19217054/sending-a-custom-post-https-request-in-dispatch-cookies-headers
+
 --Make all swap off
 sudo swapoff -a
 --Resize the swapfile

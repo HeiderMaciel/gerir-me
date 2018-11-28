@@ -1,4 +1,31 @@
 <div id="main" class="lift:surround?with=bootstrap&at=content">
+  <script type='text/javascript'>
+      $(function() {
+       $("#cad-nfe").on('click', function() {
+      alert ("vaii cadastar")
+      $.ajax({
+          url: 'https://inovedados.com.br/nfse/empresas/cadastrar',
+          type: 'post',
+          data: {
+             "nameCompany"       : "Teste", // Nome da empresa (max 100 caracteres) */
+              "codeCompany"       : "10.712.076/0001-01", // CNPJ da empresa */
+              "imCompany"         : "", // Inscrição municipal da empresa (max 11 caracteres) */
+              "taxRegimeCompany"  : "1", // Regime de tributação da empresa (1 – Microempresa Municipal; 2 – Estimativa; 3 – Sociedade de Profissionais; 4 – Cooperativa; 5 – MEI – Simples Nacional; 6 – ME EPP – Simples Nacional) */
+              "simplesCompany"    : "1", /// Optante do SIMPLES nacional? (1 - Sim, 2 - Não) */          
+                  },
+          headers: {
+              token: "0155f419c07965d45070ab0699137a93"
+          },
+          dataType: 'json',
+          success: function (data) {
+            alert (data)
+              console.info(data);
+          }
+      });        
+      });        
+      });        
+  </script>
+
   <span>
     <form   class="lift:UnitSnippet.maintain">
       <div class="well">
@@ -6,6 +33,9 @@
         <a class="btn primary" href="/unit/list">Lista</a>
         <input class="btn success" type="submit" value="Salvar">
         <a class="btn primary" href="/unit/edit">Inserir novo</a>
+        <span class="lift:SecuritySnippet.isSuperAdmin">
+        <button type="button" id="cad-nfe" title ="Cadastra unidade para emissão de NFe"class="btn primary lift:SecuritySnippet.isSuperAdmin">Cadastrar NFe</button>
+        </span>
       </div>
       <div>
         <span id="user_form">

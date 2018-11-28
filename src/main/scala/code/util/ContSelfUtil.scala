@@ -14,7 +14,7 @@ import java.util.Date
 
 
 object ContSelfUtil extends net.liftweb.common.Logger  {
-	lazy val access_token = "CX0fV+oSgF35PMkmqrIxo5AkIJmEwB2zSbP88Ssace7zoT00KEY1BFAMZIsyCea1VOeB37+dlqoDu4T8fz/z+w=="
+	lazy val access_token = "Basic CX0fV+oSgF35PMkmqrIxo5AkIJmEwB2zSbP88Ssace7zoT00KEY1BFAMZIsyCea1VOeB37+dlqoDu4T8fz/z+w=="
 	implicit val formats = DefaultFormats // Brings in default date formats etc.
 	lazy val host = "app.contself.com.br"
 	lazy val apiv2 = :/(host)
@@ -23,25 +23,10 @@ object ContSelfUtil extends net.liftweb.common.Logger  {
 
 		val http = new Http
 		val request = ContSelfUtil.apiv2/"ApiMobileV2/IntegracaoProcessamento_OrdemServico"
-//		val ret = http(request.secure <<? authParams(access_token) << mapParams(access_token,formatDate(paymentDate)) as_str)
-        val ret = http(request.secure << mapParams(access_token,formatDate(paymentDate)) <:< authParams(access_token) as_str)
+        val ret = http(request.secure <<? mapParams(access_token,formatDate(paymentDate)) <:< authParams(access_token) as_str)
 
-
-/*
-val ret = Http(
-   "https://app.contself.com.br/ApiMobileV2/IntegracaoProcessamento_OrdemServico").postData(mapParams(access_token,formatDate(paymentDate)))
-  .header("Content-Type", "application/json")
-  .header("Authorization", "CX0fV+oSgF35PMkmqrIxo5AkIJmEwB2zSbP88Ssace7zoT00KEY1BFAMZIsyCea1VOeB37+dlqoDu4T8fz/z+w==")
-  .option(HttpOptions.readTimeout(10000)).asString
-*/
-//println ("vaiiiii ================ " + ret + " =========================== ")
-//println ("vaiiiii ================ " + mapParams(access_token,formatDate(paymentDate)) + " =========================== ")
 		//info(ret)
 		val json = parse(ret)
-	/*	val faceEvent = (json.extract[FacebookEventReturn])
-		
-		faceEvent
-	*/
 	}
 
 	def authParams (token:String) = {
@@ -49,8 +34,9 @@ val ret = Http(
             "Content-Type" -> "application/json")
 	}
 
-	def mapParams(token:String,paymentDate:String) = 
-    	Map("ChavePessoa" -> "966488d7-adac-4ea9-866c-30a4b144f278",
+	def mapParams(token:String,paymentDate:String) = {
+        val value = 100.0;
+    	Map(("ChavePessoa" , "966488d7-adac-4ea9-866c-30a4b144f278"),
     		"DataOS" -> paymentDate,
     		"CodigoOS" -> "1",
     		"Convenio" -> "Particular",
@@ -59,8 +45,9 @@ val ret = Http(
     		"IdentificadorPaciente" -> "55118593620",
     		"CodigoResponsavelFinanceiro" ->  "",
     		"IdentificadorResponsavelFinanceiro" -> "",
-    		"ValorOS" -> "100",
+    		("ValorOS" , "100"),
     		"DataEnvioRegistro" -> paymentDate)
+    }
 
 /*
     	Map("ChavePessoa" -> "966488d7-adac-4ea9-866c-30a4b144f278",
