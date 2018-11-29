@@ -314,7 +314,8 @@ class  UserSnippet extends BootstrapPaginatorSnippet[User] {
 													("name",u.thumbAndName),
 													("id",u.id.is),
 													("group",u.group.is),
-													("calendarInterval",u.calendarInterval.is)
+													("calendarInterval",if (u.calendarInterval.is != 0) {
+													u.calendarInterval.is } else { AuthUtil.company.calendarInterval.is })
 													//,("hours", JsArray(u.workHouers.map(h => JsObj(("day", h.day.is),("start", h.start.is),("end", h.end.is),("startLanch", h.startLanch.is),("endLanch", h.endLanch.is))) ))
 												)
 											)
