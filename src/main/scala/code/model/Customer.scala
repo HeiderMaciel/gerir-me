@@ -734,6 +734,8 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
                     "update useractivity set user_c=? where user_c=?;"::
                     "update usercompanyunit set user_c=? where user_c=?;"::
                     "update userusergroup set user_c=? where user_c=?;"::
+                    "update usermessage set of_c=? where of_c=?;"::
+                    "update usermessagelogread set to_c=? where to_c=?;"::
                     "update bpmonthly set user_c=? where user_c=?;"::
                     "update tdepet set animal=? where animal=?;"::
                     Nil
