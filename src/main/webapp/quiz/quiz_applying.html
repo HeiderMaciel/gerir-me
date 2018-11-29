@@ -85,7 +85,15 @@
                     data: FORM.serialize(),
                     success: function( response ) {
                         console.log( response );
-                        alert ("Formulário salvo com sucesso!")
+                        if (response == true || response == "true") {
+                            alert ("Formulário salvo com sucesso!")
+                        } else {
+                            alert("Erro ao salvar formulário " + response);
+                        }
+                    }, 
+                    error : function(response){
+                        console.log( response );
+                        alert("Erro ao salvar formulário " + response);
                     }
                 } );
             })

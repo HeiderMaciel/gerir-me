@@ -11,7 +11,7 @@ import net.liftweb.common.Full
 import net.liftweb.http.S
 import net.liftweb.http.js.JE._
 import net.liftweb.http.rest._
-import net.liftweb.json.JsonAST.JBool
+import net.liftweb.json._
 //import net.liftweb.mapper.By
 import net.liftweb.mapper._ 
 
@@ -25,13 +25,18 @@ object QuizApplyingApi extends RestHelper with ReportRest with net.liftweb.commo
     }
 
     case "api" :: "v2" :: "quiz_applying" :: Nil Post _ => {
-      for {
-        id <- S.param("id")
-        questions <- S.param("questions")
-      } yield {
-        questions.split(",").map(saveAnswer(id.toLong, _))
-      }
-      JBool(true)
+      try {
+        for {
+          id <- S.param("id")
+          questions <- S.param("questions")
+        } yield {
+          questions.split(",").map(saveAnswer(id.toLong, _))
+        }
+        JBool(true)
+      } catch {
+        case e: RuntimeException => JString(e.getMessage)
+        case e: Exception => JString(e.getMessage)
+      }     
     }
     case "api" :: "v2" :: "getQuestions" :: quizId :: Nil JsonGet _ =>{
       val quizParm = if (quizId != "" && quizId != "0") {
@@ -96,6 +101,9 @@ order by qa.applydate, qq.orderinsection
             case _ => QuizAnswer.createInCompany
           }
 
+      if (value.length > 20000) {
+        throw new RuntimeException("Quantidade de caracteres maior que 20000 - questão " + questionId)
+      }
       val r = quizAnswer
         .quizApplying(applyingId)
         .quizQuestion(questionIdLong)
