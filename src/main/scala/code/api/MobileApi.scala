@@ -269,8 +269,8 @@ order by date_c
         (activityObj.durationMin/60),
         userObj.company.obj.get.hoursInAdvancePub.is,
         date1,
-//        userObj.company.obj.get.calendarInterval.is,
-        userObj.calendarInterval.is,
+        if (userObj.calendarInterval.is != 0) { 
+          userObj.calendarInterval.is } else {userObj.company.obj.get.calendarInterval.is},
         user.toLong,
         customer.company,
         date1,
