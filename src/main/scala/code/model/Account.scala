@@ -200,7 +200,7 @@ class Account extends Audited[Account]
 */
 
   override def save() = {
-    if(AuthUtil.?) {
+    if(AuthUtil.? && this.id.is != -1) {
       val ac = getAccountUnit (AuthUtil.unit)
       ac.save;
     }
