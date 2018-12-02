@@ -801,11 +801,29 @@ no account payable - 22/02/2018 - rigel
 				}
 
 				def idsToshow:List[Long] = S.param("ids") match {
-					case Full(ids) => ids.split(",").toList.map(_.trim.toLong)
+					case Full(ids) => {
+						if (ids.trim != "") {
+							ids.split(",").toList.map(_.trim.toLong)
+						} else {
+							Nil
+						}
+					}
 					case _ => Nil
 				}
 
 				def idsToshowStr = idsToshow.map(_.toString).reduceLeft(_+" , "+_)
+
+
+				val status_name = S.param("status_select_filter[]") match {
+					case Full(p) => "status_select_filter[]"
+					case _ => "status_select_filter"
+				}
+				
+				def statusStr:String = S.param(status_name) match {
+					case Full(p) => S.params(status_name).filter(_ != "").map(_.toString).reduceLeft(_+","+_)
+					case _ => "true,false";
+				}
+
 		        val sqldt : String = if (dttypes == "1") { // competencia
 		            " and date(ap.exerciseDate) between date(?) and date(?) "
 		          } else if (dttypes == "2") { // pagamento
@@ -819,7 +837,9 @@ no account payable - 22/02/2018 - rigel
 				(
 				(
     		      select COALESCE(sum(case when ap.typemovement = 0 then ap.value when ap.typemovement = 1 then ap.value * (-1) end),0) as total    
-				  from accountpayable ap where 
+				  from accountpayable ap 
+				  inner join account acc on acc.id = ap.account and acc.receive = true
+				  where 
 				  ap.toconciliation = false and
 				  ap.company=? and 
 				  ap.category in (
@@ -827,7 +847,8 @@ no account payable - 22/02/2018 - rigel
 				      accountcategory acc 
 				      where acc.company=? and acc.mintreenode between ac.mintreenode and ac.maxtreenode
 				      )
-				      and ap.paid=true """ + sqldt + """
+				      and ap.paid in (%s)
+				      """ + sqldt + """
 				      and ap.value <> 0
 				      and (%s) and (%s)
 				) 
@@ -842,7 +863,7 @@ no account payable - 22/02/2018 - rigel
 				"""
 
 				if(idsToshow.isEmpty) {
-					toResponse(SQL_DRE_TREE.format(unit, costcenters, 
+					toResponse(SQL_DRE_TREE.format(statusStr, unit, costcenters, 
 						accounts),
 					List(AuthUtil.company.id.is, AuthUtil.company.id.is, 
 						start, end, AuthUtil.company.id.is, start));

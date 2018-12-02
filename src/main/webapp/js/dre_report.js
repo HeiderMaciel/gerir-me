@@ -1,4 +1,4 @@
-var requestDreData = function(unit, costcenters, accounts, dttype, start, end, ids) {
+var requestDreData = function(unit, costcenters, accounts, dttype, start, end, status_select_filter, ids) {
   var url = "/report/dre_tree";
   $.post(url, {
     unit: unit,
@@ -7,6 +7,7 @@ var requestDreData = function(unit, costcenters, accounts, dttype, start, end, i
     dttype: dttype,
     start: start,
     end: end,
+    status_select_filter: status_select_filter,
     ids: ids
   }, function(t) {
     eval("var treeData = " + t);

@@ -504,6 +504,10 @@
     }
   };
 
+  AccountPayable.status_select_filter = function() {
+    return $('#status_select_filter').val().toString();
+  };
+
   AccountPayable.statusToFilter = function() {
     if ($('#status_select_filter').val()) {
       return $('#status_select_filter').val().toString();
@@ -1008,7 +1012,10 @@
         "backdrop": true
       });
       return AccountPayable.getListFromServer(function() {
-        return requestDreData(0, 0, 0, AccountPayable.dttype(), AccountPayable.startDate(), AccountPayable.endDate(), AccountPayable.ids.join(" , "));
+        return requestDreData(0, 0, 0, AccountPayable.dttype(), 
+          AccountPayable.startDate(), AccountPayable.endDate(),
+          AccountPayable.status_select_filter(), 
+          AccountPayable.ids.join(" , "));
       });
     });
   }));

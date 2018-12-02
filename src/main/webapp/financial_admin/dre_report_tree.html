@@ -15,7 +15,7 @@
       $("#start").val(getDateBr(new Date().getStartOfMonth()));
       $("#end").val(getDateBr(new Date()));
       $("#send").click(function(){
-       requestDreData($("#unit").val(),$("#costcenters").val(),$("#accounts").val(),$("#dttype").val(), $("#start").val(), $("#end").val());
+       requestDreData($("#unit").val(),$("#costcenters").val(),$("#accounts").val(),$("#dttype").val(), $("#start").val(), $("#end").val(), $("#status_select_filter").val());
       });
     });
   </script>
@@ -43,7 +43,7 @@
                   </div>
               </div>
               <div class="clearfix">
-                <label for="total">Intervalo</label>
+                <label for="start">Intervalo</label>
                 <div class="input">
                   <div class="inline-inputs">
                     <div class="input-prepend" style="float:left; padding-right:10px">
@@ -56,6 +56,15 @@
                     </div>
                   </div>
                 </div>
+              </div>
+              <div class="clearfix">
+                  <label for="status_select_filter">Status</label>
+                  <div class="input">
+                    <select id='status_select_filter' multiple="multiple" name='status_select_filter'>
+                        <option selected="selected" value='true'>Pagos</option>
+                        <option selected="selected" value='false'>Planejados</option>
+                    </select>
+                  </div>
               </div>
               <div class="clearfix lift:SecuritySnippet.hasUnitModule">
                 <label for="unit">Unidade</label>
@@ -95,8 +104,6 @@
   </div>
   <div>
     <br>
-    Este relatório inclui apenas lançamentos financeiros marcadas como <b>pagos</b>, <br>
-    portanto lançamentos planejados <b>não são consideradas</b>, <br>
-    diferente da visão de DRE na tela principal do financeiro
+    Este relatório inclui apenas lançamentos financeiros nas <<b>contas</b> marcadas como <b>faturadas</b>
   </div>
  </div>

@@ -42,6 +42,8 @@ trait NameSearchble [self <: net.liftweb.mapper.Mapper[self]]{
       if(this.is == BusinessRulesUtil.EMPTY){
         throw new RuntimeException("Nome não pode conter apenas caracteres especiais!")
       }
+      if(isPersonalName_?){
+      }
     } 
     override def dbIndexed_? = true
   }
