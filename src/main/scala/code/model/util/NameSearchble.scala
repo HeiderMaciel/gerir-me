@@ -22,6 +22,8 @@ trait NameSearchble [self <: net.liftweb.mapper.Mapper[self]]{
 
   protected def updateShortName = true
 
+  protected def complSearchName = "";
+
   protected def isPersonalName_? = false
   protected def isAnimalName_? = false // se true pode duplicar
   protected def allowDuplicated_? = false
@@ -38,12 +40,15 @@ trait NameSearchble [self <: net.liftweb.mapper.Mapper[self]]{
       if (fieldOwner.asInstanceOf[NameSearchble[self]].name.is.trim() == "") {
         throw new RuntimeException("Nome não pode ser vazio!")
       }
-      this.set(BusinessRulesUtil.clearString(fieldOwner.asInstanceOf[NameSearchble[self]].name.is.trim()))
-      if(this.is == BusinessRulesUtil.EMPTY){
+      var searchAux = BusinessRulesUtil.clearString(fieldOwner.asInstanceOf[NameSearchble[self]].name.is.trim())
+      if(searchAux == BusinessRulesUtil.EMPTY){
         throw new RuntimeException("Nome não pode conter apenas caracteres especiais!")
       }
-      if(isPersonalName_?){
+      searchAux += " " + complSearchName
+      if (searchAux.length > 255) {
+        searchAux = searchAux.substring (0,254)
       }
+      this.set(searchAux.trim)
     } 
     override def dbIndexed_? = true
   }

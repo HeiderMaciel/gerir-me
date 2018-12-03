@@ -34,6 +34,8 @@ with Siteble
 with PerCity{
   self: OwnerType =>
 
+    override def complSearchName = BusinessRulesUtil.clearString (allPhones)
+
     override def updateIdForCompany = if(AuthUtil.?) {
         AuthUtil.company.bpIdForCompany == 0 || AuthUtil.company.bpIdForCompany == 1
     } else {
@@ -194,7 +196,17 @@ with PerCity{
     }  
 
     def allPhones:String = {
-      ((phone + " " + mobilePhone + " ").trim + " " + email_alternative).trim
+      var aux = "";
+      if (phone.length > 7) {
+        aux = phone + " "
+      }
+      if (mobilePhone.length > 7) {
+        aux += mobilePhone + " "
+      }
+      if (email_alternative.length > 7) {
+        aux += email_alternative 
+      }
+      (aux).trim
     }
 
     def cityDefaultValue:String = if(AuthUtil.? ){
