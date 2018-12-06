@@ -473,6 +473,15 @@ object SecuritySnippet {
       }      
 
 //
+      def auxiliarProperty(in:NodeSeq):NodeSeq ={
+        if (PermissionModule.auxiliar_? && !PermissionModule.solo_?
+          && (AuthUtil.user.isPeopleManager || AuthUtil.company.appType.isEbellepet))
+          in
+        else
+          NodeSeq.Empty
+      }      
+
+
       def calendarFixed (in:NodeSeq):NodeSeq ={
         if (AuthUtil.user.calendarFixed_? &&
           (AuthUtil.user.isSimpleUserCalendar || 
