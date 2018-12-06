@@ -46,10 +46,18 @@ object QuizApi extends  RestHelper with ReportRest with net.liftweb.common.Logge
 						message(message_aux).
 						save
 					//	)
-						val thisQuiz = QuizApplying.findAll (By(QuizApplying.business_pattern, customer.toLong),
-							By(QuizApplying.quiz, quiz.toInt),
-							OrderBy(QuizApplying.id,Descending))(0); 
-						JInt (thisQuiz.id.is)
+						if (!ac.hasQuestions) {
+							// retorna id para abrir window
+							// com texto
+							val thisQuiz = QuizApplying.findAll (By(QuizApplying.business_pattern, customer.toLong),
+								By(QuizApplying.quiz, quiz.toInt),
+								OrderBy(QuizApplying.id,Descending))(0); 
+							JInt (thisQuiz.id.is)
+						} else {
+							// para não abrir o texto vazio
+							// no caso de questoes - estruturadas
+							JInt (0)
+						}
 					} catch {
 						case e:Exception => JString(e.getMessage)
 					}

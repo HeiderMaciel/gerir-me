@@ -562,12 +562,13 @@ $(function() {
         customer: gup("id")
       }, function(results) {
         if(results > 1 || results > "1"){
-          // ok
-        }else{
+          // ok - abre window com rich text
+          window.open("/quiz/quizapply?id=" + results, "_quiz_maste")
+        }else if (results == 0 || results == "0"){
+          // ok - são questoes estrut - não faz nada
+        } else {
           alert(results);
         }
-        // TESTAR o message para ver o tipo de abertura
-        window.open("/quiz/quizapply?id=" + results, "_quiz_maste")
         // alert("Questionário adicionado com sucesso!");
         renderQuiz();
         $('#message_total').jqte();

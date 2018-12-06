@@ -61,6 +61,25 @@ class Quiz extends Audited[Quiz] with PerCompany with IdPK with CreatedUpdated w
             OrderBy(QuizSection.id, Ascending))
     }
 
+    def hasQuestions:Boolean = {
+
+        val sql = """
+            select count(1) from quizquestion qq 
+            inner join quizsection qs on qs.id = qq.quizsection and qs.status = 1
+            where qq.status = 1 and qs.quiz = ? and qq.company = ?
+        """
+        val r = DB.performQuery(sql,
+          this.id.is::this.company.is::Nil)
+
+        var counter = 0l;
+        val answer = r._2.map( (p) => {
+          counter = p(0).asInstanceOf[Long]
+        })
+
+        return (counter > 0);
+    }
+
+
     def quizLabel = if(AuthUtil.? && (AuthUtil.company.appType.isEsmile||AuthUtil.company.appType.isEdoctus||
        AuthUtil.company.appType.isEphysio)){
         "Prontuário"
