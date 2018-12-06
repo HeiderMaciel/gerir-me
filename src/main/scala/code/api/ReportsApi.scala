@@ -1099,6 +1099,17 @@ order by ca.openerdate, ca.id
 					case Full(p) if(p!="") => true
 					case _ => false
 				}
+
+				val status_name = S.param("status_select_filter[]") match {
+					case Full(p) => "status_select_filter[]"
+					case _ => "status_select_filter"
+				}
+				
+				def statusStr:String = S.param(status_name) match {
+					case Full(p) => S.params(status_name).filter(_ != "").map(_.toString).reduceLeft(_+","+_)
+					case _ => "true,false";
+				}
+
 		        val sqldt : String = if (dttypes == "1") { // competencia
 		            " and date(ap.exerciseDate) between date(dates.start_of_month) and date(dates.end_of_month) "
 		          } else if (dttypes == "2") { // pagamento
@@ -1110,16 +1121,18 @@ order by ca.openerdate, ca.id
 				select * from (
 				    select dates.short_name_year, ac.treelevelstr || ac.name,
 				    ( (
-				      select COALESCE(sum(case when ap.typemovement = 0 then ap.value when ap.typemovement = 1 then ap.value * (-1) end),0) as total    
+				      select COALESCE(sum(case when ap.typemovement = 0 then 
+				      ap.value when ap.typemovement = 1 then ap.value * (-1) end),0) as total    
 				      from accountpayable ap where
 					  ap.toconciliation = false and
 				      ap.company=ac.company and 
 				      ap.category in (
 				          select id from 
 				          accountcategory acc 
-				          where acc.company= ac.company and acc.mintreenode between ac.mintreenode and ac.maxtreenode
+				          where acc.company= ac.company 
+				          and acc.mintreenode between ac.mintreenode and ac.maxtreenode
 				          )
-				          and ap.paid=true """ + sqldt + """
+				          and ap.paid in (%s) """ + sqldt + """
 				          and (%s) and (%s)
 				    ) 
 				    )
@@ -1133,7 +1146,7 @@ order by ca.openerdate, ca.id
 				    ) as data where total <>00
 				"""
 				//if(!inverse)
-					toResponse(SQL_REPORT_ACCOUNTPAYABLE.format(unit, costcenters, //unit, costcenters, 
+					toResponse(SQL_REPORT_ACCOUNTPAYABLE.format(statusStr, unit, costcenters, //unit, costcenters, 
 						accounts),List(AuthUtil.company.id.is, start, end, start)) 
 				//else
 				//	toResponse(AccountPayable.SQL_REPORT_ACCOUNT_MONTH,List(AuthUtil.company.id.is, unit, start, end, true, true))
