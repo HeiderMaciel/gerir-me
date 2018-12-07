@@ -1464,83 +1464,6 @@ order by ca.openerdate, ca.id
 				toResponse(sql.format (productclass),List(AuthUtil.company.id.is, start, end))
 			}
 
-			case "report" :: "presumed_income_product" :: Nil Post _ => {
-				def start:Date = S.param("start") match {
-					case Full(p) => Project.strToDateOrToday(p)
-					case _ => new Date()
-				}
-				def end:Date = S.param("end") match {
-					case Full(p) => Project.strToDateOrToday(p)
-					case _ => new Date()
-				}			
-/*
-				select
-				     co.name,
-				     u.name,
-				     tp.name,
-				     p.name, 
-				     sum(td.price) as price, 
-				     sum(COALESCE(c.value,0) +p.purchaseprice) as coust,
-				    sum((td.price-(COALESCE(c.value,0)+p.purchaseprice))) gain
-				from  
-				product p
-				inner join producttype tp on(tp.id = p.typeproduct)
-				inner join treatmentdetail td on(td.product = p.id)
-				inner join treatment t on(t.id=td.treatment)
-				left join commision c on (c.treatment_detail = td.id)
-				inner join companyunit u on(u.id = t.unit)
-				inner join company co on (co.id = p.company)
-				where
-				p.company =  ? and
-				productclass  =1
-				and t.status = 4
-				and  t.dateevent between date(?) and date(?)
-				group by p.id,tp.id, u.id,co.name,p.name, tp.name, u.name
-				order by p.name,u.name, co.name
-*/
-				val sql = """
-					select 
-					     company,
-					     unidade,
-					     grupo,
-					     profissional,
-					     tipo,
-					     produto, 
-					     sum(price) as price, 
-					     sum (coust) as coust,
-					     sum(gain) as gain
-					from (
-					select
-					     co.name as company,
-					     cu.name as unidade,
-					     ug.name as grupo,
-					     bp.name as profissional,
-					     tp.name as tipo,
-					     pr.name as produto, 
-					     td.price as price,
-					     COALESCE ((select sum (value) from commision where treatment_detail = td.id),0) + coalesce(pr.purchaseprice,0) as coust,
-					     td.price - (COALESCE ((select sum (value) from commision where treatment_detail = td.id),0)+ coalesce(pr.purchaseprice,0)) as gain
-					from  treatment tr
-						inner join treatmentdetail td on tr.id = td.treatment
-						inner join product pr on (td.activity = pr.id or td.product = pr.id)
-						inner join company co on (co.id = tr.company)
-						inner join companyunit cu on(cu.id = tr.unit)
-						left join business_pattern bp on (bp.id = tr.user_c)
-						left join usergroup ug on( ug.id = bp.group_c)
-						left join producttype tp on(tp.id = pr.typeproduct)
-					where
-						tr.company =  ? and
-						productclass  in (1)
-						and tr.status = 4
-						and  tr.dateevent between date(?) and date(?)
-						order by bp.name, pr.name,cu.name, co.name							
-					) as data1
-					group by produto, profissional, grupo,tipo, unidade,company
-					order by profissional, produto,unidade, company						
-				"""
-			toResponse(sql,List(AuthUtil.company.id.is, start, end))
-		}
-
 		case "report" :: "treatment_audit" :: Nil Post _=> {
 			def start:Date = S.param("start") match {
 				case Full(p) => Project.strToDateOrToday(p)
@@ -1634,7 +1557,7 @@ order by ca.openerdate, ca.id
 				left join business_pattern bp on bp.id = tr.user_c 
 				inner join companyunit cu on cu.id = tr.unit
 				inner join business_pattern bui on bui.id = tr.createdby
-				inner join business_pattern bua on bua.id = tr.createdby
+				inner join business_pattern bua on bua.id = tr.updatedby
 				where tr.company = ? %s %s %s and tr.dateevent between ? and ? and date(tr.createdat) between ? and ? 
 				order by tr.createdat limit 300
 				"""
