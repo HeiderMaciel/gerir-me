@@ -418,6 +418,11 @@
                     } else {
                        template.find('.print-question').text(question.value);
                     }
+                    if (question.style != "") {
+                        var el = template.find('.print-question')
+                        setStyle (el,question.style)
+                    }
+
                     template.find(".txa").remove();
                 } else {
                     var textarea = template.find('textarea');
