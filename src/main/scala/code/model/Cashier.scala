@@ -162,6 +162,12 @@ class Cashier extends LongKeyedMapper[Cashier]
            throw new AlreadyClosedCashier("Caixa já está fechado!") 
         }
         try {
+            // 07/12/2018 - rigel chamei o desfat antes pq varias 
+            // tentativas de fechar um caixa com alguma f pagto mal 
+            // configurada, podem gerar duplicações no financeiro
+            // o desfat antes, se for o caso, exclui do financeiro 
+            // tudo gerado auto no caixa em questão
+            FatService.desFat(this)
             FatService.fat(this);
         } catch  {
           case e: Exception => {

@@ -30,7 +30,7 @@ object FatService extends net.liftweb.common.Logger {
 				// println("Fating "+paymentType.name.is)
 				val total = paymentsByType(paymentTypeId).map(_.value.is).reduceLeft(_+_)
 				//(paymentType,total)
-				if (paymentType.receiveAtSight_?.is || paymentType.receiveAtSight_?.is) {
+				if (paymentType.receive_?.is || paymentType.receiveAtSight_?.is) {
 					if (paymentType.defaltAccount.obj.isEmpty) {
 				      throw new RuntimeException("Forma de pagamento " + 
 				      	paymentType.name.is + 
