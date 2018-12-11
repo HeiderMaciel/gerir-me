@@ -605,7 +605,8 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
   }
 
 
-    def toRemessa240 (customer:Long, start:Date, end:Date, account:Account, limit:Long) {
+    def toRemessa240 (customer:Long, start:Date, end:Date, account:Account, limit:Long,
+      sendAgain:Boolean, updateSendDate:Boolean) {
        val ac = AccountCompanyUnit.findAll (
         By (AccountCompanyUnit.account, account),
         By (AccountCompanyUnit.unit, AuthUtil.unit)) (0)
@@ -615,9 +616,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
         //val nowTime  = now.getTime()
 
        def  cotpinsc = if (ac.document_company != "") {
-          "2" // cnpj
-       } else {
-          "1" // cpf
+          "2" /* cnpj */ } else { "1" /* cpf */
        }
        def  coinsc = if (ac.document_company != "") {
           BusinessRulesUtil.zerosLimit (BusinessRulesUtil.clearString(ac.document_company),14); // cnpj 
@@ -665,8 +664,7 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
           Project.dtformat(now, "ddMMyyyy") + 
           Project.dtformat(now, "HHmmss") + 
           Project.dtformat(now, "yyyyMM") + // remessa
-          layout + 
-          densidade + 
+          layout + densidade + 
           BusinessRulesUtil.limitSpaces (" ",20) + // uso febraban
           BusinessRulesUtil.limitSpaces (" ",20) + // uso empresa
           BusinessRulesUtil.limitSpaces (" ",29) + // uso febraban cnab
@@ -718,15 +716,16 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
        var titulos = 0;
        println ("vaiiii antes " + start + "  fim  " + end )
        val sqlCustomer = if (customer != 0) {
-          " business_pattern = " + customer + " "
-        } else {
-          " 1 = 1 "
-        }
+          " business_pattern = " + customer + " " } else { " 1 = 1 "
+       }
+       val againSql = if (sendAgain) {
+        " 1 = 1 " } else { " senddate is null "
+       }
        Monthly.findAll(
         BySql(sqlCustomer, IHaveValidatedThisSQL("","")),
         BySql("(dateExpiration between ? and ?)", IHaveValidatedThisSQL("",""), start, end),
-        By(Monthly.status, 1),
-        By(Monthly.paid, false),
+        BySql(againSql, IHaveValidatedThisSQL("","")),
+        By(Monthly.status, 1), By(Monthly.paid, false),
         By(Monthly.account, account.id.is),
         OrderBy(dateExpiration, Ascending),
         OrderBy(id, Ascending)).foreach ((mo) => {
@@ -751,7 +750,10 @@ object Monthly extends Monthly with LongKeyedMapperPerCompany[Monthly] with Only
               sequencial += 1;
               strXml += mo.toRemessaS (sequencial, banknumber);
             }
-            mo.sendDate.set (now)
+            if(mo.sendDate.get == Empty || mo.sendDate.get == null ||
+              updateSendDate) {
+              mo.sendDate.set (now)
+            }
             mo.save
            if (mo.barCode == "") {
             mo.barCode.set("*")

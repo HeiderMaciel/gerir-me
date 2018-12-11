@@ -14,13 +14,18 @@
       if (!cust) {
         cust = "0"
       }
+      var sendAgain = $('#sendAgain').is(":checked");
+      var updateSendDate = $('#updateSendDate').is(":checked");
       // create and download the remessa file
       $.post('/monthly/transfer', {
         start:$('#start').val(), 
         end:$('#end').val(), 
         customer:cust, 
         account:$('#account240').val(),
-        limit:$('#limit').val()}, function(invoicedata){
+        limit:$('#limit').val(),
+        sendAgain:sendAgain,
+        updateSendDate: updateSendDate
+        }, function(invoicedata){
           eval ("var invoice = " + invoicedata)
           if (invoice.status == "error" || invoice.status != "success") {
             alert (invoice.message)
@@ -69,6 +74,17 @@
               </div>
           </div>
         </div>      
+        <div class="clearfix">
+          <label for="sendAgain">Re Envia / Atual Dt
+          </label>
+            <div class="input">
+              <div class="inline-inputs">
+                <input class="url_parameter" name="sendAgain" id='sendAgain' type='checkbox' /> Re envia
+                <input class="url_parameter" name="updateSendDate" id='updateSendDate' type='checkbox' /> Atual Dt Remessa
+                <span class="help-block"></span>
+              </div>
+            </div>
+        </div>
         <div class="clearfix">
             <label for="account240">Conta</label>
             <div class="input">
