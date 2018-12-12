@@ -55,6 +55,10 @@
     fields[uphonecol] = "none";
     var coobscol = 29
     fields[coobscol] = "none";
+    var cashiernocol = 30
+    fields[cashiernocol] = "none";
+    var cashoperatorcol = 31
+    fields[cashoperatorcol] = "none";
     var url = "/treatments/receipt_customer_unit";
     $("#command").html(gup("command"));
     var date =  gup("date") || getDateBr(new Date());
@@ -119,6 +123,10 @@
         $("#uphone").html(uphone);
         var coobs = data[0][coobscol]; // observação na conig empresa
         $("#coobs").html(coobs);
+        var cashierNo = data[0][cashiernocol]; 
+        $("#cashierNo").html(cashierNo);
+        var cashOperator = data[0][cashoperatorcol]; 
+        $("#cashOperator").html(cashOperator);
         //window.print();
       });
 
@@ -192,7 +200,7 @@
             (<span id="cextenso"></span>)<br/><br/>
             </span>
             <span style="font-size:14px;">
-            Referente a Comanda : </span><span style="font-size:14px;" id="command"></span> - <span style="font-size:14px;" id="week_day"></span>  <span style="font-size:14px;" id="date"></span>
+            Referente a Comanda : </span><span style="font-size:14px;" id="command"></span> - <span style="font-size:14px;" id="week_day"></span>  <span style="font-size:14px;" id="date"></span> - Cx : <span style="font-size:14px;" id="cashierNo"></span>  <span style="font-size:14px;" id="cashOperator"></span>
           </td>
         </tr>
 <!--

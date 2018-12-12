@@ -334,7 +334,7 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					td.amount, td.price, to_number (to_char (pa.value,'999999999.99'),'999999999.99'),
 					cic.name, stc.name, bc.id, 
 					trim (bu.phone || ' ' || bu.mobile_phone || ' ' || bu.email_alternative),
-					co.expenseReceiptObs
+					co.expenseReceiptObs, ca.idforcompany, bo.short_name
 					--, pa.* 
 					from payment pa
 					inner join company co on co.id = pa.company
@@ -348,6 +348,7 @@ object TreatmentReportApi extends RestHelper with ReportRest with net.liftweb.co
 					left join business_pattern ban on ban.id = tdp.animal
 					left join business_pattern bu on bu.id = cu.partner
 					left join business_pattern bp on bp.id = tr.user_c
+					left join business_pattern bo on bo.id = pa.createdby
 					left join city ci on ci.id = bu.cityref
 					left join state st on st.id = ci.state
 					left join city cic on cic.id = bc.cityref
