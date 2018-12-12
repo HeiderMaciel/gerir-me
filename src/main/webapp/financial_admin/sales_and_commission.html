@@ -20,7 +20,7 @@
       type: "format",
       decode: function(name, row) {
         customers.push(row[0]);
-        return "<a href='/customer/edit?id=" + row[0] + "' target='_customer_maste'>" + name + "</a>";
+        return "<a href='/user/edit?id=" + row[0] + "' target='_user_maste'>" + name + "</a>";
       }
     }
     if (!hasUnitModule) {
