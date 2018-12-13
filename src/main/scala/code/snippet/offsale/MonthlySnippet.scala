@@ -35,10 +35,10 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 	def findForListParamsWithoutOrder: List[QueryParam[Monthly]] = 
 	List(Like(Monthly.description,"%"+BusinessRulesUtil.clearString(name)+"%"))
 	override def page = {
-		if(!showAll && !showDebtors){
+		if(!showAll) {
 			super.page
 		}else{
-		   Monthly.findAllInCompanyWithInactive(findForListParams :_*)
+		   	Monthly.findAllInCompanyWithInactive(findForListParams :_*)
 		}
 	}
 
@@ -73,13 +73,17 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 
 	def list(xhtml: NodeSeq): NodeSeq = {
 		    val today = Project.date_format_db.parse(Project.date_format_db.format(new Date()));
-			def thumbSN(field:Boolean, expDate: Date) = if (field) {
-				<img style= "width:16px" src="/images/good.png"/>
-			} else if (expDate.after (today) || Project.date_format_db.parse(Project.date_format_db.format(expDate)).equals (today)) {
-				<img style= "width:16px" src="/images/account_customer.png"/>
+			def thumbSN(status:Integer, field:Boolean, expDate: Date) = if (status == 1) {
+				if (field) {
+					<img title="Pago" style= "width:16px" src="/images/good.png"/>
+				} else if (expDate.after (today) || Project.date_format_db.parse(Project.date_format_db.format(expDate)).equals (today)) {
+					<img title="Ainda no prazo" style= "width:16px" src="/images/account_customer.png"/>
+				} else {
+					<img title="Atrasado" style= "width:16px" src="/images/bad.png"/>
+				}  
 			} else {
-				<img style= "width:16px" src="/images/bad.png"/>
-			}  
+				<img title="Inativo" style= "width:16px" src="/images/cancel.png"/>
+			}
 			def late (originalDate:Date, paymentDate: Date, paid : Boolean) = 
 			if (paymentDate.after (originalDate)) {
 				( (paymentDate.getTime() - originalDate.getTime()) 
@@ -120,7 +124,7 @@ class  MonthlySnippet extends BootstrapPaginatorSnippet[Monthly] {
 							"paymentdate" -> Text(Project.dateToStrOrEmpty(ac.paymentDate.is)),
 							//"paid" -> Text(if(ac.paid.is){ "Sim" }else{ "Não" }),
 							"late" -> Text(late(ac.originalDate, ac.dateExpiration, ac.paid)),
-							"paid" -> thumbSN(ac.paid.is, ac.dateExpiration),
+							"paid" -> thumbSN(ac.status.is, ac.paid.is, ac.dateExpiration),
 							"actions" -> <a class="btn" href={"/monthly/edit_monthly?id="+ac.id.is + "&company="+ac.company_customer.is}>Editar</a>,
 							"gocompany" -> <a class="btn success" href={"/security/useCompany?id="+ac.company_customer.is}>Ir</a>,
 							"delete" -> SHtml.submit("Excluir - Use Status",delete,"class" -> "btn danger","data-confirm-message" -> {" excluir a mensalidade "+ac.description}),
