@@ -96,6 +96,12 @@ class QuizQuestion extends Audited[QuizQuestion] with PerCompany with IdPK with 
     object quizQuestionStyle extends MappedPoliteString(this,255) {
         override def defaultValue = "";
     }
+    object quizQuestionLabelStyle extends MappedPoliteString(this,255) {
+        override def defaultValue = "";
+    }
+    object quizQuestionAddonStyle extends MappedPoliteString(this,255) {
+        override def defaultValue = "";
+    }
 
 
     def quizSectionName = quizSection.obj match {

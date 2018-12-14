@@ -196,7 +196,7 @@
                         // falta setra valor e tá dando erro na api
                         //createAnswer (question, template);
 
-                        createQuestion(question, template)
+                        createQuestion(question, section, template)
                         if (question.type == 8 /* rich text */) {
                             $('#'+question.id).jqte();
                         } else if (question.type == 0 /* text */) {
@@ -208,16 +208,16 @@
                 })
             }
 
-            function createQuestion(question, section) {
+            function createQuestion(question, section, templateSection) {
                 var template;
                 switch (question.type) {
                     case 0: // texto
                     case 5: // valor
                     case 6: // data
-                        template = createText(question);
+                        template = createText(question, section);
                         break;
                     case 1: 
-                        template = createParagraph(question, false);
+                        template = createParagraph(question, section, false);
                         break;
                     case 2:
                         template = createList(question, false);
@@ -232,23 +232,44 @@
                         template = createList(question, true);
                         break;
                     case 8: // texto rico
-                        template = createParagraph(question, true);
+                        template = createParagraph(question, section, true);
                         break;
                 }
 
-                section.append(template);
+                templateSection.append(template);
 
-                if (question.style != "") {
+                if (question.style != "" || section.style != "") {
                     var el = document.getElementById(question.id);
                     if (el != null) {
                         var before = el.getAttribute ("style");
                         if (before != "") {
                             before += ";"
                         }
-                        el.setAttribute ('style', before + question.style);
+                        el.setAttribute ('style', before + question.style + section.style);
                     }
                 }
 
+                if (question.labelStyle != "" || section.labelStyle != "") {
+                    var el = document.getElementById('labelleft'+question.id);
+                    if (el != null) {
+                        var before = el.getAttribute ("style");
+                        if (before != "") {
+                            before += ";"
+                        }
+                        el.setAttribute ('style', before + question.labelStyle + section.labelStyle);
+                    }
+                }
+
+                if (question.addonStyle != "" || section.addonStyle != "") {
+                    var el = document.getElementById('addon'+question.id);
+                    if (el != null) {
+                        var before = el.getAttribute ("style");
+                        if (before != "") {
+                            before += ";"
+                        }
+                        el.setAttribute ('style', before + question.addonStyle + section.addonStyle);
+                    }
+                }
 
                 if (question.format == "0") {
                     // reduzido left
@@ -323,6 +344,8 @@
 
                 setId(template.find('.help-inline'), "helpinline"+question.id);
 
+                setId(template.find('.add-on'), "addon"+question.id);
+
                 if (question.format == "1") {
                     // enunciado paragrafo
                     template.find('b:first').text(question.name);
@@ -374,7 +397,7 @@
                 $("#answer" + question.id).val(question.answerid);
             }
 
-            function createText(question) {
+            function createText(question, section) {
                 var template = templateQuestion (question, "text");
 
                 formatQuestion (question, template)
@@ -384,7 +407,10 @@
                         // imprime sem borda
                         var addon = template.find('.add-on');
                         //alert (add)
-                        setStyle(addon, 'color:black;border:0');
+                        if (question.addonStyle != "" || section.addonStyle != "") {
+                        } else {
+                            setStyle(addon, 'color:black; border:0');
+                        }
                         var input = template.find('input');
                         setStyle(input, 'border:0');
                     }
@@ -408,7 +434,7 @@
                 return template;
             }
 
-            function createParagraph(question, rich) {
+            function createParagraph(question, section, rich) {
                 //var template = $($("#paragraph-template").html());
                 var template = templateQuestion (question, "paragraph");
                 formatQuestion (question, template)
@@ -418,9 +444,9 @@
                     } else {
                        template.find('.print-question').text(question.value);
                     }
-                    if (question.style != "") {
+                    if (question.style != "" || section.style != "") {
                         var el = template.find('.print-question')
-                        setStyle (el,question.style)
+                        setStyle (el,question.style + section.style)
                     }
 
                     template.find(".txa").remove();

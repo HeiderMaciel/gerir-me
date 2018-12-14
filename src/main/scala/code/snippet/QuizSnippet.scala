@@ -416,6 +416,9 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 			"name=rank" #> (SHtml.text(ac.rank.is.toString, (v:String) =>{ if(v !=""){ac.rank(v.toDouble)};}))&
 			"name=rankPercent" #> (SHtml.text(ac.rankPercent.is.toString, (v:String) =>{ if(v !=""){ac.rankPercent(v.toDouble)};}))&
 			"name=orderinquiz" #> (SHtml.text(ac.orderInQuiz.is.toString, (v:String) => ac.orderInQuiz(v.toInt)))&
+		    "name=quizQuestionStyle" #> (SHtml.textarea(ac.quizQuestionStyle.is, ac.quizQuestionStyle(_)))&
+		    "name=quizQuestionLabelStyle" #> (SHtml.textarea(ac.quizQuestionLabelStyle.is, ac.quizQuestionLabelStyle(_)))&
+		    "name=quizQuestionAddonStyle" #> (SHtml.textarea(ac.quizQuestionAddonStyle.is, ac.quizQuestionAddonStyle(_)))&
 			"name=obs" #> (SHtml.textarea(ac.obs.is, ac.obs(_))++SHtml.hidden(process))
 
 		}catch {
@@ -460,6 +463,8 @@ class  QuizSnippet extends BootstrapPaginatorSnippet[Quiz] {
 		    "name=sufix" #> (SHtml.text(ac.sufix.is, ac.sufix(_)))&
 		    "name=autoComplete" #> (SHtml.checkbox(ac.autoComplete_?, ac.autoComplete_?(_)))&
 		    "name=quizQuestionStyle" #> (SHtml.textarea(ac.quizQuestionStyle.is, ac.quizQuestionStyle(_)))&
+		    "name=quizQuestionLabelStyle" #> (SHtml.textarea(ac.quizQuestionLabelStyle.is, ac.quizQuestionLabelStyle(_)))&
+		    "name=quizQuestionAddonStyle" #> (SHtml.textarea(ac.quizQuestionAddonStyle.is, ac.quizQuestionAddonStyle(_)))&
 		    "name=message" #> (SHtml.textarea(ac.message.is, ac.message(_)))&
 			"name=rank" #> (SHtml.text(ac.rank.is.toString, (v:String) =>{ if(v !=""){ac.rank(v.toDouble)};}))&
 			"name=orderinsection" #> (SHtml.text(ac.orderInSection.is.toString, (v:String) => ac.orderInSection(v.toInt)))&

@@ -38,6 +38,15 @@ class QuizSection extends Audited[QuizSection] with PerCompany with IdPK with Cr
         override def defaultValue = 1
         // 5 nenhum
     }
+    object quizQuestionStyle extends MappedPoliteString(this,255) {
+        override def defaultValue = "";
+    }
+    object quizQuestionLabelStyle extends MappedPoliteString(this,255) {
+        override def defaultValue = "";
+    }
+    object quizQuestionAddonStyle extends MappedPoliteString(this,255) {
+        override def defaultValue = "";
+    }
 
     def quizName = quiz.obj match {
         case Full(t) => t.short_name.is

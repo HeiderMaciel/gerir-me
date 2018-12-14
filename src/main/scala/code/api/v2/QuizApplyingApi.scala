@@ -143,6 +143,9 @@ order by qa.applydate, qq.orderinsection
       ("id", section.id.is),
       ("name", section.name.is),
       ("format", section.quizSectionFormat.is),
+      ("style", section.quizQuestionStyle.is),
+      ("labelStyle", section.quizQuestionLabelStyle.is),
+      ("addonStyle", section.quizQuestionAddonStyle.is),
       ("obs", section.obs.is),
       ("questions", JsArray(section.questions(quizApplyingId, print).map(questionJson(_, quizApplyingId, customer, print)))))
   }
@@ -288,6 +291,8 @@ order by qa.applydate, qq.orderinsection
       ("position", question.quizQuestionPosition.is),
       ("printControl", question.printControl.is),
       ("style", question.quizQuestionStyle.is),
+      ("labelStyle", question.quizQuestionLabelStyle.is),
+      ("addonStyle", question.quizQuestionAddonStyle.is),
       ("obs", question.obs.is),
       ("domain", domainAux),
       ("autoComplete", autoComplete),
