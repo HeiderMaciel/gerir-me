@@ -185,21 +185,24 @@ object Project{
 
         var strAux = years;
 
-        if (str != "YEARS" && str != "YEARSINT") {
-          if (strAux != "" && (months + days) != "") {
-            strAux += ", "
-          }
-          if (months != "") {
-            strAux += months
-            if (days != "") {
+        if (str == "DAYSINT") {
+          strAux = ((ai_anos * 365) + (ai_meses * 30) + ai_dias).toString
+        } else {  
+          if (str != "YEARS" && str != "YEARSINT") {
+            if (strAux != "" && (months + days) != "") {
               strAux += ", "
             }
+            if (months != "") {
+              strAux += months
+              if (days != "") {
+                strAux += ", "
+              }
+            }
+            strAux += days
+          } else if (str == "YEARSINT") {
+            strAux = ai_anos.toString
           }
-          strAux += days
-        } else if (str == "YEARSINT") {
-          strAux = ai_anos.toString
         }
-
         strAux
   }
 

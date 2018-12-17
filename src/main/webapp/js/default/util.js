@@ -2310,6 +2310,9 @@ var showUnredMessage = function() {
 	});
 }
 var processMessages = function() {
+	if (document.location.href.indexOf("msg=false") != -1) {
+	   return;
+	}
 	if (typeof logged != "undefined" && logged) {
 		$("#menu_messages_hided").click(function() {
 			showHidedMessages();

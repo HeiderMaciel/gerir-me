@@ -230,7 +230,8 @@ class User extends  BusinessPattern[User] with UserIdAsString{
     }    
 
     def beginning = {
-        if (AuthUtil.user.isFinancialManager) {
+        if (AuthUtil.user.isFinancialManager &&
+            (Project.diffYYMM (Project.today,AuthUtil.company.createdAt,"DAYSINT")).toInt > 25) {
           val of = User.findByKey(AuthUtil.user.id.is).get        
           val users = AuthUtil.user.id.is:: Nil
           val calendar = Calendar.getInstance()
@@ -242,20 +243,17 @@ class User extends  BusinessPattern[User] with UserIdAsString{
              (AuthUtil.unit.getPartner.document == "" && 
               AuthUtil.unit.getPartner.document_company == "")) {
             val message = """Olá %s, <br/>
-            Por determinação da Febraban deverão ser registrados todos os boletos<br/>
-            a partir de 13/10/2018 > 100,00<br/>
-            a partir de 27/10/2018 > 0,01<br/><br/>
 
             Por favor, atualize os dados de sua empresa <br>É preciso informar um CPF ou CNPJ válido.<br/>
             É preciso também informar o endereço completo<br/>
             <br/>
-            Acesse o <b>cadastro de unidades</b>, no menu superior direito, seu usuário, unidades, ou use o atalho ( ALT U )
+            Acesse o <b>cadastro de unidades</b>, no menu superior direito, seu usuário, unidades, ou use o atalho ( ALT U ) <a href="/unit/edit?id=%s&msg=false">Ou Clique aqui</a>
             <br/>
             <br/>
             <img src="http://ebelle.vilarika.com.br/images/mensal_menu1.png" style="width: 400px;"/>
             <br/>
             <br/>
-            """.format (AuthUtil.user.name)
+            """.format (AuthUtil.user.name, AuthUtil.unit.id.is)
             UserMessage.build("Atualize os dados de sua empresa", message, of, 0, users, AuthUtil.company, UserMessage.SYSTEM, expirationdate)
           }
         }
