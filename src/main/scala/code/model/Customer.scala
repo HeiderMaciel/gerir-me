@@ -458,7 +458,7 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
             //By(Customer.password, Project.md5(password))
             BySql[code.model.Customer]("password = ? or password = ?",
                 IHaveValidatedThisSQL("",""), password, pwdMd5)
-            )
+            )   
         }
         customers match {
             case customer::tail => {
@@ -470,7 +470,7 @@ object Customer extends Customer with BusinessPatternMeta[Customer]{
                 customer.lastLogin(new Date()).insecureSave
                 customer
             }
-            case _ => throw new RuntimeException("Cliente não existe!");
+            case _ => throw new RuntimeException("Cliente não existe! " + email.trim.toLowerCase + " " + company:String);
         }
     }
     lazy val SQL_GET_CUSTOMER_ACCOUNT_HISTORY = """

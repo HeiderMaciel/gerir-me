@@ -619,6 +619,8 @@ git pull
 pm2 stop all        
 pm2 restart all     
 
+pm2 logs
+
 cd /var/lib/jenkins/app/gerir-me
 pm2 start gerirme.json
 
