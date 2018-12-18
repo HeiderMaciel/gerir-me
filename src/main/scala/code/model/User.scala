@@ -603,7 +603,7 @@ class User extends  BusinessPattern[User] with UserIdAsString{
     val SQL_UPDATE_ORDER_10_10 = """
        update business_pattern set orderincalendar = 
        ((select count (*) from business_pattern t1 where t1.company = business_pattern.company 
-           and is_employee = true and orderincalendar <> 0
+           and is_employee = true and orderincalendar <> 0 and userstatus = 1
            and t1.unit = business_pattern.unit 
            and (t1.orderincalendar < business_pattern.orderincalendar or (t1.orderincalendar = business_pattern.orderincalendar and t1.id < business_pattern.id)))+1) * 10
        where company = ? and unit = ? and orderincalendar <> 0
