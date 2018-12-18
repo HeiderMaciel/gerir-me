@@ -193,6 +193,11 @@ table form{
   width:530px;
 }
 
+.btdim1 {
+  width:40px; 
+  text-align:center;
+}
+
 /*
   Usado para diferencia logo em base local na agenda
 */

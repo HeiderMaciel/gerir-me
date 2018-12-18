@@ -5,6 +5,64 @@
 
     function Manager() {}
 
+Manager.notifyMe = function() {
+
+/**
+ * @function _guid
+ * @description Creates GUID for user based on several different browser variables
+ * It will never be RFC4122 compliant but it is robust
+ * @returns {Number}
+ * @private
+ */
+var guid = function() {
+
+// 45011866453736710357880537363768136624
+
+    var nav = window.navigator;
+    var screen = window.screen;
+    var guid = nav.mimeTypes.length;
+    guid += nav.userAgent.replace(/\D+/g, '');
+    guid += nav.plugins.length;
+    guid += screen.height || '';
+    guid += screen.width || '';
+    guid += screen.pixelDepth || '';
+
+    return guid;
+};
+
+var options = {
+  body: 'Este é um teste de notificação ',
+  silent: false,
+  vibrate: [200, 100, 200]
+}
+//  alert ("vaiii notifications " + Notification.permission + " " + guid ())
+  // Verifica se o browser suporta notificações
+  if (!("Notification" in window)) {
+    alert("Este browser não suporta notificações de Desktop");
+  }
+
+  // Let's check whether notification permissions have already been granted
+  else if (Notification.permission === "granted") {
+    // If it's okay let's create a notification
+    var notification = new Notification("Hi there! granted", options);
+  }
+
+  // Otherwise, we need to ask the user for permission
+  else if (Notification.permission !== 'denied') {
+    Notification.requestPermission(function (permission) {
+      // If the user accepts, let's create a notification
+      if (permission === "granted") {
+        var notification = new Notification("Hi there! not denied", options);
+      }
+    });
+  } else {
+    alert ("denied")
+  }
+
+  // At last, if the user has denied notifications, and you 
+  // want to be respectful there is no need to bother them any more.
+};
+
     Manager.remove = function(id) {
       var url;
       url = "/calendar/remove_freebusy/" + id;
@@ -233,10 +291,10 @@
           type : "format",
           decode: function(name, row) {
             return "" +
-            "<a class='btn primary' onclick='Manager.new_detail(" + 
+            "<a class='btn primary btdim1' onclick='Manager.new_detail(" + 
             row[13] +',"' +row[0]+ '"' + ")'" + 
-            " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir novo</a> " +
-            "<a class='btn' onclick='Manager.edit_detail(" + 
+            " title='Inserir novo serviço para este cliente/paciente' target=''>Novo</a> " +
+            "<a class='btn btdim1' onclick='Manager.edit_detail(" + 
             row[14] + ',' + //td.id
             '"' +row[2]+ '",' + // customer name 
             '"' +row[0] + '",' + // start 
@@ -252,7 +310,7 @@
             row[19] + '' + // offsale
             ")'" + 
             " title='Editar o serviço deste cliente/paciente' target=''>Editar</a> " +
-            "<a class='btn danger' onclick='Manager.del_detail(" + 
+            "<a class='btn danger btdim1' onclick='Manager.del_detail(" + 
             row[14] +")'  target=''>Excluir</a>"
             //      "<a class='btn primary' onclick='Manager.new_fit(" +row[0].replace (':','.') +")' title='Inserir novo serviço neste mesmo horário' target=''>Encaixar</a> " +
           }
@@ -320,11 +378,11 @@
           // por que a função no Manager não funciona
 //          return "<a class='btn success' href='/command/setaux?user=" + (Manager.user())+ "&tdid="+row[5]+"'>XML</a>"
 //          return "<a class='btn success' onclick='Manager.set_auxiliar(" + (Manager.user()) + "," +row[5]+")'  target='_tissxml_maste'>XML1</a>"
-          return "<a class='btn primary' onclick='Manager.new_detail("+
+          return "<a class='btn primary btdim1' onclick='Manager.new_detail("+
           row[8]+ ',"' +row[0]+ '"' + ")'" + 
-          " title='Inserir novo serviço para este cliente/paciente' target=''>Inserir novo</a> " +
-          "<a class='btn success' onclick='Manager.set_auxiliar(" + (Manager.user()) + "," +row[7]+")'  target=''>Gravar assistente</a> " +
-          "<a class='btn danger' onclick='Manager.del_auxiliar(" + (Manager.user()) + "," +row[7]+")'  target=''>Excluir assistente</a>"
+          " title='Inserir novo serviço para este cliente/paciente' target=''>Novo</a> " +
+          "<a class='btn success btdim1' title='Gravá-lo como assistente desse atendimento' onclick='Manager.set_auxiliar(" + (Manager.user()) + "," +row[7]+")'  target=''>Gravar</a> " +
+          "<a class='btn danger btdim1' title='Excluí-lo como assistente desse atendimento' onclick='Manager.del_auxiliar(" + (Manager.user()) + "," +row[7]+")'  target=''>Excluir</a>"
         }
       };
       fields1[8] = "none"
@@ -752,6 +810,9 @@
     // comentadoo para nao entrar buscando
     // Manager.getListFromServer();
     $("#send").click(function() {
+      if (AuthUtil.user.id == 3) {
+        Manager.notifyMe ();
+      }
       $("#start").val($("#day").val())
       Manager.getCustomers();
       return Manager.getListFromServer();
