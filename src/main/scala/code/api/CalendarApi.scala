@@ -105,6 +105,9 @@ object CalendarApi extends RestHelper with net.liftweb.common.Logger  {
 			def endDate = Project.strToDateOrToday(end)
 			JsArray(code.service.TreatmentCalendarService.
 				treatmentsForCalendarAsJson(false, AuthUtil.company, AuthUtil.unit, 
+				startDate, endDate) ::: 
+				code.service.TreatmentCalendarService.
+				treatmentsAuxForCalendarAsJson(false, AuthUtil.company, AuthUtil.unit, 
 				startDate, endDate) ::: BusyEvent.findByDate(startDate, endDate, AuthUtil.unit).map(_.toJson))
 		}
 		case "calendar" :: "treatments" :: Nil Post _ => {
@@ -126,7 +129,10 @@ object CalendarApi extends RestHelper with net.liftweb.common.Logger  {
 				}else{
 					code.service.TreatmentCalendarService.
 					treatmentsForCalendarAsJson(false, AuthUtil.company, AuthUtil.unit, 
-						startDate, endDate)
+						startDate, endDate) ::: 
+					code.service.TreatmentCalendarService.
+					treatmentsAuxForCalendarAsJson(false, AuthUtil.company, AuthUtil.unit, 
+					startDate, endDate)
 				}
 			}
 			val busys = {

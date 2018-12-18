@@ -67,6 +67,7 @@ with PerCompany with PerUnit {
                 ("icon", ""), // colocar aqu o relogio se for workhour
 				("is_employee_hour", this.is_employee_lanche_?.is),
                 ("unitId", this.unit.is),
+                ("auxiliar", "not_auxiliar"), 
 				("status", "not_work" )
 		)
     }
