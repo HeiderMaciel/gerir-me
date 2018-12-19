@@ -92,6 +92,21 @@ class Product extends ProductMapper[Product]{
         case Full(t) => t.name.is
         case _ => ""
     }
+
+    override def save() = {
+        var r = super.save()
+        if(this.is_inentory_control_? && 
+            InventoryCurrent.countInCompany(
+            By(InventoryCurrent.product,this.id)
+            )<=0){
+            var ac = InventoryCurrent.createInCompany
+            ac.product (this.id).
+            currentStock (0).
+            unit (AuthUtil.unit.id).
+            save
+        }
+        r 
+    }
 }
 
 
