@@ -207,7 +207,15 @@ object CalendarApi extends RestHelper with net.liftweb.common.Logger  {
 			lazy val userIds = S.param("users").get.split(",").map(_.toLong).toList
 
 			JsArray(BusyEvent.findByDate(startDate, endDate, userIds, AuthUtil.unit, showWorkHours).map( (be) => {
-				JsObj(("id",be.id.is), ("user",be.user.obj.get.name.is), ("obs",be.description.is), ("start",be.start.is.getTime), ("end",be.end.is.getTime))
+				JsObj(
+					("id",be.id.is), 
+					("user",be.user.obj.get.name.is), 
+					("obs",be.description.is), 
+					("start",be.start.is.getTime), 
+					("end",be.end.is.getTime),
+					("is_employee_lanche",be.is_employee_lanche_?.is),
+					("auditstr",be.auditStr)
+					)
 			}))
 		}
 		case "calendar" :: "clearBusyEventByUser" :: Nil Post _ => {

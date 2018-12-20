@@ -62,7 +62,16 @@
         total = 0;
         for (_i = 0, _len = results.length; _i < _len; _i++) {
           obj = results[_i];
-          $("#grid tbody").append("<tr><td>" + obj.user + "</td><td>" + (getDateBr(new Date(obj.start))) + " " + (getHourBr(new Date(obj.start))) + "</td><td>" + (getDateBr(new Date(obj.end))) + " " + (getHourBr(new Date(obj.end))) + "</td><td>" + obj.obs + "</td></td><td><a href='#' data-id='" + obj.id + "' class='action_delete'><img src='/images/delete.png'/></a></td></tr>");
+          $("#grid tbody").append(
+            "<tr>" +
+            "<td>" + obj.user + "</td>" +
+            "<td>" + (getDateBr(new Date(obj.start))) + " " + (getHourBr(new Date(obj.start))) + "</td>" + 
+            "<td>" + (getDateBr(new Date(obj.end))) + " " + (getHourBr(new Date(obj.end))) + "</td>" +
+            "<td>" + obj.obs + "</td>" +
+            "<td>" + "<img src=\"/images/" + (obj.is_employee_lanche ? 'good' : 'bad') + ".png\"/>" + "</td>" +
+            "<td><a href='#' data-id='" + obj.id + "' class='action_delete'><img src='/images/delete.png'/></a></td>" +
+            "</td><td><a title='" + obj.auditstr + "' href='#' ><img width='24px' src='/images/audit.png'/></a></td>" +
+            "</tr>");
         }
         return $(".action_delete").click(function() {
           return Manager.remove($(this).attr("data-id"));
