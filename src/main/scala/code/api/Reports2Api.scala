@@ -1305,6 +1305,33 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 						AuthUtil.company.id.is, start, end )) //, start, end)) 
 			} 
 
+			case "report" :: "treatments_cross" :: Nil Post _ =>{
+
+				def start:Date = S.param("start") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+				def end:Date = S.param("end") match {
+					case Full(p) => Project.strToDateOrToday(p)
+					case _ => new Date()
+				}
+
+				val SQL = """
+				select date_c, to_char (start_c, 'hh24:mi'), bc.name, 
+				date_c
+				from dates 
+				left join treatment tr on tr.company = ? and tr.status <> 5 and tr.hasdetail = true
+				and date(tr.dateevent) between date_c and date_c
+				left join business_pattern bc on bc.id = tr.customer
+				where date_c between date (?) and date (?) 
+				%s
+				group by date_c, start_c, bc.name
+				order by date_c, start_c, bc.name
+								"""
+				toResponse(SQL.format (" and 1 = 1"),
+					List(AuthUtil.company.id.is, start, end ))
+			} 
+
 			case "report" :: "sql_command" :: Nil Post _ => {
 				val id:Long =  S.param("command") match {
 					case Full(p) if(p != "") => p.toLong 
