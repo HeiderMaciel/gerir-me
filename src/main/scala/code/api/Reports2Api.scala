@@ -1316,20 +1316,36 @@ object Reports2 extends RestHelper with ReportRest with net.liftweb.common.Logge
 					case _ => new Date()
 				}
 
+				def user:String = S.param("user") match {
+					case Full(s) if(s != "") => s
+					case _ => " nada " // tem que ter 
+				}
+				def minutes:Int = S.param("minutes") match {
+					case Full(p) if(p != "") => p.toInt
+					case _ => 0;
+				}
+
 				val SQL = """
-				select date_c, to_char (start_c, 'hh24:mi'), bc.name, 
+				select to_char (date_c, 'DD/mon'), to_char (agh,'99') || ':' || agm, bc.name || ' - ' || detailTreatmentAsText, 
 				date_c
 				from dates 
-				left join treatment tr on tr.company = ? and tr.status <> 5 and tr.hasdetail = true
-				and date(tr.dateevent) between date_c and date_c
+				left join aghm on agh between ? and ? and agm % ? = 0
+				left join treatment tr on tr.company = ? and tr.status not in (5,1,8) -- delete missed rescheduled
+				and tr.hasdetail = true
+				and tr.user_c in (?) 
+				and date(tr.dateevent) = date_c and tr.start_c 
+         			  between (to_char (date_c, 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp and 
+				  (to_char (date(date_c), 'YYYY-MM-DD') || ' ' || trim (to_char (agh, '09'))||':'|| trim (to_char (agm,'09')))::timestamp + ((? - 1) * interval '1 minute')
 				left join business_pattern bc on bc.id = tr.customer
 				where date_c between date (?) and date (?) 
-				%s
-				group by date_c, start_c, bc.name
-				order by date_c, start_c, bc.name
+				--%s
+				group by date_c, agh, agm, bc.name, detailTreatmentAsText
+				order by date_c, agh, agm, bc.name, detailTreatmentAsText
 								"""
-				toResponse(SQL.format (" and 1 = 1"),
-					List(AuthUtil.company.id.is, start, end ))
+				toResponse(SQL, //.format (" and 1 = 1"),
+					List(AuthUtil.company.calendarStart.is, 
+						AuthUtil.company.calendarEnd.is,
+						minutes, AuthUtil.company.id.is, user.toLong, minutes, start, end ))
 			} 
 
 			case "report" :: "sql_command" :: Nil Post _ => {
