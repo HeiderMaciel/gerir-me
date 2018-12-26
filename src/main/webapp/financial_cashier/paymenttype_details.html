@@ -22,37 +22,38 @@
             return "<a href='/customer/edit?id=" + row[0] + "' target='_customer_maste'>" + name + "</a>";
           }
         }
-        fields[4] = "real";
-        //fields[5] = "real";
-        fields[5] = {
+        fields[6] = "real";
+        //fields[7] = "real";
+        fields[7] = {
           type : "format",
           decode: function(name, row) {
             var color = "red"
-            if (row[5] != row[4]) {
+            if (row[6] != row[7]) {
             return "<p style='color:" + color + "'>" + 
-                realDecode(row[5]) + "<p/>"
+                realDecode(row[7]) + "<p/>"
             } else {
-              return realDecode(row[5])
+              return realDecode(row[7])
             }
           }
         }
-        fields[7] = "date";
-        fields[8] = "date";
-        fields[8] = {
+        fields[9] = "date";
+        fields[10] = "date";
+        fields[10] = {
           type : "format",
           decode: function(name, row) {
             var color = "red"
-            if (row[8] != row[7]) {
+            if (row[10] != row[9]) {
             return "<p style='color:" + color + "'>" + 
-                dateDecode(row[8]) + "<p/>"
+                dateDecode(row[10]) + "<p/>"
             } else {
-              return dateDecode(row[8])
+              return dateDecode(row[10])
             }
           }
         }
         if (!hasUnitModule) {
-          fields[9] = "none";
+          fields[11] = "none";
         }
+        fields[12] = "audit";
         var url = "/report/paymenttype_details/false";
         var total_to_pay = 0.00;
         var request = function(){
@@ -189,6 +190,8 @@
       <thead>
         <th>Id</th>
         <th>Nome <span data-i18n='Cliente'></span></th>
+        <th>Doc</th>
+        <th>Endereço</th>
         <th>Caixa</th>
         <th>Comanda</th>
         <th>Total Venda</th>
@@ -197,7 +200,7 @@
         <th>Data</th>
         <th>Vencimento</th>
         <th class="clearfix lift:SecuritySnippet.hasUnitModule">Unidade</th>
-        <th>Usuário</th>
+        <th><a title='Auditoria' href='#' ><img width='24px' src='/images/audit.png'/></a></th>
         </tr>
       </thead>
       <tbody>

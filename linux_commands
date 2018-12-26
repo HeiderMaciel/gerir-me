@@ -1,3 +1,7 @@
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 1  0    524 2261936  64764 11647820    0    0    18    23    0    4  5  2 94  0  0
+
 
 https://www.4devs.com.br/gerador_de_cnpj
 

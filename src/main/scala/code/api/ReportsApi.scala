@@ -1021,24 +1021,29 @@ order by ca.openerdate, ca.id
 				def paymentTypesFatWhere = filterSqlIn("payment_type", " pd.typepayment in(%s)")
 				val SQL = """
 					select bc.id, bc.name as cliente, 
+					bc.document || ' ' || bc.document_company as doc,
+					trim (trim (bc.street || ', ' || bc.number_c || ' ' || bc.complement)
+					|| ', ' || bc.district || ', ' || coalesce (ci.name,'') || '-' || coalesce (st.short_name,'') || ', ' || bc.postal_code) as address,
 					ca.idforcompany as caixa, pa.command as comanda, 
 					pa.value as total, pd.value, pt.name as forma, pa.datepayment as pagamento, 
 					pd.duedate, cu.name as unidade,
-					bu.short_name || ' ' || to_char (pd.createdat,'dd/mm/yy hh24:mi' )
+ 		            fu_auditstr (pa.createdby, pa.createdat, pa.updatedby, pa.updatedat)
 					from payment pa
 					inner join paymentdetail pd on pa.id = pd.payment
-					inner join business_pattern bu on bu.id = pd.createdby
+					--inner join business_pattern bu on bu.id = pd.createdby
 					inner join paymenttype pt on pt.id = pd.typepayment
 					inner join cashier ca on ca.id = pa.cashier
 					inner join business_pattern bc on bc.id = pa.customer
 					inner join companyunit cu on cu.id = ca.unit
+					left join city ci on ci.id = bc.cityref
+					left join state st on st.id = bc.stateref
 					where pa.company = ? 
 					and pa.datepayment between ? and ?
 					and %s
 					and %s
 					and %s
 					and %s
-					order by pa.datepayment, ca.idforcompany, pd.duedate, bc.name, pa.command, pt.name
+					order by pa.datepayment, ca.idforcompany, bc.name, pa.command, pd.duedate, pt.name
 				"""
 				val sqlFat = """
 					select sum (
