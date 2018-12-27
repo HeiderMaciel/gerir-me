@@ -455,7 +455,8 @@ with PerCity{
         BpRelationship.addBpRelationship(id.is, bp_manager.is, 27)
       }
 
-      if(!this.street.is.isEmpty || this.street.is != "") {
+      if ((!this.street.is.isEmpty || this.street.is != "") && 
+          (this.lat.is == "" || this.lat.isEmpty)) {
         BusinessPatternLocationQueeue.enqueeue(BusinessPatternQueeueDto(this.id.is))
       } else {
         this.lat.set ("");
