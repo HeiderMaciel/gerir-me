@@ -65,7 +65,7 @@
           renderReport(url,fields,Cachier.prepareCashierParams(params),"#grid", function(data){
             data.forEach(function(row){
               //total_sale += parseFloat(row[4]);
-              total_paid += parseFloat(row[5]);
+              total_paid += parseFloat(row[7]);
               countpt += 1;
             });
             //$("#total_sale").val(total_sale.formatMoney());
