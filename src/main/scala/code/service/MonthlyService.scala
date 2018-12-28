@@ -106,7 +106,7 @@ object MonthlyService {
 			OrderBy (Company.id, Ascending)).map((company:Company)=>{
 			company.partner.obj match {
 				case Full(customer)=>{
-					generateMonthly(customer, company, date, 17)
+					generateMonthly(customer, company, date, 21) //17)
 				}
 				case _ => 
 			}
