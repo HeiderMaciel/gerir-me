@@ -49,12 +49,28 @@
 			      <select size="30" id="productType" class='local_storage' name="productType">
 			      </select>					       						    
 			    </span>
+			    <span class='label-inline'>
+			    	Itens por Página
+			    </span>
+			    <span class='select-inline'>
+			      <input class="mini local_storage" id="itenspp_product" name="itenspp_product" value="20">
+				</span>
 				<input class="all" id="all" name="all" type="checkbox"/> Mostrar todos?
 				<input class="btn success" type="submit" value="Buscar">
 			</form>
 		</span>
 	</div>
-<table class="bordered-table zebra-striped">
+	<a onclick="return ExcellentExport.excel(this, 'table_result', 'data');"
+	href="#" download="data.xls" class="btn excel_buttton"
+	title="Exportar para excel">
+	<img style="width: 16px;" src="/images/excel.png" />
+	</a>  
+	<a onclick="return ExcellentExport.csv(this, 'table_result', ';');"
+	href="#" download="data.csv" class="btn excel_buttton"
+	title="Exportar para csv">
+	<img style="width: 16px;" src="/images/generate.png" />
+	</a>  
+<table id="table_result" class="bordered-table zebra-striped">
 		<thead>
 			<th>Id</th>
 			<th>Foto</th>

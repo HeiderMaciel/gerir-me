@@ -57,6 +57,13 @@ class  ActivitySnippet extends BootstrapPaginatorSnippet[Activity] with SnippetU
 
 	def units = ("0", "Selecione uma Unidade") :: CompanyUnit.findAllInCompany(OrderBy(CompanyUnit.name, Ascending)).map(t => (t.id.is.toString, t.name.is))
 
+	def itens = S.param("itenspp_activity") match {
+		case Full(s) => s.toInt
+		case _ => 20
+	}
+	
+	override def itemsPerPage = itens;
+
 	def costcenters = ("0" -> "Selecione um Centro de Custo")::
 	CostCenter.findAllInCompany(OrderBy(CostCenter.name, Ascending)).map(cc => (cc.id.is.toString,cc.name.is))
 	def accountcategories = ("0" -> "Selecione uma Categoria")::

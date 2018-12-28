@@ -61,6 +61,14 @@ class  ProductSnippet  extends BootstrapPaginatorSnippet[Product] with SnippetUp
     }else{
         " 1 = 1 "
     }
+
+	def itens = S.param("itenspp_product") match {
+		case Full(s) => s.toInt
+		case _ => 20
+	}
+	
+	override def itemsPerPage = itens;
+
 	def inventory_control = S.param("inventory_control") match {
 		case Full(p) if(p != "")=> 1
 		case _ => 0
