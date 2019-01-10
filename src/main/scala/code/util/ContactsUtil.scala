@@ -9,6 +9,7 @@ import net.liftweb.util._
 import net.liftweb.common._
 import mapper._ 
 import S._
+import actor._
 import code.model._
 import scala.xml._
 import scala.collection.JavaConverters._
@@ -21,7 +22,7 @@ import scala.io.Source._
 import java.util.Date
 
 
-object ContactsUtil extends net.liftweb.common.Logger {
+object ContactsUtil extends LiftActor with net.liftweb.common.Logger {
   var sqlInsert = "";
   //var bi = 0;
   var filePath = if(Project.isLinuxServer){
@@ -32,84 +33,7 @@ object ContactsUtil extends net.liftweb.common.Logger {
   def execute(file:File, origin:String, nameasis: Long, generatesql: Long){
     sqlInsert = "";
     val lines = fromFile(file).getLines.toList
-    val schema = if (origin.indexOf (".") > 0) {
-      ""
-    } else {
-      "diversos."
-    }
-
-println ("vaiiii ======= " + lines(1))
-    println ("vaiiii virg " +lines(1).count(_ == ','));
-
-    val separator:String = if (lines(1).count(_ == '.') >
-      lines(1).count(_ == ';') && lines(1).count(_ == '.') >
-      lines(1).count(_ == ',')) {
-        "."
-      } else if (lines(1).count(_ == ';') >
-      lines(1).count(_ == ',')) {
-        ";"
-      } else {
-        ","
-      }
-    // o for começa de um para saltar a primeira linha 
-    // cabeçalho das colunas - parametrizar
-    //val details = 
-    println ("vaiiii ======== gerar " + lines.size + " linhas! separador " + separator)
-
-    sqlInsert += "--Drop table " + schema + origin  + ";\n\n"
-    sqlInsert += "Create table " + schema + origin  + " ( \n"
-    var listCol = lines(0).split(separator);
-    var j = 0;
-    listCol.foreach((column) => {
-      var colAux = column.replaceAll ("\"", "")
-      colAux = colAux.replaceAll (" ", "")
-      println ("vaiiii ===================== ANTES " + colAux);
-      colAux = BusinessRulesUtil.convertChars (colAux)
-      println ("vaiiii ===================== APOS " + colAux);
-      if (BusinessRulesUtil.clearString(colAux) == "") {
-        colAux = "nada" + j
-      }
-      sqlInsert += BusinessRulesUtil.clearString(colAux) + " varchar (255)"
-      j += 1;
-      if (j < listCol.length) {
-        sqlInsert += ",\n"
-      } else {
-        sqlInsert += """)
-            WITH (
-            OIDS=FALSE
-            );
-            ALTER TABLE """ + schema + origin + 
-            " OWNER TO postgres;\n ";
-      }
-    })  
-
-    sqlInsert += "--Delete from " + schema + origin  + ";\n"
-
-    for(i <- 1 to (lines.size)-1 ) {
-      //println ("vaiii ====== " + lines(i) + " === " + i + " serapardor " + separator)
-      var line = lines(i);
-      factory(i, line, separator, schema + origin, nameasis, generatesql)
-    }
-    // gerar arquivo aqui
-    if (generatesql > 0) {
-     scala.tools.nsc.io.File(filePath + origin + ".sql").
-     writeAll(sqlInsert);
-     //println ("vaiiiii ======= " + sqlInsert)
-    } else {
-/*    details.map((d) => {
-
-      removeInventory(d.customer.id, d.purchasePrice, 0l, d.price, d.amount, 
-        d.product, "venda importada", " sem doc", d.unit, 
-        d.iCause, d.today)
-      if (d.product.salePrice == 0 && d.amount != 0) {
-        d.product.salePrice (d.price / d.amount).save
-      }
-
-      })
-*/
-      // verificar email no bp e ligar
-      UtilSqlContacts.updateContacts(AuthUtil.company, origin);
-    } 
+    ContactsUtil ! UploadMessage (lines, origin, nameasis, generatesql)
   }
 
   def linkContactCustomer (ac:Contact) = {
@@ -245,6 +169,100 @@ println ("vaiiii ======= " + lines(1))
           )
 */
   }
+
+  def treat (message:UploadMessage) {
+    val lines = message.lines;
+    val origin = message.origin;
+    val nameasis = message.nameasis;
+    val generatesql = message.generatesql;
+
+    val schema = if (origin.indexOf (".") > 0) {
+      ""
+    } else {
+      "diversos."
+    }
+
+println ("vaiiii ======= " + lines(1))
+    println ("vaiiii virg " +lines(1).count(_ == ','));
+
+    val separator:String = if (lines(1).count(_ == '.') >
+      lines(1).count(_ == ';') && lines(1).count(_ == '.') >
+      lines(1).count(_ == ',')) {
+        "."
+      } else if (lines(1).count(_ == ';') >
+      lines(1).count(_ == ',')) {
+        ";"
+      } else {
+        ","
+      }
+    // o for começa de um para saltar a primeira linha 
+    // cabeçalho das colunas - parametrizar
+    //val details = 
+    println ("vaiiii ======== gerar " + lines.size + " linhas! separador " + separator)
+
+    sqlInsert += "--Drop table " + schema + origin  + ";\n\n"
+    sqlInsert += "Create table " + schema + origin  + " ( \n"
+    var listCol = lines(0).split(separator);
+    var j = 0;
+    listCol.foreach((column) => {
+      var colAux = column.replaceAll ("\"", "")
+      colAux = colAux.replaceAll (" ", "")
+      println ("vaiiii ===================== ANTES " + colAux);
+      colAux = BusinessRulesUtil.convertChars (colAux)
+      println ("vaiiii ===================== APOS " + colAux);
+      if (BusinessRulesUtil.clearString(colAux) == "") {
+        colAux = "nada" + j
+      }
+      sqlInsert += BusinessRulesUtil.clearString(colAux) + " varchar (255)"
+      j += 1;
+      if (j < listCol.length) {
+        sqlInsert += ",\n"
+      } else {
+        sqlInsert += """)
+            WITH (
+            OIDS=FALSE
+            );
+            ALTER TABLE """ + schema + origin + 
+            " OWNER TO postgres;\n ";
+      }
+    })  
+
+    sqlInsert += "--Delete from " + schema + origin  + ";\n"
+
+    for(i <- 1 to (lines.size)-1 ) {
+      //println ("vaiii ====== " + lines(i) + " === " + i + " serapardor " + separator)
+      var line = lines(i);
+      factory(i, line, separator, schema + origin, nameasis, generatesql)
+    }
+    // gerar arquivo aqui
+    if (generatesql > 0) {
+     scala.tools.nsc.io.File(filePath + origin + ".sql").
+     writeAll(sqlInsert);
+     //println ("vaiiiii ======= " + sqlInsert)
+    } else {
+/*    details.map((d) => {
+
+      removeInventory(d.customer.id, d.purchasePrice, 0l, d.price, d.amount, 
+        d.product, "venda importada", " sem doc", d.unit, 
+        d.iCause, d.today)
+      if (d.product.salePrice == 0 && d.amount != 0) {
+        d.product.salePrice (d.price / d.amount).save
+      }
+
+      })
+*/
+      // verificar email no bp e ligar
+      UtilSqlContacts.updateContacts(AuthUtil.company, origin);
+    } 
+
+  }
+
+  protected def messageHandler = {
+    case a:UploadMessage => treat(a)
+//    case a:String => 
+    case _ =>
+  }
+
 }
 
 
@@ -270,6 +288,8 @@ case class DetailContacts(
 */
 
 }
+
+case class UploadMessage(lines:List[String], origin:String, nameasis: Long, generatesql: Long);
 
 object UtilSqlContacts {
   val SQL_UPDATE_PHONE = """
