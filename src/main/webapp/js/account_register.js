@@ -84,6 +84,9 @@
     var validate;
 
     function AccountPayable() {
+      if ($("#value").val() == "") {
+        $("#value").val("0");
+      } 
       this.value = $("#value").val();
       this.dueDate = $("#date").val();
       this.exerciseDate = $("#exerciseDate").val();
@@ -176,7 +179,7 @@
         }
       }  
       if ((!account.value) || (parseFloat(account.value) == 0)) {
-        if (!account.cheque) {
+        if (!account.cheque || (parseFloat(account.cheque) == 0)) {
           if (!confirm("Tem certeza que deseja cadastrar um lançamento como valor zero?")) {
             throw "Operação cancelada!";
           }
