@@ -2088,7 +2088,7 @@ order by ca.openerdate, ca.id
 		}
 
 		case "report" :: "modules" :: Nil Post _ =>{
-			val status:String = S.param("status") match {
+			val status:String = S.param("pm_status") match {
 				case Full(p) if(p != "")=> " pm.status in (1,0) "
 				case _ => " pm.status in (1) "
 			}			
