@@ -645,6 +645,8 @@
       if ($('#user').val()) {
         getActivities();
         ProductSearch.updatePrice();
+        // limpa o auxiliar qdo troca o profissional
+        $("#auxiliar").val("").change();
       };
       return;
     });
