@@ -42,9 +42,13 @@
       return item;
     })
       data = google.visualization.arrayToDataTable(data);
-      var options = {title:" Relatório de Caixa por Forma de Pagamento"}
+      var options = {title:" Relatório de Caixa por Forma de Pagamento"
+      }
       var typeg = $("#graphtype").val()
-      if (typeg == "1") {
+      if (typeg == "1" || typeg == "3") {
+        if (typeg == "3") {
+          options["pieHole"] = 0.5;
+        }
         var chartP = new google.visualization.PieChart(document.getElementById('chart_div'));
           chartP.draw(data, options);
       } else {
@@ -85,6 +89,7 @@
                   <select class="medium local_storage" id="graphtype" name="graphtype">
                       <option value="1">Pizza</option>
                       <option value="2">Barra</option>
+                      <option value="3">Donut</option>
                   </select>
                 </div>
               </div>
