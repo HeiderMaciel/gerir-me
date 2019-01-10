@@ -82,7 +82,8 @@ var callApiGetValue = function() {
   var params = $('#checkoutClose_form').serializeObject();
   params.cashier = params.cashiers;
   params.isIdForCompany = true;
-  requestCashiersPaymentTypes(params, "#grid", "#total_payment_types");
+  requestCashiersPaymentTypes(params, "#grid", "#total_payment_types", 
+    false, "#totalfat");
   url = $('#checkoutClose_form').attr('action');
   url += "/checkoutValues/" + $('#cashiers_select').val();
   $.get(url, function(t) {

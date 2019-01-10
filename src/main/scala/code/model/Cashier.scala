@@ -209,37 +209,46 @@ class Cashier extends LongKeyedMapper[Cashier]
 
 object Cashier extends Cashier with LongKeyedMapperPerCompany[Cashier]  with  OnlyCurrentCompany[Cashier] with net.liftweb.common.Logger{
     lazy val SQL_REPORT_PAYMENT_TYPES = """
-                                        select * from (select t.name paymenttype, 
-                                        sum(pd.value) as value
-                                        from paymentdetail pd
-                                        inner join payment p on(pd.payment = p.id and p.company = pd.company)
-                                        inner join paymenttype t on(pd.typepayment=t.id)
-                                        WHERE pd.company = ? and p.cashier= ? and %s
-                                        group by t.name
-                                        order by t.name) as data;"""
+        select *, 
+        round(((value / SUM(value) OVER ())*100)::numeric,2) as "percent"  from (
+        select t.name paymenttype, 
+        sum(pd.value) as value,
+        t.receive, t.receiveatsight
+        from paymentdetail pd
+        inner join payment p on(pd.payment = p.id and p.company = pd.company)
+        inner join paymenttype t on(pd.typepayment=t.id)
+        WHERE pd.company = ? and p.cashier= ? and %s
+        group by t.name, t.receive, t.receiveatsight
+        order by t.name, t.receive, t.receiveatsight) as data1;"""
 
     lazy val SQL_REPORT_PAYMENT_TYPES_UNIT =  """
-                                        select t.name paymenttype, sum(pd.value) as value
-                                        from paymentdetail pd
-                                        inner join payment p on(pd.payment = p.id)
-                                        inner join paymenttype t on(pd.typepayment=t.id)
-                                        inner join cashier c on(c.id = p.cashier)
-                                        WHERE c.unit = ?
-                                        and p.datepayment between ? and ?  
-                                        and %s
-                                        group by t.name
-                                        order by t.name;"""
+        select *, 
+        round(((value / SUM(value) OVER ())*100)::numeric,2) as "percent"  from (
+        select t.name paymenttype, sum(pd.value) as value,
+        t.receive, t.receiveatsight
+        from paymentdetail pd
+        inner join payment p on(pd.payment = p.id)
+        inner join paymenttype t on(pd.typepayment=t.id)
+        inner join cashier c on(c.id = p.cashier)
+        WHERE c.unit = ?
+        and p.datepayment between ? and ?  
+        and %s
+        group by t.name, t.receive, t.receiveatsight
+        order by t.name, t.receive, t.receiveatsight) as data1;"""
     lazy val SQL_REPORT_PAYMENT_TYPES_COMPANY =  """
-                                        select t.name paymenttype, sum(pd.value) as value
-                                        from paymentdetail pd
-                                        inner join payment p on(pd.payment = p.id)
-                                        inner join paymenttype t on(pd.typepayment=t.id)
-                                        inner join cashier c on(c.id = p.cashier)
-                                        WHERE pd.company = ?
-                                        and p.datepayment between ? and ?
-                                        and %s
-                                        group by t.name
-                                        order by t.name;"""
+        select *, 
+        round(((value / SUM(value) OVER ())*100)::numeric,2) as "percent"  from (
+        select t.name paymenttype, sum(pd.value) as value, 
+        t.receive, t.receiveatsight
+        from paymentdetail pd
+        inner join payment p on(pd.payment = p.id)
+        inner join paymenttype t on(pd.typepayment=t.id)
+        inner join cashier c on(c.id = p.cashier)
+        WHERE pd.company = ?
+        and p.datepayment between ? and ?
+        and %s
+        group by t.name, t.receive, t.receiveatsight
+        order by t.name, t.receive, t.receiveatsight) as data1;"""
 
 //    def showAllCashiers = AuthUtil.user.isAdmin  || AuthUtil.user.isFinancialManager || 
 //     AuthUtil.user.isCashierGeneral || AuthUtil.unit.useSingleCashier_?.is

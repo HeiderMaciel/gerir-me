@@ -1,6 +1,7 @@
 <div id="main" class="lift:surround?with=financial;at=content">
   <script src="/js/reports.js"></script>
   <script src="/js/cashiers_payment_types.js"></script>
+  <script src="/js/jquery.tablesorter.pager.js"></script>
   <span id="cash_form">
   	<script type="text/javascript" src='/js/checkout_close.js'></script>
 <form id='checkoutClose_form' onsubmit='callApiGetValue();return false;' action="/cash/">
@@ -145,6 +146,9 @@
           <thead>
             <th>Form Pag</th>
             <th>Valor</th>
+            <th>Faturado</th>
+            <th>À vista</th>
+            <th>%</th>
           </thead>
           <tbody>
           </tbody>
@@ -154,6 +158,12 @@
                 Total Form. Pags
               </td>
               <td id='total_payment_types'>
+              </td>
+              <td id='totalfat'>
+              </td>
+              <td id='none'>
+              </td>
+              <td id='none1'>
               </td>
             </tr>
           </tfoot>

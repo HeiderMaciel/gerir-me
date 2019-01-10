@@ -22,7 +22,7 @@
         }
        // } else {
           var params = $("#form_report").serializeObject();
-          requestCashiersPaymentTypes(params, "#grid", "#total", true);
+          requestCashiersPaymentTypes(params, "#grid", "#total", true, "#totalfat");
           renderOuts(params);
        // }
       }
@@ -140,6 +140,11 @@
         <div class="input-prepend" style="float:left; padding-right:10px">
           <span class="add-on"><img src="/images/money.png" width="16"></span>
           <input style="color:black;" disabled='true' class="small" id="total" name="total" size="19" placeholder="0.00" type="text">
+          <span class="help-block">Total produzido</span>
+        </div>
+        <div class="input-prepend" style="float:left; padding-right:10px">
+          <span class="add-on"><img src="/images/money.png" width="16"></span>
+          <input style="color:black;" disabled='true' class="small" id="totalfat" name="totalfat" size="19" placeholder="0.00" type="text">
           <span class="help-block">Total faturado</span>
         </div>
         <div class="input-prepend" style="float:left; padding-right:10px">
@@ -160,6 +165,9 @@
   <thead>
     <th>Form Pag</th>
     <th>Valor</th>
+    <th>Faturado</th>
+    <th>À vista</th>
+    <th>%</th>
   </thead>
   <tbody>
   </tbody>
