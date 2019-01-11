@@ -71,9 +71,15 @@ object CashApi extends RestHelper with net.liftweb.common.Logger  {
 		}
 
 		case "cash" :: "getCheques" :: chequeId  :: Nil JsonGet _ => {
+			val sql = if (chequeId.toLong == 0) {
+			  "	(received = false or id = ?) "
+			} else {
+			  // se passou um cheque é só ele - pq não pode trocar	
+			  "	(id = ?) "
+			}			
 			JsArray(
 				Cheque.findAllInCompany(
-			        BySql(" (received = false or id = ?) ",IHaveValidatedThisSQL("",""), chequeId.toLong),
+			        BySql(sql,IHaveValidatedThisSQL("",""), chequeId.toLong),
 					OrderBy (Cheque.id, Ascending)).map((ch:Cheque)=>{
 						JsObj(
 							  ("status","success"),

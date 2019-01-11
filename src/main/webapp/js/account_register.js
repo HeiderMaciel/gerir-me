@@ -127,7 +127,7 @@
       } else {
         this.cheque = $("#cheque_select").val().toString();
         if (this.cheque.indexOf(",")==0) {
-          this.cheque = this.cheque.substring (1,this.cheque.length-1)
+          this.cheque = this.cheque.substring (1,this.cheque.length)
         }
       }
      // console.log(this.cheque)
@@ -166,7 +166,7 @@
         }
       }
       if (category.isparent) { 
-            throw "Não é permitido fazer lançamento em categoria totalizadora. Operação cancelada!";
+         throw "Não é permitido fazer lançamento em categoria totalizadora. Operação cancelada!";
       }
       var accountAux;
       accountAux = AccountMovement.getById(account.account);
@@ -242,7 +242,19 @@
     if (!callApiLock) {
       callApiLock = true;
       try {
+        if ($("#type_select option:checked").data('transfer') &&
+          $("#cheque_select").val() != null &&
+          $("#cheque_select").val() != "") {
+            callApiLock = false
+            return alert ("Não faz sentido transferir cheque, altere a conta do lançamento para a conta desejada!" + $("#cheque_select").val())
+        }
         if (AccountPayable.actualId) {
+          if (chequeid != 0 && chequeid != "") {
+            if (chequeid != $("#cheque_select").val() || $("#cheque_select").val() == null) {
+              callApiLock = false
+              return alert ("Cheque não pode ser alterado em lançamento já salvo, exclua o lançamento e faça um novo!")
+            }
+          }
           //alert ("vaiii ==== " + $("#recurrence_id").val())
           if ($("#recurrence_all").is(":checked")) {
              if (confirm("Tem certeza que deseja atualizar este lançamento e inclusive os futuros?")) {

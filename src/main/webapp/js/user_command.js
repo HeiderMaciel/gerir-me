@@ -811,7 +811,7 @@ var options = {
     // Manager.getListFromServer();
     $("#send").click(function() {
       if (AuthUtil.user.id == 3) {
-        Manager.notifyMe ();
+        // Manager.notifyMe ();
       }
       $("#start").val($("#day").val())
       Manager.getCustomers();
