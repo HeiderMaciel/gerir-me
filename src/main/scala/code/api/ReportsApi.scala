@@ -1434,9 +1434,9 @@ order by ca.openerdate, ca.id
 					     profissional,
 					     tipo,
 					     produto, 
-					     sum(price) as price, 
-					     sum (coust) as coust,
-					     sum(gain) as gain
+					     round (sum(price)::numeric,2) as price, 
+					     round (sum (coust)::numeric,2) as coust,
+					     round (sum(gain)::numeric,2) as gain
 					from (
 					select
 					     co.name as company,
