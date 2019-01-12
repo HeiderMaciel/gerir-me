@@ -726,6 +726,9 @@ var options = {
       $("#grid tbody").html("");
       // dava erro agora que o reports.js dá msg no caso de exceção
       //return Manager.getListFromServer();
+
+      // limpa tb auxiliar
+      $("#grid1 tbody").html("");
     });
 
     $("#customer").change(function(){
@@ -818,7 +821,19 @@ var options = {
       return Manager.getListFromServer();
     });
     $("#user").change(function () {
+      Manager.getCustomers();
+      if ($("#password").val() == "1234") {
+        $("#password").val("").change(); 
+      }
       return Manager.getActivities();
+    });
+    $("#password").change(function () {
+      if ($("#password").val() !== "1234" &&
+          $("#password").val() !== "edoctus" &&
+          $("#password").val() !== "") {
+        $("#send").click();
+      } 
+      return;
     });
     $("#start_date,#end_date").change(function() {
       return Manager.getListFromServer();
