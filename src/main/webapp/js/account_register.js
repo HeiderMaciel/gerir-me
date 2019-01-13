@@ -629,7 +629,7 @@
             "<td>" + (getDateBr(new Date(obj.dueDate))) + dataAux + "</td>" +
 //            "<td>" + obj.category + "</td>" +
             "<td>"+"<a href='/financial_admin/account_category?id="+obj.category_id+"' target='_customer_maste'>"+obj.category+"</a>"+"</td>" +
-            "<td>" + obj.obs_trunc + "</td>" +
+            "<td>" + "<p style='line-height: 105%'>" + obj.obs_trunc + "</p>" +"</td>" +
             "<td>" + 
             (obj.value.formatMoney()) + "</td>" + 
             //"<td>" + 
@@ -638,12 +638,12 @@
             (obj.type === 0 ? 'add' : 'remove') + ".png\"/></td><td><img src=\"/images/" + 
             (obj.paid ? 'good' : 'bad') + ".png\"/></td>" + 
             //"<td>" + obj.user_name + "</td></td>" +
-            "<td>"+"<a href='/customer/edit?id="+obj.user_id+"' target='_customer_maste'>"+obj.user_name+"</a>"+"</td>" +
+            "<td>"+"<a style='line-height: 105%' href='/customer/edit?id="+obj.user_id+"' target='_customer_maste'>"+obj.user_name+"</a>"+"</td>" +
             (hasUnitModule ? "<td>" + obj.unit_name + "</td>" : "") + 
             "<td>" + obj.cashier + "</td>" +
-            "<td>" + obj.account_name + "</td>" +
+            "<td>" + "<p style='line-height: 105%'>" + obj.account_name + "</p>" + "</td>" +
             (hasCostcenterModule ? "<td>" + obj.costcenter_name + "</td>" : "") + 
-            "<td>" + obj.paymenttype_name + "</td>" + 
+            "<td>" + "<p style='line-height: 105%'>" + obj.paymenttype_name + "</p>" + "</td>" + 
             (hasFinancialadModule ? "<td>" + 
               "<img width='16px' src=\"/images/" + 
               (obj.conciliate == "0" ? 'audit'     : (obj.conciliate == "1" ? 'tick'       : 'consolidate')) + ".png\" title=\"" + 
