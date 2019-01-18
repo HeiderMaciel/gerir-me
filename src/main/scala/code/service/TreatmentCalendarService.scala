@@ -68,7 +68,7 @@ object TreatmentCalendarService {
         val query = if (!auxiliar) {
           SQL_TREATMENT_TO_CALENDAR_DATA (isCustomer) +where+Treatment.SQL_VALID_TREATMENT
         } else {
-println ("vaiiii ============================= AUX ")
+println ("vaiiii ============================= AUX " + AuthUtil.company.id.is)
           SQL_TREATMENT_AUX_TO_CALENDAR_DATA (isCustomer) +where+Treatment.SQL_VALID_TREATMENT
         }           
 
