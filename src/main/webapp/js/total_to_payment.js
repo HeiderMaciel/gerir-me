@@ -72,6 +72,8 @@
                             "<td>"+payment.category+"</td>" +
                             "<td>"+payment.obs+"</td>" + 
                             "<td>"+(payment.value).formatMoney()+"</td>" +
+                            "<td><img src=\"/images/" + 
+                            (payment.type === 0 ? 'add' : 'remove') + ".png\"/></td>" +
                             (payment.aggregateValue != 0 ? "<td>" + (payment.aggregateValue).formatMoney() + "</td>" : "<td>" + "</td>") + 
                             "</tr>";
                         };

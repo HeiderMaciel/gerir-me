@@ -635,7 +635,8 @@
             //"<td>" + 
             //(obj.aggregateValue.formatMoney()) + "</td>" + 
             "<td><img src=\"/images/" + 
-            (obj.type === 0 ? 'add' : 'remove') + ".png\"/></td><td><img src=\"/images/" + 
+            (obj.type === 0 ? 'add' : 'remove') + ".png\"/></td>" +
+            "<td><img src=\"/images/" + 
             (obj.paid ? 'good' : 'bad') + ".png\"/></td>" + 
             //"<td>" + obj.user_name + "</td></td>" +
             "<td>"+"<a style='line-height: 105%' href='/customer/edit?id="+obj.user_id+"' target='_customer_maste'>"+obj.user_name+"</a>"+"</td>" +
