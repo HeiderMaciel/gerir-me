@@ -80,6 +80,10 @@
                         total_to_pay += total;
                         $("#to_pay").val((total_to_pay).formatMoney())
             });
+            $.post("/report/commissions_fat", $("#form_report").serializeObject(), function(r){
+              var total = parseFloat(eval(r)[0][0]);
+              $("#total_prod").val((total).formatMoney());
+            });
           });
 
         })

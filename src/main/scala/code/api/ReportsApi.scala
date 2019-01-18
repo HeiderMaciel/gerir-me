@@ -435,11 +435,11 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					case Full(p) => p
 					case _ => "0,1";
 				}
-				def start:Date = S.param("start") match {
+				def start:Date = S.param("startDate") match {
 					case Full(p) => Project.strToDateOrToday(p)
 					case _ => new Date()
 				}
-				def end:Date = S.param("end") match {
+				def end:Date = S.param("endDate") match {
 					case Full(p) => Project.strToDateOrToday(p)
 					case _ => new Date()
 				}
@@ -492,11 +492,11 @@ object Reports extends RestHelper with ReportRest with net.liftweb.common.Logger
 					case Full(p) => p
 					case _ => "0,1";
 				}
-				def start:Date = S.param("start") match {
+				def start:Date = S.param("startDate") match {
 					case Full(p) => Project.strToDateOrToday(p)
 					case _ => new Date()
 				}
-				def end:Date = S.param("end") match {
+				def end:Date = S.param("endDate") match {
 					case Full(p) => Project.strToDateOrToday(p)
 					case _ => new Date()
 				}

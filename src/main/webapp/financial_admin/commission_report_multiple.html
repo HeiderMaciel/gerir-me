@@ -31,10 +31,10 @@
     var hasAuxiliarModule = $('.has-auxiliar-module').length > 0;
     var hasUnitModule = $('.has-unit-module').length > 0;
     var startDate = function(){
-      return  encodeURIComponent($("#start").val() != "" ? $("#start").val() : getDateBr(new Date().getStartOfMonth()));
+      return  encodeURIComponent($("#startDate").val() != "" ? $("#startDate").val() : getDateBr(new Date().getStartOfMonth()));
     }
     var endDate = function(){
-      return encodeURIComponent($("#end").val() != "" ? $("#end").val() : getDateBr(new Date()));
+      return encodeURIComponent($("#endDate").val() != "" ? $("#endDate").val() : getDateBr(new Date()));
     }     
     var fields = [];
     if (!AuthUtil.company.showSalesToUser_$qmark) {
@@ -62,12 +62,14 @@
     }
 //    fields[7] = "real";
     fields[11] = "none";
-    var url = "/report/commissions";
+    var url = "/report/commissions/";
     var total_to_pay = 0.00;
     var request = function(){
       var total = 0.00;
       var total_commission = 0.00;
-      renderReport(url,fields,$("#form_report").serializeObject(),"#grid", function(data){
+      // false pq aqui não são as pendentes (futuro) 
+      // e sim as do período
+      renderReport(url+"false",fields,$("#form_report").serializeObject(),"#grid", function(data){
         data.forEach(function(row){
           total_commission += parseFloat(row[8]);
         });
@@ -133,11 +135,11 @@
                 <div class="inline-inputs">
                   <div class="input-prepend" style="float:left; padding-right:10px">
                     <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
-                    <input type="text" class="input-small date to_day" id='start' name="start" placeholder="Início"/>
+                    <input type="text" class="input-small date to_day" id='startDate' name="startDate" placeholder="Início"/>
                   </div>
                   <div class="input-prepend" style="float:left; padding-right:10px">
                     <span class="add-on"><img width="16" src="/images/calendar_addon.png"></span>
-                    <input type="text" class="input-small date to_day" id='end' name="end" placeholder="Fim"/>
+                    <input type="text" class="input-small date to_day" id='endDate' name="endDate" placeholder="Fim"/>
                   </div>
                 </div>
               </div>
