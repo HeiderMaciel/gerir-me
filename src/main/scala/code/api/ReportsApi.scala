@@ -1824,7 +1824,7 @@ order by ca.openerdate, ca.id
                 }
 				//"un_used >0"
 			}
-			val dateFilter = " date(pay.datepayment) between date(?) and date(?) "
+			val dateFilter = " date(dc.efetivedate) between date(?) and date(?) "
 
 			if(rel_mini == 0){
 				//info (DeliveryControl.SQL_REPORT)
