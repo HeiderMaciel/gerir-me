@@ -134,6 +134,9 @@ object ContactsUtil extends LiftActor with net.liftweb.common.Logger {
       listCol.foreach((column) => {
         colAux = column.replaceAll ("\"","");
         colAux = colAux.replaceAll ("'"," ");
+        if (colAux == "NULL" || colAux == "null") {
+          colAux = "";
+        }
         sqlInsert += "'" + colAux + "'";
         j += 1;
         if (j < listCol.length) {
