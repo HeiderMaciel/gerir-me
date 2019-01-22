@@ -670,6 +670,11 @@ class Company extends Audited[Company] with PerCompany with IdPK with CreatedUpd
   }
 
   override def save() = {
+
+      if (this.calendarInterval != 0 && this.calendarInterval < 5) {
+          throw new RuntimeException ("O menor intervalo de agenda aceitável é de 5 minutos")
+      }
+
       val r = super.save
 
 /*

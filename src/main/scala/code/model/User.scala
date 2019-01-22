@@ -617,6 +617,9 @@ class User extends  BusinessPattern[User] with UserIdAsString{
             && ("01234567890").indexOf (this.password) != -1) {
             throw new RuntimeException ("Senha não pode ser uma sequencia simples de números");
         }
+        if (this.calendarInterval != 0 && this.calendarInterval < 5) {
+            throw new RuntimeException ("O menor intervalo de agenda aceitável é de 5 minutos")
+        }
         if (this.parent_percent != 0.0 && this.parent.isEmpty) {
             throw new RuntimeException ("Um profissional superior precisa ser informado, caso o percentual de comissão para o superior seja diferente de zero")
         }

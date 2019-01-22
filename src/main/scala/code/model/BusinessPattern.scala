@@ -371,13 +371,8 @@ with PerCity{
 
     object bp_origin extends MappedLong(this)
 
-    def calendarIntervalDefault:Int = if (AuthUtil.?) {
-        AuthUtil.company.calendarInterval.is
-    } else {
-        60;
-    }
     object calendarInterval extends MappedInt(this) {
-        override def defaultValue = calendarIntervalDefault;
+        override def defaultValue = 0;
     }
 
     def insecureSave = {
